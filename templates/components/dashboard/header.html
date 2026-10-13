@@ -33,7 +33,7 @@
                 <span class="inline-block w-2 h-2 rounded-full bg-[#15803d]">
                 </span>
                 <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">
-                    Đang xem dữ liệu mẫu
+                    {{ 'Bản xem trước — chưa xuất bản' if dashboard is defined and dashboard.preview else 'Snapshot · Revision ' ~ bundle.revision if dashboard is defined else 'Đang xem dữ liệu mẫu' }}
                 </span>
             </div>
             <div class="hidden xl:flex items-center gap-1 font-body-sm text-body-sm text-outline last-updated">
@@ -41,7 +41,7 @@
                     schedule
                 </span>
                 <span>
-                    Cập nhật lần cuối: 02/10/2026 15:30
+                    {{ 'Snapshot: ' ~ (bundle.generated_at or 'Chưa có thời điểm') if dashboard is defined else 'Cập nhật lần cuối: 02/10/2026 15:30' }}
                 </span>
             </div>
             <button aria-controls="export-menu" aria-expanded="false" aria-haspopup="true"
@@ -62,7 +62,7 @@
                 </div>
                 <div class="hidden lg:flex flex-col text-left">
                     <span class="font-label-md text-label-md text-on-surface leading-tight">
-                        Account Manager
+                        {{ 'Người xem báo cáo' if dashboard is defined else 'Account Manager' }}
                     </span>
                     <span class="font-label-sm text-label-sm text-outline leading-tight">
                         KDH Agency
@@ -108,7 +108,7 @@
                     calendar_today
                 </span>
                 <span class="font-medium" id="date-range-label">
-                    01/09/2026 – 30/09/2026
+                    {{ bundle.period.start ~ ' → ' ~ bundle.period.end if dashboard is defined else '01/09/2026 – 30/09/2026' }}
                 </span>
             </button>
         </div>
@@ -123,7 +123,7 @@
                     Kỳ trước
                 </span>
                 <span class="text-outline" id="comparison-label">
-                    (02/08/2026 – 31/08/2026)
+                    {% if dashboard is defined %}{{ '(' ~ bundle.comparison.start ~ ' → ' ~ bundle.comparison.end ~ ')' if bundle.comparison else 'Chưa có kỳ so sánh' }}{% else %}(02/08/2026 – 31/08/2026){% endif %}
                 </span>
                 <span aria-hidden="true" class="material-symbols-outlined text-[16px] text-outline">
                     arrow_drop_down

@@ -1,3 +1,4 @@
+{% if dashboard is defined %}{% include 'pages/snapshot/controls.html' %}{% else %}
 <div id="export-menu" class="export-menu" aria-label="Xuất báo cáo" hidden>
   <button type="button" id="export-pdf"><span class="material-symbols-outlined" aria-hidden="true">picture_as_pdf</span>In / Lưu báo cáo PDF</button>
   <button type="button" id="export-csv"><span class="material-symbols-outlined" aria-hidden="true">table_view</span>Xuất Excel (.csv)</button>
@@ -19,3 +20,5 @@
 </dialog>
 
 <div id="dashboard-toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+{% endif %}

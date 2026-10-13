@@ -1,3 +1,7 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<p class="text-body-sm text-outline">Nguồn: snapshot Admin · Revision {{ bundle.revision }} · {{ bundle.generated_at or "Chưa có thời điểm" }}</p>
+{% else %}
 <footer class="flex flex-col sm:flex-row items-center justify-between py-space-sm text-outline font-body-sm text-body-sm gap-2">
 <div class="flex items-center gap-2">
 <span aria-hidden="true" class="material-symbols-outlined text-primary text-[18px]">
@@ -19,3 +23,5 @@
    </span>
 </div>
 </footer>
+
+{% endif %}

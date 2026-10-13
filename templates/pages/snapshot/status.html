@@ -1,0 +1,4 @@
+<div class="snapshot-status" data-report-id="{{ bundle.report_id }}" data-revision="{{ bundle.revision }}" data-selected="{{ selected_section }}">
+{% if dashboard.preview %}<strong class="snapshot-preview">Bản xem trước — chưa xuất bản · CHƯA XUẤT BẢN</strong>{% else %}<strong>{{ 'Final · Chính thức' if bundle.status == 'final' else 'Provisional · Tạm thời' }}</strong>{% endif %}
+{{ bundle.name }}{% if not dashboard.preview %} · Revision {{ bundle.revision }}{% endif %} · {{ bundle.period.start }} → {{ bundle.period.end }}{% if bundle.provenance == 'demo' %} · DEMO{% endif %}</div>
+{% if dashboard.quality.warnings or dashboard.limitations or bundle.quality.warnings %}<details class="snapshot-quality"><summary>Chất lượng &amp; phạm vi dữ liệu</summary>{% for message in bundle.quality.warnings + dashboard.quality.warnings + dashboard.limitations %}<p>{{ message }}</p>{% endfor %}</details>{% endif %}

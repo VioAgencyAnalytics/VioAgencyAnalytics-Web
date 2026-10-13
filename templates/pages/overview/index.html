@@ -1,5 +1,5 @@
 {% extends "layouts/dashboard.html" %}
-{% block page_script %}<script src="/static/js/pages/overview.js" defer></script>{% endblock %}
+{% block page_script %}{% if dashboard is not defined %}<script src="/static/js/pages/overview.js" defer></script>{% endif %}{% endblock %}
 {% block content %}
 <div class="flex flex-col w-full">
   {% include "pages/overview/partials/executive_summary.html" %}
@@ -10,6 +10,6 @@
   {% include "pages/overview/partials/action_plan.html" %}
   {% include "pages/overview/partials/footer.html" %}
 </div>
-{% include "pages/overview/controls.html" %}
+{% if dashboard is not defined %}{% include "pages/overview/controls.html" %}{% endif %}
 {% endblock %}
-{% block scripts %}<script id="overview-data" type="application/json">{{ overview | tojson }}</script>{% endblock %}
+{% block scripts %}{% if dashboard is not defined %}<script id="overview-data" type="application/json">{{ overview | tojson }}</script>{% endif %}{% endblock %}

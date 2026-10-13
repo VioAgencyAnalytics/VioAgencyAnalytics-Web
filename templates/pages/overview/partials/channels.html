@@ -1,3 +1,14 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<section class="flex flex-col gap-space-sm mb-space-lg" id="channel-performance">
+<div class="flex items-center justify-between mb-1"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[22px]" aria-hidden="true">category</span><h2 class="font-headline-md text-headline-md text-on-surface">HIỆU QUẢ THEO TỪNG KÊNH MARKETING</h2></div><span class="font-label-md text-label-md text-outline">{{ dashboard.channel_cards|length }} kênh trong báo cáo</span></div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md channel-grid">{% for section in dashboard.channel_cards %}<article class="flex flex-col justify-between bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm hover:shadow-md transition-all group channel-card snapshot-card">
+<div><div class="flex items-start justify-between mb-space-md"><div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-[#eff6ff] flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[22px]" aria-hidden="true">{{ section.icon }}</span></div><div><h3 class="font-title-sm text-title-sm text-on-surface group-hover:text-primary transition-colors">{{ section.label }}</h3><span class="font-label-sm text-label-sm text-outline">Snapshot · {{ bundle.period.start }} → {{ bundle.period.end }}</span></div></div></div>
+<div class="grid grid-cols-2 gap-y-3 gap-x-2 py-space-sm bg-surface-container-low rounded-xl px-3 mb-space-md">{% for metric in section.kpis[:4] %}<div><span class="font-label-sm text-label-sm text-outline block">{{ metric.label }}</span><span class="font-title-sm text-title-sm text-on-surface">{{ metric.text }} {{ metric.unit_text }}</span></div>{% else %}<p class="snapshot-empty">Chưa có chỉ số trong snapshot.</p>{% endfor %}</div>
+{% if section.charts %}{{ charts(section.charts[:1]) }}{% else %}<p class="font-body-sm text-body-sm text-outline mb-space-sm">Chưa có chuỗi xu hướng đã chốt.</p>{% endif %}</div>
+<a class="inline-flex items-center gap-1 font-label-md text-label-md text-primary font-semibold hover:gap-2 transition-all" href="{{ snapshot_links.get(section.key|replace('_','-'), snapshot_home) }}">Xem chi tiết {{ section.label }}<span class="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span></a></article>{% endfor %}</div>
+</section>
+{% else %}
 <section class="flex flex-col gap-space-sm mb-space-lg" id="channel-performance">
 <div class="flex items-center justify-between mb-1">
 <div class="flex items-center gap-2">
@@ -571,3 +582,5 @@
 </div>
 </div>
 </section>
+
+{% endif %}

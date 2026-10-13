@@ -1,3 +1,7 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<div class="vd-two-columns"><section id="yt-audience" class="vd-card">{{ unavailable('Khán Giả & Giữ Chân') }}</section><section id="yt-sources" class="vd-card">{{ unavailable('Nguồn Tiếp Cận & Từ Khóa') }}</section></div>
+{% else %}
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-space-lg">
 <div id="yt-audience" class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] border border-outline-variant/30 flex flex-col justify-between">
 <div>
@@ -87,3 +91,5 @@
 </div>
 </div>
 </div>
+
+{% endif %}

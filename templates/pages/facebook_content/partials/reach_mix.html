@@ -1,6 +1,12 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{{ unavailable('Tiếp cận tự nhiên & trả phí') }}
+{% else %}
 {% from 'pages/facebook_content/partials/helpers.html' import n, pct, heading %}
 {{ heading('So Sánh Tiếp Cận: Tự Nhiên (Organic) vs Quảng Cáo (Paid)', 'bar_chart', 'Hiệu quả phân bổ nguồn lực reach giữa traffic tự nhiên và phân phối trả phí.') }}
 {% set mix = fb_content.reach_mix %}
 {% for label, key, note in [('Tiếp Cận Tự Nhiên (Organic Reach)', 'organic', 'Nội dung Reels và bài viết kiến thức y khoa được chia sẻ trong mẫu.'), ('Tiếp Cận Trả Phí (Paid Reach)', 'paid', 'Phân phối trả phí cho các chiến dịch Tiêm chủng và Khám nhi tổng quát.')] %}
 <div class="fc-bar-row fc-color-{{ loop.index }}"><div class="fc-bar-label"><span><i></i>{{ label }}</span><strong>{{ n(mix[key]) }} ({{ pct(mix[key ~ '_percent']) }})</strong></div><div class="fc-track"><span style="width:{{ mix[key ~ '_percent'] }}%"></span></div><p class="fc-note">{{ note }}</p></div>{% endfor %}
 <div class="fc-panel-footer"><span>Tỷ lệ Organic / Paid: {{ '%.1f'|format(mix.organic / mix.paid) }}x</span><strong>Tối ưu hiệu quả ngân sách</strong></div>
+
+{% endif %}

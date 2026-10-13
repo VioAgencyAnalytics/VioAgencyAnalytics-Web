@@ -1,3 +1,9 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<div class="bg-gradient-to-r from-primary to-primary-container rounded-xl p-space-lg text-on-primary shadow-lg flex flex-col md:flex-row items-center justify-between gap-space-md" id="seo-result">
+<div><h4 class="font-headline-md text-headline-md text-on-primary">{{ dashboard.evidence[0].claim if dashboard.evidence and dashboard.evidence[0].claim else "Chưa có kết luận hiệu suất được duyệt" }}</h4><p class="font-body-sm">Kết luận chỉ dựa trên snapshot của revision này.</p></div><button type="button" id="seo-pdf" class="px-4 py-2 rounded-lg bg-surface-container-lowest text-primary">Tải Báo Cáo SEO PDF</button>
+</div>
+{% else %}
 <div class="bg-gradient-to-r from-primary to-primary-container rounded-xl p-space-lg text-on-primary shadow-lg flex flex-col md:flex-row items-center justify-between gap-space-md" id="seo-result">
 <div class="flex items-center gap-space-md">
 <div class="w-12 h-12 rounded-full bg-on-primary/15 flex items-center justify-center shrink-0">
@@ -20,3 +26,5 @@
    </button>
 </div>
 </div>
+
+{% endif %}

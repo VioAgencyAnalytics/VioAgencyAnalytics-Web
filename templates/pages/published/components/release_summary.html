@@ -1,0 +1,3 @@
+{% if item.approval %}<p class="pb-approval">Bản phát hành {{ item.approval.version }} · Duyệt ngày {{ item.approval.approved_at }} · Mã phê duyệt {{ item.approval.approval_id }}</p>{% endif %}
+{% if item.limitations %}<article class="pb-card pb-summary"><h3>Phạm vi kết luận</h3><ul>{% for line in item.limitations %}<li>{{ line }}</li>{% endfor %}</ul></article>{% endif %}
+{% if item.platforms %}<details class="pb-card"><summary>Nguồn có trong báo cáo</summary><div class="pb-scope-grid">{% for platform in item.platforms %}<span class="pb-status">{{ platform.label }} · {{ 'Có trong báo cáo' if platform.status == 'included' else 'Chưa có dữ liệu trong bản này' }}</span>{% endfor %}</div></details>{% endif %}

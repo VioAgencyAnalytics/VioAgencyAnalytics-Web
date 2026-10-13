@@ -1,4 +1,10 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<div class="vd-panel-head"><div><h2>{{ 'Biểu đồ Chi tiêu & Lượt Leads theo thời gian' if video.channel == 'tiktok' else 'Xu Hướng Lượt Xem & Thời Gian Xem' }}</h2><p>Kỳ báo cáo {{ bundle.period.start }} → {{ bundle.period.end }} · Mỗi chỉ số dùng thang đo riêng</p></div></div>{{ charts() }}
+{% else %}
 <div class="vd-panel-head"><div><h2>{{ 'Biểu đồ Chi tiêu & Lượt Leads theo thời gian' if video.channel == 'tiktok' else 'Xu Hướng Lượt Xem & Thời Gian Xem' }}</h2><p>Kỳ báo cáo <span id="vd-chart-period"></span></p></div><div class="vd-legend"><span><i></i>{{ video.chart.labels[0] }}</span><span id="vd-chart-secondary"><i class="{{ 'green' if video.channel == 'tiktok' else 'purple' }}"></i>{{ video.chart.labels[1] }}</span></div></div>
 {% if video.channel == 'youtube' %}<div class="vd-chart-tabs" aria-label="Chỉ số biểu đồ"><button type="button" data-chart-metric="views" aria-pressed="true">Lượt xem</button><button type="button" data-chart-metric="watch_hours" aria-pressed="false">Thời gian xem</button></div>{% endif %}
 <div class="vd-chart" id="vd-chart" tabindex="0" role="group" aria-label="Biểu đồ theo ngày; dùng phím mũi tên để xem số liệu"><svg id="vd-chart-svg" viewBox="0 0 800 280" preserveAspectRatio="none" role="img" aria-labelledby="vd-chart-title"><title id="vd-chart-title">Xu hướng dữ liệu mẫu theo ngày</title></svg><div class="vd-chart-tooltip" id="vd-chart-tooltip" hidden></div></div>
 <div class="vd-chart-dates" id="vd-chart-dates"></div>
+
+{% endif %}

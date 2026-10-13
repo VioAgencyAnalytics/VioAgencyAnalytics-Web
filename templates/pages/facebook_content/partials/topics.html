@@ -1,6 +1,12 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{{ unavailable('Hiệu quả theo chủ đề') }}
+{% else %}
 {% from 'pages/facebook_content/partials/helpers.html' import n, pct, heading %}
 {{ heading('Hiệu Quả Theo Chủ Đề Nội Dung (Core Topics)', 'category', 'Mức độ quan tâm của cộng đồng phụ huynh đối với các nhóm chủ đề y tế trẻ em.') }}
 <div class="fc-topic-grid">{% for row in fb_content.topics %}
 <button type="button" class="fc-topic fc-color-{{ loop.index }}" data-fc-topic="{{ row.key }}"><div><h3>{{ row.label }}</h3><span class="fc-badge">{{ row.count }} bài</span></div><div class="fc-topic-stats"><span>Tổng Reach: {{ n(row.reach) }}</span><strong>ER: {{ pct(row.er) }}</strong></div><p>{{ row.description }}</p></button>
 {% endfor %}</div>
 <div class="fc-panel-footer"><span>Khuyến nghị: Tăng 20% nội dung Dinh dưỡng và Tiêm chủng</span><button type="button" class="fc-link" id="fc-topic-details">Xem chi tiết chủ đề →</button></div>
+
+{% endif %}

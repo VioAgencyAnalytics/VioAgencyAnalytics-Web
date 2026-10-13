@@ -1,3 +1,10 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-space-lg mb-space-lg" id="insights">
+<div class="flex flex-col bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm"><div class="flex items-center gap-space-sm mb-space-md"><div class="w-10 h-10 rounded-xl bg-[#ecfdf5] text-[#15803d] flex items-center justify-center"><span class="material-symbols-outlined text-[24px]" aria-hidden="true">verified</span></div><h2 class="font-headline-md text-headline-md text-on-surface">ĐIỂM NỔI BẬT TRONG KỲ</h2></div><div class="flex flex-col gap-space-sm">{% for evidence in dashboard.evidence %}<p class="p-space-sm rounded-xl bg-surface-container-low font-body-md text-body-md">{{ evidence.claim or evidence.metric }}</p>{% else %}<p class="snapshot-empty">Chưa có nhận định được phép công bố.</p>{% endfor %}</div></div>
+<div class="flex flex-col bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm"><div class="flex items-center gap-space-sm mb-space-md"><div class="w-10 h-10 rounded-xl bg-surface-container-low text-primary flex items-center justify-center"><span class="material-symbols-outlined text-[24px]" aria-hidden="true">lightbulb</span></div><h2 class="font-headline-md text-headline-md text-on-surface">CƠ HỘI &amp; ĐỀ XUẤT</h2></div><div class="flex flex-col gap-space-sm">{% for opportunity in dashboard.opportunities %}<article class="p-space-sm rounded-xl bg-surface-container-low"><h3>{{ opportunity.title }}</h3><p>{{ opportunity.reason or '' }}</p></article>{% else %}<p class="snapshot-empty">Chưa có đề xuất được duyệt.</p>{% endfor %}</div></div>
+</section>
+{% else %}
 <section class="grid grid-cols-1 lg:grid-cols-2 gap-space-lg mb-space-lg" id="insights">
 <!-- Box 1: Điểm Nổi Bật Trong Kỳ -->
 <div class="flex flex-col bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm">
@@ -156,3 +163,5 @@
 </div>
 </div>
 </section>
+
+{% endif %}

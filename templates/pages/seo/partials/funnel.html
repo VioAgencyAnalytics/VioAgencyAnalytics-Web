@@ -1,3 +1,11 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<div class="bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] mb-space-xl" id="seo-funnel">
+{% from 'pages/snapshot/components.html' import saved with context %}
+<div class="mb-6"><h3 class="font-headline-md text-headline-md">Phễu Chuyển Đổi SEO &amp; Khách Hàng Tiềm Năng</h3><p class="text-body-sm text-outline">Chỉ số của từng nguồn trong kỳ đã chốt; chưa xác lập hành trình giữa các nguồn.</p></div>
+<div class="grid grid-cols-1 md:grid-cols-6 gap-3">{% for key,label in [('gsc.impressions','Lượt Hiển Thị'),('gsc.clicks','Lượt Click (GSC)'),('ga4.organic_users','Website Visitors'),('seo.service_page_views','Service Page Views'),('seo.leads','SEO Leads'),('seo.appointments','Lịch Hẹn Thành Công')] %}<div class="{{ 'bg-primary text-on-primary shadow-md' if loop.last else 'bg-surface-container-low' }} p-4 rounded-xl flex flex-col justify-between relative"><div><span class="font-label-sm text-label-sm uppercase">Bước {{ loop.index }}</span><div class="font-title-sm text-title-sm mt-1">{{ label }}</div></div><div class="mt-4 font-kpi-display text-[24px]">{{ saved(key) }}</div></div>{% endfor %}</div>
+</div>
+{% else %}
 <div class="bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] mb-space-xl" id="seo-funnel">
 <div class="mb-6">
 <h3 class="font-headline-md text-headline-md text-on-surface">
@@ -161,3 +169,5 @@
 </div>
 </div>
 </div>
+
+{% endif %}

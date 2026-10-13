@@ -1,6 +1,6 @@
 {% extends "layouts/dashboard.html" %}
 {% block page_styles %}<link rel="stylesheet" href="/static/css/pages/facebook-ads.css">{% endblock %}
-{% block page_script %}<script src="/static/js/pages/facebook-ads.js" defer></script>{% endblock %}
+{% block page_script %}{% if dashboard is not defined %}<script src="/static/js/pages/facebook-ads.js" defer></script>{% endif %}{% endblock %}
 {% block content %}
 <div id="fb-dashboard">
   <section id="fb-summary" class="fb-page-header">
@@ -10,22 +10,24 @@
     </div>
     <div class="fb-header-actions"><button type="button" id="fb-advanced" class="fb-button"><span class="material-symbols-outlined" aria-hidden="true">filter_list</span>Bộ lọc nâng cao</button><button type="button" id="fb-optimize" class="fb-button pink"><span class="material-symbols-outlined" aria-hidden="true">auto_graph</span>Tạo báo cáo tối ưu</button></div>
   </section>
-  <div class="fb-report-context"><span id="fb-period-caption">Dữ liệu mẫu · 01/09/2026 – 30/09/2026</span><span id="fb-filter-caption">Tất cả chiến dịch</span><button type="button" id="fb-clear" hidden>Xóa bộ lọc</button></div>
+  <div class="fb-report-context"><span id="fb-period-caption">{{ bundle.period.start ~ " → " ~ bundle.period.end if dashboard is defined else "Dữ liệu mẫu · 01/09/2026 – 30/09/2026" }}</span><span id="fb-filter-caption">Tất cả chiến dịch</span><button type="button" id="fb-clear" hidden>Xóa bộ lọc</button></div>
   <div id="fb-error" role="alert" hidden></div>
   <section id="fb-kpis" class="fb-kpi-grid" aria-label="Chỉ số Facebook Ads">{% include 'pages/facebook_ads/partials/kpis.html' %}</section>
-  <section id="fb-campaigns" class="panel">
+  <section id="fb-campaigns" class="panel" {% if dashboard is defined %}data-snapshot-table{% endif %}>
     <div class="fb-section-heading"><div><h2>Hiệu Quả Chiến Dịch Quảng Cáo</h2><p>Chi tiết phân bổ ngân sách, lượt tương tác và CPL từng chiến dịch đang chạy.</p></div><button type="button" id="fb-sort" class="fb-button subtle"><span class="material-symbols-outlined" aria-hidden="true">sort</span><span>CPL: thấp → cao</span></button></div>
-    <div class="fb-table-scroll" tabindex="0" role="region" aria-label="Bảng hiệu quả chiến dịch"><table id="fb-campaign-table"><thead><tr><th>Tên Chiến Dịch</th><th>Mục tiêu</th><th>Chi Tiêu / Ngân Sách</th><th>Reach</th><th>Clicks (CTR)</th><th>Leads</th><th aria-sort="ascending">CPL (₫)</th><th>Hiệu Quả</th></tr></thead><tbody id="fb-campaign-rows">{% include 'pages/facebook_ads/partials/campaigns.html' %}</tbody></table></div>
+    {% if dashboard is defined %}<label>Tìm trong snapshot <input type="search" data-snapshot-search aria-label="Lọc chiến dịch"></label><span data-row-count>{{ dashboard.campaign_rows|length }} hàng</span>{% endif %}
+    <div class="fb-table-scroll" tabindex="0" role="region" aria-label="Bảng hiệu quả chiến dịch"><table id="fb-campaign-table"><thead><tr><th>Tên Chiến Dịch</th><th>Mục tiêu</th><th>Chi Tiêu / Ngân Sách</th><th>Reach</th><th>Clicks (CTR)</th><th>Leads</th><th>{% if dashboard is defined %}<button data-snapshot-sort="6" type="button">CPL (đơn vị snapshot)</button>{% else %}CPL (₫){% endif %}</th><th>Hiệu Quả</th></tr></thead><tbody id="fb-campaign-rows">{% include 'pages/facebook_ads/partials/campaigns.html' %}</tbody></table></div>
+    {% if dashboard is defined and not dashboard.campaign_rows %}<p class="snapshot-empty">Chưa có chiến dịch trong snapshot.</p>{% endif %}
   </section>
   <div class="fb-two-columns">
     <section id="fb-funnel" class="panel"><div class="fb-section-heading"><div><h2>Phễu Chuyển Đổi &amp; Chi Phí</h2><p>Từ lượt hiển thị đến lịch hẹn thực tế tại phòng khám.</p></div><span class="material-symbols-outlined fb-blue" aria-hidden="true">conversion_path</span></div><div id="fb-funnel-body">{% include 'pages/facebook_ads/partials/funnel.html' %}</div></section>
-    <section id="fb-audience" class="panel"><div class="fb-section-heading"><div><h2>Đối Tượng &amp; Phân Phối</h2><p>Phân bổ chi tiêu theo vị trí hiển thị và hồ sơ đối tượng mẫu.</p></div><span class="material-symbols-outlined fb-blue" aria-hidden="true">donut_large</span></div><div id="fb-audience-body">{% include 'pages/facebook_ads/partials/audience.html' %}</div></section>
+    <section id="fb-audience" class="panel"><div class="fb-section-heading"><div><h2>Đối Tượng &amp; Phân Phối</h2><p>Phân bổ chi tiêu theo vị trí hiển thị và hồ sơ đối tượng{% if dashboard is not defined %} mẫu{% endif %}.</p></div><span class="material-symbols-outlined fb-blue" aria-hidden="true">donut_large</span></div><div id="fb-audience-body">{% include 'pages/facebook_ads/partials/audience.html' %}</div></section>
   </div>
   <section id="fb-creatives" class="panel"><div class="fb-section-heading"><div><h2>Hiệu Quả Nội Dung Quảng Cáo (Ad Creatives)</h2><p>Các mẫu nổi bật được cung cấp trong thiết kế; không đại diện toàn bộ chi tiêu chiến dịch.</p></div><button type="button" id="fb-library" class="fb-button subtle"><span class="material-symbols-outlined" aria-hidden="true">perm_media</span>Xem thư viện quảng cáo</button></div><div id="fb-creatives-grid" class="fb-creative-grid">{% include 'pages/facebook_ads/partials/creatives.html' %}</div></section>
   <div id="fb-insights" class="fb-insight-grid">{% include 'pages/facebook_ads/partials/insights.html' %}</div>
-  <footer class="fb-data-footer"><span><span class="material-symbols-outlined" aria-hidden="true">info</span>Nguồn dữ liệu: <strong>Bộ dữ liệu mẫu KinderHealth</strong></span><span>Chưa kết nối Meta Marketing API / CRM</span></footer>
-  <p class="fb-small fb-muted">Các kỳ khác tháng 9/2026 được mô phỏng theo độ dài kỳ. Phân tích tối ưu dùng quy tắc tính toán, chưa sử dụng mô hình AI.</p>
+  <footer class="fb-data-footer"><span><span class="material-symbols-outlined" aria-hidden="true">info</span>Nguồn dữ liệu: <strong>{{ "Snapshot Admin" if dashboard is defined else "Bộ dữ liệu mẫu KinderHealth" }}</strong></span><span>Chưa kết nối Meta Marketing API / CRM</span></footer>
+  <p class="fb-small fb-muted">{{ "Chỉ số tổng giữ nguyên theo kỳ đã chốt. Bộ lọc chỉ áp dụng cho bảng." if dashboard is defined else "Các kỳ khác tháng 9/2026 được mô phỏng theo độ dài kỳ. Phân tích tối ưu dùng quy tắc tính toán, chưa sử dụng mô hình AI." }}</p>
 </div>
-{% include 'pages/facebook_ads/controls.html' %}
+{% if dashboard is not defined %}{% include 'pages/facebook_ads/controls.html' %}{% endif %}
 {% endblock %}
-{% block scripts %}<script id="facebook-ads-data" type="application/json">{{ ads | tojson }}</script>{% endblock %}
+{% block scripts %}{% if dashboard is not defined %}<script id="facebook-ads-data" type="application/json">{{ ads | tojson }}</script>{% endif %}{% endblock %}

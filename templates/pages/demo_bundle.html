@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }} · KDH Report</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin:0; background:#f4f6fa; color:#1d2939; font-family:system-ui,-apple-system,Arial,sans-serif; }
+    .header { background:#101d38; padding:16px 24px; color:white; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .header strong { font-size:19px; }
+    .warning { background:#fff1bd; color:#784500; padding:12px 24px; font-weight:700; border-bottom:1px solid #e7bd41; }
+    .app { max-width:1420px; margin:auto; display:grid; grid-template-columns:225px 1fr; min-height:calc(100vh - 110px); }
+    nav { padding:20px 12px; background:#fff; border-right:1px solid #e2e8f0; }
+    nav a { display:block; color:#344054; text-decoration:none; padding:11px 14px; border-radius:8px; margin:4px 0; font-weight:500; }
+    nav a.active { background:#e9f1ff; color:#175cd3; font-weight:700; }
+    main { padding:24px; min-width:0; }
+    h1 { font-size:24px; margin:0 0 6px; }
+    h2 { font-size:20px; margin:12px 0 18px; }
+    .muted { color:#667085; font-size:13px; }
+    .section { background:#fff; border:1px solid #e2e8f0; padding:20px; border-radius:14px; margin-top:18px; }
+    .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; }
+    .kpi { border:1px solid #e4e7ec; background:#fcfcfd; border-radius:10px; padding:15px; }
+    .kpi .key { font-size:12px; color:#667085; overflow-wrap:anywhere; }
+    .kpi .val { font-size:23px; font-weight:750; margin-top:8px; overflow-wrap:anywhere; }
+    .trend { width:100%; height:auto; border:1px solid #eaecf0; border-radius:8px; }
+    table { border-collapse:collapse; width:100%; font-size:13px; min-width:600px; }
+    th,td { padding:10px 12px; text-align:left; border-bottom:1px solid #e4e7ec; }
+    th { background:#f8fafc; }
+    .table-wrap { overflow:auto; }
+    .notice { background:#fffaeb; padding:12px; border-radius:8px; margin-top:10px; font-size:12px; }
+    @media(max-width:800px){.app{grid-template-columns:1fr;}nav{border:0;display:flex;overflow:auto;}nav a{white-space:nowrap;}main{padding:14px}}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <strong>KDH Marketing Report · DEMO</strong>
+    <span>Revision {{ revision }} · {{ status|upper }}</span>
+  </header>
+  <div class="warning">DỮ LIỆU DEMO / SIMULATED — KHÔNG PHẢI KẾT QUẢ THỰC TẾ CỦA KINDERHEALTH</div>
+  <div class="app">
+    <nav>
+      {% for sec in sections %}
+        <a class="{% if sec.key == section_key %}active{% endif %}" href="/demo-bundles/{{ report_id }}/{{ sec.key }}?revision={{ revision }}">{{ sec.label }}</a>
+      {% endfor %}
+    </nav>
+    <main>
+      <h1>{{ title }}</h1>
+      <p class="muted">{{ period.start }} → {{ period.end }} · Report {{ report_id }} · dữ liệu đã Publish từ Admin</p>
+      {% for src in items %}
+        <article class="section">
+          <h2>{{ src.label }} <small class="muted">{{ src.status }}</small></h2>
+          <div class="cards">
+            {% for m in src.metrics %}
+              <div class="kpi"><div class="key">{{ m.name }}</div><div class="val">{{ m.value }}</div></div>
+            {% endfor %}
+          </div>
+          {% if src.trend %}
+            <h3>Xu hướng {{ src.trend.key }} ({{ src.trend.count }} ngày)</h3>
+            <svg class="trend" viewBox="0 0 700 195" role="img" aria-label="Đường xu hướng {{ src.trend.key }}">
+              <line x1="12" y1="172" x2="688" y2="172" stroke="#dde5ef"/>
+              <polyline points="{{ src.trend.points }}" fill="none" stroke="#2574d5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          {% endif %}
+          {% if src.table %}
+            <h3>{{ src.table.title }} — 12 dòng đầu</h3>
+            <div class="table-wrap"><table>
+              <thead><tr>{% for col in src.table.columns %}<th>{{ col }}</th>{% endfor %}</tr></thead>
+              <tbody>{% for row in src.table.rows %}<tr>{% for val in row %}<td>{{ val }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+            </table></div>
+          {% endif %}
+          {% for note in src.notes %}<div class="notice">{{ note }}</div>{% endfor %}
+        </article>
+      {% endfor %}
+      {% if quality.warnings %}
+        <article class="section"><h2>Chất lượng dữ liệu / Cảnh báo</h2>
+          {% for warning in quality.warnings %}<p class="muted">• {{ warning }}</p>{% endfor %}
+        </article>
+      {% endif %}
+    </main>
+  </div>
+</body>
+</html>

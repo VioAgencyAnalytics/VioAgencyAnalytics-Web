@@ -1,3 +1,9 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<div class="bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] mb-space-xl" id="seo-keywords">
+<h3 class="font-headline-md text-headline-md">Thứ Hạng Từ Khóa Nổi Bật</h3>{{ tables(dashboard.keyword_tables) }}
+</div>
+{% else %}
 <div class="bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] mb-space-xl" id="seo-keywords">
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md mb-6">
 <div>
@@ -284,3 +290,5 @@
 </table>
 </div>
 </div>
+
+{% endif %}

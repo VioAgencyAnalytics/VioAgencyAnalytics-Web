@@ -1,17 +1,19 @@
 {% set current = active_report | default(report_name | default('overview')) %}
 {% macro report_group(key, label, icon, url, path, items) %}
+{% set enabled = snapshot_links is not defined or key in snapshot_links %}
+{% set url = snapshot_links.get(key, '') if snapshot_links is defined else url %}
 <div class="report-nav-group" data-report-group="{{ key }}">
   <div class="report-nav-row">
-    <a class="report-nav-link" data-path="{{ path }}" href="{{ url }}" {% if current == key %}aria-current="page"{% endif %}>
+    <a class="report-nav-link" data-path="{{ path }}" {% if enabled %}href="{{ url }}"{% else %}aria-disabled="true" title="Section chưa được cho phép trong Bundle"{% endif %} {% if current == key %}aria-current="page"{% endif %}>
       <span class="material-symbols-outlined" aria-hidden="true">{{ icon }}</span><span>{{ label }}</span>
     </a>
-    <button class="report-nav-toggle" type="button" aria-label="Menu con {{ label }}" aria-controls="{{ key }}-submenu" aria-expanded="{{ 'true' if current == key else 'false' }}">
+    <button class="report-nav-toggle" type="button" {% if not enabled %}disabled{% endif %} aria-label="Menu con {{ label }}" aria-controls="{{ key }}-submenu" aria-expanded="{{ 'true' if current == key else 'false' }}">
       <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
     </button>
   </div>
   <div id="{{ key }}-submenu" class="report-submenu {{ 'seo-submenu' if key == 'seo' else '' }}" {% if current != key %}hidden{% endif %}>
     {% for view, text, symbol, section in items %}
-    <a href="{{ url }}?view={{ view }}" data-path="{{ view }}" data-section="{{ section }}">
+    <a {% if enabled %}href="{{ url }}{{ "&" if snapshot_links is defined else "?" }}view={{ view }}"{% else %}aria-disabled="true"{% endif %} data-path="{{ view }}" data-section="{{ section }}">
       <span class="material-symbols-outlined" aria-hidden="true">{{ symbol }}</span><span>{{ text }}</span>
     </a>
     {% endfor %}
@@ -65,6 +67,6 @@
   {% for key, path, label, icon in [
     ('google-maps', 'google-maps-va-ho-so-doanh-nghiep', 'Google Maps & Hồ sơ doanh nghiệp', 'storefront')
   ] %}
-  <a class="report-nav-link" data-path="{{ path }}" href="/report/{{ key }}" {% if current == key %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">{{ icon }}</span><span>{{ label }}</span></a>
+  <a class="report-nav-link" data-path="{{ path }}" {% if snapshot_links is not defined %}href="/report/{{ key }}"{% elif "gmb" in snapshot_links %}href="{{ snapshot_links.gmb }}"{% else %}aria-disabled="true" title="Section chưa được cho phép trong Bundle"{% endif %} {% if current == key %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">{{ icon }}</span><span>{{ label }}</span></a>
   {% endfor %}
 </nav>

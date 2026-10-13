@@ -1,0 +1,4 @@
+{% macro quality_status(quality) %}
+<div class="pb-quality pb-quality-{{ quality.status }}"><span class="pb-status">{{ {'complete': 'Complete · Đầy đủ', 'partial': 'Partial · Một phần', 'failed': 'Failed · Lỗi', 'unknown': 'Unknown · Chưa xác định'}.get(quality.status, 'Unknown') }}</span>{% if quality.latest_date %}<span>Ngày dữ liệu: {{ quality.latest_date }}</span>{% endif %}</div>
+{% if quality.warnings %}<ul class="pb-warnings" aria-label="Cảnh báo chất lượng">{% for warning in quality.warnings %}<li>{{ warning }}</li>{% endfor %}</ul>{% endif %}
+{% endmacro %}

@@ -1,6 +1,8 @@
 # KDH Marketing Reporting Dashboard
 
-A FastAPI + Jinja2 marketing reporting dashboard built around a mock-data-first architecture.
+> Marketing integration (10/10/2026): production now uses `/login` and `/reports` with Admin-backed report/revision authorization. Legacy mock routes remain development-only. See [integration handover](docs/MARKETING_INTEGRATION.md).
+
+A FastAPI + Jinja2 marketing reporting dashboard with independent demo pages and a protected renderer for published Admin Report Bundles.
 
 ## Stack
 
@@ -37,8 +39,10 @@ Container tự khởi động lại khi Docker Engine chạy, trừ khi đã ch�
 Muốn đổi cổng trên PowerShell, đặt `$env:KDH_PORT = '8090'` trước khi chạy Compose.
 Ứng dụng mặc định chỉ được mở trên máy đang chạy Docker.
 
-Bản Docker dùng cùng dữ liệu mẫu như bản local. Chưa thêm database vì luồng báo cáo
-hiện chưa sử dụng database; Docker không tự kết nối Meta, Google hoặc CRM.
+Bản Docker mặc định giữ các trang dữ liệu mẫu như bản local. Luồng Report Bundle mới
+ở `/published/{report_id}` bị khóa trong production cho đến khi có viewer auth đầy đủ.
+Preview cục bộ cần cấu hình riêng theo [hướng dẫn NEW-1](docs/NEW-1-bundle-renderer.md).
+Chưa thêm database; New chỉ đọc Internal API của Admin và không tự kết nối các provider.
 Các file `.env`, môi trường ảo, `node_modules` và dữ liệu thử trong `.work` không được
 đưa vào image. Node.js chỉ dùng ở bước build CSS; container chạy bằng user không phải root.
 
@@ -125,6 +129,10 @@ Mở `http://127.0.0.1:8080/report/tiktok` hoặc `http://127.0.0.1:8080/report/
 Compose project là `kdh-report-new`, không gộp với dự án `KDH-Report` khác.
 
 ## Project structure
+
+NEW-1 bổ sung `BundleService`, `BundleViewMapper`, các view model và template chung trong
+`templates/pages/published/`. Xem [audit, danh sách file, contract, phân quyền preview và cách kiểm thử](docs/NEW-1-bundle-renderer.md).
+Luồng này tái sử dụng `AdminBundleRepository`, không dùng mock fallback và không tính lại KPI.
 
 The frontend is server-rendered Jinja2 HTML with local CSS and vanilla JavaScript.
 `templates/` and `static/` together form the frontend; Python routes, services and

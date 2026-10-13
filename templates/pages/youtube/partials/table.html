@@ -1,5 +1,11 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{{ tables(dashboard.detail_tables) }}
+{% else %}
 {% from 'pages/video/partials/helpers.html' import num, pct %}
 <div class="vd-table-scroll"><table><thead><tr><th>Video / Tiêu đề</th><th>Ngày đăng</th><th>Lượt xem</th><th>Thời gian<br>xem TB</th><th>CTR<br>Thumbnail</th><th>Subscribers<br>mới</th></tr></thead><tbody>
 {% for row in video.rows %}<tr><td><button type="button" class="vd-yt-video" data-video-detail="{{ row.id }}"><img src="/static/img/youtube/{{ row.image }}" alt="" width="48" height="32" loading="lazy"><span>{{ row.title }}</span></button></td><td>{{ row.date[8:10] }}/{{ row.date[5:7] }}/{{ row.date[:4] }}</td><td><strong>{{ num(row.views) }}</strong></td><td>{{ row.duration }}</td><td class="vd-text-green">{{ pct(row.ctr) }}</td><td class="vd-text-blue">+{{ num(row.subscribers) }}</td></tr>
 {% else %}<tr><td colspan="6" class="vd-empty">Không có video mẫu trong khoảng ngày hoặc phù hợp tìm kiếm.</td></tr>{% endfor %}
 </tbody></table></div>
+
+{% endif %}

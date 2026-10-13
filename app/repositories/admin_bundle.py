@@ -30,6 +30,10 @@ class AdminBundleUnavailableError(AdminBundleRepositoryError):
     """Admin API could not be reached."""
 
 
+class AdminBundleTimeoutError(AdminBundleUnavailableError):
+    """Admin did not respond before the configured deadline."""
+
+
 class AdminBundleUpstreamError(AdminBundleRepositoryError):
     """Admin returned an unexpected HTTP error."""
 
@@ -62,11 +66,21 @@ class AdminBundleRepository:
                 "REPORT_ADMIN_BASE_URL chưa được cấu hình."
             )
 
-        parsed = urlsplit(self.base_url)
+        try:
+            parsed = urlsplit(self.base_url)
+            parsed.port  # Validate malformed/out-of-range ports without exposing the URL.
+        except ValueError:
+            raise AdminBundleConfigError("REPORT_ADMIN_BASE_URL không hợp lệ.") from None
 
         if (
             parsed.scheme not in {"http", "https"}
-            or not parsed.netloc
+            or not parsed.hostname
+            or any(ord(char) < 33 for char in self.base_url)
+            or "\\" in self.base_url
+            or parsed.username is not None
+            or parsed.password is not None
+            or parsed.query
+            or parsed.fragment
         ):
             raise AdminBundleConfigError(
                 "REPORT_ADMIN_BASE_URL không hợp lệ."
@@ -130,10 +144,14 @@ class AdminBundleRepository:
                 params=params,
                 headers=headers,
             )
-        except httpx.RequestError as exc:
+        except httpx.TimeoutException:
+            raise AdminBundleTimeoutError(
+                "Hết thời gian chờ KDH-Report-Admin."
+            ) from None
+        except httpx.RequestError:
             raise AdminBundleUnavailableError(
                 "Không thể kết nối KDH-Report-Admin."
-            ) from exc
+            ) from None
 
         if response.status_code == 401:
             raise AdminBundleAuthError(
@@ -150,7 +168,7 @@ class AdminBundleRepository:
                 "Report Bundle chưa có immutable snapshot hợp lệ."
             )
 
-        if response.status_code >= 400:
+        if response.status_code != 200:
             raise AdminBundleUpstreamError(
                 "KDH-Report-Admin trả về lỗi "
                 f"HTTP {response.status_code}."
@@ -158,15 +176,18 @@ class AdminBundleRepository:
 
         try:
             payload = response.json()
-        except ValueError as exc:
+        except ValueError:
             raise AdminBundleContractError(
                 "KDH-Report-Admin không trả về JSON hợp lệ."
-            ) from exc
+            ) from None
 
         self._validate_contract(
             payload,
             expected_report_id=report_id,
         )
+
+        if revision is not None and payload['report']['revision'] != revision:
+            raise AdminBundleContractError("report.revision không khớp revision được yêu cầu.")
 
         return payload
 
@@ -183,6 +204,7 @@ class AdminBundleRepository:
                 params=params,
                 headers=headers,
                 timeout=self.timeout_seconds,
+                follow_redirects=False,
             )
 
         with httpx.Client(
@@ -192,6 +214,7 @@ class AdminBundleRepository:
                 url,
                 params=params,
                 headers=headers,
+                follow_redirects=False,
             )
 
     def _validate_contract(
@@ -252,7 +275,7 @@ class AdminBundleRepository:
                 "report.revision không hợp lệ."
             )
 
-        if report.get("status") not in self.PUBLISHED_STATUSES:
+        if not isinstance(report.get("status"), str) or report["status"] not in self.PUBLISHED_STATUSES:
             raise AdminBundleContractError(
                 "Report-New chỉ được đọc "
                 "provisional hoặc final bundle."

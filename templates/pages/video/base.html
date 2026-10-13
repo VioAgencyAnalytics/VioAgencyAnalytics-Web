@@ -1,12 +1,12 @@
 {% extends 'layouts/dashboard.html' %}
 {% block page_styles %}<link rel="stylesheet" href="/static/css/pages/video.css">{% endblock %}
-{% block page_script %}<script src="/static/js/pages/video.js" defer></script>{% endblock %}
+{% block page_script %}{% if dashboard is not defined %}<script src="/static/js/pages/video.js" defer></script>{% endif %}{% endblock %}
 {% block content %}
 <div id="video-dashboard" class="vd-dashboard vd-{{ video.channel }}" data-channel="{{ video.channel }}">
   {% block video_content %}{% endblock %}
-  <footer class="vd-footer"><span><span class="material-symbols-outlined" aria-hidden="true">api</span>{{ video.notice }}</span><span>Cập nhật mẫu: 02/10/2026 15:30</span></footer>
+  {% if dashboard is defined %}<footer class="text-body-sm text-outline">Nguồn: snapshot Admin · Revision {{ bundle.revision }}</footer>{% else %}<footer class="vd-footer"><span><span class="material-symbols-outlined" aria-hidden="true">api</span>{{ video.notice }}</span><span>Cập nhật mẫu: 02/10/2026 15:30</span></footer>{% endif %}
 </div>
-<dialog id="vd-filter-dialog" class="dashboard-dialog" aria-labelledby="vd-filter-title"><form id="vd-filter-form">
+{% if dashboard is not defined %}<dialog id="vd-filter-dialog" class="dashboard-dialog" aria-labelledby="vd-filter-title"><form id="vd-filter-form">
   <h2 id="vd-filter-title">{{ 'Lọc chiến dịch TikTok' if video.channel == 'tiktok' else 'Tìm video YouTube' }}</h2>
   <p>Bộ lọc áp dụng cho bảng chi tiết. Chỉ số tổng quan vẫn phản ánh toàn kỳ.</p>
   <label>Tìm kiếm<input id="vd-query" type="search" maxlength="200" placeholder="Tiêu đề, mã chiến dịch…"></label>
@@ -17,5 +17,5 @@
 </form></dialog>
 <dialog id="vd-detail-dialog" class="dashboard-dialog vd-wide-dialog" aria-labelledby="vd-detail-title"><h2 id="vd-detail-title"></h2><div id="vd-detail-body"></div><div class="dialog-actions"><button type="button" class="confirm-button" data-close-dialog>Đóng</button></div></dialog>
 <dialog id="vd-plan-dialog" class="dashboard-dialog vd-wide-dialog" aria-labelledby="vd-plan-title"><form id="vd-plan-form"><h2 id="vd-plan-title">Kế hoạch nội dung YouTube</h2><p>Ghi nhận lựa chọn cho bản mẫu trên trình duyệt này.</p><label class="vd-check"><input type="checkbox" name="qa">Sản xuất series Q&amp;A 1-1 cùng bác sĩ</label><label class="vd-check"><input type="checkbox" name="cta">Tối ưu End Screen và link đặt lịch</label><label class="vd-check"><input type="checkbox" name="seo">Tối ưu SEO video Tiêm chủng &amp; Dinh dưỡng</label><p id="vd-plan-error" class="form-error" hidden></p><div class="dialog-actions"><button type="button" data-close-dialog>Hủy</button><button type="submit" class="confirm-button">Lưu lựa chọn</button></div></form></dialog>
-{% endblock %}
-{% block scripts %}<script id="video-data" type="application/json">{{ video | tojson }}</script>{% endblock %}
+{% endif %}{% endblock %}
+{% block scripts %}{% if dashboard is not defined %}<script id="video-data" type="application/json">{{ video | tojson }}</script>{% endif %}{% endblock %}

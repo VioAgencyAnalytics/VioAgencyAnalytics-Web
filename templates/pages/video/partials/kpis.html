@@ -1,3 +1,7 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{{ kpis(dashboard.channel) }}
+{% else %}
 {% from 'pages/video/partials/helpers.html' import num, pct, compact, icon %}
 {% for metric in video.metrics %}
 <article class="vd-card vd-kpi"><div class="vd-kpi-label"><span>{{ metric.label }}</span>{{ icon(metric.icon) }}</div>
@@ -6,3 +10,5 @@
   {% if video.channel == 'youtube' %}<div class="vd-kpi-foot"><span>{{ metric.source }}</span><span>{{ metric.assessment }}</span></div>{% endif %}
 </article>
 {% endfor %}
+
+{% endif %}
