@@ -39,7 +39,7 @@
             </span>
             <span class="font-label-sm text-label-sm text-outline">
                 Bản quyền KDH Analytics
-{% if dashboard is defined and viewer_mode %}<div class="snapshot-session"><a href="/reports">Báo cáo</a><form method="post" action="/logout"><input type="hidden" name="csrf" value="{{ csrf }}"><button type="submit">Đăng xuất</button></form></div>{% endif %}
+{% if dashboard is defined and viewer_mode %}<div class="snapshot-session"><a href="/reports">Về Admin</a><form method="post" action="/logout"><input type="hidden" name="csrf" value="{{ csrf }}"><button type="submit">Kết thúc phiên xem</button></form></div>{% endif %}
             </span>
         </div>
     </div>

@@ -1,13 +1,13 @@
-"""Viewer login and report access; no service credential reaches the browser."""
+"""Dashboard access through Admin sessions; New never collects credentials."""
 import re
 import secrets
-from dataclasses import asdict
-from urllib.parse import parse_qs, quote
+from urllib.parse import parse_qs, urlencode
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
 
 from app.bundle_safety import check_safe_payload
+from app.admin_access import admin_entry
 from app.config import get_settings
 from app.repositories.admin_bundle import AdminBundleConfigError, AdminBundleContractError
 from app.repositories.viewer import AdminViewerRepository, ViewerError
@@ -29,8 +29,11 @@ def repository(request: Request, settings=Depends(get_settings)):
         raise ViewerError(503, 'Chưa cấu hình kết nối báo cáo với Admin.') from None
 
 
-def next_path(value):
-    return value if isinstance(value, str) and re.fullmatch(r'/(?:reports(?:/rpt_[a-f0-9]{32})?|internal-preview/[a-f0-9]{32})(?:\?revision=[1-9][0-9]{0,8})?', value) else '/reports'
+def resume_report(target, revision=None):
+    scope = {'mode': 'published' if revision is not None else 'preview', 'target_id': target}
+    if revision is not None:
+        scope['revision'] = revision
+    return RedirectResponse('/auth/handoff/start?' + urlencode(scope), 303, headers=HEADERS)
 
 
 def error_page(request, error):
@@ -70,27 +73,14 @@ def safe_json(response, settings):
         raise ViewerError(502, 'Dữ liệu báo cáo chưa đúng cấu trúc hoặc chứa trường không được phép hiển thị.') from None
 
 
-@router.get('/login')
-def login_page(request: Request):
-    nonce = secrets.token_urlsafe(32)
-    response = templates.TemplateResponse(request=request, name='pages/published/login.html',
-        context={'title': 'Đăng nhập báo cáo', 'csrf': nonce, 'next': next_path(request.query_params.get('next'))}, headers=HEADERS)
-    response.set_cookie(CSRF, nonce, httponly=True, samesite='lax', secure=request.url.scheme == 'https', max_age=28800)
-    return response
-
-
-@router.post('/login')
-async def login(request: Request, settings=Depends(get_settings)):
+@router.get('/')
+@router.get('/login', include_in_schema=False)
+@router.get('/reports')
+def admin_selection(request: Request, settings=Depends(get_settings)):
+    # Old bookmarks remain usable, but authentication and selection live on Admin.
+    # Query strings (including arbitrary next URLs) never select the redirect host.
     try:
-        data = await form(request)
-        email, password = data.get('email', ''), data.get('password', '')
-        if not email or len(email) > 254 or not password or len(password) > 256:
-            raise ViewerError(400, 'Nhập email và mật khẩu hợp lệ.')
-        upstream = repository(request, settings)
-        session = upstream.login(email, password)
-        response = RedirectResponse(next_path(data.get('next')), status_code=303, headers=HEADERS)
-        response.set_cookie(SESSION, session, httponly=True, samesite='lax', secure=request.url.scheme == 'https', max_age=28800)
-        return response
+        return RedirectResponse(admin_entry(settings), 303, headers=HEADERS)
     except ViewerError as exc:
         return error_page(request, exc)
 
@@ -98,30 +88,16 @@ async def login(request: Request, settings=Depends(get_settings)):
 @router.post('/logout')
 async def logout(request: Request, settings=Depends(get_settings)):
     try:
+        destination = admin_entry(settings)
         await form(request)
         repository(request, settings).call('DELETE', '/api/internal/v1/viewer-session')
     except ViewerError as exc:
         if exc.status != 401:
             return error_page(request, exc)
-    response = RedirectResponse('/login', status_code=303, headers=HEADERS)
+    response = RedirectResponse(destination, status_code=303, headers=HEADERS)
     response.delete_cookie(SESSION)
     response.delete_cookie(CSRF)
     return response
-
-
-@router.get('/reports')
-def reports(request: Request, settings=Depends(get_settings)):
-    try:
-        response = safe_json(repository(request, settings).call('GET', '/api/internal/v1/viewer/report-bundles'), settings)
-        if not isinstance(response.get('reports'), list) or any(
-                not isinstance(item, dict) or not isinstance(item.get('report_id'), str)
-                or not re.fullmatch(r'rpt_[a-f0-9]{32}', item['report_id']) or type(item.get('revision')) is not int
-                or item['revision'] < 1 or item.get('status') not in ('provisional', 'final') for item in response['reports']):
-            raise ViewerError(502, 'Danh sách báo cáo không hợp lệ.')
-        return templates.TemplateResponse(request=request, name='pages/published/list.html',
-            context={'title': 'Báo cáo được cấp quyền', 'reports': response['reports'], 'csrf': request.cookies.get(CSRF, '')}, headers=HEADERS)
-    except ViewerError as exc:
-        return RedirectResponse('/login', status_code=303, headers=HEADERS) if exc.status == 401 else error_page(request, exc)
 
 
 @router.get('/reports/{report_id}')
@@ -133,7 +109,9 @@ def report(request: Request, report_id: str, settings=Depends(get_settings)):
             raise ViewerError(400, 'Mã báo cáo hoặc bộ lọc không hợp lệ.')
         if revision_text is not None and not re.fullmatch(r'[1-9][0-9]{0,8}', revision_text):
             raise ViewerError(400, 'Revision không hợp lệ.')
-        bundle = BundleService(repository(request, settings)).get_report(report_id, int(revision_text) if revision_text else None)
+        if revision_text is None:
+            return admin_selection(request, settings)
+        bundle = BundleService(repository(request, settings)).get_report(report_id, int(revision_text))
         selected = request.query_params.get('section', bundle.default_section)
         if selected not in [section.key for section in bundle.sections]:
             raise ViewerError(404, 'Section không nằm trong báo cáo được xuất bản.')
@@ -142,8 +120,7 @@ def report(request: Request, report_id: str, settings=Depends(get_settings)):
             context={**context, 'viewer_mode': True, 'csrf': request.cookies.get(CSRF, '')}, headers=HEADERS)
     except ViewerError as exc:
         if exc.status == 401:
-            destination = next_path(request.url.path + ('?revision=' + revision_text if revision_text else ''))
-            return RedirectResponse('/login?next=' + quote(destination, safe=''), status_code=303, headers=HEADERS)
+            return resume_report(report_id, revision_text)
         return error_page(request, exc)
     except BundleServiceError as exc:
         return error_page(request, exc)
@@ -168,5 +145,5 @@ def internal_preview(request: Request, candidate_id: str, settings=Depends(get_s
             context={**context, 'viewer_mode': True, 'csrf': request.cookies.get(CSRF, '')}, headers=HEADERS)
     except ViewerError as exc:
         if exc.status == 401:
-            return RedirectResponse('/login?next=' + quote(request.url.path, safe=''), status_code=303, headers=HEADERS)
+            return resume_report(candidate_id)
         return error_page(request, exc)

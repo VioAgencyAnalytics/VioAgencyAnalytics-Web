@@ -98,3 +98,5 @@ def test_canonical_host_before_browser_binding_and_clean_callback(handoff):
     result = client.get('/auth/handoff/callback')
     assert result.status_code == 200 and result.headers['referrer-policy'] == 'no-referrer'
     assert 'https://' not in result.text and '/static/js/pages/handoff.js' in result.text
+    assert 'type="password"' not in result.text
+    assert 'id="handoff-reset"' in result.text and client.cookies.get(viewer.CSRF)

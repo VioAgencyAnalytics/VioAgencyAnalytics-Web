@@ -1,6 +1,6 @@
 # Admin → New: chuyển phiên và dữ liệu trên dashboard hiện có
 
-Cập nhật 13/10/2026. Working tree: `D:\KDH-Report-All\KDH-Report-Admin` và
+Cập nhật 14/10/2026. Working tree: `D:\KDH-Report-All\KDH-Report-Admin` và
 `D:\KDH-Report-All\KDH-Report-New`. Không phải hai đường dẫn cũ ở ổ D gốc.
 
 ## Hành vi
@@ -12,10 +12,23 @@ và không hỏi lại mật khẩu khi cùng trình duyệt còn phiên Admin h
 
 Admin hết phiên: đăng nhập trên trang Admin rồi quay lại đúng giao dịch/báo cáo.
 Giao dịch sống 10 phút; quá thời gian phải mở lại từ Admin. Không tự chọn revision mới nhất.
+New không còn form email/mật khẩu, `POST /login` hoặc backend chuyển tiếp mật khẩu.
+`/`, `/reports` và bookmark `GET /login` cũ chỉ chuyển về `/viewer/reports` tại Admin.
+Admin dùng phiên hiện có để mở `/marketing`; chưa có phiên thì đăng nhập tại Admin
+rồi tới màn chọn báo cáo. Không render danh sách báo cáo trung gian ở New.
+Trang đăng nhập này là **giao diện Admin gốc**: dùng lại `index.html`, `loginView`
+và CSS đã thiết kế. Đã bỏ form handoff trắng/không có giao diện ngày 14/10;
+cả chọn báo cáo và nối lại phiên hết hạn đều dùng cùng trang login cũ.
+
+Mở URL dashboard đã pin revision khi phiên Viewer hết hạn sẽ bắt đầu lại handoff:
+Admin còn phiên thì dashboard mở tự động; hết phiên thì đăng nhập tại Admin rồi quay
+về đúng report/revision. URL thiếu revision quay về Admin để chọn, không tự lấy bản mới nhất.
+Footer có **Về Admin** và **Kết thúc phiên xem**; kết thúc phiên xem không đăng xuất
+phiên Admin gốc. Xung đột tài khoản có nút kết thúc phiên xem rõ ràng, không tự ghi đè.
+
 Draft không có nút mở published; giao diện giải thích điều kiện xuất bản còn thiếu.
 **Xem trước nội bộ** đi qua `/internal-preview/{candidate_id}`, có nhãn chưa xuất bản,
-chỉ quyền Admin, không tạo publication hay grant. `/login` và `/reports` vẫn phục vụ
-người truy cập trực tiếp; quyền khách hàng do Admin kiểm tra.
+chỉ quyền Admin, không tạo publication hay grant. Quyền người xem vẫn do Admin kiểm tra.
 
 Các trang `/reports/...` dùng lại `layouts/dashboard.html` và sáu template gốc:
 Overview, SEO, Facebook Ads, Facebook Content, TikTok, YouTube. Giữ CSS/font/icon,
@@ -46,9 +59,9 @@ trong cùng dashboard shell.
    role, grant và guard. Khóa user, thu hồi phiên/grant hoặc mất quyền chặn lần đọc kế tiếp.
    Đây không phải cơ chế đẩy để xóa nội dung đã tải trong tab đang mở.
 
-New đang có tài khoản khác: trả **409**, giữ nguyên tài khoản đó, hướng dẫn đăng xuất
-New rồi mở lại từ Admin. Cùng tài khoản: đổi phiên được ủy quyền cũ sang phiên mới.
-Đăng xuất New với token được ủy quyền chỉ thu hồi token đó; đăng xuất Admin làm token
+New đang có phiên của tài khoản khác: trả **409**, giữ nguyên phiên đó và cho phép
+kết thúc phiên xem rồi mở lại từ Admin. Cùng tài khoản: đổi phiên được ủy quyền cũ sang phiên mới.
+Kết thúc phiên xem với token được ủy quyền chỉ thu hồi token đó; đăng xuất Admin làm token
 được ủy quyền mất hiệu lực. Token bị pin phạm vi nên mở report/revision khác cần một
 giao dịch mới; danh sách của token này chỉ chứa phạm vi đó.
 
@@ -129,6 +142,35 @@ không được dùng để tự tạo tổng; các dòng giữ nguyên phạm v
 
 ## Kiểm thử và ảnh
 
+Đợt bỏ đăng nhập riêng New dùng `tests/test_viewer.py`, `tests/test_handoff.py`,
+Admin `tests/test_viewer_handoff.py` và browser `scripts/handoff-browser.mjs`.
+Log mới có tiền tố `admin-only-`; kết quả browser tại
+`test-results/dashboard-binding/admin-only-result.json` bên Admin. Browser kiểm tra
+root/login/list cũ về Admin, không gửi mật khẩu tới New, Viewer hết hạn tự nối lại,
+phiên Admin hết hạn quay lại đúng revision, xung đột tài khoản và kết thúc phiên xem.
+
+Kết quả đầy đủ của đợt này (New 13/10; Admin/HTTP/Chrome chạy lại 14/10 sau sửa login):
+
+- **Admin Python: 338 PASS / 0 FAIL / 0 SKIP**, cả SQLite và PostgreSQL tách biệt.
+  Log Admin `test-results/restored-login-python.txt` (675,427 giây).
+- **New: 225 PASS / 0 FAIL / 0 SKIP**, bốn deprecation warning hiện có.
+  Log New `.work/admin-only-tests.txt`.
+- **Admin UI: 69 PASS / 0 FAIL / 0 SKIP**, log `test-results/restored-login-ui.txt`.
+- **HTTP E2E: 1 PASS**, log `test-results/restored-login-http.txt`.
+- **Chrome: PASS**, log `test-results/restored-login-browser.txt`, không có lỗi JavaScript.
+  Bao gồm dashboard 1440/768/390, mở đúng revision không login lần hai, nối lại phiên
+  Viewer, hết phiên Admin rồi trở lại báo cáo, thu hồi phiên, 409 và kết thúc phiên xem,
+  preview, đổi series làm chart đổi hình, filter/export không gọi mock.
+- JS syntax và `git diff --check` hai repo đạt.
+
+Ảnh mới: `admin-only-login-at-admin.png`, `admin-only-identity-conflict.png`,
+`e2e-admin-selected.png`, `e2e-report-{1440,768,390}.png` trong thư mục ảnh Admin ở dưới.
+Runner hiện hành là `scripts/handoff-browser.mjs`; cặp `tests/run_marketing_browser.py`
+và `tests/marketing.browser.cjs` là QA lịch sử của giao diện/login trước handoff,
+không dùng làm bằng chứng nghiệm thu luồng hiện tại.
+
+Các kết quả bên dưới là mốc kiểm thử handoff trước khi bỏ đăng nhập riêng:
+
 Chạy với SQLite tạm, PostgreSQL `kdh-handoff-qa-postgres` riêng ở 5434 dùng tmpfs,
 HTTP fixture Admin 8093/New 8084 và Chrome headless profile riêng. Không ghi fixture
 vào DB/volume KinderHealth, không sử dụng cookie trình duyệt của người dùng.
@@ -182,25 +224,56 @@ Mở tab cũ của một revision vẫn đọc snapshot bất biến; không syn
 
 ## Build và đưa vào runtime
 
-Đợt này chỉ build image kiểm thử `kdh-report-admin:handoff-qa` và
-`kdh-report-new:handoff-qa`; không thay container/volume đang dùng. Trước khi nâng cấp
-runtime: xác nhận backup DB đọc được, giữ các file local, kiểm tra các cặp URL và
-service token server, giữ nguyên ENCRYPTION_KEY. Không `down -v`.
+Ngày **14/10/2026**, đã build image và cập nhật container đang dùng:
+`kdh-report-admin-admin-1` (8090), `kdh-report-new-app-1` (8080). Cả hai và PostgreSQL
+đều healthy. Không recreate PostgreSQL; giữ volume, `.env`, ENCRYPTION_KEY và service token.
 
-Lệnh đúng service hiện có, chạy khi đã sẵn sàng nâng cấp:
+Backup DB trước triển khai ở Admin:
+`test-results/backups/postgres-before-admin-only-20261014-082514.dump`
+(1.116.320 byte, 171 archive entries). Đã kiểm tra danh mục và đọc toàn bộ payload
+bằng `pg_restore --file=/dev/null`, không restore vào DB thật. Image trước triển khai
+được giữ với tag `kdh-report-admin:before-admin-only-20261014-082514` và
+`kdh-report-new:before-admin-only-20261014-082514`.
+
+Đối chiếu trước/sau: 2 user, 9 Dataset, 1 Bundle provisional, 7 section, 10 source
+snapshot, 900 daily metric; migration 1–8 đầy đủ. Không tạo báo cáo, release hay grant
+để thử trên runtime. Hash `.env` và file Meta đã stage giữ nguyên; file ứng dụng trong
+container khớp working tree. Docker có thể biểu diễn cùng bind mount Windows bằng
+`D:/...` hoặc `/run/desktop/mnt/host/d/...`; đã chuẩn hóa đường dẫn khi đối chiếu.
+
+HTTP runtime PASS: `/`, `/login`, `/reports` về Admin; `POST /login` trả 405;
+handoff/callback có mặt; URL report hết phiên vẫn giữ đúng revision; Internal API
+cần xác thực; các route mock production trả 404. Log trong Admin:
+`test-results/admin-only-deploy-before.json`, `admin-only-deploy-after.json`,
+`admin-only-runtime-smoke.json`. Lượt sửa giao diện đăng nhập sau đó đã rebuild
+riêng Admin và kiểm bằng Chrome trực tiếp runtime: các điểm vào từ New có cùng
+form, bố cục và CSS với Admin gốc trên desktop/mobile. Log mới
+`test-results/restored-login-runtime-browser.txt`, ảnh
+`test-results/dashboard-binding/runtime-restored-admin-login-{1440,390}.png`;
+HTTP/hash container: `test-results/restored-login-runtime-smoke.json`.
+Backup mới `test-results/backups/postgres-before-restored-login-20261014-085150.dump`
+đã đọc toàn bộ; dữ liệu/volume/`.env`/image New giữ nguyên.
+Luồng click có đăng nhập kiểm trên Chrome fixture E2E, không dùng tài khoản/phiên
+của người dùng trên DB thật; không coi đó là nghiệm thu dữ liệu/provider thật.
+
+Lệnh đã dùng sau khi xác nhận backup/cấu hình (không `down -v`):
 
 ```powershell
 Set-Location D:\KDH-Report-All\KDH-Report-Admin
-docker compose up -d --build admin
+docker compose build admin
+docker compose up -d --no-deps admin
 Set-Location D:\KDH-Report-All\KDH-Report-New
-docker compose up -d --build app
+docker compose build app
+docker compose up -d --no-deps app
 ```
 
-Sau build kiểm tra module/router trong image/container, migration 8 và đường
-`/auth/handoff/start`, `/auth/handoff/callback`, `/viewer/authorize`. Sau đó thử click
-thực từ phiên Admin hợp lệ với report đã được phép xuất bản. Healthy đơn thuần không
-thay cho kiểm tra auth, quyền, guard, dashboard và request mạng trên trình duyệt.
+Khi kiểm trên trình duyệt người dùng: mở `http://localhost:8090/viewer/reports`, đăng
+nhập Admin, chọn report/revision được guard cho phép, bấm **Mở báo cáo**. Dashboard
+New phải mở thẳng; thiếu quyền/điều kiện xuất bản vẫn bị chặn.
 
 Để lặp lại QA local: chạy `scripts/serve_handoff_qa.py` mỗi repo, rồi trong Admin chạy
 `node scripts/handoff-browser.mjs`. Ảnh đối chiếu: chạy New `scripts/serve_dashboard_qa.py`,
 sau đó Admin `node scripts/dashboard-browser.mjs paired`. Các server chỉ bind loopback.
+Kiểm riêng trang đăng nhập trên runtime đang chạy: trong Admin chạy
+`node scripts/handoff-browser.mjs --runtime-login`. Lệnh dùng profile Chrome tạm,
+so sánh login gốc với điểm vào từ New, không gửi mật khẩu hay POST lên runtime.

@@ -1,6 +1,6 @@
 from copy import deepcopy
 import pytest
-from tests.test_viewer import env, sign_in, REPORT_ID
+from tests.test_viewer import env, use_viewer_session, REPORT_ID
 from app.mappers.bundle import BundleViewMapper
 from app.mappers.dashboard import dashboard_context, display
 from tests.bundle_fixtures import published_bundle
@@ -13,7 +13,7 @@ def test_original_channel_templates_are_bound_and_mock_scripts_absent(env, secti
     bundle['sections'][section] = raw
     bundle['navigation']['sections'] = [section]
     bundle['navigation']['default_section'] = section
-    sign_in(client)
+    use_viewer_session(client)
     response = client.get('/reports/'+REPORT_ID+'?revision=2&section='+section)
     assert response.status_code == 200
     assert 'dashboard-sidebar' in response.text and 'snapshot-data' in response.text
@@ -48,7 +48,7 @@ def test_no_organic_users_or_marketing_totals_inferred():
 
 
 def test_forbidden_section_and_submenu_preserve_revision(env):
-    client, calls, _, _ = env; sign_in(client)
+    client, calls, _, _ = env; use_viewer_session(client)
     response = client.get('/reports/'+REPORT_ID+'?revision=2&section=seo&view=thu-hang-tu-khoa')
     assert response.status_code == 200 and 'revision=2&amp;section=seo&amp;view=thu-hang-tu-khoa' in response.text
     assert client.get('/reports/'+REPORT_ID+'?revision=2&section=youtube').status_code == 404

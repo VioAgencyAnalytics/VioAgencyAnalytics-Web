@@ -6,6 +6,16 @@
   const $ = selector => document.querySelector(selector);
   const $$ = selector => [...document.querySelectorAll(selector)];
   const note = text => { const box = $('#dashboard-toast'); box.textContent = text; box.hidden = false; setTimeout(() => { box.hidden = true; }, 6000); };
+  $('form[action="/logout"]')?.addEventListener('submit', async event => {
+    event.preventDefault();
+    try {
+      // Keep the CSRF form on New; navigate to Admin only after revocation.
+      const response = await fetch('/logout', {method: 'POST', redirect: 'manual',
+        body: new URLSearchParams(new FormData(event.currentTarget))});
+      if (response.type === 'opaqueredirect') location.replace('/reports');
+      else note('Chưa kết thúc được phiên xem. Tải lại trang rồi thử lại.');
+    } catch { note('Chưa kết nối được hệ thống. Vui lòng thử lại.'); }
+  });
   $$('[data-close-dialog]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
   $$('[data-bundle-chart]').forEach(element => {
     const chart = JSON.parse(element.querySelector('script').textContent);

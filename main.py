@@ -2,7 +2,7 @@
 from pathlib import Path
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.routes.pages import router as pages_router
@@ -91,11 +91,6 @@ async def production_reports_only(request: Request, call_next):
         )
 
     return await call_next(request)
-
-@app.get("/")
-def root_redirect():
-    return RedirectResponse(url="/login" if get_runtime_mode().app_env == "production" else "/overview")
-
 
 if __name__ == "__main__":
     import uvicorn

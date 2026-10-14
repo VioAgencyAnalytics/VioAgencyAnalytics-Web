@@ -30,21 +30,14 @@ class AdminViewerRepository(AdminBundleRepository):
             raise ViewerError(503, 'Chưa kết nối được hệ thống báo cáo. Vui lòng thử lại.') from None
         if response.status_code != 200:
             messages = {400: 'Giao dịch đã hết hạn, đã dùng hoặc không hợp lệ. Mở lại báo cáo từ Admin.',
-                        409: 'New đang đăng nhập bằng tài khoản khác hoặc snapshot chưa hợp lệ. Đăng xuất New rồi mở lại báo cáo từ Admin.',
-                        401: 'Email, mật khẩu hoặc phiên đăng nhập chưa hợp lệ.',
+                        409: 'Phiên xem thuộc tài khoản khác hoặc snapshot chưa hợp lệ. Kết thúc phiên xem rồi mở lại báo cáo từ Admin.',
+                        401: 'Phiên Admin đã hết hạn hoặc không còn hợp lệ.',
                         403: 'Tài khoản không có quyền mở nội dung này.',
                         404: 'Không tìm thấy báo cáo trong phạm vi được cấp.',
                         429: 'Thử đăng nhập quá nhiều lần. Vui lòng chờ rồi thử lại.'}
             raise ViewerError(response.status_code if response.status_code in messages else 502,
                               messages.get(response.status_code, 'Hệ thống chưa trả được báo cáo hợp lệ.'))
         return response
-
-    def login(self, email, password):
-        response = self.call('POST', '/api/auth/login', {'email': email, 'password': password})
-        session = response.cookies.get('kdh_session')
-        if not session:
-            raise ViewerError(502, 'Hệ thống chưa cấp phiên đăng nhập.')
-        return session
 
     def get_bundle(self, report_id, revision=None):
         payload = super().get_bundle(report_id, revision)

@@ -1,4 +1,4 @@
-"""Customer routes use separate end-user sessions AND the backend credential."""
+"""New renders Admin-authorized reports without a separate login surface."""
 import json
 from types import SimpleNamespace
 
@@ -19,7 +19,8 @@ SESSION = 'isolated-viewer-session'
 @pytest.fixture
 def env(monkeypatch):
     settings = Settings(_env_file=None, app_env='test', debug=False,
-                        report_admin_base_url='https://admin.invalid', report_service_token=SERVICE_TOKEN)
+                        report_admin_base_url='https://internal.invalid', report_service_token=SERVICE_TOKEN,
+                        report_admin_public_url='https://admin.invalid', report_new_public_url='https://new.invalid')
     bundle = published_bundle()
     bundle['report']['id'] = REPORT_ID
     calls, replies = [], {}
@@ -30,8 +31,7 @@ def env(monkeypatch):
         path = request.url.path
         if path in replies:
             return replies[path]
-        if path == '/api/auth/login':
-            return httpx.Response(200, json={}, headers={'Set-Cookie': 'kdh_session=' + SESSION + '; HttpOnly; Path=/'})
+        assert path != '/api/auth/login', 'New must never forward a password to Admin'
         if request.headers.get('X-KDH-Viewer-Session') != SESSION:
             return httpx.Response(401)
         if path == '/api/internal/v1/viewer-session':
@@ -51,36 +51,46 @@ def env(monkeypatch):
     upstream.close()
 
 
-def sign_in(client, next_url='/reports'):
-    page = client.get('/login')
-    assert 'HttpOnly' in page.headers['set-cookie'] and 'Secure' in page.headers['set-cookie']
-    assert page.headers['referrer-policy'] == 'same-origin'
-    csrf = client.cookies.get(viewer.CSRF)
-    result = client.post('/login', data={'csrf': csrf, 'email': 'viewer@example.test', 'password': 'test-only-password', 'next': next_url},
-                         headers={'Origin': 'https://new.invalid'}, follow_redirects=False)
-    assert result.status_code == 303
-    return result
+def use_viewer_session(client):
+    # Unit fixture only; actual session issuance is exercised by handoff/browser tests.
+    client.cookies.set(viewer.SESSION, SESSION, domain='new.invalid', path='/')
+    client.cookies.set(viewer.CSRF, 'fixture-csrf', domain='new.invalid', path='/')
 
 
-def test_login_reports_and_revision_use_server_identity_without_leaking_it(env):
+@pytest.mark.parametrize('path', ['/', '/login', '/reports', '/login?next=https://evil.invalid', '/reports?next=//evil.invalid'])
+def test_entry_routes_return_to_admin_without_a_login_or_list(env, path):
     client, calls, _, _ = env
-    assert client.get('/reports', follow_redirects=False).status_code == 303
-    result = sign_in(client, '/reports/' + REPORT_ID + '?revision=2')
-    assert result.headers['location'].endswith('?revision=2')
-    assert client.get('/reports').status_code == 200
+    response = client.get(path, follow_redirects=False)
+    assert response.status_code == 303
+    assert response.headers['location'] == 'https://admin.invalid/viewer/reports'
+    assert 'password' not in response.text and 'no-store' in response.headers['cache-control']
+    assert not calls
+
+
+def test_new_does_not_accept_login_credentials(env):
+    client, calls, _, _ = env
+    response = client.post('/login', data={'email': 'viewer@example.test', 'password': 'test-only-password'})
+    assert response.status_code == 405 and not calls
+    assert not client.cookies.get(viewer.SESSION)
+
+
+def test_report_and_revision_use_server_identity_without_leaking_it(env):
+    client, calls, _, _ = env
+    use_viewer_session(client)
     page = client.get('/reports/' + REPORT_ID + '?revision=2')
     assert page.status_code == 200 and 'DEMO' in page.text
     assert SERVICE_TOKEN not in page.text and SESSION not in page.text
     assert calls[-1].url.path == '/api/internal/v1/viewer/report-bundles/' + REPORT_ID
     assert calls[-1].url.params['revision'] == '2'
     assert 'no-store' in page.headers['cache-control']
+    assert 'Về Admin' in page.text and 'action="/login"' not in page.text
 
 
 @pytest.mark.parametrize('mode', ['no_csrf', 'wrong_csrf', 'foreign_origin', 'null_origin', 'duplicate', 'invalid_utf8'])
-def test_login_csrf_and_form_validation(env, mode):
+def test_end_viewing_session_csrf_and_form_validation(env, mode):
     client, calls, _, _ = env
-    client.get('/login')
-    data = {'email': 'test@example.test', 'password': 'test-only', 'csrf': client.cookies.get(viewer.CSRF)}
+    use_viewer_session(client)
+    data = {'csrf': client.cookies.get(viewer.CSRF)}
     headers = {}
     if mode == 'no_csrf': data.pop('csrf')
     if mode == 'wrong_csrf': data['csrf'] = 'incorrect'
@@ -88,43 +98,47 @@ def test_login_csrf_and_form_validation(env, mode):
     if mode == 'null_origin': headers['Origin'] = 'null'
     if mode in ('duplicate', 'invalid_utf8'):
         content = b'csrf=a&csrf=b' if mode == 'duplicate' else b'csrf=\xff'
-        response = client.post('/login', content=content, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+        response = client.post('/logout', content=content, headers={'Content-Type': 'application/x-www-form-urlencoded'})
     else:
-        response = client.post('/login', data=data, headers=headers)
+        response = client.post('/logout', data=data, headers=headers)
     assert response.status_code in (400, 403) and not calls
 
 
-def test_open_redirect_and_logout_session_revocation(env):
+def test_end_viewing_session_returns_to_admin(env):
     client, calls, _, _ = env
-    assert sign_in(client, '//evil.invalid').headers['location'] == '/reports'
+    use_viewer_session(client)
     denied = client.post('/logout', data={'csrf': 'wrong'})
     assert denied.status_code == 403
     response = client.post('/logout', data={'csrf': client.cookies.get(viewer.CSRF)}, follow_redirects=False)
     assert response.status_code == 303 and calls[-1].method == 'DELETE'
+    assert response.headers['location'] == 'https://admin.invalid/viewer/reports'
     assert not client.cookies.get(viewer.SESSION)
 
 
 @pytest.mark.parametrize('status', [401, 403, 404, 500])
 def test_expired_denied_or_upstream_error_is_safe(env, status):
     client, _, replies, _ = env
-    sign_in(client)
+    use_viewer_session(client)
     replies['/api/internal/v1/viewer/report-bundles/' + REPORT_ID] = httpx.Response(status, text=SERVICE_TOKEN)
-    response = client.get('/reports/' + REPORT_ID, follow_redirects=False)
+    response = client.get('/reports/' + REPORT_ID + '?revision=2', follow_redirects=False)
     assert response.status_code == {401: 303, 403: 403, 404: 404, 500: 502}[status]
     assert SERVICE_TOKEN not in response.text
+    if status == 401:
+        assert response.headers['location'] == '/auth/handoff/start?mode=published&target_id=' + REPORT_ID + '&revision=2'
 
 
-@pytest.mark.parametrize('payload', [[], {'reports': [{'report_id': '../draft', 'revision': 1, 'status': 'final'}]}, {'access_token': 'test-only'}])
-def test_invalid_or_sensitive_list_fails_closed(env, payload):
+@pytest.mark.parametrize('payload', [[], {'candidate': 'invalid'}, {'access_token': 'test-only'}])
+def test_invalid_or_sensitive_preview_fails_closed(env, payload):
     client, _, replies, _ = env
-    sign_in(client)
-    replies['/api/internal/v1/viewer/report-bundles'] = httpx.Response(200, json=payload)
-    assert client.get('/reports').status_code == 502
+    use_viewer_session(client)
+    path = '/api/internal/v1/marketing-preview/' + 'b' * 32
+    replies[path] = httpx.Response(200, json=payload)
+    assert client.get('/internal-preview/' + 'b' * 32).status_code == 502
 
 
 def test_internal_preview_stays_admin_only(env):
     client, _, replies, _ = env
-    sign_in(client)
+    use_viewer_session(client)
     path = '/api/internal/v1/marketing-preview/' + 'b' * 32
     replies[path] = httpx.Response(403)
     assert client.get('/internal-preview/' + 'b' * 32).status_code == 403
@@ -140,7 +154,7 @@ def test_production_disables_legacy_mock_and_demo_routes(env, monkeypatch, path)
     client, calls, _, _ = env
     monkeypatch.setattr(main, 'get_runtime_mode', lambda: SimpleNamespace(app_env='production'))
     assert client.get(path).status_code == 404
-    assert client.get('/', follow_redirects=False).headers['location'] == '/login'
+    assert client.get('/', follow_redirects=False).headers['location'] == 'https://admin.invalid/viewer/reports'
     assert client.get('/api/v1/health').status_code == 200 and not calls
 
 
@@ -149,3 +163,26 @@ def test_bad_report_scope_cannot_call_upstream(env):
     for suffix in ('?revision=0', '?revision=1&revision=2', '?client_id=other'):
         assert client.get('/reports/' + REPORT_ID + suffix).status_code == 400
     assert not calls
+
+
+def test_unpinned_report_requires_selection_in_admin(env):
+    client, calls, _, _ = env
+    response = client.get('/reports/' + REPORT_ID, follow_redirects=False)
+    assert response.headers['location'] == 'https://admin.invalid/viewer/reports'
+    assert not calls
+
+
+def test_expired_preview_resumes_via_admin_handoff(env):
+    client, _, _, _ = env
+    response = client.get('/internal-preview/' + 'b' * 32, follow_redirects=False)
+    assert response.status_code == 303
+    assert response.headers['location'] == '/auth/handoff/start?mode=preview&target_id=' + 'b' * 32
+
+
+@pytest.mark.parametrize('origin', ['https://admin.invalid/evil', 'https://admin.invalid?next=evil',
+                                    'https://user:secret@admin.invalid', 'http://admin.invalid', 'https://admin.invalid:bad'])
+def test_invalid_admin_origin_fails_without_redirect(env, origin):
+    client, calls, _, _ = env
+    main.app.dependency_overrides[get_settings]().report_admin_public_url = origin
+    response = client.get('/', follow_redirects=False)
+    assert response.status_code == 503 and 'location' not in response.headers and not calls

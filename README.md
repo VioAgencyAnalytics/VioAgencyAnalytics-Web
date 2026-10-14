@@ -1,6 +1,6 @@
 # KDH Marketing Reporting Dashboard
 
-> Marketing integration (10/10/2026): production now uses `/login` and `/reports` with Admin-backed report/revision authorization. Legacy mock routes remain development-only. See [integration handover](docs/MARKETING_INTEGRATION.md).
+> Luồng hiện hành: **Đăng nhập Admin → Chọn báo cáo/revision → Mở báo cáo → Dashboard New**. New không có form hoặc API đăng nhập riêng. `/`, `/login` cũ và `/reports` chuyển về Admin. Xem [hướng dẫn hiện hành](docs/ADMIN_HANDOFF_DASHBOARD.md).
 
 A FastAPI + Jinja2 marketing reporting dashboard with independent demo pages and a protected renderer for published Admin Report Bundles.
 
@@ -20,10 +20,10 @@ Cài và mở Docker Desktop (Linux containers). Tại thư mục dự án, ch�
 docker compose up --build -d
 ```
 
-Mở **http://localhost:8080** (tự chuyển đến `/overview`). FE và BE của **KDH-Report-New**
+Mở **http://localhost:8080** (chuyển đến Admin để đăng nhập/chọn báo cáo). FE và BE của **KDH-Report-New**
 chạy trong container `kdh-report-new-app-1`, nhóm Compose **`kdh-report-new`**.
-Nhóm này độc lập với dự án **KDH-Report** (`kdh-report`); không dùng chung container
-hoặc network của hai dự án. Chạy lệnh trong đúng thư mục `D:\KDH-Report-New`.
+New chạy riêng và tham gia network nội bộ của **KDH-Report-Admin** để đọc Bundle.
+Khởi động Admin trước; chạy lệnh New trong `D:\KDH-Report-All\KDH-Report-New`.
 Docker tự cài thư viện Python, build Tailwind CSS và khởi động FastAPI; máy host
 không cần cài Python hoặc Node.js. Lần build đầu cần Internet để tải image và thư viện.
 Cổng mặc định là 8080 để không trùng bản uvicorn đang chạy ở cổng 8000.
@@ -39,9 +39,10 @@ Container tự khởi động lại khi Docker Engine chạy, trừ khi đã ch�
 Muốn đổi cổng trên PowerShell, đặt `$env:KDH_PORT = '8090'` trước khi chạy Compose.
 Ứng dụng mặc định chỉ được mở trên máy đang chạy Docker.
 
-Bản Docker mặc định giữ các trang dữ liệu mẫu như bản local. Luồng Report Bundle mới
-ở `/published/{report_id}` bị khóa trong production cho đến khi có viewer auth đầy đủ.
-Preview cục bộ cần cấu hình riêng theo [hướng dẫn NEW-1](docs/NEW-1-bundle-renderer.md).
+Bản Docker production chỉ phục vụ dashboard qua phiên được Admin cấp cho đúng
+`/reports/{report_id}?revision=N`. Phiên hết hạn quay về đăng nhập tại Admin rồi mở
+lại đúng báo cáo. Các trang mock và `/published/{report_id}` dành cho phát triển
+bị khóa trong production. Preview nội bộ từ Admin đi qua handoff riêng.
 Chưa thêm database; New chỉ đọc Internal API của Admin và không tự kết nối các provider.
 Các file `.env`, môi trường ảo, `node_modules` và dữ liệu thử trong `.work` không được
 đưa vào image. Node.js chỉ dùng ở bước build CSS; container chạy bằng user không phải root.

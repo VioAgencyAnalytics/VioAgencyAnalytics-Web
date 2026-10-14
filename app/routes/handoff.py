@@ -4,12 +4,13 @@ import hashlib
 import json
 import re
 import secrets
-from urllib.parse import urlencode, urlsplit
+from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse, RedirectResponse
 
 from app.config import get_settings
+from app.admin_access import public_origin
 from app.routes import viewer
 from app.routes.pages import templates
 from app.routes.published import HEADERS
@@ -17,15 +18,6 @@ from app.repositories.viewer import ViewerError
 
 router = APIRouter(tags=['viewer handoff'])
 HANDOFF_HEADERS = {**HEADERS, 'Referrer-Policy': 'no-referrer'}
-
-
-def public_origin(value):
-    value = value.rstrip('/')
-    p = urlsplit(value)
-    if (p.scheme not in ('http', 'https') or not p.hostname or p.username or p.password or p.path or p.query or p.fragment
-            or (p.scheme == 'http' and p.hostname not in ('localhost', '127.0.0.1', '::1'))):
-        raise ViewerError(503, 'URL public chưa được cấu hình hợp lệ.')
-    return value
 
 
 def binding_cookie(secure):
@@ -71,7 +63,12 @@ def start(request: Request, settings=Depends(get_settings)):
 
 @router.get('/auth/handoff/callback')
 def callback_page(request: Request):
-    return templates.TemplateResponse(request=request, name='pages/published/handoff.html', context={}, headers=HANDOFF_HEADERS)
+    csrf = request.cookies.get(viewer.CSRF) or secrets.token_urlsafe(32)
+    response = templates.TemplateResponse(request=request, name='pages/published/handoff.html',
+        context={'csrf': csrf}, headers=HANDOFF_HEADERS)
+    response.set_cookie(viewer.CSRF, csrf, httponly=True, secure=request.url.scheme == 'https',
+                        samesite='lax', max_age=28800)
+    return response
 
 
 @router.post('/auth/handoff/callback')

@@ -1,5 +1,8 @@
 # KDH-Report-New — bàn giao tích hợp Marketing
 
+> Mốc lịch sử 10/10. Luồng đăng nhập/list riêng New bên dưới đã được thay bằng
+> đăng nhập và chọn báo cáo tại Admin. Xem [luồng hiện hành](ADMIN_HANDOFF_DASHBOARD.md).
+
 Cập nhật 10/10/2026. Tiếp nối renderer local hiện có, giữ FastAPI/Jinja2/Vanilla JS. Admin Flask tại `D:\KDH-Report-Admin` sở hữu dữ liệu, tài khoản, review và publication. New không truy cập PostgreSQL Admin.
 
 ## Đường người dùng

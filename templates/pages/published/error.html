@@ -1,2 +1,2 @@
 {% extends 'pages/published/base.html' %}
-{% block content %}<div class="pb-error-page"><span class="material-symbols-outlined" aria-hidden="true">error_outline</span><h1>Chưa thể mở báo cáo</h1><p role="alert">{{ message }}</p><p>Mã lỗi: {{ code }}</p><p>Vui lòng báo người quản trị hoặc tải lại trang sau.</p></div>{% endblock %}
+{% block content %}<div class="pb-error-page"><span class="material-symbols-outlined" aria-hidden="true">error_outline</span><h1>Chưa thể mở báo cáo</h1><p role="alert">{{ message }}</p><p>Mã lỗi: {{ code }}</p><p>Vui lòng báo người quản trị hoặc tải lại trang sau.</p><a href="/reports">Về Admin để chọn báo cáo</a></div>{% endblock %}
