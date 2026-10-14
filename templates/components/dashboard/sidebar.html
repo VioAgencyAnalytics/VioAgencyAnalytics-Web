@@ -1,46 +1,40 @@
 <aside
-    class="fixed left-0 top-0 h-full w-[280px] bg-surface-container-lowest border-r border-outline-variant/40 z-50 flex flex-col justify-between shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] dashboard-sidebar"
+    class="fixed left-0 top-0 h-full w-[260px] bg-white border-r border-slate-200 z-50 flex flex-col dashboard-sidebar"
     id="dashboard-sidebar">
-    <div class="flex flex-col">
-        <div class="p-space-lg border-b border-outline-variant/30">
-            <a class="flex items-center gap-space-md group" data-path="tong-quan-toan-bo-du-an" href="{{ snapshot_home if dashboard is defined else "/overview" }}">
-                <img alt="KDH Traffic Report Logo" class="h-12 w-12 shrink-0 object-contain" height="48"
-                    src="/static/img/kdh-logo.png" width="48" />
-                <div class="flex min-w-0 flex-col">
-                    <span class="font-title-md text-title-md text-primary tracking-tight leading-tight">
-                        KDH Traffic Report
-                    </span>
-                    <span class="font-label-sm text-label-sm text-on-surface-variant leading-snug">
-                        Executive Analytics Suite
-                    </span>
-                </div>
-            </a>
-            <div class="mt-space-md p-space-sm bg-surface-container-low rounded-lg border border-outline-variant/40">
-                <div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
-                    Khách hàng:
-                </div>
-                <div class="font-title-sm text-body-sm font-semibold text-on-surface truncate">
-                    {{ bundle.client_name if dashboard is defined else "KinderHealth (Nhi khoa & Tiêm chủng)" }}
+    <!-- Brand -->
+    <div class="px-4 py-4 border-b border-slate-100 shrink-0">
+        <a class="flex items-center gap-3 group" href="{{ snapshot_home if dashboard is defined else '/overview' }}" data-path="tong-quan-toan-bo-du-an">
+            <img alt="KDH" class="h-9 w-9 shrink-0 object-contain" height="36" src="/static/img/kdh-logo.png" width="36" />
+            <div class="min-w-0">
+                <div class="text-sm font-bold text-slate-900 leading-tight tracking-tight">KDH Report</div>
+                <div class="text-xs text-slate-400 leading-tight truncate">
+                    {{ bundle.client_name if dashboard is defined else 'KinderHealth Clinic' }}
                 </div>
             </div>
-        </div>
-        <div class="px-space-md pt-space-lg pb-space-xs">
-            <span class="px-space-xs font-label-sm text-label-sm text-outline tracking-wider uppercase">
-                CHỌN BÁO CÁO
-            </span>
-        </div>
+        </a>
+    </div>
+    <!-- Nav label -->
+    <div class="px-4 pt-4 pb-1">
+        <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Báo cáo kênh</span>
+    </div>
+    <!-- Navigation -->
+    <div class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-2 pb-4" style="scrollbar-width:thin">
         {% include "components/dashboard/navigation.html" %}
     </div>
-    <div
-        class="p-space-md border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-low/50">
-        <div class="flex items-center gap-2">
-            <span aria-hidden="true" class="material-symbols-outlined text-outline text-[18px]">
-                verified
-            </span>
-            <span class="font-label-sm text-label-sm text-outline">
-                Bản quyền KDH Analytics
-{% if dashboard is defined and viewer_mode %}<div class="snapshot-session"><a href="/reports">Về Admin</a><form method="post" action="/logout"><input type="hidden" name="csrf" value="{{ csrf }}"><button type="submit">Kết thúc phiên xem</button></form></div>{% endif %}
-            </span>
+    <!-- Footer -->
+    <div class="px-4 py-3 border-t border-slate-100 shrink-0">
+        <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span class="material-symbols-outlined text-[14px] text-slate-400">verified</span>
+            <span>KDH Analytics © 2026</span>
         </div>
+        {% if dashboard is defined and viewer_mode %}
+        <div class="snapshot-session mt-2">
+            <a href="/reports" class="text-xs text-blue-600 hover:underline">← Về Admin</a>
+            <form method="post" action="/logout" class="inline ml-3">
+                <input type="hidden" name="csrf" value="{{ csrf }}">
+                <button type="submit" class="text-xs text-slate-400 hover:text-red-500">Kết thúc phiên</button>
+            </form>
+        </div>
+        {% endif %}
     </div>
 </aside>
