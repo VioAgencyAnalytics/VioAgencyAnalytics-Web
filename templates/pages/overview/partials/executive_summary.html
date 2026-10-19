@@ -1,59 +1,68 @@
-<section class="flex flex-col gap-space-md mb-space-lg" id="executive-summary">
-<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm executive-banner">
-<div class="flex flex-col gap-1">
-<div class="flex items-center gap-space-xs">
-<span class="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm uppercase tracking-wider">
-      Báo cáo đa kênh định kỳ
-     </span>
-<span class="text-outline text-label-sm">
-      •
-     </span>
-<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">
-      KinderHealth Clinic Group
-     </span>
-</div>
-<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
-     TỔNG QUAN TOÀN BỘ DỰ ÁN
-    </h1>
-<p class="font-body-md text-body-md text-on-surface-variant" id="period-description">
-     Tổng hợp hiệu quả Marketing đa kênh của KinderHealth trong kỳ báo cáo (01/09/2026 – 30/09/2026 so với kỳ trước).
-    </p>
-</div>
-<div class="flex flex-wrap items-center gap-space-sm shrink-0">
-<div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-container-low text-on-surface">
-<span aria-hidden="true" class="material-symbols-outlined text-primary text-[20px]">
-      donut_large
-     </span>
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline">
-       Tỷ lệ chuyển đổi tổng
-      </span>
-<div class="flex items-center gap-1.5">
-<span class="font-title-sm text-title-sm text-on-surface">
-        1,82%
-       </span>
-<span class="font-metric-delta text-metric-delta text-[#15803d] flex items-center bg-[#dcfce7] px-1.5 py-0.5 rounded-full">
-<span aria-hidden="true" class="material-symbols-outlined text-[14px]">
-         arrow_upward
-        </span>
-        0,24%
-       </span>
-</div>
-</div>
-</div>
-<div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-container-low text-on-surface">
-<span aria-hidden="true" class="material-symbols-outlined text-secondary text-[20px]">
-      assignment_turned_in
-     </span>
-<div class="flex flex-col">
-<span class="font-label-sm text-label-sm text-outline">
-       Đánh giá tiến độ KPI
-      </span>
-<span class="font-label-md text-label-md text-[#15803d]">
-       Đạt 114,2% kế hoạch tháng
-      </span>
-</div>
-</div>
-</div>
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<section class="mb-space-lg" id="executive-summary">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 executive-banner">
+  <div class="min-w-0">
+    <div class="flex items-center gap-2 mb-1">
+      <span class="exec-badge">Báo cáo đa kênh</span>
+      <span class="text-slate-300">•</span>
+      <span class="text-xs text-slate-500">{{ bundle.client_name }}</span>
+    </div>
+    <h1 class="exec-title">Tổng quan</h1>
+    <p class="text-sm text-slate-500 mt-0.5" id="period-description">{{ bundle.period.start }} → {{ bundle.period.end }}</p>
+  </div>
+  <div class="flex flex-wrap items-center gap-3 shrink-0">
+    {% for key,label,icon in [('marketing.conversion_rate','Tỷ lệ chuyển đổi','donut_large'),('marketing.kpi_completion','Tiến độ KPI','assignment_turned_in')] %}
+    <div class="exec-metric-card">
+      <span class="material-symbols-outlined text-blue-600 text-[18px]" aria-hidden="true">{{ icon }}</span>
+      <div>
+        <div class="exec-metric-label">{{ label }}</div>
+        <div class="text-sm font-bold text-slate-900">{% for metric in dashboard.all_metrics if metric.key == key %}{{ metric.text }}{% else %}<span class="snapshot-missing text-slate-400">–</span>{% endfor %}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 </section>
+{% else %}
+<section class="mb-space-lg" id="executive-summary">
+<div class="executive-banner">
+  <div class="min-w-0">
+    <div class="flex items-center gap-2 mb-2">
+      <span class="exec-badge"><span class="material-symbols-outlined text-[12px] mr-1">bar_chart</span>Báo cáo đa kênh</span>
+      <span class="exec-badge exec-badge--muted">KinderHealth Clinic Group</span>
+    </div>
+    <h1 class="exec-title">Tổng quan hiệu quả Marketing</h1>
+    <p class="exec-subtitle" id="period-description">
+      <span class="material-symbols-outlined text-[14px] mr-1">date_range</span>
+      01/09/2026 – 30/09/2026
+    </p>
+  </div>
+  <div class="flex flex-wrap items-center gap-3 shrink-0">
+    <div class="exec-metric-card exec-metric-card--highlight">
+      <div class="exec-metric-icon exec-metric-icon--blue">
+        <span aria-hidden="true" class="material-symbols-outlined text-[18px]">donut_large</span>
+      </div>
+      <div>
+        <div class="exec-metric-label">Tỷ lệ chuyển đổi</div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-sm font-bold text-slate-900">1,82%</span>
+          <span class="exec-delta exec-delta--up">
+            <span aria-hidden="true" class="material-symbols-outlined text-[11px]">arrow_upward</span>0,24%
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="exec-metric-card exec-metric-card--highlight">
+      <div class="exec-metric-icon exec-metric-icon--emerald">
+        <span aria-hidden="true" class="material-symbols-outlined text-[18px]">assignment_turned_in</span>
+      </div>
+      <div>
+        <div class="exec-metric-label">Tiến độ KPI</div>
+        <div class="text-sm font-bold text-emerald-600">114,2% kế hoạch</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+{% endif %}

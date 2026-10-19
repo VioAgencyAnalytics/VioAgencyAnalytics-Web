@@ -1,0 +1,48 @@
+{% macro kpis(channel) %}
+{% for metric in dashboard.kpis %}
+<article class="executive-kpi {{ 'seo-kpi-card bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] flex flex-col justify-between' if channel == 'seo' else 'flex flex-col justify-between bg-surface-container-lowest p-space-md rounded-2xl shadow-sm kpi-card' if channel == 'overview' else 'fb-kpi panel' if channel == 'facebook_ads' else 'fc-kpi-card' if channel == 'facebook_content' else 'vd-card vd-kpi' }}">
+{% if channel == 'seo' %}<div>{% endif %}
+<div class="{{ 'fb-kpi-label' if channel == 'facebook_ads' else 'fc-kpi-label' if channel == 'facebook_content' else 'vd-kpi-label' if channel in ['tiktok','youtube'] else 'flex items-center justify-between mb-2 font-label-md text-label-md text-outline uppercase tracking-wider' }}"><span>{{ metric.label }}</span>{% if channel == 'overview' %}<div class="p-2 rounded-lg bg-surface-container-low text-primary">{% endif %}<span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">{{ metric.icon }}</span>{% if channel == 'overview' %}</div>{% endif %}</div>
+{% if channel == 'overview' %}<div class="my-space-sm">{% endif %}<div class="{{ 'fb-kpi-value' if channel == 'facebook_ads' else 'fc-kpi-value' if channel == 'facebook_content' else 'vd-kpi-value' if channel in ['tiktok','youtube'] else 'font-kpi-display text-kpi-display text-on-surface tracking-tight' }}" data-snapshot-kpi="{{ metric.key }}" {% if channel == 'overview' %}data-field="{{ metric.key.split('.')[-1] }}"{% endif %}>{% if metric.value is none %}<span class="snapshot-missing">Chưa có dữ liệu</span>{% else %}{{ metric.text }} <small class="snapshot-unit">{{ metric.unit_text }}</small>{% endif %}</div>{% if channel == 'overview' %}</div>{% endif %}
+{% if channel == 'seo' %}</div>{% endif %}
+<div class="{{ 'fc-kpi-note' if channel == 'facebook_content' else 'fb-kpi-footer' if channel == 'facebook_ads' else 'vd-delta' if channel in ['tiktok','youtube'] else 'snapshot-kpi-note' }}"><span title="Giá trị của kỳ so sánh đã chốt">Kỳ trước: {{ metric.previous_text if metric.previous is not none else '—' }}</span>{% if channel != 'youtube' %}<span title="{{ metric.source }}">{{ metric.source or 'Chưa có nguồn' }}</span>{% endif %}</div>{% if channel == 'youtube' %}<div class="vd-kpi-foot"><span>{{ metric.source or 'Chưa có nguồn' }}</span></div>{% endif %}</article>
+{% endfor %}
+{% endmacro %}
+
+{% macro charts(charts=none) %}
+{% set series = dashboard.charts if charts is none else charts %}
+{% if series %}<div class="snapshot-chart-group"><label>Chỉ số <select data-snapshot-series>{% for chart in series %}<option value="{{ loop.index0 }}">{{ chart.title }} · {{ chart.source }}{% if chart.unit %} ({{ chart.unit }}){% endif %}</option>{% endfor %}</select></label>
+{% for chart in series %}<div data-bundle-chart {% if not loop.first %}hidden{% endif %}><script type="application/json">{{ chart|tojson }}</script><div class="pb-chart-surface"></div><p class="pb-chart-tooltip" role="status" hidden></p></div>{% endfor %}</div>
+{% else %}<p class="snapshot-empty">Chưa có chuỗi dữ liệu phù hợp trong snapshot này.</p>{% endif %}
+{% endmacro %}
+
+{% macro tables(tables=none) %}
+{% set data = dashboard.tables if tables is none else tables %}
+{% for table in data %}<div class="snapshot-table" data-snapshot-table>
+<div class="snapshot-table-heading"><h3>{{ table.title }} <span class="table-source">{{ table.source }}</span></h3><label>Tìm trong bảng <input type="search" data-snapshot-search aria-label="Lọc {{ table.title }}" placeholder="Nhập để tìm…"></label></div>
+{% if dashboard.channel == 'seo' and 'keyword' in table.columns|map(attribute='key')|list %}
+<label class="snapshot-rank-filter">Thứ hạng lũy kế <select data-snapshot-rank aria-label="Lọc Top K"><option value="all">Tất cả vị trí</option>{% for k in [5,10,20,30,50,100] %}<option value="{{ k }}">Top {{ k }} (1–{{ k }})</option>{% endfor %}</select></label>
+{% endif %}
+<div class="snapshot-table-scroll {{ 'fc-table-scroll' if dashboard.channel == 'facebook_content' else 'vd-table-scroll' if dashboard.channel in ['tiktok','youtube'] else '' }}" tabindex="0" role="region" aria-label="{{ table.title }}"><table class="w-full text-left border-collapse"><thead><tr>{% for column in table.columns %}<th scope="col"><button type="button" data-snapshot-sort="{{ loop.index0 }}">{{ column.label }}{% if column.unit %} ({{ column.unit }}){% endif %}</button></th>{% endfor %}</tr></thead><tbody>
+{% for row in table.rows %}<tr data-snapshot-row data-row-date="{{ row.date.value if row.date is defined and row.date.value is not none else '' }}" data-position="{{ row.position.value if row.position is defined and row.position.value is number else '' }}">{% for column in table.columns %}{% set cell = row[column.key] %}<td class="{{ 'snapshot-number' if cell.value is number else '' }}" data-value="{{ cell.value if cell.value is not none else '' }}">{% if cell.url %}<a href="{{ cell.url }}" rel="noopener noreferrer" target="_blank">{{ cell.value }}</a>{% elif loop.first %}<button class="{{ 'fc-post-title' if dashboard.channel == 'facebook_content' else 'vd-row-link' if dashboard.channel in ['tiktok','youtube'] else 'text-primary' }}" type="button" data-snapshot-detail>{{ snapshot_format(cell.value, column.unit) }}</button>{% else %}{{ snapshot_format(cell.value, column.unit) }}{% endif %}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+<div class="{{ 'fc-pagination' if dashboard.channel == 'facebook_content' else 'snapshot-pagination' }}"><span data-row-count role="status">{{ table.rows|length }} hàng</span><label>Số hàng/trang <select data-page-size><option value="10">10</option><option value="25">25</option><option value="all">Tất cả</option></select></label><button type="button" data-page-prev>Trước</button><span data-page-number>1</span><button type="button" data-page-next>Tiếp</button></div>
+{% if not table.rows %}<p class="snapshot-empty">Chưa có hàng dữ liệu.</p>{% endif %}</div>{% else %}<p class="snapshot-empty">Chưa có bảng chi tiết trong snapshot này.</p>{% endfor %}
+{% endmacro %}
+
+{% macro insights() %}
+<div class="space-y-4">{% for evidence in dashboard.evidence %}<article class="bg-surface-container-low p-3.5 rounded-lg border-l-4 border-primary"><h4>{{ evidence.claim or evidence.metric or 'Bằng chứng đã duyệt' }}</h4><p>{{ evidence.source or '' }} · {{ snapshot_format(evidence.before) }} → {{ snapshot_format(evidence.after) }}</p></article>{% else %}<p class="snapshot-empty">Chưa có nhận định được phép công bố.</p>{% endfor %}
+{% for opportunity in dashboard.opportunities %}<article class="bg-surface-container-low p-3.5 rounded-lg border-l-4 border-secondary"><h4>{{ opportunity.title }}</h4><p>{{ opportunity.reason or '' }}</p><p>{{ opportunity.action or '' }}</p>{% for condition in opportunity.conditions %}<p>{{ condition }}</p>{% endfor %}</article>{% else %}<p class="snapshot-empty">Chưa có đề xuất được duyệt cho báo cáo này.</p>{% endfor %}</div>
+{% endmacro %}
+
+{% macro unavailable(label) %}<h3>{{ label }}</h3><p class="snapshot-empty">Snapshot chưa cung cấp dữ liệu cho thành phần này.</p>{% endmacro %}
+
+{% macro saved(key) %}{% set metric = dashboard.saved_metrics.get(key) %}{% if metric and metric.value is not none %}{{ metric.text }}{% if metric.unit not in ['count','ratio','tỷ lệ (0–1)','percent','%'] %} {{ metric.unit }}{% endif %}{% else %}<span class="snapshot-missing">Chưa có dữ liệu</span>{% endif %}{% endmacro %}
+
+{% macro evidence_list() %}<ul class="space-y-3">{% for evidence in dashboard.evidence %}<li>{{ evidence.claim or evidence.metric or 'Bằng chứng đã duyệt' }}</li>{% else %}<li class="snapshot-empty">Chưa có nhận định được phép công bố.</li>{% endfor %}</ul>{% endmacro %}
+{% macro opportunity_list() %}<ul class="space-y-3">{% for opportunity in dashboard.opportunities %}<li><strong>{{ opportunity.title }}</strong><p>{{ opportunity.action or opportunity.reason or '' }}</p>{% for condition in opportunity.conditions %}<p>{{ condition }}</p>{% endfor %}</li>{% else %}<li class="snapshot-empty">Chưa có đề xuất được duyệt.</li>{% endfor %}</ul>{% endmacro %}
+
+{% macro metrics(items=none) %}
+{% set entries = dashboard.all_metrics if items is none else items %}
+<dl class="snapshot-metrics">{% for metric in entries %}<div><dt>{{ metric.label }} · {{ metric.source }}</dt><dd>{{ metric.text }} {% if metric.unit not in ['ratio','tỷ lệ (0–1)','percent','%'] %}{{ metric.unit }}{% endif %}</dd></div>{% else %}<p class="snapshot-empty">Chưa có KPI được Admin chốt.</p>{% endfor %}</dl>
+{% endmacro %}

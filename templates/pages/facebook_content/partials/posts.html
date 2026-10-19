@@ -1,7 +1,13 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<div class="fc-post-heading"><div><h2>Hiệu quả bài đăng</h2><p class="fc-subtitle">Chọn tiêu đề cột để sắp xếp.</p></div></div>{{ tables(dashboard.detail_tables) }}
+{% else %}
 {% from 'pages/facebook_content/partials/helpers.html' import n, pct %}
-<div class="fc-post-heading"><div><h2>Bảng Chi Tiết Hiệu Quả Bài Đăng (Top Posts)</h2><p class="fc-subtitle">5 bài mẫu được cung cấp trong tổng số 48 bài tháng 9/2026.</p></div><div class="fc-tabs" aria-label="Sắp xếp bài viết">{% for key, label in [('all','Tất cả (5 mẫu)'),('reach_desc','Reach cao nhất'),('engagement_desc','Tương tác cao nhất'),('shares_desc','Share nhiều nhất'),('clicks_desc','Click nhiều nhất')] %}<button type="button" data-fc-sort="{{ key }}" aria-pressed="{{ 'true' if fb_content.filters.sort == key else 'false' }}">{{ label }}</button>{% endfor %}</div></div>
+<div class="fc-post-heading"><div><h2>Hiệu quả bài đăng</h2><p class="fc-subtitle">5 bài mẫu được cung cấp trong tổng số 48 bài tháng 9/2026.</p></div><div class="fc-tabs" aria-label="Sắp xếp bài viết">{% for key, label in [('all','Tất cả (5 mẫu)'),('reach_desc','Reach cao nhất'),('engagement_desc','Tương tác cao nhất'),('shares_desc','Share nhiều nhất'),('clicks_desc','Click nhiều nhất')] %}<button type="button" data-fc-sort="{{ key }}" aria-pressed="{{ 'true' if fb_content.filters.sort == key else 'false' }}">{{ label }}</button>{% endfor %}</div></div>
 <div class="fc-table-scroll" tabindex="0" role="region" aria-label="Bảng bài viết"><table><thead><tr><th>Bài viết / Tiêu đề</th><th>Ngày đăng</th><th>Loại nội dung</th><th>Reach</th><th>Engagement</th><th>ER (%)</th><th>Comments</th><th>Shares</th><th>Clicks</th></tr></thead><tbody>
 {% for row in fb_content.posts %}<tr data-fc-row><td><button type="button" class="fc-post-title" data-fc-post="{{ row.id }}" title="{{ row.title }}">{{ row.title }}</button><div class="fc-note">Chủ đề: {{ row.topic }}</div></td><td>{{ row.date[8:10] }}/{{ row.date[5:7] }}/{{ row.date[0:4] }}</td><td><span class="fc-badge fc-format-{{ row.format_key }}">{{ row.format }}</span></td><td>{{ n(row.reach) }}</td><td class="fc-blue">{{ n(row.engagement) }}</td><td class="fc-green">{{ pct(row.er) }}</td><td>{{ n(row.comments) }}</td><td>{{ n(row.shares) }}</td><td>{{ n(row.clicks) }}</td></tr>
 {% else %}<tr><td colspan="9" class="fc-empty">Không có bài mẫu phù hợp kỳ và bộ lọc. Hãy chọn tháng 9/2026 hoặc xóa bộ lọc nội dung.</td></tr>{% endfor %}
 </tbody></table></div>
 <div class="fc-pagination"><span id="fc-post-count" role="status"></span><label>Số bài/trang <select id="fc-page-size"><option value="5">5</option><option value="2">2</option></select></label><div><button type="button" id="fc-prev">Trước</button><span id="fc-page-number">1</span><button type="button" id="fc-next">Tiếp</button></div></div>
+
+{% endif %}

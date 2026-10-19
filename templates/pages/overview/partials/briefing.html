@@ -1,0 +1,31 @@
+{# Only presentation of evidence and opportunities already admitted by the mapper. #}
+{% macro evidence_item(item) %}
+<article class="briefing-item">
+  <p>{{ item.claim or item.metric or 'Chưa có nội dung nhận định.' }}</p>
+  {% if item.source or item.data_date %}<p class="briefing-meta">{{ item.source or 'Chưa có nguồn' }}{% if item.data_date %} · {{ item.data_date }}{% endif %}</p>{% endif %}
+</article>
+{% endmacro %}
+{% macro opportunity_item(item) %}
+<article class="briefing-item">
+  <h3>{{ item.title or 'Đề xuất đã duyệt' }}</h3>
+  {% if item.reason %}<p>{{ item.reason }}</p>{% endif %}
+  {% for condition in item.conditions %}<p class="briefing-condition">{{ condition }}</p>{% endfor %}
+</article>
+{% endmacro %}
+<section class="executive-briefing" id="insights" aria-label="Nhận định và đề xuất trong báo cáo">
+  <div class="briefing-card">
+    <div class="briefing-heading"><span class="material-symbols-outlined" aria-hidden="true">lightbulb</span><h2>Nhận định trong kỳ</h2></div>
+    {% if dashboard.evidence %}
+      {{ evidence_item(dashboard.evidence[0]) }}
+      {% if dashboard.evidence|length > 1 %}<details><summary>Xem thêm {{ dashboard.evidence|length - 1 }} nhận định</summary>{% for item in dashboard.evidence[1:] %}{{ evidence_item(item) }}{% endfor %}</details>{% endif %}
+    {% else %}<p class="briefing-empty">Chưa có nhận định được phép công bố.</p>{% endif %}
+  </div>
+  <div class="briefing-card briefing-opportunities">
+    <div class="briefing-heading"><span class="material-symbols-outlined" aria-hidden="true">flag</span><h2>Đề xuất</h2></div>
+    {% if dashboard.opportunities %}
+      {{ opportunity_item(dashboard.opportunities[0]) }}
+      {% if dashboard.opportunities|length > 1 %}<details><summary>Xem thêm {{ dashboard.opportunities|length - 1 }} đề xuất</summary>{% for item in dashboard.opportunities[1:] %}{{ opportunity_item(item) }}{% endfor %}</details>{% endif %}
+      <a class="briefing-action" href="#action-plan">Xem hành động đề xuất <span aria-hidden="true">→</span></a>
+    {% else %}<p class="briefing-empty">Chưa có đề xuất được duyệt.</p>{% endif %}
+  </div>
+</section>

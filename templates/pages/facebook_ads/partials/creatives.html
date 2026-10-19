@@ -1,3 +1,7 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{{ unavailable('Nội dung quảng cáo') }}
+{% else %}
 {% for row in ads.creatives %}
 <article class="fb-creative" data-creative-type="{{ row.type }}">
   <div class="fb-creative-heading"><span class="fb-tag">{{ row.type_label }}</span><span class="fb-small fb-muted">{{ row.id }}</span></div>
@@ -6,3 +10,5 @@
   <button type="button" class="fb-text-button" data-creative-detail="{{ row.id }}">Xem chi tiết mẫu quảng cáo →</button>
 </article>
 {% else %}<p class="fb-empty">Không có mẫu quảng cáo phù hợp bộ lọc chiến dịch.</p>{% endfor %}
+
+{% endif %}

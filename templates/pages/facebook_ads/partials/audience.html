@@ -1,3 +1,7 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{{ charts() }}
+{% else %}
 {% for row in ads.placements %}
 <div class="fb-placement"><div><span>{{ row.name }}</span><strong>{{ row.percent }}% ({{ row.text }})</strong></div><div class="fb-track"><span style="width: {{ row.percent }}%; background: {{ row.color }}"></span></div></div>
 {% endfor %}
@@ -7,3 +11,5 @@
   {% else %}<p class="fb-muted">Không có dữ liệu cho bộ lọc này.</p>{% endif %}
 </div>
 <p class="fb-small fb-muted fb-placement-note">Phân bổ theo tỷ trọng minh họa 58/22/14/6. Reach của các chiến dịch mẫu giả định không trùng lặp.</p>
+
+{% endif %}

@@ -1,3 +1,7 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<h2>Biểu đồ trong báo cáo</h2>{{ charts() }}
+{% else %}
 {% from 'pages/facebook_content/partials/helpers.html' import n, pct, heading %}
 {{ heading('Phân Bổ Định Dạng Nội Dung', 'donut_large', 'Tỷ lệ bài đăng và hiệu quả tương tác phân theo định dạng media.') }}
 <div class="fc-format-list">{% for row in fb_content.formats %}
@@ -5,3 +9,5 @@
 {% endfor %}</div>
 <div class="fc-panel-footer"><span>Định dạng nổi bật: Reels</span><strong>+42% reach theo mẫu</strong></div>
 <p class="fc-note">Phân nhóm định dạng theo thiết kế; bảng bài mẫu có thêm Livestream. Reach từng bài có thể trùng người xem.</p>
+
+{% endif %}

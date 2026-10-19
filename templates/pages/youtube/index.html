@@ -1,10 +1,10 @@
 {% extends 'pages/video/base.html' %}
 {% block video_content %}
-<section id="yt-summary" class="vd-heading"><div class="vd-eyebrow"><span>YouTube Analytics Suite</span> · Dữ liệu mẫu KinderHealth</div><h1>YOUTUBE &amp; HIỆU QUẢ VIDEO - KÊNH CHUYÊN GIA &amp; LƯU LƯỢNG</h1><p>Phân tích chi tiết lượt xem, thời gian xem, tỷ lệ giữ chân khán giả và mức độ chuyển đổi từ YouTube về hệ thống KinderHealth.</p></section>
+<section id="yt-summary" class="vd-heading"><div class="vd-eyebrow"><span>Báo cáo kênh</span> {{ "· " ~ bundle.client_name if dashboard is defined else "· Dữ liệu mẫu KinderHealth" }}</div><h1>YouTube</h1><p>Lượt xem và hiệu quả video trong kỳ.</p></section>
 <p id="vd-error" class="form-error" role="alert" hidden></p>
 <section id="vd-kpis" class="vd-kpi-grid" aria-label="Chỉ số YouTube">{% include 'pages/video/partials/kpis.html' %}</section>
 <section id="yt-trend" class="vd-card vd-trend">{% include 'pages/video/partials/chart.html' %}</section>
-<section id="yt-videos" class="vd-card"><div class="vd-panel-head"><div><h2>Hiệu Quả Video Tiêu Biểu (Top Videos)</h2><p>Các video có lượng tương tác và thu hút khách hàng tiềm năng cao nhất trong tháng</p></div><button type="button" class="vd-button" data-open-filter>Xem tất cả (4 video mẫu)</button></div><div id="vd-filter-status" hidden><span></span><button type="button" id="vd-clear">Xóa bộ lọc</button></div><div id="vd-table">{% include 'pages/youtube/partials/table.html' %}</div></section>
+<section id="yt-videos" class="vd-card"><div class="vd-panel-head"><div><h2>Hiệu quả video</h2><p>Video trong kỳ báo cáo.</p></div><button type="button" class="vd-button" data-open-filter>{{ "Tìm video trong bảng" if dashboard is defined else "Xem tất cả (4 video mẫu)" }}</button></div><div id="vd-filter-status" hidden><span></span><button type="button" id="vd-clear">Xóa bộ lọc</button></div><div id="vd-table">{% include 'pages/youtube/partials/table.html' %}</div></section>
 {% include 'pages/youtube/partials/audience.html' %}
 <section id="yt-funnel" class="vd-card" data-video-fragment="funnel">{% include 'pages/video/partials/funnel.html' %}</section>
 <section id="yt-insights">{% include 'pages/youtube/partials/insights.html' %}</section>

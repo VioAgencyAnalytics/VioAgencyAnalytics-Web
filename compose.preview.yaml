@@ -1,0 +1,10 @@
+# Explicit local-only preview override; never use this file for production.
+services:
+  app:
+    environment:
+      APP_ENV: development
+      REPORT_PREVIEW_ENABLED: "true"
+      REPORT_PREVIEW_USERNAME: ${REPORT_PREVIEW_USERNAME:?Set a separate preview username}
+      REPORT_PREVIEW_PASSWORD: ${REPORT_PREVIEW_PASSWORD:?Set a separate preview password}
+      REPORT_PREVIEW_ALLOWED_IDS: ${REPORT_PREVIEW_ALLOWED_IDS:?Set a JSON list of permitted report IDs}
+      REPORT_SERVICE_TOKEN: ${REPORT_SERVICE_TOKEN:?Set the backend Admin service token}

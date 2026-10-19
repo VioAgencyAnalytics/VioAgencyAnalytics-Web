@@ -1,3 +1,7 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{{ kpis('facebook_ads') }}
+{% else %}
 {% for metric in ads.metrics %}
 <article class="fb-kpi panel">
   <div class="fb-kpi-label"><span>{{ metric.label }}</span><span class="material-symbols-outlined" aria-hidden="true">{{ metric.icon }}</span></div>
@@ -8,3 +12,5 @@
   </div>
 </article>
 {% endfor %}
+
+{% endif %}

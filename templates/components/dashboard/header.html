@@ -1,134 +1,67 @@
 <header
-    class="fixed top-0 left-[280px] right-0 h-32 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant/40 z-40 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.03)] dashboard-header">
-    <div class="h-16 px-space-lg flex items-center justify-between border-b border-outline-variant/30 header-top">
-        <button aria-controls="dashboard-sidebar" aria-expanded="false" aria-label="Mở menu báo cáo"
-            class="sidebar-toggle" id="sidebar-toggle" type="button">
-            <span aria-hidden="true" class="material-symbols-outlined">
-                menu
-            </span>
+    class="fixed top-0 left-[260px] right-0 h-16 z-40 flex items-center px-6 gap-4 dashboard-header">
+    <!-- Mobile toggle -->
+    <button aria-controls="dashboard-sidebar" aria-expanded="false" aria-label="Mở menu"
+        class="sidebar-toggle shrink-0" id="sidebar-toggle" type="button">
+        <span aria-hidden="true" class="material-symbols-outlined">menu</span>
+    </button>
+
+    <!-- Logo mobile -->
+    <img alt="KDH" class="h-8 w-8 shrink-0 object-contain lg:hidden" height="32"
+        src="/static/img/kdh-logo.png" width="32" />
+
+    <!-- Period filters -->
+    <div class="flex items-center gap-3 flex-1 min-w-0 overflow-x-auto header-filters">
+        {% if dashboard is not defined %}
+        <div aria-label="Khoảng thời gian" class="header-period-switcher" id="period-switcher">
+            <button aria-pressed="false" class="period-btn" data-period="7" type="button">7 ngày</button>
+            <button aria-pressed="true" class="period-btn active" data-period="30" type="button">30 ngày</button>
+            <button aria-pressed="false" class="period-btn" data-period="90" type="button">3 tháng</button>
+            <button aria-pressed="false" class="period-btn" data-period="180" type="button">6 tháng</button>
+        </div>
+        {% endif %}
+        <button aria-label="Lọc ngày chi tiết" class="header-date-btn" id="date-range" type="button">
+            <span aria-hidden="true" class="material-symbols-outlined text-[15px] text-blue-600">calendar_today</span>
+            <span class="font-medium" id="date-range-label">{{ bundle.period.start ~ ' – ' ~ bundle.period.end if dashboard is defined else '01/09/2026 – 30/09/2026' }}</span>
         </button>
-        <div class="flex items-center gap-space-md">
-            <img alt="KDH Traffic Report Logo" class="h-10 w-10 shrink-0 object-contain lg:hidden" height="40"
-                src="/static/img/kdh-logo.png" width="40" />
-            <button aria-label="Thông tin nguồn dữ liệu"
-                class="flex items-center gap-2 px-space-sm py-1.5 rounded-lg bg-surface-container-low border border-outline-variant/50 text-on-surface hover:bg-surface-container-high transition-colors font-body-sm text-body-sm"
-                id="data-source" type="button">
-                <span aria-hidden="true" class="material-symbols-outlined text-[16px] text-primary">
-                    sync_alt
-                </span>
-                <span>
-                    Nguồn dữ liệu:
-                    <strong>
-                        Tổng hợp dữ liệu Marketing
-                    </strong>
-                </span>
-                <span aria-hidden="true" class="material-symbols-outlined text-[16px] text-outline">
-                    expand_more
-                </span>
-            </button>
-        </div>
-        <div class="flex items-center gap-space-md">
-            <div
-                class="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-container-low border border-outline-variant/40 data-status">
-                <span class="inline-block w-2 h-2 rounded-full bg-[#15803d]">
-                </span>
-                <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">
-                    Đang xem dữ liệu mẫu
-                </span>
-            </div>
-            <div class="hidden xl:flex items-center gap-1 font-body-sm text-body-sm text-outline last-updated">
-                <span aria-hidden="true" class="material-symbols-outlined text-[16px]">
-                    schedule
-                </span>
-                <span>
-                    Cập nhật lần cuối: 02/10/2026 15:30
-                </span>
-            </div>
-            <button aria-controls="export-menu" aria-expanded="false" aria-haspopup="true"
-                class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-body-sm text-body-sm font-medium transition-colors shadow-[0_4px_14px_rgba(0,81,170,0.25)]"
-                id="export-report" type="button">
-                <span aria-hidden="true" class="material-symbols-outlined text-[16px]">
-                    download
-                </span>
-                <span>
-                    Xuất báo cáo PDF/Excel
-                </span>
-            </button>
-            <div class="flex items-center gap-2 pl-space-xs">
-                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                    <span aria-hidden="true" class="material-symbols-outlined text-on-primary text-[18px]">
-                        person
-                    </span>
-                </div>
-                <div class="hidden lg:flex flex-col text-left">
-                    <span class="font-label-md text-label-md text-on-surface leading-tight">
-                        Account Manager
-                    </span>
-                    <span class="font-label-sm text-label-sm text-outline leading-tight">
-                        KDH Agency
-                    </span>
-                </div>
-            </div>
-        </div>
+        <!-- Comparison -->
+        {% if dashboard is defined %}
+        <span class="header-comparison">So sánh: {{ bundle.comparison.start ~ ' – ' ~ bundle.comparison.end if bundle.comparison else 'Chưa có kỳ so sánh' }}</span>
+        {% else %}
+        <button aria-pressed="true"
+            class="hidden sm:flex items-center gap-1.5 header-date-btn"
+            id="comparison" type="button">
+            <span class="text-slate-400 text-xs">So sánh:</span>
+            <span class="font-medium text-slate-700" id="comparison-label">{% if dashboard is defined %}{{ bundle.comparison.start ~ ' – ' ~ bundle.comparison.end if bundle.comparison else 'Chưa có' }}{% else %}Kỳ trước{% endif %}</span>
+            <span aria-hidden="true" class="material-symbols-outlined text-[15px] text-slate-400">expand_more</span>
+        </button>
+        {% endif %}
     </div>
-    <div class="h-16 px-space-lg flex items-center justify-between gap-space-md overflow-x-auto header-filters">
-        <div class="flex items-center gap-space-md shrink-0">
-            <span class="font-label-sm text-label-sm text-on-surface-variant font-medium uppercase tracking-wide">
-                Khoảng thời gian:
-            </span>
-            <div aria-label="Khoảng thời gian báo cáo"
-                class="flex items-center bg-surface-container-low p-1 rounded-lg border border-outline-variant/40 text-on-surface-variant font-body-sm text-body-sm"
-                id="period-switcher">
-                <button aria-pressed="false" class="px-3 py-1 rounded hover:text-on-surface transition-colors"
-                    data-period="7" type="button">
-                    7 ngày
-                </button>
-                <button aria-pressed="true"
-                    class="px-3 py-1 rounded bg-surface-container-lowest text-primary font-semibold shadow-sm"
-                    data-period="30" type="button">
-                    30 ngày
-                </button>
-                <button aria-pressed="false" class="px-3 py-1 rounded hover:text-on-surface transition-colors"
-                    data-period="90" type="button">
-                    3 tháng
-                </button>
-                <button aria-pressed="false" class="px-3 py-1 rounded hover:text-on-surface transition-colors"
-                    data-period="180" type="button">
-                    6 tháng
-                </button>
-                <button aria-pressed="false" class="px-3 py-1 rounded hover:text-on-surface transition-colors"
-                    data-period="custom" type="button">
-                    Tùy chỉnh
-                </button>
-            </div>
-            <button
-                class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-body-sm text-body-sm text-on-surface"
-                id="date-range" type="button">
-                <span aria-hidden="true" class="material-symbols-outlined text-[16px] text-primary">
-                    calendar_today
-                </span>
-                <span class="font-medium" id="date-range-label">
-                    01/09/2026 – 30/09/2026
-                </span>
-            </button>
+
+    <!-- Right actions -->
+    <div class="flex items-center gap-3 shrink-0">
+        <!-- Data status pill -->
+        <div class="hidden md:flex items-center gap-1.5 header-status-pill">
+            <span class="header-status-dot"></span>
+            <span>{{ 'Preview' if dashboard is defined and dashboard.preview else 'Rev.' ~ bundle.revision if dashboard is defined else 'Dữ liệu mẫu' }}</span>
         </div>
-        <div class="flex items-center gap-2 shrink-0">
-            <span class="font-label-sm text-label-sm text-on-surface-variant font-medium uppercase tracking-wide">
-                So sánh:
-            </span>
-            <button aria-pressed="true"
-                class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/60 rounded-lg font-body-sm text-body-sm text-on-surface hover:bg-surface-container-low transition-colors"
-                id="comparison" type="button">
-                <span class="font-medium">
-                    Kỳ trước
-                </span>
-                <span class="text-outline" id="comparison-label">
-                    (02/08/2026 – 31/08/2026)
-                </span>
-                <span aria-hidden="true" class="material-symbols-outlined text-[16px] text-outline">
-                    arrow_drop_down
-                </span>
-            </button>
+        <!-- Data source button -->
+        <button aria-label="Nguồn dữ liệu" title="{{ 'Tạo lúc: ' ~ (bundle.generated_at or 'Chưa có thông tin') if dashboard is defined else 'Nguồn dữ liệu mẫu' }}"
+            class="header-action-btn"
+            id="data-source" type="button">
+            <span aria-hidden="true" class="material-symbols-outlined text-[15px] text-blue-600">sync_alt</span>
+            <span class="hidden xl:inline">Nguồn dữ liệu</span>
+        </button>
+        <!-- Export -->
+        <button aria-label="Xuất báo cáo" aria-controls="export-menu" aria-expanded="false" aria-haspopup="true"
+            class="header-export-btn"
+            id="export-report" type="button">
+            <span aria-hidden="true" class="material-symbols-outlined text-[15px]">download</span>
+            <span class="hidden sm:inline">Xuất báo cáo</span>
+        </button>
+        <!-- Avatar -->
+        <div class="header-avatar">
+            <span aria-hidden="true" class="material-symbols-outlined text-white text-[16px]">person</span>
         </div>
     </div>
 </header>

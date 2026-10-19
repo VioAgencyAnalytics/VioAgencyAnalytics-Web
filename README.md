@@ -1,6 +1,27 @@
 # KDH Marketing Reporting Dashboard
 
-A FastAPI + Jinja2 marketing reporting dashboard built around a mock-data-first architecture.
+> Luồng hiện hành: **Đăng nhập Admin → Chọn báo cáo/revision → Mở báo cáo → Dashboard New**. New không có form hoặc API đăng nhập riêng. `/`, `/login` cũ và `/reports` chuyển về Admin. Xem [hướng dẫn hiện hành](docs/ADMIN_HANDOFF_DASHBOARD.md).
+
+## Xem riêng giao diện New, không đăng nhập
+
+Trong thư mục `KDH-Report-New`, chạy:
+
+```powershell
+docker compose -f compose.design-preview.yaml up -d --build
+```
+
+Mở **http://localhost:8081/** để vào Tổng quan mới (`/qa/overview`), rồi chọn SEO,
+Facebook Ads, Facebook Content, TikTok, YouTube hoặc Google Maps trong sidebar.
+Đây là bản xem giao diện Bundle với **fixture kiểm thử**, có nhãn DEMO;
+không dùng dữ liệu báo cáo thật. Các mục thiếu dữ liệu vẫn hiển thị chưa có dữ liệu.
+Container dùng cùng Mapper/template/CSS/JS với Viewer, chạy riêng, không nhận
+service token, không nối database hay network Admin và không có route báo cáo thật
+hoặc đăng nhập. Chỉ container preview mount `scripts/` và `tests/` ở chế độ chỉ đọc;
+hai thư mục này không được đưa vào image Viewer production.
+New báo cáo thật tại 8080 vẫn cần Admin hoạt động để đăng nhập/chọn báo cáo.
+File này dùng độc lập; không ghép với `compose.yaml` hay `compose.preview.yaml`.
+
+A FastAPI + Jinja2 marketing reporting dashboard with independent demo pages and a protected renderer for published Admin Report Bundles.
 
 ## Stack
 
@@ -18,10 +39,10 @@ Cài và mở Docker Desktop (Linux containers). Tại thư mục dự án, ch�
 docker compose up --build -d
 ```
 
-Mở **http://localhost:8080** (tự chuyển đến `/overview`). FE và BE của **KDH-Report-New**
+Mở **http://localhost:8080** (chuyển đến Admin để đăng nhập/chọn báo cáo). FE và BE của **KDH-Report-New**
 chạy trong container `kdh-report-new-app-1`, nhóm Compose **`kdh-report-new`**.
-Nhóm này độc lập với dự án **KDH-Report** (`kdh-report`); không dùng chung container
-hoặc network của hai dự án. Chạy lệnh trong đúng thư mục `D:\KDH-Report-New`.
+New chạy riêng và tham gia network nội bộ của **KDH-Report-Admin** để đọc Bundle.
+Khởi động Admin trước; chạy lệnh New trong `D:\KDH-Report-All\KDH-Report-New`.
 Docker tự cài thư viện Python, build Tailwind CSS và khởi động FastAPI; máy host
 không cần cài Python hoặc Node.js. Lần build đầu cần Internet để tải image và thư viện.
 Cổng mặc định là 8080 để không trùng bản uvicorn đang chạy ở cổng 8000.
@@ -37,8 +58,11 @@ Container tự khởi động lại khi Docker Engine chạy, trừ khi đã ch�
 Muốn đổi cổng trên PowerShell, đặt `$env:KDH_PORT = '8090'` trước khi chạy Compose.
 Ứng dụng mặc định chỉ được mở trên máy đang chạy Docker.
 
-Bản Docker dùng cùng dữ liệu mẫu như bản local. Chưa thêm database vì luồng báo cáo
-hiện chưa sử dụng database; Docker không tự kết nối Meta, Google hoặc CRM.
+Bản Docker production chỉ phục vụ dashboard qua phiên được Admin cấp cho đúng
+`/reports/{report_id}?revision=N`. Phiên hết hạn quay về đăng nhập tại Admin rồi mở
+lại đúng báo cáo. Các trang mock và `/published/{report_id}` dành cho phát triển
+bị khóa trong production. Preview nội bộ từ Admin đi qua handoff riêng.
+Chưa thêm database; New chỉ đọc Internal API của Admin và không tự kết nối các provider.
 Các file `.env`, môi trường ảo, `node_modules` và dữ liệu thử trong `.work` không được
 đưa vào image. Node.js chỉ dùng ở bước build CSS; container chạy bằng user không phải root.
 
@@ -125,6 +149,10 @@ Mở `http://127.0.0.1:8080/report/tiktok` hoặc `http://127.0.0.1:8080/report/
 Compose project là `kdh-report-new`, không gộp với dự án `KDH-Report` khác.
 
 ## Project structure
+
+NEW-1 bổ sung `BundleService`, `BundleViewMapper`, các view model và template chung trong
+`templates/pages/published/`. Xem [audit, danh sách file, contract, phân quyền preview và cách kiểm thử](docs/NEW-1-bundle-renderer.md).
+Luồng này tái sử dụng `AdminBundleRepository`, không dùng mock fallback và không tính lại KPI.
 
 The frontend is server-rendered Jinja2 HTML with local CSS and vanilla JavaScript.
 `templates/` and `static/` together form the frontend; Python routes, services and

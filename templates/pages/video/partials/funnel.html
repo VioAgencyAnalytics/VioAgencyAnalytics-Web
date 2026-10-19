@@ -1,3 +1,10 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{% from 'pages/snapshot/components.html' import saved with context %}
+{% if video.channel == 'tiktok' %}<div class="vd-panel-head"><h2>Phễu Chuyển Đổi TikTok Ads</h2><span class="material-symbols-outlined" aria-hidden="true">filter_alt</span></div>
+<div class="vd-funnel-bars">{% for key,label in [('impressions','Lượt hiển thị'),('video_views','Lượt xem video'),('clicks','Lượt click'),('leads','Leads')] %}<div><div class="vd-bar-label"><span>{{ loop.index }}. {{ label }}</span><span>{{ saved('tiktok_ads.' ~ key) }}</span></div><div class="vd-bar" aria-hidden="true"></div></div>{% endfor %}</div><div class="vd-panel-foot">Chưa có tỷ lệ phễu được chốt; các thanh không biểu diễn tỷ lệ ước tính.</div>
+{% else %}<div class="vd-panel-head"><div><h2>Phễu Chuyển Đổi Từ YouTube Về Hệ Thống</h2><p>Chỉ số trong snapshot; chưa xác lập hành trình giữa các nguồn.</p></div></div><div class="vd-funnel-steps">{% for key,label,color in [('views','Lượt xem video','blue'),('outbound_clicks','Click về website','purple'),('website_visits','Truy cập website','pink'),('leads','Khách hàng tiềm năng','green'),('appointments','Lịch hẹn thành công','blue')] %}<div class="vd-funnel-step vd-border-{{ color }}"><small>BƯỚC {{ loop.index }}</small><h3>{{ label }}</h3><strong class="vd-text-{{ color }}">{{ saved('youtube.' ~ key) }}</strong><p>Chưa có tỷ lệ chuyển đổi được chốt.</p></div>{% endfor %}</div>{% endif %}
+{% else %}
 {% from 'pages/video/partials/helpers.html' import num, pct, compact, icon %}
 {% if video.channel == 'tiktok' %}
 <div class="vd-panel-head"><h2>Phễu Chuyển Đổi TikTok Ads</h2>{{ icon('filter_alt') }}</div>
@@ -6,4 +13,6 @@
 {% else %}
 <div class="vd-panel-head"><div><h2>Phễu Chuyển Đổi Từ YouTube Về Hệ Thống</h2><p>Theo dõi hành trình từ người xem video đến khách hàng đặt lịch khám tại KinderHealth</p></div></div>
 <div class="vd-funnel-steps">{% for row in video.funnel %}<div class="vd-funnel-step vd-border-{{ row.color }}"><small>BƯỚC {{ loop.index }}</small><h3>{{ row.label }}</h3><strong class="vd-text-{{ row.color }}">{{ compact(row.value) if loop.first else num(row.value) }}</strong><span class="vd-text-green">{{ '100% lượt xem' if loop.first else 'Tỷ lệ: ' ~ pct(row.percent) }}</span><p>{{ row.description }}</p></div>{% endfor %}</div>
+{% endif %}
+
 {% endif %}

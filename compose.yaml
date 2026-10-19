@@ -1,3 +1,4 @@
+
 name: kdh-report-new
 
 services:
@@ -5,10 +6,32 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+
     ports:
       - "127.0.0.1:${KDH_PORT:-8080}:8000"
+
     environment:
       APP_ENV: production
       DEBUG: "false"
+
+      # Ket noi den backend KDH-Report-Admin
+      REPORT_ADMIN_BASE_URL: http://admin:8090
+      REPORT_ADMIN_PUBLIC_URL: ${REPORT_ADMIN_PUBLIC_URL:-http://localhost:8090}
+      REPORT_NEW_PUBLIC_URL: ${REPORT_NEW_PUBLIC_URL:-http://localhost:8080}
+      REPORT_SERVICE_TOKEN: ${REPORT_SERVICE_TOKEN:?REPORT_SERVICE_TOKEN is required}
+      REPORT_REQUEST_TIMEOUT_SECONDS: ${REPORT_REQUEST_TIMEOUT_SECONDS:-5}
+
+      # Cho phep xem Demo Bundle tren local
+      ENABLE_DEMO_PREVIEW: "1"
+
     restart: unless-stopped
     init: true
+
+    networks:
+      - default
+      - admin_shared
+
+networks:
+  admin_shared:
+    external: true
+    name: kdh-report-admin_default

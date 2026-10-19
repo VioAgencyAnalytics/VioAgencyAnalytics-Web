@@ -1,3 +1,10 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg mb-space-xl">
+<div class="lg:col-span-7 bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40 snapshot-card" id="seo-landings"><h3 class="font-headline-md text-headline-md">Hiệu Quả Trang Đích</h3>{{ tables(dashboard.landing_tables) }}</div>
+<div class="lg:col-span-5 bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40" id="seo-insights"><h3 class="font-headline-md text-headline-md">Điểm Nổi Bật &amp; Kế Hoạch SEO</h3>{{ insights() }}</div></div>
+{% if dashboard.other_tables %}<section class="bg-surface-container-lowest rounded-xl p-space-lg mb-space-xl"><h3 class="font-headline-md text-headline-md">Chi tiết dữ liệu nguồn</h3>{{ tables(dashboard.other_tables) }}</section>{% endif %}
+{% else %}
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg mb-space-xl" id="seo-details">
 <!-- Top Landing Pages Table (7 cols) -->
 <div class="lg:col-span-7 bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] flex flex-col justify-between" id="seo-landings">
@@ -201,3 +208,5 @@
 </div>
 </div>
 </div>
+
+{% endif %}

@@ -2,17 +2,17 @@
 <div>
 <div class="flex items-center gap-2 mb-1">
 <span class="px-2.5 py-0.5 rounded-full bg-primary-fixed/50 text-primary font-label-sm text-label-sm tracking-wide">
-     ORGANIC SEARCH PERFORMANCE
+     {{ bundle.client_name if dashboard is defined else 'Dữ liệu mẫu' }}
     </span>
 <span class="text-outline text-body-sm">
-     • Dữ liệu mẫu GSC &amp; GA4
+     {{ '' if dashboard is defined else '• GSC & GA4' }}
     </span>
 </div>
 <h1 class="font-headline-xl text-headline-xl text-on-surface">
-    SEO &amp; LƯU LƯỢNG WEBSITE - HIỆU QUẢ TỔNG QUAN &amp; TỪ KHÓA
+    SEO &amp; lưu lượng website
    </h1>
 <p class="font-body-md text-body-md text-on-surface-variant mt-1">
-    Phân tích chi tiết lưu lượng tìm kiếm tự nhiên, hiệu suất Google Search Console và Google Analytics 4 cho KinderHealth.
+    Lưu lượng, thứ hạng từ khóa và chuyển đổi trong kỳ.
    </p>
 </div>
 <div class="flex items-center gap-2 shrink-0">
@@ -21,7 +21,7 @@
      filter_list
     </span>
 <span>
-     Bộ lọc nâng cao
+     {{ 'Tìm trong bảng' if dashboard is defined else 'Bộ lọc nâng cao' }}
     </span>
 </button>
 <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-body-sm text-body-sm font-medium transition-colors shadow-[0_4px_12px_rgba(0,81,170,0.2)]" id="seo-weekly" type="button">
@@ -29,7 +29,7 @@
      auto_graph
     </span>
 <span>
-     Tạo báo cáo SEO tuần
+     {{ 'Báo cáo tuần · Chưa khả dụng' if dashboard is defined else 'Tạo báo cáo SEO tuần' }}
     </span>
 </button>
 </div>
