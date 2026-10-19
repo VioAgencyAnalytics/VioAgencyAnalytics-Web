@@ -74,6 +74,7 @@ window.dashboardCharts.renderBundleChart = function (container, chart) {
   const colors = ['#0051aa', '#6845c5', '#15803d', '#a50058', '#727784', '#d08d18'];
   const surface = container.querySelector('.pb-chart-surface');
   const tooltip = container.querySelector('.pb-chart-tooltip');
+  tooltip.hidden = true;
   const fmt = value => value === null ? 'Chưa có dữ liệu' : new Intl.NumberFormat('vi-VN', {maximumFractionDigits:12}).format(value);
   const make = (tag, attrs = {}, text = null) => {
     const node = document.createElementNS(ns, tag);
@@ -109,7 +110,7 @@ window.dashboardCharts.renderBundleChart = function (container, chart) {
     });
   } else {
     const finite = values.filter(v => v !== null), low = Math.min(0,...finite), high = Math.max(0,...finite);
-    const spread = high-low || 1, left = 60, right = 570, top = 24, bottom = 225;
+    const spread = high-low || 1, left = 84, right = 576, top = 24, bottom = 225;
     const y = value => bottom-(value-low)/spread*(bottom-top);
     const x = i => chart.kind === 'bar' ? left+(i+.5)*(right-left)/values.length : values.length === 1 ? (left+right)/2 : left+i*(right-left)/(values.length-1);
     for (let i=0;i<4;i++) {
@@ -128,8 +129,13 @@ window.dashboardCharts.renderBundleChart = function (container, chart) {
         width:(right-left)/values.length*.64,height:Math.max(1,Math.abs(y(value)-y(0))),rx:3,fill:colors[0]}) : make('circle',{cx:x(i),cy:y(value),r:4,fill:colors[0]});
       interactive(node,i);
     });
-    const indices = [...new Set([0,.25,.5,.75,1].map(v => Math.round(v*(labels.length-1))))];
-    indices.forEach(i => svg.appendChild(make('text',{x:x(i),y:250,'text-anchor':'middle',fill:'#727784','font-size':10},labels[i].length > 18 ? labels[i].slice(0,16)+'…' : labels[i])));
+    // Fewer axis labels leave room for readable dates. All points and their
+    // complete labels remain available through pointer and keyboard tooltips.
+    const ticks = labels.some(label => label.length > 8) ? [0,.5,1] : [0,.25,.5,.75,1];
+    const indices = [...new Set(ticks.map(v => Math.round(v*(labels.length-1))))];
+    indices.forEach((i, tick) => svg.appendChild(make('text',{x:x(i),y:250,
+      'text-anchor':indices.length === 1 ? 'middle' : tick === 0 ? 'start' : tick === indices.length-1 ? 'end' : 'middle',
+      fill:'#727784','font-size':10},labels[i].length > 18 ? labels[i].slice(0,16)+'…' : labels[i])));
   }
   const legend = document.createElement('div'); legend.className='pb-chart-legend';
   (chart.kind === 'donut' ? labels : [chart.title]).forEach((label,i) => {

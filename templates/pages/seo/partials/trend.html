@@ -1,7 +1,8 @@
 {% if dashboard is defined %}
 {% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
 <div class="bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] mb-space-xl" id="seo-trend">
-<h3 class="font-headline-md text-headline-md">Xu Hướng Lưu Lượng Tìm Kiếm Tự Nhiên (Organic Traffic)</h3><p class="text-body-sm text-outline">Các chuỗi được chốt trong kỳ báo cáo. Mỗi chỉ số dùng thang đo riêng.</p>{{ charts() }}
+<h3 class="font-headline-md text-headline-md">Xu hướng lưu lượng</h3><p class="text-body-sm text-outline">Mỗi chỉ số dùng thang đo riêng. GA4 toàn website không đồng nghĩa với Organic Search.</p>{{ charts() }}
+<h4 class="font-headline-md">Chỉ số nguồn đã chốt</h4>{{ metrics(dashboard.traffic_metrics) }}
 </div>
 {% else %}
 <div class="bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] mb-space-xl" id="seo-trend">

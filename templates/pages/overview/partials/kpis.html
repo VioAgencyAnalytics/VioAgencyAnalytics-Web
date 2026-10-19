@@ -7,26 +7,26 @@
 <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-space-lg overview-kpis" id="kpi-grid">
 
 {% set kpi_items = [
-  ('hub',      'Tổng tiếp cận',    'reach',      'reach_previous',   '+15,8%', True,  'primary'),
-  ('language', 'Lượt truy cập Web','traffic',    'traffic_previous',  '+22,4%', True,  'primary'),
-  ('thumb_up', 'Lượt tương tác',   'engagement', 'engagement_previous','+9,1%', True,  'secondary'),
-  ('contact_phone','Leads',        'leads',      None,               '+18,4%', True,  'tertiary'),
-  ('payments', 'Chi phí QC',       'spend',      None,               '-4,2%',  False, 'primary')
+  ('hub',      'Tổng tiếp cận',    'reach',      'reach_previous',   '+15,8%', True,  '#0051aa', '#eef4ff'),
+  ('language', 'Lượt truy cập Web','traffic',    'traffic_previous',  '+22,4%', True,  '#176f91', '#eaf7fc'),
+  ('thumb_up', 'Lượt tương tác',   'engagement', 'engagement_previous','+9,1%', True,  '#6845c5', '#f4effc'),
+  ('contact_phone','Leads',        'leads',      None,               '+18,4%', True,  '#0051aa', '#eef4ff'),
+  ('payments', 'Chi phí QC',       'spend',      None,               '-4,2%',  False, '#916124', '#fff6e9')
 ] %}
 
-{% for icon, label, field, prev_field, delta, is_up, color in kpi_items %}
-<div class="flex flex-col justify-between bg-white border border-slate-200 p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-blue-200 transition-all kpi-card">
-  <div class="flex items-start justify-between mb-3">
-    <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider leading-tight">{{ label }}</span>
-    <div class="p-1.5 rounded-lg bg-slate-50">
-      <span aria-hidden="true" class="material-symbols-outlined text-blue-600 text-[18px]">{{ icon }}</span>
+{% for icon, label, field, prev_field, delta, is_up, accent, tint in kpi_items %}
+<div class="kpi-card-premium" style="--kpi-accent:{{ accent }};--kpi-tint:{{ tint }}">
+  <div class="kpi-card-header">
+    <span class="kpi-card-label">{{ label }}</span>
+    <div class="kpi-card-icon">
+      <span aria-hidden="true" class="material-symbols-outlined text-[18px]">{{ icon }}</span>
     </div>
   </div>
-  <div class="mb-3">
-    <span class="font-kpi-display text-kpi-display text-slate-900 tracking-tight" data-field="{{ field }}">{{ overview.fields[field] }}</span>
+  <div class="kpi-card-value">
+    <span class="font-kpi-display text-kpi-display tracking-tight" data-field="{{ field }}">{{ overview.fields[field] }}</span>
   </div>
-  <div class="flex items-center justify-between pt-2 border-t border-slate-100">
-    <span class="text-[11px] font-bold {{ 'text-emerald-600 bg-emerald-50' if is_up else 'text-emerald-600 bg-emerald-50' }} px-2 py-0.5 rounded-full flex items-center gap-0.5">
+  <div class="kpi-card-footer">
+    <span class="kpi-delta {{ 'kpi-delta--up' if is_up else 'kpi-delta--down' }}">
       <span aria-hidden="true" class="material-symbols-outlined text-[11px]">{{ 'arrow_upward' if is_up else 'arrow_downward' }}</span>{{ delta }}
     </span>
     {% if prev_field %}

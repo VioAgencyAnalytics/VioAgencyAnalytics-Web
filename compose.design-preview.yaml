@@ -1,0 +1,21 @@
+# Standalone UI preview. Run this file alone, not as a production override.
+name: kdh-report-new-design-preview
+
+services:
+  preview:
+    build: .
+    image: kdh-report-new-design-preview:local
+    command: ["python", "-m", "uvicorn", "serve_executive_qa:app", "--app-dir", "/app/scripts", "--host", "0.0.0.0", "--port", "8000"]
+    # Fixtures are mounted only in this isolated local preview, never the Viewer.
+    volumes:
+      - ./scripts:/app/scripts:ro
+      - ./tests:/app/tests:ro
+    ports:
+      - "127.0.0.1:8081:8000"
+    environment:
+      APP_ENV: development
+      DEBUG: "false"
+      REPORT_SERVICE_TOKEN: ""
+      REPORT_PREVIEW_ENABLED: "false"
+    init: true
+    restart: unless-stopped

@@ -24,7 +24,8 @@ SUPPORTED = set(SECTION_NAMES) | {'facebook-content-30d', 'facebook-content-6m',
 LABELS = {
     'activeUsers': 'Người dùng hoạt động', 'sessions': 'Phiên truy cập', 'screenPageViews': 'Lượt xem trang',
     'engagementRate': 'Tỷ lệ tương tác', 'clicks': 'Lượt nhấp', 'impressions': 'Lượt hiển thị',
-    'ctr': 'CTR', 'position': 'Vị trí', 'top5': 'Top 5', 'top10': 'Top 10', 'top20': 'Top 20', 'top100': 'Top 100',
+    'ctr': 'CTR', 'position': 'Vị trí', 'top5': 'Top 5', 'top10': 'Top 10', 'top20': 'Top 20',
+    'top30': 'Top 30', 'top50': 'Top 50', 'top100': 'Top 100',
     'views': 'Lượt xem', 'calls': 'Cuộc gọi', 'directions': 'Lượt chỉ đường', 'website_clicks': 'Nhấp website',
     'date': 'Ngày', 'query': 'Truy vấn', 'keyword': 'Từ khóa', 'url': 'URL nguồn', 'location': 'Mã cơ sở',
     'name': 'Tên', 'sessionDefaultChannelGroup': 'Kênh', 'pagePath': 'Trang', 'spend': 'Chi tiêu',
@@ -180,7 +181,7 @@ class BundleViewMapper:
                 q.warnings.append('Kỳ dataset không khớp kỳ báo cáo. Nội dung được khóa để tránh trình bày sai kỳ.')
                 return view
         compare_ok = comparison is not None
-        if comparison and any(params.get(k) != comparison[v] for k, v in (('previous_start', 'start'), ('previous_end', 'end'))):
+        if comparison and (params.get('compare') is False or any(params.get(k) != comparison[v] for k, v in (('previous_start', 'start'), ('previous_end', 'end')))):
             compare_ok = False
             q.warnings.append('Chưa xác minh được kỳ so sánh của dataset; không hiển thị số kỳ trước hoặc thay đổi.')
         if data and view.report_type and view.report_type.replace('_', '-') not in SUPPORTED:
@@ -238,6 +239,7 @@ class BundleViewMapper:
         return view
 
     def _source(self, view: SectionView, source_key: str, raw: dict, compare_ok: bool) -> None:
+        table_start = len(view.tables)
         name = text(raw.get('label')) or SECTION_NAMES.get(source_key, source_key)
         latest = text(raw.get('latest_available_date'))
         source_notes = notes(raw.get('warnings'))
@@ -282,6 +284,22 @@ class BundleViewMapper:
                     view.charts.append(ChartView('Phiên theo kênh', 'bar', labels, values, name, '', latest))
         self._explicit_charts(view, raw.get('charts'), name, latest)
         self._explicit_tables(view, raw.get('tables'), name)
+        for table in view.tables[table_start:]:
+            keys = {column['key'] for column in table.columns}
+            if 'keyword' not in keys:
+                continue
+            # A saved per-row comparison has the same period requirements as a KPI.
+            if not compare_ok:
+                for row in table.rows:
+                    for key in ('previous_position', 'change'):
+                        if key in row:
+                            row[key] = {'value': None, 'url': None}
+            if source_key == 'keywords' and {'keyword', 'date', 'url'} <= keys:
+                identities = [tuple(row[key]['value'] for key in ('keyword', 'date', 'url')) for row in table.rows]
+                if len(identities) != len(set(identities)):
+                    view.quality.warnings.append(
+                        f'{name}: có bản ghi trùng từ khóa/ngày/URL. Giữ nguyên snapshot; '
+                        'Top K đã chốt chưa chứng minh số từ khóa duy nhất. Cần Admin đối soát.')
 
     @staticmethod
     def _explicit_tables(view: SectionView, tables: object, source: str) -> None:

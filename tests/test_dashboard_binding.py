@@ -89,3 +89,118 @@ def test_preview_channel_is_selected_from_source_without_publishing():
     candidate={'marketing':{'preview':{'widgets':[{'metric_id':'youtube.views','value':42}]}},'sources':{},'params':{}}
     bundle=preview_dashboard(candidate, [], 'a'*32)
     assert bundle.default_section == 'youtube' and bundle.status == 'draft'
+
+def test_seo_multi_source_qa_contract():
+    """
+    QA-only: verify New can render 3 sources inside
+    one SEO section without inventing missing KPIs.
+    """
+    raw = published_bundle()
+
+    seo_data = raw["sections"]["seo"]["data"]
+
+    # Synthetic data, never real provider observations.
+    seo_data["sources"] = {
+        "gsc": {
+            "label": "GSC QA",
+            "status": "ready",
+            "latest_available_date": "2026-09-30",
+            "totals": {
+                "impressions": 12500,
+                "clicks": 620,
+            },
+            "daily": [
+                {
+                    "date": "2026-09-28",
+                    "clicks": 10,
+                    "impressions": 200,
+                },
+                {
+                    "date": "2026-09-29",
+                    "clicks": 13,
+                    "impressions": 240,
+                },
+                {
+                    "date": "2026-09-30",
+                    "clicks": 20,
+                    "impressions": 300,
+                },
+            ],
+        },
+        "ga4": {
+            "label": "GA4 QA",
+            "status": "ready",
+            "latest_available_date": "2026-09-30",
+            "totals": {
+                "activeUsers": 880,
+                "sessions": 1100,
+            },
+        },
+        "keywords": {
+            "label": "Keywords QA",
+            "status": "ready",
+            "latest_available_date": "2026-09-30",
+            "totals": {
+                "top10": 18,
+            },
+            "entries": [
+                {
+                    "date": "2026-09-30",
+                    "keyword": "khám nhi",
+                    "url": "/kham-nhi",
+                    "position": 3,
+                }
+            ],
+        },
+    }
+
+    bundle = BundleViewMapper().map(
+        raw,
+        raw["report"]["id"],
+        2,
+    )
+
+    context = dashboard_context(
+        bundle,
+        "seo",
+        "/reports/" + raw["report"]["id"],
+    )
+
+    dashboard = context["dashboard"]
+
+    # Designed SEO KPI order:
+    # Impressions, Clicks, Organic Users,
+    # Top 10, SEO Leads, Conversion Rate.
+    values = [
+        card["value"]
+        for card in dashboard["kpis"]
+    ]
+
+    assert values == [
+        12500,
+        620,
+        None,
+        18,
+        None,
+        None,
+    ]
+
+    # The three GSC daily observations must be
+    # available for the chart renderer.
+    assert any(
+        chart["labels"] == [
+            "2026-09-28",
+            "2026-09-29",
+            "2026-09-30",
+        ]
+        and chart["values"] == [10, 13, 20]
+        for chart in dashboard["charts"]
+    )
+
+    # Keyword detail is preserved as a table.
+    assert dashboard["keyword_tables"]
+    assert (
+        dashboard["keyword_tables"][0]
+        ["rows"][0]["keyword"]["value"]
+        == "khám nhi"
+    )

@@ -112,6 +112,8 @@ def report(request: Request, report_id: str, settings=Depends(get_settings)):
         if revision_text is None:
             return admin_selection(request, settings)
         bundle = BundleService(repository(request, settings)).get_report(report_id, int(revision_text))
+        if settings.app_env == 'production' and bundle.provenance == 'demo':
+            raise ViewerError(502, 'Báo cáo chứa dữ liệu mẫu; không được hiển thị trong production.')
         selected = request.query_params.get('section', bundle.default_section)
         if selected not in [section.key for section in bundle.sections]:
             raise ViewerError(404, 'Section không nằm trong báo cáo được xuất bản.')

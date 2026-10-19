@@ -1,0 +1,86 @@
+/* Presentation refinements only. Published values and source copy stay intact. */
+.dashboard-header { left:260px; gap:12px; box-shadow:none; }
+.dashboard-header button { min-height:40px; }
+.header-comparison { color:#64748b; font-size:12px; white-space:nowrap; }
+.published-dashboard .dashboard-header .header-filters { overflow:visible; }
+.published-dashboard .dashboard-main h1 { font-size:28px; line-height:1.25; letter-spacing:-.025em; font-weight:700; }
+.published-dashboard .dashboard-main h2,
+.published-dashboard .dashboard-main h3.font-headline-md { font-size:18px; line-height:1.4; font-weight:600; }
+.published-dashboard .dashboard-main p { line-height:1.6; }
+.published-dashboard :is(.fb-page-header,.fc-page-heading,.seo-page-header) { align-items:flex-start; gap:20px; }
+.published-dashboard :is(.fb-eyebrow,.fc-eyebrow,.vd-eyebrow) { font-size:12px; margin-bottom:6px; }
+.published-dashboard :is(.fb-eyebrow,.fc-eyebrow,.vd-eyebrow) span { text-transform:none; letter-spacing:0; }
+.published-dashboard :is(.fb-header-actions,.fc-actions,.seo-page-header>div:last-child) { flex-wrap:wrap; }
+.published-dashboard :is(#seo-weekly,#fb-optimize) { background:#f8fafc; color:#475569; border:1px solid #cbd5e1; box-shadow:none; }
+.published-dashboard .fc-actions { width:auto; max-width:100%; }
+.published-dashboard .fc-actions .fc-button { flex:0 1 auto; }
+.published-dashboard :is(.panel,.fc-panel,.vd-card,.seo-kpi-card,.kpi-card,.fc-kpi-card) { box-shadow:0 1px 3px #0f172a06; border-color:#e2e8f0; }
+.published-dashboard :is(.fb-kpi-label,.fc-kpi-label,.vd-kpi-label,.seo-kpi-card .uppercase,.kpi-card .uppercase) { text-transform:none; letter-spacing:0; font-size:12px; line-height:1.5; color:#475569; }
+.published-dashboard .fc-kpi-card { min-height:188px; padding:18px; }
+.published-dashboard .fc-kpi-label { min-height:36px; }
+.published-dashboard .fc-kpi-note { padding-top:12px; }
+.published-dashboard :is(.snapshot-kpi-note,.fc-kpi-note,.fb-kpi-footer,.vd-delta,.vd-kpi-foot) { color:#64748b; }
+.published-dashboard .snapshot-missing { color:#64748b; font-size:14px; }
+.published-dashboard [data-snapshot-kpi],
+.published-dashboard .seo-keyword-tiers dd { font-variant-numeric:tabular-nums; }
+.published-dashboard .snapshot-empty { min-height:0; padding:16px 0; font-size:13px; color:#64748b; }
+.published-dashboard .snapshot-status { color:#475569; font-size:12px; overflow-wrap:anywhere; margin-bottom:8px; }
+.published-dashboard .snapshot-quality { margin-bottom:16px; border:1px solid #f1d295; background:#fffbeb; border-radius:8px; padding:10px 14px; color:#854d0e; }
+.published-dashboard .snapshot-quality p { margin:8px 0; overflow-wrap:anywhere; }
+.published-dashboard .snapshot-chart-group { margin-top:16px; }
+.published-dashboard .snapshot-chart-group>label { display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:13px; color:#475569; }
+.published-dashboard .snapshot-chart-group select { min-width:0; max-width:100%; min-height:40px; }
+.published-dashboard .snapshot-table-heading { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; }
+.published-dashboard .snapshot-table-heading h3 { font-size:14px; font-weight:600; overflow-wrap:anywhere; }
+.published-dashboard .snapshot-table-heading label { font-size:12px; }
+.published-dashboard [data-snapshot-table] input[type="search"] { border:1px solid #cbd5e1; border-radius:8px; padding:8px 10px; margin:8px; max-width:180px; background:white; }
+.published-dashboard #fb-optimize .material-symbols-outlined { color:inherit; }
+.published-dashboard #fb-campaign-table :is(th,td):nth-child(n+3):nth-child(-n+7) { text-align:right; font-variant-numeric:tabular-nums; }
+.published-dashboard #fb-campaign-table th { text-transform:none; font-size:12px; }
+.published-dashboard .snapshot-chart-group [data-bundle-chart] { max-width:100%; overflow-x:auto; }
+.published-dashboard .pb-chart-surface { min-width:420px; }
+.published-dashboard .pb-chart-surface svg text { font-size:14px; }
+.published-dashboard .snapshot-table :is(th,td) { line-height:1.5; }
+.published-dashboard .snapshot-table th { text-transform:none; font-size:12px; color:#475569; background:#f8fafc; }
+.published-dashboard .snapshot-table tbody tr:hover { background:#f8fafc; }
+.published-dashboard :is(.snapshot-pagination,.fc-pagination) { gap:8px; }
+.published-dashboard :is(.snapshot-pagination,.fc-pagination) :is(button,select) { min-height:36px; }
+.published-dashboard #seo-result { background:#f8fafc; border:1px solid #e2e8f0; color:#334155; box-shadow:none; align-items:flex-start; }
+.published-dashboard #seo-result h4 { color:#334155; font-size:16px; line-height:1.5; }
+.published-dashboard #seo-result p { color:#64748b; font-size:12px; }
+.published-dashboard #seo-result button { flex-shrink:0; border:1px solid #cbd5e1; }
+.published-dashboard .fc-insight h3 { text-transform:none; letter-spacing:0; font-size:14px; }
+.published-dashboard .fc-insight ul { margin-bottom:0; }
+.published-dashboard .fc-insight p { border-top:0; margin-top:6px; padding-top:0; }
+.published-dashboard .dashboard-dialog { max-height:85dvh; overflow-y:auto; overflow-wrap:anywhere; }
+@media(max-width:1279px) {
+  .published-dashboard .header-comparison { max-width:180px; white-space:normal; }
+  .published-dashboard :is(.fb-page-header,.seo-page-header) { flex-direction:column; }
+}
+@media(max-width:1023px) { .dashboard-header { left:0; } }
+@media(max-width:767px) {
+  .published-dashboard .dashboard-header { height:auto !important; min-height:80px; flex-wrap:wrap; padding:10px 14px; gap:8px; }
+  .published-dashboard .dashboard-header>img { display:none; }
+  .published-dashboard .dashboard-header .header-filters { flex:1; flex-wrap:wrap; gap:4px; }
+  .published-dashboard #date-range { padding:4px 8px; font-size:11px; min-height:36px; }
+  .published-dashboard .header-comparison { flex-basis:100%; max-width:none; font-size:10px; }
+  .published-dashboard .dashboard-header>div:last-child { gap:6px; }
+  .published-dashboard .dashboard-header>div:last-child>div:last-child { display:none; }
+  .published-dashboard :is(#data-source,#export-report) { min-width:40px; padding:8px; }
+  .published-dashboard .dashboard-main { padding-top:100px; }
+  .published-dashboard .dashboard-main h1 { font-size:24px; }
+  .published-dashboard :is(.fc-button,.fb-button) { min-height:40px; }
+  .published-dashboard .fc-kpi-card { min-height:172px; padding:14px; }
+  .published-dashboard .fc-kpi-label { min-height:36px; }
+  .published-dashboard .fc-kpi-note { font-size:11px; }
+  .published-dashboard .snapshot-chart-group [data-bundle-chart] { max-width:100%; overflow-x:auto; }
+  .published-dashboard .pb-chart-surface { min-width:420px; }
+  .published-dashboard .pb-chart-tooltip { position:sticky; left:0; white-space:pre-line; }
+  .published-dashboard .snapshot-table-heading { padding:0 8px; }
+  .published-dashboard .snapshot-table-heading label { display:flex; align-items:center; flex-wrap:wrap; }
+}
+@media print {
+  .published-dashboard .dashboard-main { padding-top:0; }
+  .published-dashboard .pb-chart-surface { min-width:0; }
+  .published-dashboard .snapshot-chart-group [data-bundle-chart] { overflow:visible; }
+}

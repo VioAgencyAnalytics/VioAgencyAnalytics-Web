@@ -2,6 +2,25 @@
 
 > Luồng hiện hành: **Đăng nhập Admin → Chọn báo cáo/revision → Mở báo cáo → Dashboard New**. New không có form hoặc API đăng nhập riêng. `/`, `/login` cũ và `/reports` chuyển về Admin. Xem [hướng dẫn hiện hành](docs/ADMIN_HANDOFF_DASHBOARD.md).
 
+## Xem riêng giao diện New, không đăng nhập
+
+Trong thư mục `KDH-Report-New`, chạy:
+
+```powershell
+docker compose -f compose.design-preview.yaml up -d --build
+```
+
+Mở **http://localhost:8081/** để vào Tổng quan mới (`/qa/overview`), rồi chọn SEO,
+Facebook Ads, Facebook Content, TikTok, YouTube hoặc Google Maps trong sidebar.
+Đây là bản xem giao diện Bundle với **fixture kiểm thử**, có nhãn DEMO;
+không dùng dữ liệu báo cáo thật. Các mục thiếu dữ liệu vẫn hiển thị chưa có dữ liệu.
+Container dùng cùng Mapper/template/CSS/JS với Viewer, chạy riêng, không nhận
+service token, không nối database hay network Admin và không có route báo cáo thật
+hoặc đăng nhập. Chỉ container preview mount `scripts/` và `tests/` ở chế độ chỉ đọc;
+hai thư mục này không được đưa vào image Viewer production.
+New báo cáo thật tại 8080 vẫn cần Admin hoạt động để đăng nhập/chọn báo cáo.
+File này dùng độc lập; không ghép với `compose.yaml` hay `compose.preview.yaml`.
+
 A FastAPI + Jinja2 marketing reporting dashboard with independent demo pages and a protected renderer for published Admin Report Bundles.
 
 ## Stack

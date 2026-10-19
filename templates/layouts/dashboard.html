@@ -11,9 +11,11 @@
   {% if dashboard is defined %}<link rel="stylesheet" href="/static/css/pages/snapshot.css"><script src="/static/js/shared/charts.js" defer></script><script src="/static/js/pages/snapshot.js" defer></script>{% endif %}
   {% block sidebar_script %}<script src="/static/js/shared/sidebar.js" defer></script>{% endblock %}
   {% block page_styles %}{% endblock %}
+  <link rel="stylesheet" href="/static/css/pages/executive.css">
+  {% if dashboard is defined %}<link rel="stylesheet" href="/static/css/pages/executive-polish.css">{% endif %}
   {% block page_script %}{% endblock %}
 </head>
-<body class="bg-surface font-body-md text-body-md text-on-surface">
+<body {% if dashboard is defined %}data-report-channel="{{ dashboard.channel }}" {% endif %}class="{{ 'published-dashboard ' if dashboard is defined else '' }}bg-surface font-body-md text-body-md text-on-surface">
 <a class="skip-link" href="#main-content">Đến nội dung báo cáo</a>
 {% block sidebar %}{% include "components/dashboard/sidebar.html" %}{% endblock %}
 

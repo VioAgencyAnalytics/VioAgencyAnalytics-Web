@@ -51,7 +51,8 @@
   function matches(row) {
     const term = search.trim().toLocaleLowerCase('vi');
     if (term && !(row.keyword + ' ' + row.landing).toLocaleLowerCase('vi').includes(term)) return false;
-    return ({ all: true, top3: row.position <= 3, top10: row.position > 3 && row.position <= 10,
+    if (/^top(5|10|20|30|50|100)$/.test(rank)) return row.position >= 1 && row.position <= Number(rank.slice(3));
+    return ({ all: true, top3: row.position >= 1 && row.position <= 3,
       new: row.previous > 10 && row.position <= 10, risers: row.previous - row.position >= 5 })[rank];
   }
   const applied = document.createElement('div');

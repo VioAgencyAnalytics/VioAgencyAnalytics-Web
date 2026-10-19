@@ -1,22 +1,22 @@
 {% if dashboard is defined %}
 {% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
 <section class="mb-space-lg" id="executive-summary">
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 px-6 py-5 rounded-2xl shadow-sm executive-banner">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 executive-banner">
   <div class="min-w-0">
     <div class="flex items-center gap-2 mb-1">
-      <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[11px] font-semibold uppercase tracking-wider">Báo cáo đa kênh</span>
+      <span class="exec-badge">Báo cáo đa kênh</span>
       <span class="text-slate-300">•</span>
       <span class="text-xs text-slate-500">{{ bundle.client_name }}</span>
     </div>
-    <h1 class="text-xl font-bold text-slate-900 tracking-tight leading-tight">Tổng quan toàn dự án</h1>
+    <h1 class="exec-title">Tổng quan</h1>
     <p class="text-sm text-slate-500 mt-0.5" id="period-description">{{ bundle.period.start }} → {{ bundle.period.end }}</p>
   </div>
   <div class="flex flex-wrap items-center gap-3 shrink-0">
     {% for key,label,icon in [('marketing.conversion_rate','Tỷ lệ chuyển đổi','donut_large'),('marketing.kpi_completion','Tiến độ KPI','assignment_turned_in')] %}
-    <div class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100">
+    <div class="exec-metric-card">
       <span class="material-symbols-outlined text-blue-600 text-[18px]" aria-hidden="true">{{ icon }}</span>
       <div>
-        <div class="text-[10px] text-slate-400 uppercase tracking-wide">{{ label }}</div>
+        <div class="exec-metric-label">{{ label }}</div>
         <div class="text-sm font-bold text-slate-900">{% for metric in dashboard.all_metrics if metric.key == key %}{{ metric.text }}{% else %}<span class="snapshot-missing text-slate-400">–</span>{% endfor %}</div>
       </div>
     </div>
@@ -26,33 +26,39 @@
 </section>
 {% else %}
 <section class="mb-space-lg" id="executive-summary">
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 px-6 py-5 rounded-2xl shadow-sm executive-banner">
+<div class="executive-banner">
   <div class="min-w-0">
-    <div class="flex items-center gap-2 mb-1">
-      <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[11px] font-semibold uppercase tracking-wider">Báo cáo đa kênh</span>
-      <span class="text-slate-300">•</span>
-      <span class="text-xs text-slate-500">KinderHealth Clinic Group</span>
+    <div class="flex items-center gap-2 mb-2">
+      <span class="exec-badge"><span class="material-symbols-outlined text-[12px] mr-1">bar_chart</span>Báo cáo đa kênh</span>
+      <span class="exec-badge exec-badge--muted">KinderHealth Clinic Group</span>
     </div>
-    <h1 class="text-xl font-bold text-slate-900 tracking-tight leading-tight">Tổng quan toàn dự án</h1>
-    <p class="text-sm text-slate-500 mt-0.5" id="period-description">01/09/2026 – 30/09/2026</p>
+    <h1 class="exec-title">Tổng quan hiệu quả Marketing</h1>
+    <p class="exec-subtitle" id="period-description">
+      <span class="material-symbols-outlined text-[14px] mr-1">date_range</span>
+      01/09/2026 – 30/09/2026
+    </p>
   </div>
   <div class="flex flex-wrap items-center gap-3 shrink-0">
-    <div class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100">
-      <span aria-hidden="true" class="material-symbols-outlined text-blue-600 text-[18px]">donut_large</span>
+    <div class="exec-metric-card exec-metric-card--highlight">
+      <div class="exec-metric-icon exec-metric-icon--blue">
+        <span aria-hidden="true" class="material-symbols-outlined text-[18px]">donut_large</span>
+      </div>
       <div>
-        <div class="text-[10px] text-slate-400 uppercase tracking-wide">Tỷ lệ chuyển đổi</div>
+        <div class="exec-metric-label">Tỷ lệ chuyển đổi</div>
         <div class="flex items-center gap-1.5">
           <span class="text-sm font-bold text-slate-900">1,82%</span>
-          <span class="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
+          <span class="exec-delta exec-delta--up">
             <span aria-hidden="true" class="material-symbols-outlined text-[11px]">arrow_upward</span>0,24%
           </span>
         </div>
       </div>
     </div>
-    <div class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100">
-      <span aria-hidden="true" class="material-symbols-outlined text-blue-600 text-[18px]">assignment_turned_in</span>
+    <div class="exec-metric-card exec-metric-card--highlight">
+      <div class="exec-metric-icon exec-metric-icon--emerald">
+        <span aria-hidden="true" class="material-symbols-outlined text-[18px]">assignment_turned_in</span>
+      </div>
       <div>
-        <div class="text-[10px] text-slate-400 uppercase tracking-wide">Tiến độ KPI</div>
+        <div class="exec-metric-label">Tiến độ KPI</div>
         <div class="text-sm font-bold text-emerald-600">114,2% kế hoạch</div>
       </div>
     </div>

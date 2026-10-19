@@ -1,6 +1,6 @@
 {% if dashboard is defined %}
 {% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
-<div class="vd-panel-head"><div><h2>{{ 'Biểu đồ Chi tiêu & Lượt Leads theo thời gian' if video.channel == 'tiktok' else 'Xu Hướng Lượt Xem & Thời Gian Xem' }}</h2><p>Kỳ báo cáo {{ bundle.period.start }} → {{ bundle.period.end }} · Mỗi chỉ số dùng thang đo riêng</p></div></div>{{ charts() }}
+<div class="vd-panel-head"><div><h2>Xu hướng trong kỳ</h2><p>Mỗi chỉ số dùng thang đo riêng.</p></div></div>{{ charts() }}
 {% else %}
 <div class="vd-panel-head"><div><h2>{{ 'Biểu đồ Chi tiêu & Lượt Leads theo thời gian' if video.channel == 'tiktok' else 'Xu Hướng Lượt Xem & Thời Gian Xem' }}</h2><p>Kỳ báo cáo <span id="vd-chart-period"></span></p></div><div class="vd-legend"><span><i></i>{{ video.chart.labels[0] }}</span><span id="vd-chart-secondary"><i class="{{ 'green' if video.channel == 'tiktok' else 'purple' }}"></i>{{ video.chart.labels[1] }}</span></div></div>
 {% if video.channel == 'youtube' %}<div class="vd-chart-tabs" aria-label="Chỉ số biểu đồ"><button type="button" data-chart-metric="views" aria-pressed="true">Lượt xem</button><button type="button" data-chart-metric="watch_hours" aria-pressed="false">Thời gian xem</button></div>{% endif %}

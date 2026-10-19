@@ -1,4 +1,13 @@
 #seo-dashboard > * { min-width: 0; }
+.seo-keyword-tiers { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+.seo-keyword-tiers > div { background: #f2f3ff; border-radius: 8px; padding: 12px; overflow-wrap: anywhere; }
+.seo-keyword-tiers dt { color: #424753; font-size: 13px; }
+.seo-keyword-tiers dd { font-size: 20px; font-weight: 600; margin: 8px 0; }
+.seo-keyword-tiers p { font-size: 12px; color: #727784; }
+#seo-keywords .snapshot-table th:first-child { min-width: 160px; }
+#seo-keywords .snapshot-table th:nth-child(2) { min-width: 180px; }
+@media (max-width: 1199px) { .seo-keyword-tiers { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 639px) { .seo-keyword-tiers { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 #seo-dashboard [id] { scroll-margin-top: 148px; }
 .seo-page-header > div:first-child { min-width: 0; }
 .seo-page-header > div:first-child > div { flex-wrap: wrap; }

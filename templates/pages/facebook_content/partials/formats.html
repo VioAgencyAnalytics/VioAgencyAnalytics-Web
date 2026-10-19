@@ -1,6 +1,6 @@
 {% if dashboard is defined %}
 {% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
-<h2>Phân Bổ Định Dạng Nội Dung</h2>{{ charts() }}
+<h2>Biểu đồ trong báo cáo</h2>{{ charts() }}
 {% else %}
 {% from 'pages/facebook_content/partials/helpers.html' import n, pct, heading %}
 {{ heading('Phân Bổ Định Dạng Nội Dung', 'donut_large', 'Tỷ lệ bài đăng và hiệu quả tương tác phân theo định dạng media.') }}

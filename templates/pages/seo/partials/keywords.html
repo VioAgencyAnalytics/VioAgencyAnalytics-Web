@@ -1,14 +1,24 @@
 {% if dashboard is defined %}
 {% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
 <div class="bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] mb-space-xl" id="seo-keywords">
-<h3 class="font-headline-md text-headline-md">Thứ Hạng Từ Khóa Nổi Bật</h3>{{ tables(dashboard.keyword_tables) }}
+<h3 class="font-headline-md text-headline-md">Thứ hạng từ khóa</h3>
+<p class="seo-sample-note">Top K gồm vị trí 1–K, theo số đã chốt. Không cộng các mốc. Bảng lịch sử bên dưới không phải số từ khóa duy nhất.</p>
+<dl class="seo-keyword-tiers">
+{% for tier in dashboard.keyword_tiers %}{% set metric = tier.metric %}
+<div><dt>Top {{ tier.limit }}</dt><dd data-keyword-tier="{{ tier.limit }}">{{ metric.text if metric else 'Chưa có dữ liệu' }}</dd>
+<p>Kỳ trước: {{ snapshot_format(metric.previous, metric.unit) if metric and metric.previous is not none else '—' }}</p>
+<p>{{ metric.source if metric else 'Chưa có nguồn' }} · {{ metric.data_date if metric and metric.data_date else 'Chưa có ngày tracking' }}</p></div>
+{% endfor %}
+</dl>
+<p class="seo-sample-note">Vị trí kỳ trước và thay đổi chỉ hiển thị khi có dữ liệu so sánh hợp lệ.</p>
+{{ tables(dashboard.keyword_tables) }}
 </div>
 {% else %}
 <div class="bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] mb-space-xl" id="seo-keywords">
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md mb-6">
 <div>
 <h3 class="font-headline-md text-headline-md text-on-surface">
-     Thứ Hạng Từ Khóa Nổi Bật
+     Thứ hạng từ khóa
     </h3>
 <p class="font-body-sm text-body-sm text-on-surface-variant">
      Theo dõi các từ khóa trọng tâm ngành Nhi khoa &amp; Tiêm chủng
@@ -17,19 +27,16 @@
 <!-- Filter Tabs -->
 <div aria-label="Lọc thứ hạng từ khóa" class="flex items-center gap-1 bg-surface-container-low p-1 rounded-lg border border-outline-variant/40 overflow-x-auto" id="seo-rank-filters">
 <button aria-pressed="true" class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-semibold text-body-sm shadow-sm whitespace-nowrap" data-rank="all" id="seo-rank-all" type="button">
-     Tất cả (148)
+     Tất cả bản ghi mẫu
     </button>
-<button aria-pressed="false" class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface text-body-sm whitespace-nowrap" data-rank="top3" id="seo-rank-top3" type="button">
-     Top 3 (32)
-    </button>
-<button aria-pressed="false" class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface text-body-sm whitespace-nowrap" data-rank="top10" id="seo-rank-top10" type="button">
-     Top 10 (116)
-    </button>
+{% for k in [5,10,20,30,50,100] %}
+<button aria-pressed="false" class="px-3 py-1.5 rounded-lg text-on-surface-variant text-body-sm whitespace-nowrap" data-rank="top{{ k }}" id="seo-rank-top{{ k }}" type="button">Top {{ k }} (1–{{ k }})</button>
+{% endfor %}
 <button aria-pressed="false" class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface text-body-sm whitespace-nowrap" data-rank="new" id="seo-rank-new" type="button">
-     Mới vào Top 10 (12)
+     Mới vào Top 10
     </button>
 <button aria-pressed="false" class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface text-body-sm whitespace-nowrap" data-rank="risers" id="seo-rank-risers" type="button">
-     Tăng hạng mạnh (24)
+     Tăng hạng mạnh
     </button>
 </div>
 </div>

@@ -1,164 +1,67 @@
 {% if dashboard is defined %}
 {% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
 <section class="grid grid-cols-1 lg:grid-cols-2 gap-space-lg mb-space-lg" id="insights">
-<div class="flex flex-col bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm"><div class="flex items-center gap-space-sm mb-space-md"><div class="w-10 h-10 rounded-xl bg-[#ecfdf5] text-[#15803d] flex items-center justify-center"><span class="material-symbols-outlined text-[24px]" aria-hidden="true">verified</span></div><h2 class="font-headline-md text-headline-md text-on-surface">ĐIỂM NỔI BẬT TRONG KỲ</h2></div><div class="flex flex-col gap-space-sm">{% for evidence in dashboard.evidence %}<p class="p-space-sm rounded-xl bg-surface-container-low font-body-md text-body-md">{{ evidence.claim or evidence.metric }}</p>{% else %}<p class="snapshot-empty">Chưa có nhận định được phép công bố.</p>{% endfor %}</div></div>
-<div class="flex flex-col bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm"><div class="flex items-center gap-space-sm mb-space-md"><div class="w-10 h-10 rounded-xl bg-surface-container-low text-primary flex items-center justify-center"><span class="material-symbols-outlined text-[24px]" aria-hidden="true">lightbulb</span></div><h2 class="font-headline-md text-headline-md text-on-surface">CƠ HỘI &amp; ĐỀ XUẤT</h2></div><div class="flex flex-col gap-space-sm">{% for opportunity in dashboard.opportunities %}<article class="p-space-sm rounded-xl bg-surface-container-low"><h3>{{ opportunity.title }}</h3><p>{{ opportunity.reason or '' }}</p></article>{% else %}<p class="snapshot-empty">Chưa có đề xuất được duyệt.</p>{% endfor %}</div></div>
+<div class="flex flex-col bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm"><div class="flex items-center gap-space-sm mb-space-md"><div class="w-10 h-10 rounded-xl bg-[#ecfdf5] text-[#15803d] flex items-center justify-center"><span class="material-symbols-outlined text-[24px]" aria-hidden="true">verified</span></div><h2 class="font-headline-md text-headline-md text-on-surface">Nhận định trong kỳ</h2></div><div class="flex flex-col gap-space-sm">{% for evidence in dashboard.evidence %}<p class="p-space-sm rounded-xl bg-surface-container-low font-body-md text-body-md">{{ evidence.claim or evidence.metric }}</p>{% else %}<p class="snapshot-empty">Chưa có nhận định được phép công bố.</p>{% endfor %}</div></div>
+<div class="flex flex-col bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm"><div class="flex items-center gap-space-sm mb-space-md"><div class="w-10 h-10 rounded-xl bg-surface-container-low text-primary flex items-center justify-center"><span class="material-symbols-outlined text-[24px]" aria-hidden="true">lightbulb</span></div><h2 class="font-headline-md text-headline-md text-on-surface">Đề xuất</h2></div><div class="flex flex-col gap-space-sm">{% for opportunity in dashboard.opportunities %}<article class="p-space-sm rounded-xl bg-surface-container-low"><h3>{{ opportunity.title }}</h3><p>{{ opportunity.reason or '' }}</p></article>{% else %}<p class="snapshot-empty">Chưa có đề xuất được duyệt.</p>{% endfor %}</div></div>
 </section>
 {% else %}
 <section class="grid grid-cols-1 lg:grid-cols-2 gap-space-lg mb-space-lg" id="insights">
 <!-- Box 1: Điểm Nổi Bật Trong Kỳ -->
-<div class="flex flex-col bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm">
-<div class="flex items-center gap-space-sm mb-space-md">
-<div class="w-10 h-10 rounded-xl bg-[#ecfdf5] text-[#15803d] flex items-center justify-center">
-<span aria-hidden="true" class="material-symbols-outlined text-[24px]">
-      verified
-     </span>
+<div class="insight-card insight-card--positive">
+<div class="insight-card-header">
+<div class="insight-card-icon insight-card-icon--positive">
+<span aria-hidden="true" class="material-symbols-outlined text-[24px]">verified</span>
 </div>
 <div>
-<h2 class="font-headline-md text-headline-md text-on-surface">
-      ĐIỂM NỔI BẬT TRONG KỲ
-     </h2>
-<span class="font-label-sm text-label-sm text-[#15803d] font-semibold uppercase tracking-wider">
-      Tín hiệu tăng trưởng tích cực
-     </span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Nhận định trong kỳ</h2>
+<span class="insight-card-badge insight-card-badge--positive">
+<span class="material-symbols-outlined text-[12px]">trending_up</span> Tín hiệu tăng trưởng tích cực
+</span>
 </div>
 </div>
 <div class="flex flex-col gap-space-sm">
-<div class="p-space-sm rounded-xl bg-surface-container-low flex items-start gap-3">
-<span aria-hidden="true" class="material-symbols-outlined text-[#15803d] text-[20px] shrink-0 mt-0.5">
-      trending_up
-     </span>
-<p class="font-body-md text-body-md text-on-surface">
-<strong>
-       Organic Traffic bứt phá +21,4%:
-      </strong>
-      Cụm bài viết chuyên khoa
-      <em>
-       Nhi &amp; Tiêm chủng mùa tựu trường
-      </em>
-      thu hút lượng lớn phụ huynh tra cứu tự nhiên.
-     </p>
+{% set positive_items = [
+  ('trending_up', 'Organic Traffic bứt phá +21,4%:', 'Cụm bài viết chuyên khoa <em>Nhi &amp; Tiêm chủng mùa tựu trường</em> thu hút lượng lớn phụ huynh tra cứu tự nhiên.'),
+  ('savings', 'Facebook Ads tối ưu vượt kỳ vọng:', 'Mang về <strong>485 Leads</strong> với chỉ số CPL giảm <strong>8,6%</strong>, đạt mức <strong>54.432 ₫/lead</strong> chất lượng cao.'),
+  ('military_tech', 'Củng cố vị thế từ khóa:', 'Đưa thành công thêm <strong>12 từ khóa giá trị cao</strong> ngành nhi khoa vào Top 10 Google Search Console.'),
+  ('star', 'Google Maps ghi nhận uy tín cao:', 'Điểm đánh giá duy trì <strong>4,8 sao</strong> với <strong>480 cuộc gọi</strong> đặt lịch khám trực tiếp tới 3 cơ sở phòng khám.')
+] %}
+{% for icon, title, desc in positive_items %}
+<div class="insight-item">
+<span aria-hidden="true" class="material-symbols-outlined text-[#15803d] text-[20px] shrink-0 mt-0.5">{{ icon }}</span>
+<p class="font-body-md text-body-md text-on-surface"><strong>{{ title }}</strong> {{ desc }}</p>
 </div>
-<div class="p-space-sm rounded-xl bg-surface-container-low flex items-start gap-3">
-<span aria-hidden="true" class="material-symbols-outlined text-[#15803d] text-[20px] shrink-0 mt-0.5">
-      savings
-     </span>
-<p class="font-body-md text-body-md text-on-surface">
-<strong>
-       Facebook Ads tối ưu vượt kỳ vọng:
-      </strong>
-      Mang về
-      <strong>
-       485 Leads
-      </strong>
-      với chỉ số CPL giảm
-      <strong>
-       8,6%
-      </strong>
-      , đạt mức
-      <strong>
-       54.432 ₫/lead
-      </strong>
-      chất lượng cao.
-     </p>
-</div>
-<div class="p-space-sm rounded-xl bg-surface-container-low flex items-start gap-3">
-<span aria-hidden="true" class="material-symbols-outlined text-[#15803d] text-[20px] shrink-0 mt-0.5">
-      military_tech
-     </span>
-<p class="font-body-md text-body-md text-on-surface">
-<strong>
-       Củng cố vị thế từ khóa:
-      </strong>
-      Đưa thành công thêm
-      <strong>
-       12 từ khóa giá trị cao
-      </strong>
-      ngành nhi khoa vào Top 10 Google Search Console.
-     </p>
-</div>
-<div class="p-space-sm rounded-xl bg-surface-container-low flex items-start gap-3">
-<span aria-hidden="true" class="material-symbols-outlined text-[#15803d] text-[20px] shrink-0 mt-0.5">
-      star
-     </span>
-<p class="font-body-md text-body-md text-on-surface">
-<strong>
-       Google Maps ghi nhận uy tín cao:
-      </strong>
-      Điểm đánh giá duy trì
-      <strong>
-       4,8 sao
-      </strong>
-      với
-      <strong>
-       480 cuộc gọi
-      </strong>
-      đặt lịch khám trực tiếp tới 3 cơ sở phòng khám.
-     </p>
-</div>
+{% endfor %}
 </div>
 </div>
 <!-- Box 2: Cần Chú Ý & Tối Ưu -->
-<div class="flex flex-col bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm">
-<div class="flex items-center gap-space-sm mb-space-md">
-<div class="w-10 h-10 rounded-xl bg-[#fff7ed] text-[#c2410c] flex items-center justify-center">
-<span aria-hidden="true" class="material-symbols-outlined text-[24px]">
-      warning
-     </span>
+<div class="insight-card insight-card--warning">
+<div class="insight-card-header">
+<div class="insight-card-icon insight-card-icon--warning">
+<span aria-hidden="true" class="material-symbols-outlined text-[24px]">warning</span>
 </div>
 <div>
-<h2 class="font-headline-md text-headline-md text-on-surface">
-      CẦN CHÚ Ý &amp; TỐI ƯU
-     </h2>
-<span class="font-label-sm text-label-sm text-[#c2410c] font-semibold uppercase tracking-wider">
-      Hành động can thiệp kịp thời
-     </span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Cần chú ý & Tối ưu</h2>
+<span class="insight-card-badge insight-card-badge--warning">
+<span class="material-symbols-outlined text-[12px]">priority_high</span> Hành động can thiệp kịp thời
+</span>
 </div>
 </div>
 <div class="flex flex-col gap-space-sm">
-<div class="p-space-sm rounded-xl bg-surface-container-low flex items-start gap-3">
-<span class="px-2 py-0.5 rounded text-metric-delta font-metric-delta bg-[#fee2e2] text-[#b91c1c] shrink-0 mt-0.5">
-      CPL ↑ 9,2%
-     </span>
-<p class="font-body-md text-body-md text-on-surface">
-<strong>
-       TikTok Ads bão hòa tệp sáng tạo:
-      </strong>
-      Chi phí mỗi lead tăng lên 68.837 ₫ do mẫu video cũ đạt tần suất lặp 3,8 lần. Cần đổi kịch bản mới trong 48h.
-     </p>
+{% set warning_items = [
+  ('CPL ↑ 9,2%', 'TikTok Ads bão hòa tệp sáng tạo:', 'Chi phí mỗi lead tăng lên 68.837 ₫ do mẫu video cũ đạt tần suất lặp 3,8 lần. Cần đổi kịch bản mới trong 48h.'),
+  ('Thứ hạng', 'Biến động SEO nhóm Dinh Dưỡng:', '4 từ khóa chủ lực bị tụt từ 3 - 5 bậc do đối thủ cùng khu vực đẩy mạnh chiến dịch bài viết chuyên sâu.'),
+  ('Reach ↓ 5,2%', 'Facebook Content tự nhiên sụt giảm:', 'Thuật toán Meta ưu tiên hiển thị Reels ngắn, các bài post dạng ảnh đơn truyền thống giảm lượt hiển thị tự nhiên.')
+] %}
+{% for badge, title, desc in warning_items %}
+<div class="insight-item">
+<span class="insight-alert-badge insight-alert-badge--red">{{ badge }}</span>
+<p class="font-body-md text-body-md text-on-surface"><strong>{{ title }}</strong> {{ desc }}</p>
 </div>
-<div class="p-space-sm rounded-xl bg-surface-container-low flex items-start gap-3">
-<span class="px-2 py-0.5 rounded text-metric-delta font-metric-delta bg-[#fee2e2] text-[#b91c1c] shrink-0 mt-0.5">
-      Thứ hạng
-     </span>
-<p class="font-body-md text-body-md text-on-surface">
-<strong>
-       Biến động SEO nhóm Dinh Dưỡng:
-      </strong>
-      4 từ khóa chủ lực bị tụt từ 3 - 5 bậc do đối thủ cùng khu vực đẩy mạnh chiến dịch bài viết chuyên sâu.
-     </p>
-</div>
-<div class="p-space-sm rounded-xl bg-surface-container-low flex items-start gap-3">
-<span class="px-2 py-0.5 rounded text-metric-delta font-metric-delta bg-[#fee2e2] text-[#b91c1c] shrink-0 mt-0.5">
-      Reach ↓ 5,2%
-     </span>
-<p class="font-body-md text-body-md text-on-surface">
-<strong>
-       Facebook Content tự nhiên sụt giảm:
-      </strong>
-      Thuật toán Meta ưu tiên hiển thị Reels ngắn, các bài post dạng ảnh đơn truyền thống giảm lượt hiển thị tự nhiên.
-     </p>
-</div>
-<div class="p-space-sm rounded-xl bg-surface-container-low flex items-start gap-3">
-<span class="px-2 py-0.5 rounded text-metric-delta font-metric-delta bg-[#fef3c7] text-[#b45309] shrink-0 mt-0.5">
-      CSKH Maps
-     </span>
-<p class="font-body-md text-body-md text-on-surface">
-<strong>
-       Phản hồi đánh giá chậm:
-      </strong>
-      Có 8 phản hồi mới trong tuần qua trên Google Maps chưa được đội ngũ chăm sóc khách hàng tương tác trả lời.
-     </p>
+{% endfor %}
+<div class="insight-item">
+<span class="insight-alert-badge insight-alert-badge--amber">CSKH Maps</span>
+<p class="font-body-md text-body-md text-on-surface"><strong>Phản hồi đánh giá chậm:</strong> Có 8 phản hồi mới trong tuần qua trên Google Maps chưa được đội ngũ chăm sóc khách hàng tương tác trả lời.</p>
 </div>
 </div>
 </div>

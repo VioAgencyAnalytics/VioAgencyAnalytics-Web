@@ -24,10 +24,24 @@
   $$('[data-snapshot-series]').forEach(select => select.addEventListener('change', () => {
     [...select.closest('.snapshot-chart-group').querySelectorAll('[data-bundle-chart]')].forEach((chart, i) => { chart.hidden = i !== Number(select.value); });
   }));
+  // Include optional channel charts in print, then restore the reader's choices.
+  let printDetails = null;
+  window.addEventListener('beforeprint', () => {
+    if (printDetails !== null) return;
+    printDetails = $$('.channel-trend, .executive-briefing details').map(element => [element, element.open]);
+    printDetails.forEach(([element]) => { element.open = true; });
+  });
+  window.addEventListener('afterprint', () => {
+    printDetails?.forEach(([element, open]) => { element.open = open; });
+    printDetails = null;
+  });
   const filterTables = () => $$('[data-snapshot-table]').forEach(table => {
     const query = table.querySelector('[data-snapshot-search]').value.toLocaleLowerCase('vi');
     const rows = [...table.querySelectorAll('tbody tr')];
-    const matching = rows.filter(row => row.textContent.toLocaleLowerCase('vi').includes(query) && row.dataset.dateHidden !== 'true');
+    const rank = table.querySelector('[data-snapshot-rank]')?.value || 'all';
+    const matching = rows.filter(row => row.textContent.toLocaleLowerCase('vi').includes(query) && row.dataset.dateHidden !== 'true'
+      && (rank === 'all' || (row.dataset.position !== '' && Number.isFinite(Number(row.dataset.position))
+        && Number(row.dataset.position) >= 1 && Number(row.dataset.position) <= Number(rank))));
     const sizeValue = table.querySelector('[data-page-size]')?.value || 'all';
     const size = sizeValue === 'all' ? Math.max(1, matching.length) : Number(sizeValue);
     const pages = Math.max(1, Math.ceil(matching.length / size));
@@ -42,6 +56,7 @@
     }
   });
   $$('[data-snapshot-search]').forEach(input => input.addEventListener('input', () => { input.closest('[data-snapshot-table]').dataset.page = 1; filterTables(); }));
+  $$('[data-snapshot-rank]').forEach(input => input.addEventListener('change', () => { input.closest('[data-snapshot-table]').dataset.page = 1; filterTables(); }));
   $$('[data-page-size]').forEach(input => input.addEventListener('change', () => { input.closest('[data-snapshot-table]').dataset.page = 1; filterTables(); }));
   $$('[data-page-prev], [data-page-next]').forEach(button => button.addEventListener('click', () => {
     const table = button.closest('[data-snapshot-table]'); table.dataset.page = Number(table.dataset.page || 1) + (button.hasAttribute('data-page-next') ? 1 : -1); filterTables();
@@ -75,7 +90,8 @@
   $('#date-form')?.addEventListener('submit', event => {
     event.preventDefault();
     const start = $('#date-start').value, end = $('#date-end').value;
-    if (start > end || start < data.period.start || end > data.period.end) { $('#date-error').textContent = 'Khoảng ngày phải nằm trong kỳ của snapshot.'; return; }
+    if (!start || !end || start > end || start < data.period.start || end > data.period.end) { $('#date-error').textContent = 'Khoảng ngày phải nằm trong kỳ của snapshot.'; return; }
+    $('#date-error').textContent = '';
     $$('[data-bundle-chart]').forEach(element => {
       const chart = JSON.parse(element.querySelector('script').textContent);
       if (chart.labels.every(label => /^\d{4}-\d{2}-\d{2}$/.test(label))) {
@@ -84,9 +100,11 @@
       }
     });
     $$('[data-snapshot-table] tbody tr').forEach(row => {
-      const date = [...row.cells].map(cell => cell.dataset.value).find(value => /^\d{4}-\d{2}-\d{2}$/.test(value));
+      const date = /^\d{4}-\d{2}-\d{2}$/.test(row.dataset.rowDate || '') ? row.dataset.rowDate : '';
       row.dataset.dateHidden = String(Boolean(date && (date < start || date > end)));
     });
+    $$('[data-snapshot-table]').forEach(table => { table.dataset.page = 1; });
+    $('#snapshot-filter-status').textContent = `Chi tiết: ${start} → ${end}. KPI và Top K giữ nguyên toàn kỳ; hàng không có ngày không được lọc theo ngày.`;
     filterTables(); $('#date-dialog').close(); note('Đã lọc chi tiết. KPI tổng vẫn là số của toàn kỳ đã chốt.');
   });
   $('#export-report')?.addEventListener('click', () => { $('#export-menu').hidden = !$('#export-menu').hidden; $('#export-report').setAttribute('aria-expanded', String(!$('#export-menu').hidden)); });
@@ -108,4 +126,9 @@
     $('#snapshot-detail').showModal();
   }));
   filterTables();
+  const targets = {'tong-quan-hieu-qua':'seo-summary', 'hieu-qua-seo':'seo-kpis', 'thu-hang-tu-khoa':'seo-keywords',
+    'hieu-qua-trang-dich':'seo-landings', 'phan-tich-luu-luong-truy-cap':'seo-trend',
+    'chuyen-doi-va-khach-hang-tiem-nang':'seo-funnel', 'tang-truong-va-phan-tich':'seo-insights'};
+  const view = new URLSearchParams(location.search).get('view');
+  if (Object.hasOwn(targets, view)) document.getElementById(targets[view])?.scrollIntoView({block:'start'});
 })();
