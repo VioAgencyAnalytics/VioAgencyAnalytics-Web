@@ -1,6 +1,12 @@
 # KDH Marketing Reporting Dashboard
 
-A FastAPI + Jinja2 marketing reporting dashboard built around a mock-data-first architecture.
+KDH-Report-New chạy Viewer bằng FastAPI + Jinja2. Bản Docker hiện tại chỉ đọc
+Published Report Bundle từ Admin.
+
+**Source ngày 20/10/2026:** các module Viewer, handoff, Bundle mapper và giao diện
+Facebook Content đã được đưa vào working tree này từ bản VIO đã kiểm thử. HEAD
+không đổi; thay đổi chưa commit. Compose dùng image bất biến đã build từ source
+này. VIO sandbox giữ riêng, không chuyển database, báo cáo hoặc quyền Viewer.
 
 ## Stack
 
@@ -10,37 +16,92 @@ A FastAPI + Jinja2 marketing reporting dashboard built around a mock-data-first 
 - Vanilla JS + ECharts
 - Pytest for smoke tests
 
-## Chạy bằng Docker — một lệnh
+## Mở New — một container, một cổng
 
-Cài và mở Docker Desktop (Linux containers). Tại thư mục dự án, chạy:
+Trong Docker Desktop, mở nhóm **`kdh-report-new`**, bấm **Run/Start** ở container
+**`kdh-report-new-app-1`**, rồi mở **http://localhost:8080**.
 
-```sh
-docker compose up --build -d
+FE và BE cùng chạy trong container này. Không cần mở các cổng preview `8081` hoặc
+`18085`. Các container VIO/Meta thuộc môi trường kiểm thử riêng, không dùng để mở
+bản New này.
+
+**Xem bố cục ngay, chưa cần chọn báo cáo:**
+http://localhost:8080/static/layout-preview/overview.html
+
+Các trang xem trước được render từ template trong image Viewer, với KPI rỗng;
+không gọi Admin, không tạo báo cáo và không sử dụng số liệu mẫu. Menu cho phép xem
+Tổng quan, SEO/Keywords, Facebook Ads, Facebook Content, TikTok Ads và YouTube.
+Lọc kỳ và xuất báo cáo bị vô hiệu hóa vì chưa có dữ liệu.
+
+Các HTML nằm trong `.work/layout-preview` (không commit) và được mount chỉ đọc.
+Khi cần tạo lại, chạy các lệnh sau với container Viewer hiện có:
+
+```powershell
+docker cp scripts/render_layout_preview.py kdh-report-new-app-1:/tmp/render_layout_preview.py
+docker exec -e PYTHONPATH=/app kdh-report-new-app-1 python /tmp/render_layout_preview.py /tmp/kdh-layout-preview
+New-Item -ItemType Directory -Force .work/layout-preview
+docker cp kdh-report-new-app-1:/tmp/kdh-layout-preview/. .work/layout-preview
 ```
 
-Mở **http://localhost:8080** (tự chuyển đến `/overview`). FE và BE của **KDH-Report-New**
-chạy trong container `kdh-report-new-app-1`, nhóm Compose **`kdh-report-new`**.
-Nhóm này độc lập với dự án **KDH-Report** (`kdh-report`); không dùng chung container
-hoặc network của hai dự án. Chạy lệnh trong đúng thư mục `D:\KDH-Report-New`.
-Docker tự cài thư viện Python, build Tailwind CSS và khởi động FastAPI; máy host
-không cần cài Python hoặc Node.js. Lần build đầu cần Internet để tải image và thư viện.
-Cổng mặc định là 8080 để không trùng bản uvicorn đang chạy ở cổng 8000.
+Nếu tạo container lần đầu và chưa có thư mục này, tạo thư mục rỗng
+`.work/layout-preview` trước, khởi động container, rồi render theo hướng dẫn trên.
+Chỉ lưu HTML xem bố cục trong thư mục này vì các file ở đây mở được không cần đăng nhập.
+
+Trang gốc chuyển sang Admin tại `http://localhost:8090/viewer/reports` để đăng nhập
+và chọn báo cáo. Admin cùng database của Admin phải đang chạy; chúng vẫn là các
+dịch vụ độc lập. Sau khi chọn báo cáo đã xuất bản, Admin chuyển về Viewer ở cổng
+8080. Đường dẫn `/overview` trực tiếp bị chặn trong production.
+
+Nếu cần tạo lại container, tại `D:\KDH-Report-All\KDH-Report-New` chạy:
+
+```sh
+docker compose up -d --no-build --pull never app
+```
+
+Yêu cầu có sẵn image local `kdh-new:unified-20261020-0d8c6b94bb93`, network
+`kdh-report-admin_default` và cấu hình `REPORT_SERVICE_TOKEN` hợp lệ đã được cấp.
+Image ID:
+`sha256:87844f282565682fefffb3f1436a48b70099129a96704abb743b134df16256f9`.
+Compose không tải image thay thế nếu thiếu image local.
+Không đưa token vào source hoặc tài liệu.
 
 ```sh
 docker compose ps              # Kiểm tra trạng thái / healthcheck
 docker compose logs -f app     # Xem log (Ctrl+C chỉ thoát xem log)
-docker compose down            # Dừng và gỡ container của dự án
+docker compose stop app        # Dừng New, giữ container để bấm Run lần sau
+docker compose start app       # Chạy lại New
 ```
 
-Sau khi sửa code, chạy lại `docker compose up --build -d` để cập nhật.
 Container tự khởi động lại khi Docker Engine chạy, trừ khi đã chủ động dừng.
-Muốn đổi cổng trên PowerShell, đặt `$env:KDH_PORT = '8090'` trước khi chạy Compose.
-Ứng dụng mặc định chỉ được mở trên máy đang chạy Docker.
+Chỉ mở ứng dụng trên máy đang chạy Docker. New không gọi Google/Meta trực tiếp và
+không có database riêng. Nếu không mở được link, kiểm tra trạng thái container và
+`http://localhost:8080/api/v1/health`; sau đó kiểm tra Admin nếu lỗi xảy ra khi chuyển trang.
 
-Bản Docker dùng cùng dữ liệu mẫu như bản local. Chưa thêm database vì luồng báo cáo
-hiện chưa sử dụng database; Docker không tự kết nối Meta, Google hoặc CRM.
-Các file `.env`, môi trường ảo, `node_modules` và dữ liệu thử trong `.work` không được
-đưa vào image. Node.js chỉ dùng ở bước build CSS; container chạy bằng user không phải root.
+Các mô tả dashboard mẫu bên dưới chỉ áp dụng cho chế độ development.
+Runtime production chặn các route demo; chỉ đọc Bundle đã phát hành từ Admin.
+Admin chính hiện giữ `client_meta_sandbox`. Báo cáo và Viewer grant của VIO sandbox
+không tự có ở database chính; chưa có Bundle/quyền phù hợp thì chưa mở được báo cáo.
+
+## New có dữ liệu mẫu — KDH-Report-New-MockDb
+
+Mở **http://localhost:8082** để xem dashboard có KPI, biểu đồ và bảng mẫu,
+không cần đăng nhập/chọn báo cáo. Trong Docker Desktop, mở nhóm
+`kdh-report-new-mockdb`, bật container **`KDH-Report-New-MockDb`** và bấm
+**8082:8000**. Trang gốc tự mở Tổng quan.
+
+```sh
+docker compose -f compose.mock.yaml up -d --no-build --pull never
+docker compose -f compose.mock.yaml stop
+```
+
+Bản này dùng entrypoint `app.design_preview:app` và dữ liệu mock sẵn có trong
+image `kdh-new:unified-20261020-0d8c6b94bb93`. Tên MockDb dùng để nhận diện;
+không tạo PostgreSQL hoặc database riêng. Container chỉ mount file CSS
+`static/css/pages/executive.css` ở chế độ chỉ đọc để cập nhật giao diện;
+không mount `.env` hay dữ liệu khách hàng, không có service token và chỉ tham gia network Docker
+riêng, không kết nối Admin/Google/Meta. Các trang ghi rõ **Dữ liệu mẫu**.
+Các số liệu và nhận định minh họa không phải kết quả hoặc cam kết kinh doanh.
+Viewer thật vẫn chạy riêng trên cổng 8080 với cơ chế phân quyền hiện tại.
 
 ## Run locally without Docker
 

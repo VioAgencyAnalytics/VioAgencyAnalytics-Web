@@ -54,11 +54,11 @@ def seo_payload(start: date | None = None, end: date | None = None, filters=None
 def filter_keywords(rows, rank='all', query=''):
     predicates = {
         'all': lambda row: True,
-        'top3': lambda row: row['position'] <= 3,
-        'top10': lambda row: 3 < row['position'] <= 10,
+        'top3': lambda row: 1 <= row['position'] <= 3,
         'new': lambda row: row['previous'] > 10 >= row['position'],
         'risers': lambda row: row['previous'] - row['position'] >= 5,
     }
+    predicates.update({f'top{k}': lambda row, limit=k: 1 <= row['position'] <= limit for k in (5, 10, 20, 30, 50, 100)})
     match = predicates[rank]
     query = query.strip().casefold()
     return [row for row in rows if match(row) and (not query or query in (row['keyword'] + ' ' + row['landing']).casefold())]

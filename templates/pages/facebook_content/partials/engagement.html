@@ -1,4 +1,15 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{% if dashboard.lifetime_kpis is defined %}
+<h3>Bộ đếm lifetime tại thời điểm snapshot</h3>
+<p>Giá trị tích lũy của các bài trong kỳ, không phải tương tác phát sinh trong kỳ.</p>
+<p>Page {{ dashboard.source_identity.external_id }} · Múi giờ nguồn: {{ dashboard.timezone }}{% if dashboard.fetched_at %} · Snapshot: {{ dashboard.fetched_at }}{% endif %}</p>
+<div class="fc-kpi-grid">{{ kpis('facebook_content', dashboard.lifetime_kpis) }}</div>
+{% else %}{{ unavailable('Cấu trúc tương tác') }}{% endif %}
+{% else %}
 {% from 'pages/facebook_content/partials/helpers.html' import n, pct, heading %}
 {{ heading('Cấu Trúc Tương Tác (Engagement Breakdown)', 'pie_chart', 'Tỷ lệ các hình thức tương tác chi tiết từ phía cộng đồng phụ huynh.') }}
 <div class="fc-breakdown">{% for row in fb_content.engagement_breakdown %}<div class="fc-bar-row fc-color-{{ loop.index }}"><div class="fc-bar-label"><span>{{ row.label }}</span><strong>{{ n(row.value) }} ({{ pct(row.percent) }})</strong></div><div class="fc-track"><span style="width:{{ row.percent }}%"></span></div></div>{% endfor %}</div>
 <div class="fc-panel-footer"><span>Tỷ lệ phản hồi tin nhắn mẫu: 98,5%</span><strong class="fc-green">Rất xuất sắc</strong></div>
+
+{% endif %}

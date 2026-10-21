@@ -17,6 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt \
     && useradd --create-home --uid 10001 appuser
 COPY --chown=appuser:appuser main.py ./
 COPY --chown=appuser:appuser app ./app
+COPY --chown=appuser:appuser ops ./ops
 COPY --chown=appuser:appuser templates ./templates
 COPY --chown=appuser:appuser static ./static
 COPY --from=frontend --chown=appuser:appuser /build/static/css/dist/dashboard.css ./static/css/dist/dashboard.css

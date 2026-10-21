@@ -8,20 +8,24 @@
   <link rel="icon" href="/static/img/kdh-logo.png">
   <link rel="stylesheet" href="/static/css/shared/fonts.css">
   <link rel="stylesheet" href="/static/css/dist/dashboard.css">
-  <script src="/static/js/shared/sidebar.js" defer></script>
+  {% if dashboard is defined %}<link rel="stylesheet" href="/static/css/pages/snapshot.css"><script src="/static/js/shared/charts.js" defer></script><script src="/static/js/pages/snapshot.js" defer></script>{% endif %}
+  {% block sidebar_script %}<script src="/static/js/shared/sidebar.js" defer></script>{% endblock %}
   {% block page_styles %}{% endblock %}
+  <link rel="stylesheet" href="/static/css/pages/executive.css">
+  {% if dashboard is defined %}<link rel="stylesheet" href="/static/css/pages/executive-polish.css">{% endif %}
   {% block page_script %}{% endblock %}
 </head>
-<body class="bg-surface font-body-md text-body-md text-on-surface">
+<body {% if dashboard is defined %}data-report-channel="{{ dashboard.channel }}" {% endif %}class="{{ 'published-dashboard ' if dashboard is defined else '' }}bg-surface font-body-md text-body-md text-on-surface">
 <a class="skip-link" href="#main-content">Đến nội dung báo cáo</a>
-{% include "components/dashboard/sidebar.html" %}
+{% block sidebar %}{% include "components/dashboard/sidebar.html" %}{% endblock %}
 
 <button type="button" id="sidebar-backdrop" aria-label="Đóng menu" hidden></button>
 <div class="dashboard-shell">
-{% include "components/dashboard/header.html" %}
-<main id="main-content" class="dashboard-main">{% block content %}{% endblock %}</main>
+{% block header %}{% include "components/dashboard/header.html" %}{% endblock %}
+<main id="main-content" class="dashboard-main">{% if dashboard is defined %}{% include 'pages/snapshot/status.html' %}{% endif %}{% block content %}{% endblock %}</main>
 </div>
-{% include "components/dashboard/controls.html" %}
+{% block controls %}{% include "components/dashboard/controls.html" %}{% endblock %}
 {% block scripts %}{% endblock %}
+{% if dashboard is defined %}<script id="snapshot-data" type="application/json">{{ {'report_id':bundle.report_id, 'revision':bundle.revision, 'period':bundle.period, 'dashboard':dashboard}|tojson }}</script>{% endif %}
 </body>
 </html>

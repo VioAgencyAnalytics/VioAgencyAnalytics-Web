@@ -11,10 +11,10 @@ client = TestClient(app)
 def test_seo_page_uses_reference_and_shared_navigation():
     response = client.get('/report/seo')
     assert response.status_code == 200
-    assert 'SEO &amp; LƯU LƯỢNG WEBSITE' in response.text
+    assert 'SEO &amp; lưu lượng website' in response.text
     assert '420.500' in response.text
     assert 'Phễu Chuyển Đổi SEO' in response.text
-    assert 'Thứ Hạng Từ Khóa Nổi Bật' in response.text
+    assert 'Thứ hạng từ khóa' in response.text
     assert '/static/js/pages/seo.js' in response.text
     assert '/static/js/pages/overview.js' not in response.text
     assert 'href="/report/seo" aria-current="page"' in response.text

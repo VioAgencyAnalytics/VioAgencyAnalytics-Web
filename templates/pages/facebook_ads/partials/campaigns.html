@@ -1,3 +1,7 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{% for row in dashboard.campaign_rows %}<tr data-snapshot-row>{% for cell in row %}<td data-value="{{ cell.value if cell.value is not none else '' }}">{% if loop.first %}<button type="button" class="fb-campaign-link" data-snapshot-detail>{{ cell.text }}</button>{% else %}{{ cell.text }}{% endif %}</td>{% endfor %}</tr>{% endfor %}
+{% else %}
 {% for row in ads.campaigns %}
 <tr data-campaign-id="{{ row.id }}">
   <td><button type="button" class="fb-campaign-link" data-campaign-detail="{{ row.id }}">{{ row.name }}</button><div class="fb-muted fb-small">ID: {{ row.id }} · {{ row.status_label }}</div></td>
@@ -12,3 +16,5 @@
 {% else %}
 <tr><td colspan="8" class="fb-empty">Không có chiến dịch phù hợp. Hãy xóa hoặc thay đổi bộ lọc.</td></tr>
 {% endfor %}
+
+{% endif %}

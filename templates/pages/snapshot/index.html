@@ -1,0 +1,2 @@
+{% extends 'layouts/dashboard.html' %}
+{% block content %}{% from 'pages/snapshot/components.html' import unavailable with context %}<section class="bg-surface-container-lowest rounded-xl p-space-lg">{{ unavailable(title) }}</section>{% endblock %}

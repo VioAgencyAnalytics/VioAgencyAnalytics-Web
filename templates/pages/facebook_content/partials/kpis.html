@@ -1,4 +1,19 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{% if dashboard.content_live %}
+{% for metric in dashboard.visible_content_kpis %}
+<article class="executive-kpi fc-kpi-card">
+  <div class="fc-kpi-label"><span>{{ metric.label }}</span><span class="material-symbols-outlined" aria-hidden="true">{{ metric.icon }}</span></div>
+  <div class="fc-kpi-value" data-snapshot-kpi="{{ metric.key }}">{{ metric.text }}{% if metric.unit_text %}<small>{{ metric.unit_text }}</small>{% endif %}</div>
+  <div class="fc-kpi-note"><span>{{ 'Tích lũy đến ngày chốt' if metric.key.endswith('_lifetime') else 'Trong kỳ báo cáo' }}</span>{% if metric.previous is not none %}<span>Kỳ trước: {{ metric.previous_text }}</span>{% endif %}</div>
+  {% if metric.coverage %}<p class="snapshot-kpi-note" data-kpi-status="{{ metric.status }}">{{ metric.coverage.available }}/{{ metric.coverage.expected }} {{ 'bài' if metric.coverage.unit == 'posts' else 'ngày' }}{% if metric.status == 'partial' %} · Dữ liệu một phần{% endif %}</p>{% endif %}
+</article>
+{% endfor %}
+{% else %}{{ kpis('facebook_content') }}{% endif %}
+{% else %}
 {% from 'pages/facebook_content/partials/helpers.html' import n, pct %}
 {% set m = fb_content.metrics %}
 {% for key, label, icon, note in [('total_posts','Tổng bài đăng','article','so với kỳ trước'),('reach','Lượt tiếp cận','visibility','Dữ liệu mẫu'),('engagement','Tổng tương tác','thumb_up','Thích, bình luận, chia sẻ, clicks'),('engagement_rate','Tỷ lệ tương tác (ER)','monitoring','so với kỳ trước'),('followers_new','Followers mới','group_add','Fan mới'),('link_clicks','Click liên kết','ads_click','Landing page')] %}
 <article class="fc-kpi-card"><div class="fc-kpi-label"><span>{{ label }}</span><span class="material-symbols-outlined" aria-hidden="true">{{ icon }}</span></div><div class="fc-kpi-value" data-fc-metric="{{ key }}">{% if key == 'engagement_rate' %}{{ pct(m[key],2) }}{% elif key == 'reach' %}{{ '%.1f'|format(m[key]/1000) }}K{% else %}{{ '+' if key == 'followers_new' else '' }}{{ n(m[key]) }}{% endif %}</div><div class="fc-kpi-note">{% if key != 'link_clicks' %}{% set delta = fb_content.deltas[key] %}<span data-fc-comparison class="fc-delta {{ 'fc-negative' if delta is not none and delta < 0 else '' }}">{% if key == 'total_posts' %}↑ +{{ m[key] - fb_content.previous[key] }}{% elif delta is not none %}{{ '↑ +' if delta >= 0 else '↓ ' }}{{ pct(delta) }}{% else %}—{% endif %}</span>{% else %}<span class="fc-blue">CTR: {{ pct(m.ctr,2) }}</span>{% endif %}<span {% if note == 'so với kỳ trước' %}data-fc-comparison{% endif %}>{{ note }}</span></div></article>{% endfor %}
+
+{% endif %}

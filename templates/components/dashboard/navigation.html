@@ -1,32 +1,37 @@
 {% set current = active_report | default(report_name | default('overview')) %}
 {% macro report_group(key, label, icon, url, path, items) %}
+{% set enabled = snapshot_links is not defined or key in snapshot_links %}
+{% set url = snapshot_links.get(key, '') if snapshot_links is defined else url %}
 <div class="report-nav-group" data-report-group="{{ key }}">
   <div class="report-nav-row">
-    <a class="report-nav-link" data-path="{{ path }}" href="{{ url }}" {% if current == key %}aria-current="page"{% endif %}>
-      <span class="material-symbols-outlined" aria-hidden="true">{{ icon }}</span><span>{{ label }}</span>
+    <a class="report-nav-link" data-path="{{ path }}" {% if enabled %}href="{{ url }}"{% else %}aria-disabled="true" title="Chưa có báo cáo được cấp quyền xem"{% endif %} {% if current == key %}aria-current="page"{% endif %}>
+      <span class="material-symbols-outlined" aria-hidden="true">{{ icon if enabled else 'lock' }}</span><span>{{ label }}{% if not enabled %}<small class="sidebar-unavailable">{{ 'Chưa có báo cáo' if dashboard is defined and dashboard.channel == 'facebook_content' else 'Ngoài Bundle' }}</small>{% endif %}</span>
     </a>
-    <button class="report-nav-toggle" type="button" aria-label="Menu con {{ label }}" aria-controls="{{ key }}-submenu" aria-expanded="{{ 'true' if current == key else 'false' }}">
+    <button class="report-nav-toggle" type="button" {% if not enabled %}disabled{% endif %} aria-label="Menu con {{ label }}" aria-controls="{{ key }}-submenu" aria-expanded="{{ 'true' if current == key else 'false' }}">
       <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
     </button>
   </div>
   <div id="{{ key }}-submenu" class="report-submenu {{ 'seo-submenu' if key == 'seo' else '' }}" {% if current != key %}hidden{% endif %}>
-    {% for view, text, symbol, section in items %}
-    <a href="{{ url }}?view={{ view }}" data-path="{{ view }}" data-section="{{ section }}">
-      <span class="material-symbols-outlined" aria-hidden="true">{{ symbol }}</span><span>{{ text }}</span>
+    {% for view, text, symbol, section in items if not (key == 'facebook-content' and dashboard is defined and dashboard.channel == 'facebook_content' and dashboard.content_live) or section in dashboard.visible_content_sections %}
+    <a {% if enabled %}href="{{ url }}{{ "&" if snapshot_links is defined else "?" }}view={{ view }}"{% else %}aria-disabled="true"{% endif %} data-path="{{ view }}" data-section="{{ section }}">
+      <span class="material-symbols-outlined" aria-hidden="true">{{ symbol }}</span><span>{{ 'Biểu đồ trong báo cáo' if key == 'facebook-content' and section == 'fc-formats' and dashboard is defined and dashboard.content_live else text }}</span>
     </a>
     {% endfor %}
   </div>
 </div>
 {% endmacro %}
 <nav aria-label="Báo cáo theo kênh" class="report-navigation">
-  {{ report_group('seo', 'SEO & Lưu lượng Website', 'search_insights', '/report/seo', 'seo-va-luu-luong-website', [
+  {% if snapshot_links is not defined or 'overview' in snapshot_links %}
+  <a class="report-nav-link overview-nav-link" href="{{ snapshot_links.overview if snapshot_links is defined else '/overview' }}" {% if current == 'overview' %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">space_dashboard</span><span>Tổng quan</span></a>
+  {% endif %}
+  {{ report_group('seo', 'SEO & website', 'search_insights', '/report/seo', 'seo-va-luu-luong-website', [
     ('tong-quan-hieu-qua', 'Tổng quan hiệu quả', 'bar_chart', 'seo-summary'),
     ('hieu-qua-seo', 'Hiệu quả SEO', 'trending_up', 'seo-kpis'),
     ('thu-hang-tu-khoa', 'Thứ hạng từ khóa', 'key', 'seo-keywords'),
     ('hieu-qua-trang-dich', 'Hiệu quả trang đích', 'description', 'seo-landings'),
-    ('phan-tich-luu-luong-truy-cap', 'Phân tích lưu lượng truy cập', 'group', 'seo-trend'),
-    ('chuyen-doi-va-khach-hang-tiem-nang', 'Chuyển đổi & Khách hàng tiềm năng', 'ads_click', 'seo-funnel'),
-    ('tang-truong-va-phan-tich', 'Tăng trưởng & Phân tích', 'lightbulb', 'seo-insights')
+    ('phan-tich-luu-luong-truy-cap', 'Lưu lượng website', 'group', 'seo-trend'),
+    ('chuyen-doi-va-khach-hang-tiem-nang', 'Chuyển đổi', 'ads_click', 'seo-funnel'),
+    ('tang-truong-va-phan-tich', 'Nhận định & đề xuất', 'lightbulb', 'seo-insights')
   ]) }}
   {{ report_group('facebook-content', 'Facebook Content', 'article', '/report/social', 'facebook-content', [
     ('fc-tong-quan-hieu-qua', 'Tổng quan hiệu quả', 'bar_chart', 'fc-summary'),
@@ -41,9 +46,9 @@
     ('fb-tong-quan-hieu-qua', 'Tổng quan hiệu quả', 'bar_chart', 'fb-summary'),
     ('fb-hieu-qua-chien-dich', 'Hiệu quả chiến dịch', 'campaign', 'fb-campaigns'),
     ('fb-doi-tuong-va-phan-phoi', 'Đối tượng & Phân phối', 'group', 'fb-audience'),
-    ('fb-hieu-qua-noi-dung-quang-cao', 'Hiệu quả nội dung quảng cáo', 'palette', 'fb-creatives'),
+    ('fb-hieu-qua-noi-dung-quang-cao', 'Nội dung quảng cáo', 'palette', 'fb-creatives'),
     ('chuyen-doi-va-chi-phi', 'Chuyển đổi & Chi phí', 'ads_click', 'fb-funnel'),
-    ('fb-tang-truong-va-phan-tich', 'Tăng trưởng & Phân tích', 'lightbulb', 'fb-insights')
+    ('fb-tang-truong-va-phan-tich', 'Nhận định & đề xuất', 'lightbulb', 'fb-insights')
   ]) }}
   {{ report_group('tiktok', 'TikTok Ads', 'music_video', '/report/tiktok', 'tiktok-ads', [
     ('tt-tong-quan', 'Tổng quan hiệu quả', 'bar_chart', 'tt-summary'),
@@ -63,8 +68,8 @@
     ('yt-de-xuat', 'Điểm nổi bật & Đề xuất', 'lightbulb', 'yt-insights')
   ]) }}
   {% for key, path, label, icon in [
-    ('google-maps', 'google-maps-va-ho-so-doanh-nghiep', 'Google Maps & Hồ sơ doanh nghiệp', 'storefront')
+    ('google-maps', 'google-maps-va-ho-so-doanh-nghiep', 'Google Maps', 'storefront')
   ] %}
-  <a class="report-nav-link" data-path="{{ path }}" href="/report/{{ key }}" {% if current == key %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">{{ icon }}</span><span>{{ label }}</span></a>
+  <a class="report-nav-link" data-path="{{ path }}" {% if snapshot_links is not defined %}href="/report/{{ key }}"{% elif "gmb" in snapshot_links %}href="{{ snapshot_links.gmb }}"{% else %}aria-disabled="true" title="Chưa có báo cáo được cấp quyền xem"{% endif %} {% if current == key %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">{{ 'lock' if snapshot_links is defined and 'gmb' not in snapshot_links else icon }}</span><span>{{ label }}{% if snapshot_links is defined and 'gmb' not in snapshot_links %}<small class="sidebar-unavailable">{{ 'Chưa có báo cáo' if dashboard is defined and dashboard.channel == 'facebook_content' else 'Ngoài Bundle' }}</small>{% endif %}</span></a>
   {% endfor %}
 </nav>

@@ -1,3 +1,9 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-md mb-space-xl" id="seo-kpis">
+{{ kpis('seo') }}
+</div>
+{% else %}
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-md mb-space-xl" id="seo-kpis">
 <!-- Card 1 -->
 <div class="bg-surface-container-lowest rounded-xl p-space-lg border border-outline-variant/40 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)] hover:shadow-[0_10px_25px_-4px_rgba(15,23,42,0.08)] transition-all flex flex-col justify-between seo-kpi-card">
@@ -192,3 +198,5 @@
 </div>
 </div>
 </div>
+
+{% endif %}

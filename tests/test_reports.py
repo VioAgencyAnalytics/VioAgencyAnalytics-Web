@@ -56,7 +56,7 @@ def test_overview_csv_uses_selected_period():
 def test_overview_renders_reference_dashboard():
     response = client.get('/overview')
     assert response.status_code == 200
-    assert 'TỔNG QUAN TOÀN BỘ DỰ ÁN' in response.text
+    assert '>Tổng quan hiệu quả Marketing</h1>' in response.text
     assert '482.350' in response.text
     assert '/static/css/dist/dashboard.css' in response.text
     assert 'cdn.tailwindcss.com' not in response.text
@@ -65,7 +65,7 @@ def test_overview_renders_reference_dashboard():
 def test_facebook_ads_page_renders():
     response = client.get('/report/facebook-ads')
     assert response.status_code == 200
-    assert 'FACEBOOK ADS &amp; CHI PHÍ - HIỆU QUẢ CHIẾN DỊCH &amp; TỐI ƯU CPL' in response.text or 'FACEBOOK ADS & CHI PHÍ' in response.text
+    assert '<h1>Facebook Ads</h1>' in response.text
     assert '26.400.000 ₫' in response.text
     assert 'Leads Thành Công' in response.text
 
@@ -80,7 +80,7 @@ def test_facebook_ads_api_renders_all_dynamic_fragments_with_filters():
     }
     assert 'data-campaign-id="893120492"' in payload['fragments']['campaigns']
     assert 'data-campaign-id="893120491"' not in payload['fragments']['campaigns']
-    assert 'Leads Thành Công' in payload['fragments']['funnel']
+    assert '<strong>Leads</strong>' in payload['fragments']['funnel']
     assert 'Hồ sơ đối tượng mẫu' in payload['fragments']['audience']
     assert 'Bác sĩ tư vấn dinh dưỡng cho bé' not in payload['fragments']['creatives']
     assert 'Vấn Đề Cần Chú Ý' in payload['fragments']['insights']

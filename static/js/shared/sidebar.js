@@ -66,6 +66,9 @@
     url.searchParams.set('view', link.dataset.path);
     history.replaceState(null, '', url);
     markSection(link.dataset.path);
+    for (let parent = section.parentElement; parent; parent = parent.parentElement) {
+      if (parent.tagName === 'DETAILS') parent.open = true;
+    }
     section.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }));
   markSection(new URLSearchParams(location.search).get('view'));

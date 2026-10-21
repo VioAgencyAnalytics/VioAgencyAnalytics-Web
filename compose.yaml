@@ -1,14 +1,5 @@
-name: kdh-report-new
-
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "127.0.0.1:${KDH_PORT:-8080}:8000"
-    environment:
-      APP_ENV: production
-      DEBUG: "false"
-    restart: unless-stopped
-    init: true
+# Active shared Viewer for Admin 8090 and VIO 8191.
+# For existing containers use Admin/Start-KDH.cmd (no recreation).
+# A fresh compose up requires both private backend service credentials.
+include:
+  - compose.shared.yaml

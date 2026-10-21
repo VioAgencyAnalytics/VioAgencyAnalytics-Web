@@ -1,5 +1,11 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{% from 'pages/snapshot/components.html' import saved with context %}
+{% for key,label in [('impressions','Lượt hiển thị'),('link_clicks','Lượt nhấp liên kết'),('landing_page_views','Lượt xem trang đích'),('leads','Leads'),('appointments','Lịch Hẹn Khám Thực Tế')] %}<div class="fb-funnel-step {{ 'last' if loop.last else '' }}"><span class="fb-step-number">{{ loop.index }}</span><div class="fb-step-label"><strong>{{ label }}</strong></div><strong class="fb-step-value">{{ saved('facebook_ads.' ~ key) }}</strong></div>{% endfor %}<p class="fb-muted fb-small">Chưa có tỷ lệ chuyển đổi được chốt cho các bước.</p>
+<div class="fb-cost-grid">{% for key,label in [('cpc','CPC Trung bình'),('cpl','CPL Trung bình'),('appointment_cpa','CPA (Đặt hẹn)')] %}<div><span class="fb-muted fb-small">{{ label }}</span><strong>{{ saved('facebook_ads.' ~ key) }}</strong></div>{% endfor %}</div>
+{% else %}
 {% set t = ads.totals.display %}
-{% for label, value, note in [('Lượt Hiển Thị (Impressions)', t.impressions, 'Lượt hiển thị quảng cáo'), ('Click Liên Kết (Link Clicks)', t.clicks, 'CTR: ' ~ t.ctr ~ ' · CPC: ' ~ t.cpc), ('Lượt Xem Landing Page', t.landing_views, t.landing_rate ~ ' từ Clicks'), ('Leads Thành Công (Form/Inbox)', t.leads, 'CR: ' ~ t.cr ~ ' · CPL: ' ~ t.cpl), ('Lịch Hẹn Khám Thực Tế', t.appointments, 'Chốt ' ~ t.appointment_rate ~ ' từ Lead')] %}
+{% for label, value, note in [('Lượt hiển thị', t.impressions, 'Lượt hiển thị quảng cáo'), ('Lượt nhấp liên kết', t.clicks, 'CTR: ' ~ t.ctr ~ ' · CPC: ' ~ t.cpc), ('Lượt xem trang đích', t.landing_views, t.landing_rate ~ ' từ Clicks'), ('Leads', t.leads, 'CR: ' ~ t.cr ~ ' · CPL: ' ~ t.cpl), ('Lịch Hẹn Khám Thực Tế', t.appointments, 'Chốt ' ~ t.appointment_rate ~ ' từ Lead')] %}
 <div class="fb-funnel-step {{ 'last' if loop.last else '' }}">
   <span class="fb-step-number">{{ loop.index }}</span>
   <div class="fb-step-label"><strong>{{ label }}</strong><div class="fb-muted fb-small">{{ note }}</div></div>
@@ -12,3 +18,5 @@
   {% endfor %}
 </div>
 <details class="fb-formulas"><summary>Cách tính các chỉ số</summary><p>CTR = Clicks / Impressions × 100. CR = Leads / Clicks × 100. CPC = Chi tiêu / Clicks. CPL = Chi tiêu / Leads. CPA = Chi tiêu / Lịch hẹn. Chi phí làm tròn đến đồng; tỷ lệ làm tròn 2 chữ số. Dấu “—” nghĩa là chưa có mẫu số để tính.</p></details>
+
+{% endif %}

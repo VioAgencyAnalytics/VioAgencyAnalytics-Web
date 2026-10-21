@@ -1,3 +1,14 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+<section class="flex flex-col gap-space-sm mb-space-lg" id="channel-performance">
+<div class="flex items-center justify-between mb-1"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[22px]" aria-hidden="true">category</span><h2 class="font-headline-md text-headline-md text-on-surface">Hiệu quả theo kênh</h2></div><span class="font-label-md text-label-md text-outline">{{ dashboard.channel_cards|length }} kênh trong báo cáo</span></div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md channel-grid">{% for section in dashboard.channel_cards %}<article class="channel-card snapshot-card executive-channel" data-channel="{{ section.key }}">
+<div class="executive-channel-heading"><span class="channel-icon material-symbols-outlined" aria-hidden="true">{{ section.icon }}</span><h3>{{ section.label }}</h3><a href="{{ snapshot_links.get(section.key|replace('_','-'), snapshot_home) }}" aria-label="Xem chi tiết {{ section.label }}"><span class="material-symbols-outlined" aria-hidden="true">arrow_outward</span></a></div>
+<dl class="executive-channel-metrics">{% for metric in section.kpis[:4] %}<div><dt>{{ metric.label }}</dt><dd class="{{ 'is-unavailable' if metric.value is none else '' }}">{{ metric.text }} {{ metric.unit_text }}</dd></div>{% else %}<p class="snapshot-empty">Chưa có chỉ số trong snapshot.</p>{% endfor %}</dl>
+{% if section.charts %}<details class="channel-trend"><summary>Xu hướng trong kỳ</summary>{{ charts(section.charts[:1]) }}</details>{% else %}<p class="channel-trend-empty">Chưa có chuỗi xu hướng đã chốt.</p>{% endif %}
+<a class="channel-detail-link" href="{{ snapshot_links.get(section.key|replace('_','-'), snapshot_home) }}">Xem báo cáo<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a></article>{% endfor %}</div>
+</section>
+{% else %}
 <section class="flex flex-col gap-space-sm mb-space-lg" id="channel-performance">
 <div class="flex items-center justify-between mb-1">
 <div class="flex items-center gap-2">
@@ -5,7 +16,7 @@
      category
     </span>
 <h2 class="font-headline-md text-headline-md text-on-surface">
-     HIỆU QUẢ THEO TỪNG KÊNH MARKETING
+     Hiệu quả theo kênh
     </h2>
 </div>
 <span class="font-label-md text-label-md text-outline">
@@ -571,3 +582,5 @@
 </div>
 </div>
 </section>
+
+{% endif %}

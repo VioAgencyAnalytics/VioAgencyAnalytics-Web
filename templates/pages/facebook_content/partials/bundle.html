@@ -1,0 +1,73 @@
+﻿{% from 'pages/snapshot/components.html' import charts, tables with context %}
+{% set labels = {'posts_published':'Bài đăng mới', 'reactions_lifetime':'Lượt bày tỏ cảm xúc', 'comments_lifetime':'Bình luận', 'engagements':'Tương tác trong kỳ', 'shares_lifetime':'Chia sẻ'} %}
+{% macro coverage(metric) %}{% if metric.coverage %}{{ metric.coverage.available }}/{{ metric.coverage.expected }} {{ 'bài' if metric.coverage.unit == 'posts' else 'ngày' }}{% else %}Chưa đủ thông tin{% endif %}{% endmacro %}
+<div id="facebook-content-dashboard" class="fc-bundle fc-agency">
+  <section id="fc-summary" class="fc-page-heading" aria-labelledby="fc-title">
+    <div>
+      <div class="fc-eyebrow"><span class="fc-channel-mark" aria-hidden="true">f</span> BÁO CÁO NỘI DUNG FACEBOOK</div>
+      <h1 id="fc-title">{{ dashboard.report_display_name }}</h1>
+      <p class="fc-period">{{ bundle.period.start[8:10] }}/{{ bundle.period.start[5:7] }}/{{ bundle.period.start[:4] }} – {{ bundle.period.end[8:10] }}/{{ bundle.period.end[5:7] }}/{{ bundle.period.end[:4] }} <span>· {{ dashboard.timezone }}</span></p>
+    </div>
+    <div class="fc-actions"><button type="button" id="fc-advanced" class="fc-button"><span class="material-symbols-outlined" aria-hidden="true">search</span>Tìm bài đăng</button><button type="button" id="fc-download" class="fc-button fc-primary"><span class="material-symbols-outlined" aria-hidden="true">download</span>Xuất bảng số liệu</button></div>
+  </section>
+  <section id="fc-kpis" aria-labelledby="fc-kpi-title">
+    <div class="fc-section-heading"><h2 id="fc-kpi-title">Kết quả tổng quan</h2><span>Nội dung đã đăng trong kỳ</span></div>
+    <div class="fc-kpi-grid">
+    {% for metric in dashboard.overview_kpis %}
+      {% set key = metric.key.split('.')[-1] %}
+      <article class="executive-kpi fc-kpi-card {{ 'fc-kpi-unavailable' if metric.value is none else 'fc-kpi-highlight' }}" aria-labelledby="fc-kpi-{{ loop.index }}">
+        <div class="fc-kpi-label"><h3 id="fc-kpi-{{ loop.index }}">{{ labels.get(key, metric.label) }}</h3><span class="material-symbols-outlined" aria-hidden="true">{{ metric.icon }}</span></div>
+        <div class="fc-kpi-value" data-snapshot-kpi="{{ metric.key }}">{% if metric.value is none %}<span class="snapshot-missing">Chưa đủ dữ liệu</span>{% else %}{{ metric.text }}{% endif %}</div>
+        <p class="fc-kpi-scope">{{ 'Tích lũy đến ngày chốt' if metric.grain == 'snapshot' else 'Trong kỳ báo cáo' }}</p>
+        <span class="fc-data-badge" data-kpi-status="{{ metric.status }}">{{ 'Ghi nhận trên ' if metric.status == 'partial' else 'Có dữ liệu ' }}{{ coverage(metric) }}</span>
+      </article>
+    {% endfor %}
+    </div>
+    <p class="fc-snapshot-stamp">Cảm xúc, bình luận và chia sẻ là số tích lũy của các bài trong kỳ đến {{ dashboard.snapshot_time }}; không phải số phát sinh riêng trong kỳ.</p>
+  </section>
+  <div class="fc-results-grid">
+    <section id="fc-publishing" class="fc-panel" aria-labelledby="fc-publishing-title">
+      <div class="fc-section-heading"><div><span class="fc-section-kicker">HOẠT ĐỘNG NỘI DUNG</span><h2 id="fc-publishing-title">Nhịp đăng bài</h2></div><span>Số bài theo ngày · {{ dashboard.timezone }}</span></div>
+      {{ charts(dashboard.content_charts) }}
+    </section>
+    <section id="fc-engagement" class="fc-panel fc-response-panel" aria-labelledby="fc-lifetime-title">
+      <span class="fc-section-kicker">PHẢN HỒI TRÊN BÀI ĐĂNG</span><h2 id="fc-lifetime-title">Cảm xúc &amp; bình luận</h2>
+      <p class="fc-subtitle">Số tích lũy đến thời điểm chốt báo cáo.</p>
+      {% set available = dashboard.lifetime_kpis|rejectattr('value','none')|list %}
+      {% set ceiling = available|map(attribute='value')|max if available else 0 %}
+      <div class="fc-response-bars">
+      {% for metric in dashboard.lifetime_kpis %}
+        <div class="fc-response-row" data-lifetime-key="{{ metric.key }}"><div class="fc-response-label"><span>{{ labels.get(metric.key.split('.')[-1], metric.label) }}</span><strong>{{ metric.text if metric.value is not none else '—' }}</strong></div>
+          {% if metric.value is not none %}<div class="fc-response-track" aria-hidden="true"><svg viewBox="0 0 100 12" preserveAspectRatio="none" focusable="false"><rect width="{{ (metric.value / ceiling * 100) if ceiling > 0 else 0 }}" height="12" rx="1.5"></rect></svg></div>{% else %}<div class="fc-response-missing">Chưa đủ dữ liệu để công bố tổng</div>{% endif %}
+          <small>{{ coverage(metric) }}</small>
+        </div>
+      {% endfor %}
+      </div>
+    </section>
+  </div>
+  <section id="fc-posts" class="fc-panel" aria-labelledby="fc-posts-title">
+    <div class="fc-section-heading"><div><span class="fc-section-kicker">CHI TIẾT NỘI DUNG</span><h2 id="fc-posts-title">Kết quả từng bài đăng</h2></div><span>Cảm xúc, bình luận, chia sẻ: số tích lũy</span></div>
+    {{ tables(dashboard.detail_tables) }}
+  </section>
+  {% set approved = namespace(items=[]) %}
+  {% for notes in dashboard.commentary.values() %}{% set approved.items = approved.items + notes.approved %}{% endfor %}
+  {% if approved.items or dashboard.opportunities %}<section id="fc-insights" class="fc-panel">
+    <h2>Nhận định &amp; hướng triển khai</h2>
+    {% for item in approved.items %}<div class="fc-approved" data-note-kind="approved"><p>{{ item.claim }}</p></div>{% endfor %}
+    {% for item in dashboard.opportunities %}<div class="fc-approved"><h3>{{ item.title or '' }}</h3><p>{{ item.reason or '' }}</p><p>{{ item.action or '' }}</p>{% for condition in item.conditions %}<p>{{ condition }}</p>{% endfor %}</div>{% endfor %}
+  </section>{% endif %}
+  <details class="fc-report-notes"><summary>Phạm vi số liệu &amp; thông tin báo cáo</summary>
+    <div class="fc-notes-content">
+      {% if not approved.items and not dashboard.opportunities %}<p id="fc-insights">Chưa có nhận định bổ sung trong báo cáo này.</p>{% endif %}
+      <p>Chưa có số tương tác phát sinh riêng trong kỳ. Chia sẻ chỉ được tổng hợp khi đủ dữ liệu của các bài; chỉ số còn thiếu được để trống.</p>
+      <div class="fc-data-gaps">
+      {% for key, id, title in [('formats','fc-formats','Định dạng nội dung'), ('topics','fc-topics','Chủ đề nội dung'), ('reach','fc-reach','Tiếp cận tự nhiên & trả phí')] %}
+        <section id="{{ id }}"><h3>{{ title }}</h3>{% if dashboard.content_breakdowns[key] %}{{ tables(dashboard.content_breakdowns[key]) }}{% else %}<p>Chưa có số liệu trong báo cáo này.</p>{% endif %}</section>
+      {% endfor %}
+      </div>
+      <dl class="fc-source-details"><dt>Khách hàng / môi trường</dt><dd>{{ bundle.client_name }}</dd><dt>Trang Facebook</dt><dd>{{ dashboard.source_identity.external_id }}</dd><dt>Thời điểm chốt số liệu</dt><dd>{{ dashboard.snapshot_time }}</dd><dt>Múi giờ nguồn</dt><dd>{{ dashboard.timezone }}</dd><dt>Phiên bản báo cáo</dt><dd>{{ bundle.revision }} · {{ 'Chính thức' if bundle.status == 'final' else 'Tạm thời' }}</dd></dl>
+      {% if dashboard.evidence %}<details class="fc-evidence"><summary>Đối chiếu số liệu</summary><ul>{% for item in dashboard.evidence %}<li>{{ item.metric or item.claim }}{% if item.after is not none %}: {{ snapshot_format(item.after) }}{% endif %}</li>{% endfor %}</ul></details>{% endif %}
+    </div>
+  </details>
+  <footer class="fc-bundle-footer"><span>KDH / BÁO CÁO HIỆU QUẢ NỘI DUNG</span><span>Facebook · {{ dashboard.timezone }} · Phiên bản {{ bundle.revision }}</span></footer>
+</div>

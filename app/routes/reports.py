@@ -174,7 +174,12 @@ def export_seo(
     rank: Literal[
         "all",
         "top3",
+        "top5",
         "top10",
+        "top20",
+        "top30",
+        "top50",
+        "top100",
         "new",
         "risers",
     ] = "all",

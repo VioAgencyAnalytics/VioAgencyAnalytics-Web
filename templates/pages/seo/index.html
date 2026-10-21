@@ -1,5 +1,5 @@
 {% extends "layouts/dashboard.html" %}
-{% block page_script %}<script src="/static/js/pages/seo.js" defer></script>{% endblock %}
+{% block page_script %}{% if dashboard is not defined %}<script src="/static/js/pages/seo.js" defer></script>{% endif %}{% endblock %}
 {% block page_styles %}<link rel="stylesheet" href="/static/css/pages/seo.css">{% endblock %}
 {% block content %}
 <div class="flex flex-col w-full" id="seo-dashboard">
@@ -11,6 +11,6 @@
   {% include "pages/seo/partials/details.html" %}
   {% include "pages/seo/partials/result.html" %}
 </div>
-{% include "pages/seo/controls.html" %}
+{% if dashboard is not defined %}{% include "pages/seo/controls.html" %}{% endif %}
 {% endblock %}
-{% block scripts %}<script id="seo-data" type="application/json">{{ seo | tojson }}</script>{% endblock %}
+{% block scripts %}{% if dashboard is not defined %}<script id="seo-data" type="application/json">{{ seo | tojson }}</script>{% endif %}{% endblock %}

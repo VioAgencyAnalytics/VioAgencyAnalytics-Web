@@ -1,3 +1,12 @@
+{% if dashboard is defined %}
+{% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{% from 'pages/snapshot/components.html' import evidence_list, opportunity_list with context %}
+<section class="panel fb-insight"><h2><span class="material-symbols-outlined" aria-hidden="true">verified</span>Điểm Nổi Bật</h2>{{ evidence_list() }}</section>
+<section class="panel fb-insight"><h2><span class="material-symbols-outlined" aria-hidden="true">report_problem</span>Vấn Đề Cần Chú Ý</h2><ul>{% for issue in dashboard.limitations %}<li>{{ issue }}</li>{% else %}<li class="snapshot-empty">Chưa có nội dung được duyệt.</li>{% endfor %}</ul></section>
+<section class="panel fb-insight"><h2><span class="material-symbols-outlined" aria-hidden="true">task_alt</span>Hành Động Đề Xuất</h2>{{ opportunity_list() }}</section>
+{% else %}
 {% for title, icon, key in [('Điểm Nổi Bật', 'verified', 'highlights'), ('Vấn Đề Cần Chú Ý', 'report_problem', 'warnings'), ('Hành Động Đề Xuất', 'task_alt', 'actions')] %}
 <section class="panel fb-insight"><h2><span class="material-symbols-outlined" aria-hidden="true">{{ icon }}</span>{{ title }}</h2><ul>{% for text in ads.insights[key] %}<li>{{ text }}</li>{% else %}<li>Chưa có dữ liệu để đánh giá.</li>{% endfor %}</ul></section>
 {% endfor %}
+
+{% endif %}

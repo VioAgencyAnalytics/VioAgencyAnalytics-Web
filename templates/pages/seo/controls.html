@@ -3,7 +3,7 @@
     <h2 id="seo-filter-title">Bộ lọc nâng cao</h2>
     <p>Lọc bảng từ khóa theo nội dung và thứ hạng. Mẫu hiện có 6 từ khóa chi tiết trong tổng số 148 từ khóa của thiết kế.</p>
     <label>Từ khóa hoặc đường dẫn<input id="seo-search" type="search" placeholder="Ví dụ: tiêm chủng" maxlength="200"></label>
-    <label>Nhóm thứ hạng<select id="seo-rank-select"><option value="all">Tất cả từ khóa</option><option value="top3">Top 3</option><option value="top10">Vị trí 4–10</option><option value="new">Mới vào Top 10</option><option value="risers">Tăng từ 5 hạng trở lên</option></select></label>
+    <label>Thứ hạng lũy kế<select id="seo-rank-select"><option value="all">Tất cả từ khóa</option>{% for k in [5,10,20,30,50,100] %}<option value="top{{ k }}">Top {{ k }} (1–{{ k }})</option>{% endfor %}<option value="new">Mới vào Top 10</option><option value="risers">Tăng từ 5 hạng trở lên</option></select></label>
     <div class="dialog-actions"><button type="button" id="seo-reset-filters">Đặt lại</button><button type="button" data-close-dialog>Hủy</button><button type="submit" class="confirm-button">Áp dụng</button></div>
   </form>
 </dialog>
