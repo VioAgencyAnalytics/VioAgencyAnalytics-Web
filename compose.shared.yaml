@@ -4,7 +4,7 @@ name: kdh-report-admin
 services:
   new:
     container_name: kdh-report-new-app-1
-    image: kdh-new:content-shell-20261021-3c0130851869
+    image: kdh-new:insights-chart-20261022-fed378fa5436
     pull_policy: never
     ports:
       - "127.0.0.1:8080:8000"

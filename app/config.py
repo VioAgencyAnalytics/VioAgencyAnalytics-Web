@@ -11,11 +11,11 @@ class RuntimeMode(BaseSettings):
 
 
 class Settings(RuntimeMode):
-    app_name: str = Field(default="KDH Marketing Dashboard")
+    app_name: str = Field(default="VioAgencyAnalytics")
     debug: bool = False
     database_url: str = "postgresql://postgres:postgres@localhost:5432/kdh_report"
         # =====================================================
-    # KDH REPORT ADMIN - INTERNAL REPORT API
+    # VioAgencyAnalytics Admin - INTERNAL REPORT API
     # =====================================================
 
     report_admin_base_url: str = (

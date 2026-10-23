@@ -130,7 +130,7 @@ def test_live_report_uses_original_shell_and_hides_empty_components():
     html = env.get_template('pages/facebook_content/index.html').render(**view)
     assert 'fc-live-shell' in html and 'fc-agency' not in html
     assert 'fc-top-grid fc-single-panel' in html
-    assert 'facebook-content.css?v=content-polish-20261021' in html
+    assert 'facebook-content.css?v=insights-chart-20261022' in html
     assert 'Nhịp đăng bài' in html
     assert 'Biểu đồ trong báo cáo' in html and 'fc-posts-panel' in html
     assert 'Published Report Bundle' not in html and 'Frozen Bundle' not in html

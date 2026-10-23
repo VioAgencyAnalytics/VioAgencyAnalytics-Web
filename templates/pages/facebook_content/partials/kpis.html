@@ -5,7 +5,7 @@
 <article class="executive-kpi fc-kpi-card">
   <div class="fc-kpi-label"><span>{{ metric.label }}</span><span class="material-symbols-outlined" aria-hidden="true">{{ metric.icon }}</span></div>
   <div class="fc-kpi-value" data-snapshot-kpi="{{ metric.key }}">{{ metric.text }}{% if metric.unit_text %}<small>{{ metric.unit_text }}</small>{% endif %}</div>
-  <div class="fc-kpi-note"><span>{{ 'Tích lũy đến ngày chốt' if metric.key.endswith('_lifetime') else 'Trong kỳ báo cáo' }}</span>{% if metric.previous is not none %}<span>Kỳ trước: {{ metric.previous_text }}</span>{% endif %}</div>
+  <div class="fc-kpi-note"><span>{{ metric.scope_label if metric.scope_label is defined else 'Tích lũy đến ngày chốt' if metric.key.endswith('_lifetime') else 'Trong kỳ báo cáo' }}</span>{% if metric.previous is not none %}<span>Kỳ trước: {{ metric.previous_text }}</span>{% endif %}</div>
   {% if metric.coverage %}<p class="snapshot-kpi-note" data-kpi-status="{{ metric.status }}">{{ metric.coverage.available }}/{{ metric.coverage.expected }} {{ 'bài' if metric.coverage.unit == 'posts' else 'ngày' }}{% if metric.status == 'partial' %} · Dữ liệu một phần{% endif %}</p>{% endif %}
 </article>
 {% endfor %}

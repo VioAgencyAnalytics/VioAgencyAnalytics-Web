@@ -18,8 +18,8 @@ from app.routes.handoff import router as handoff_router
 BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI(
-    title="KDH Marketing Dashboard",
-    description="Marketing reporting dashboard",
+    title="VioAgencyAnalytics",
+    description="Marketing analytics and reporting by VIO Agency",
     version="0.1.0",
 )
 
@@ -52,7 +52,7 @@ app.include_router(video_router)
 app.include_router(pages_router)
 app.include_router(reports_router)
 
-# Report Bundle DEMO tu KDH-Report-Admin
+# Report Bundle DEMO tu VioAgencyAnalytics-Admin
 app.include_router(demo_bundle_router)
 
 

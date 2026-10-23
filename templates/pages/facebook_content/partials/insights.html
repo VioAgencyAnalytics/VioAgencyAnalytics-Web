@@ -3,6 +3,7 @@
 {% from 'pages/snapshot/components.html' import evidence_list, opportunity_list with context %}
 {% if dashboard.content_live %}
 <div class="fc-post-heading"><h2>Nhận định &amp; hướng triển khai</h2></div>
+{{ section_status('insights', notes=false) }}
 {% for item in dashboard.content_approved_notes %}<div class="fc-approved" data-note-kind="approved">{% if item.origin == "editorial" %}<h3>{{ item.metric }}</h3>{% endif %}<p>{{ item.claim }}</p></div>{% endfor %}
 {% for item in dashboard.opportunities %}<div class="fc-approved"><h3>{{ item.title or '' }}</h3><p>{{ item.reason or '' }}</p><p>{{ item.action or '' }}</p>{% for condition in item.conditions %}<p>{{ condition }}</p>{% endfor %}</div>{% endfor %}
 {% else %}
@@ -10,7 +11,7 @@
 <div class="fc-insight-grid"><article class="fc-insight"><h3><span class="material-symbols-outlined" aria-hidden="true">verified</span>Điểm nổi bật trong kỳ</h3>{{ evidence_list() }}</article><article class="fc-insight"><h3><span class="material-symbols-outlined" aria-hidden="true">warning</span>Phạm vi &amp; giới hạn dữ liệu</h3><ul>{% for issue in dashboard.limitations %}<li>{{ issue }}</li>{% else %}<li class="snapshot-empty">Chưa có nội dung được duyệt.</li>{% endfor %}</ul></article><article class="fc-insight"><h3><span class="material-symbols-outlined" aria-hidden="true">trending_up</span>Hành động đề xuất</h3>{{ opportunity_list() }}</article></div>
 {% endif %}
 {% else %}
-<div class="fc-post-heading"><div><div class="fc-heading"><span class="material-symbols-outlined fc-blue" aria-hidden="true">lightbulb</span><h2>Nhận định &amp; đề xuất</h2></div><p class="fc-subtitle">Đánh giá chiến lược tham chiếu thiết kế tháng 9/2026 từ KDH Agency.</p></div><span class="fc-delta">Báo cáo mẫu</span></div>
+<div class="fc-post-heading"><div><div class="fc-heading"><span class="material-symbols-outlined fc-blue" aria-hidden="true">lightbulb</span><h2>Nhận định &amp; đề xuất</h2></div><p class="fc-subtitle">Nhận định mẫu theo thiết kế tham chiếu tháng 9/2026.</p></div><span class="fc-delta">Báo cáo mẫu</span></div>
 <div class="fc-insight-grid">{% for key, icon, title, footer in [('highlights','verified','Điểm nổi bật trong kỳ','Hiệu quả từ nội dung y khoa thực tế.'),('warnings','warning','Cần chú ý / Tối ưu','Thử nghiệm và đo lường trước khi điều chỉnh.'),('actions','trending_up','Hành động đề xuất','Kế hoạch tham chiếu tháng 10/2026')] %}
 <article class="fc-insight"><h3><span class="material-symbols-outlined" aria-hidden="true">{{ icon }}</span>{{ title }}</h3><ul>{% for text in fb_content.insights[key] %}<li>{{ text }}</li>{% endfor %}</ul><p>{{ footer }}</p></article>{% endfor %}</div>
 

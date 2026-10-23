@@ -20,7 +20,7 @@
   $$('[data-bundle-chart]').forEach(element => {
     const chart = JSON.parse(element.querySelector('script').textContent);
     window.dashboardCharts.renderBundleChart(element, chart);
-    if (chart.integer_axis) {
+    if (chart.kind !== 'donut') {
       let lastWidth = element.clientWidth;
       new ResizeObserver(() => {
         if (element.clientWidth !== lastWidth && element.clientWidth > 0) {

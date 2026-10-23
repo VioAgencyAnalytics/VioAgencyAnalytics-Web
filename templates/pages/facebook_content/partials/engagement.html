@@ -1,6 +1,13 @@
 {% if dashboard is defined %}
 {% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
-{% if dashboard.lifetime_kpis is defined %}
+{% if dashboard.content_live and dashboard.content_report %}
+<h2>Tương tác &amp; số liệu Page</h2>
+{{ section_status('engagement') }}
+{% if dashboard.content_insights_charts %}<p class="fc-subtitle">Toàn Page · theo mốc kết thúc ngày do Meta cung cấp. Người xem duy nhất và số người theo dõi không cộng qua ngày.</p>{{ charts(dashboard.content_insights_charts, compact_labels=true) }}{% endif %}
+{% if dashboard.content_insights %}<details class="fc-scope-note"><summary>Phạm vi thu thập Insights</summary>
+{% for metric in dashboard.content_insights.measurements if metric.scope == 'page' %}<p data-insight-status="{{ metric.report_status }}"><strong>{{ metric.label }}</strong>: {% if metric.reason %}{{ metric.reason }}{% else %}Có số liệu đã chốt · {{ metric.coverage.available }}/{{ metric.coverage.expected }} ngày.{% endif %}</p>{% endfor %}
+</details>{% endif %}
+{% elif dashboard.lifetime_kpis is defined %}
 <h3>Bộ đếm lifetime tại thời điểm snapshot</h3>
 <p>Giá trị tích lũy của các bài trong kỳ, không phải tương tác phát sinh trong kỳ.</p>
 <p>Page {{ dashboard.source_identity.external_id }} · Múi giờ nguồn: {{ dashboard.timezone }}{% if dashboard.fetched_at %} · Snapshot: {{ dashboard.fetched_at }}{% endif %}</p>

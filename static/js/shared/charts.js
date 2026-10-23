@@ -82,8 +82,8 @@ window.dashboardCharts.renderBundleChart = function (container, chart) {
     if (text !== null) node.textContent = text;
     return node;
   };
-  const plotWidth = chart.integer_axis ? Math.max(300, Math.min(900, surface.clientWidth)) : 600;
-  const svg = make('svg', {viewBox:chart.integer_axis ? `0 0 ${plotWidth} 260` : '0 0 600 280', role:'img', 'aria-label':chart.title});
+  const plotWidth = chart.kind === 'donut' ? 600 : Math.max(240, Math.min(900, surface.clientWidth || 600));
+  const svg = make('svg', {viewBox:`0 0 ${plotWidth} 280`, role:'img', 'aria-label':chart.title});
   svg.appendChild(make('title', {}, chart.title));
   surface.replaceChildren(svg);
   const values = chart.values, labels = chart.labels;
@@ -111,14 +111,18 @@ window.dashboardCharts.renderBundleChart = function (container, chart) {
     });
   } else {
     const finite = values.filter(v => v !== null), low = Math.min(0,...finite), high = Math.max(0,...finite);
-    const spread = high-low || 1, left = chart.integer_axis ? 32 : 84, right = chart.integer_axis ? plotWidth-16 : 576, top = 24, bottom = chart.integer_axis ? 215 : 225;
-    const y = value => bottom-(value-low)/spread*(bottom-top);
-    const x = i => chart.kind === 'bar' ? left+(i+.5)*(right-left)/values.length : values.length === 1 ? (left+right)/2 : left+i*(right-left)/(values.length-1);
+    const spread = high-low || 1;
+    const axisNumber = value => new Intl.NumberFormat('vi-VN', {notation:'compact', maximumSignificantDigits:3}).format(value);
     const divisions = chart.integer_axis ? Math.min(4, Math.max(1, Math.ceil(spread))) : 3;
     const ticksY = [...new Set(Array.from({length:divisions+1}, (_, i) => chart.integer_axis ? Math.round(low+spread*i/divisions) : low+spread*i/divisions))];
+    // Reserve space for the actual tick text, including thousands and negatives.
+    const left = Math.max(56, ...ticksY.map(value => axisNumber(value).length * 8 + 20));
+    const right = plotWidth-16, top = 24, bottom = 224;
+    const y = value => bottom-(value-low)/spread*(bottom-top);
+    const x = i => chart.kind === 'bar' ? left+(i+.5)*(right-left)/values.length : values.length === 1 ? (left+right)/2 : left+i*(right-left)/(values.length-1);
     for (const value of ticksY) {
       svg.appendChild(make('line',{x1:left,x2:right,y1:y(value),y2:y(value),stroke:'#e9edf8'}));
-      svg.appendChild(make('text',{x:left-8,y:y(value)+4,'text-anchor':'end',fill:'#727784','font-size':10},new Intl.NumberFormat('vi-VN',{notation:'compact',maximumSignificantDigits:3}).format(value)));
+      svg.appendChild(make('text',{x:left-12,y:y(value)+4,'text-anchor':'end',fill:'#64748b','font-size':12},axisNumber(value)));
     }
     if (chart.kind === 'line') {
       let path = '', connected = false;
@@ -133,11 +137,12 @@ window.dashboardCharts.renderBundleChart = function (container, chart) {
     });
     // Fewer axis labels leave room for readable dates. All points and their
     // complete labels remain available through pointer and keyboard tooltips.
-    const ticks = labels.some(label => label.length > 8) ? [0,.5,1] : [0,.25,.5,.75,1];
+    const dateLabel = label => /^\d{4}-\d{2}-\d{2}(?:T|$)/.test(label) ? label.slice(8,10)+'/'+label.slice(5,7) : label.length > 18 ? label.slice(0,16)+'…' : label;
+    const ticks = plotWidth < 500 || labels.some(label => dateLabel(label).length > 8) ? [0,.5,1] : [0,.25,.5,.75,1];
     const indices = [...new Set(ticks.map(v => Math.round(v*(labels.length-1))))];
     indices.forEach((i, tick) => svg.appendChild(make('text',{x:x(i),y:250,
       'text-anchor':indices.length === 1 ? 'middle' : tick === 0 ? 'start' : tick === indices.length-1 ? 'end' : 'middle',
-      fill:'#727784','font-size':10},chart.integer_axis && /^\d{4}-\d{2}-\d{2}$/.test(labels[i]) ? labels[i].slice(8,10)+'/'+labels[i].slice(5,7) : labels[i].length > 18 ? labels[i].slice(0,16)+'…' : labels[i])));
+      fill:'#64748b','font-size':12},dateLabel(labels[i]))));
   }
   const legend = document.createElement('div'); legend.className='pb-chart-legend';
   (chart.kind === 'donut' ? labels : [chart.title]).forEach((label,i) => {

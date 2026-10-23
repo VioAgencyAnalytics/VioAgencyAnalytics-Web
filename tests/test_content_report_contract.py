@@ -63,7 +63,9 @@ def test_contract_copied_without_recompute_and_original_layout_renders():
     assert source == original
     assert 'fc-topics' in context['dashboard']['visible_content_sections']
     assert 'fc-insights' in context['dashboard']['visible_content_sections']
-    assert 'fc-reach' not in context['dashboard']['visible_content_sections']
+    assert 'fc-reach' in context['dashboard']['visible_content_sections']
+    assert raw['sections']['reach']['reason'] in html
+    assert len(context['dashboard']['visible_content_sections']) == 7
     table = context['dashboard']['visible_content_tables'][0]
     assert table['rows'][0]['reactions_lifetime']['value'] == 0
     assert table['rows'][0]['shares_lifetime']['value'] is None

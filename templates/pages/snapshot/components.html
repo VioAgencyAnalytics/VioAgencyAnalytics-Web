@@ -25,9 +25,9 @@
 </article>
 {% endmacro %}
 
-{% macro charts(charts=none) %}
+{% macro charts(charts=none, compact_labels=false) %}
 {% set series = dashboard.charts if charts is none else charts %}
-{% if series %}<div class="snapshot-chart-group"><label>Chỉ số <select data-snapshot-series>{% for chart in series %}<option value="{{ loop.index0 }}">{{ chart.title }} · {{ chart.source }}{% if chart.unit %} ({{ chart.unit }}){% endif %}</option>{% endfor %}</select></label>
+{% if series %}<div class="snapshot-chart-group"><label>Chỉ số <select data-snapshot-series>{% for chart in series %}<option value="{{ loop.index0 }}">{% if compact_labels %}{{ chart.title.split(' · ')[0] }}{% else %}{{ chart.title }} · {{ chart.source }}{% if chart.unit %} ({{ chart.unit }}){% endif %}{% endif %}</option>{% endfor %}</select></label>
 {% for chart in series %}<div data-bundle-chart {% if not loop.first %}hidden{% endif %}><script type="application/json">{{ chart|tojson }}</script><div class="pb-chart-surface"></div><p class="pb-chart-tooltip" role="status" hidden></p></div>{% endfor %}</div>
 {% else %}<p class="snapshot-empty">Chưa có chuỗi dữ liệu phù hợp trong snapshot này.</p>{% endif %}
 {% endmacro %}

@@ -10,7 +10,7 @@ from app.routes.reports import router as reports_router
 from app.routes.video import router as video_router
 
 
-app = FastAPI(title='KDH New - Xem giao diện', docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI(title='VioAgencyAnalytics - Xem giao diện', docs_url=None, redoc_url=None, openapi_url=None)
 app.mount('/static', StaticFiles(directory=str(Path(__file__).resolve().parents[1] / 'static')), name='static')
 
 

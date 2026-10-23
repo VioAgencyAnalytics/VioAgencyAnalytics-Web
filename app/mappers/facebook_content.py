@@ -1,5 +1,6 @@
 """Validate and copy the Admin-owned content contract; no metric calculation."""
 from copy import deepcopy
+from datetime import datetime
 from math import isfinite
 from urllib.parse import urlsplit, parse_qs
 
@@ -35,11 +36,15 @@ def content_report(raw, source, period, released):
     rows = sections['posts']['rows']
     require(all(isinstance(row, dict) and isinstance(row.get('post_id'), str) for row in rows))
     require(len(rows) == len(original) and {row['post_id'] for row in rows} == set(original))
+    insights = validate_insights(raw.get('insights'), source, period, require)
     for row in rows:
         saved = original[row['post_id']]
         require(all(row.get(k) == saved.get(k) for k in ('date', 'title', 'message', 'format',
                     'reactions_lifetime', 'comments_lifetime', 'shares_lifetime')))
         require(all(row.get(k) is None for k in ('reach', 'engagements', 'engagement_rate', 'link_clicks')))
+        for metric in ('post_media_view', 'post_total_media_view_unique'):
+            measurement = insights.get((row['post_id'], metric))
+            require(row.get(metric + '_lifetime') == (measurement['value'] if measurement else None))
         url = row.get('permalink_url')
         if url is not None:
             require(isinstance(url, str))
@@ -55,3 +60,80 @@ def content_report(raw, source, period, released):
             except ValueError:
                 require(False)
     return deepcopy(raw)
+
+
+def validate_insights(projected, source, period, require):
+    """Validate saved measurements and copy Admin's projection; never compute KPIs."""
+    saved = source.get('insights')
+    if projected is None:
+        require(saved is None)
+        return {}
+    catalog = {
+        'page_media_view': ('page', 'day', 'sum_exact_intervals'),
+        'page_total_media_view_unique': ('page', 'day', 'non_additive'),
+        'page_post_engagements': ('page', 'day', 'sum_exact_intervals'),
+        'page_follows': ('page', 'day', 'stock_non_additive'),
+        'post_media_view': ('post', 'lifetime', 'per_post_snapshot'),
+        'post_total_media_view_unique': ('post', 'lifetime', 'non_additive'),
+    }
+    statuses = {'available', 'partial', 'permission_denied', 'task_missing', 'version_unconfirmed',
+                'invalid_token', 'invalid_metric_or_parameter', 'transport_error', 'invalid_response',
+                'empty_unconfirmed', 'budget_exhausted', 'pagination_incomplete'}
+    require(isinstance(saved, dict) and isinstance(projected, dict))
+    require(saved.get('schema_version') == 'meta-content-insights-v1')
+    require(saved.get('page_id') == source['identity']['external_id'])
+    require(saved.get('requested_period') == period and saved.get('report_timezone') == source.get('timezone'))
+    require(saved.get('measurement_timezone') == 'provider_end_time')
+    require(all(projected.get(k) == v for k, v in saved.items() if k != 'measurements'))
+    require(isinstance(saved.get('measurements'), list) and isinstance(projected.get('measurements'), list))
+    require(len(saved['measurements']) == len(projected['measurements']) <= 64)
+    require(isinstance(saved.get('permissions'), list) and isinstance(saved.get('page_tasks'), list))
+    originals = {r['post_id'] for r in source.get('entries', [])}
+    found, chart_rows = {}, []
+    for raw, row in zip(saved['measurements'], projected['measurements']):
+        require(isinstance(raw, dict) and isinstance(row, dict) and raw.get('metric') in catalog)
+        require(all(row.get(k) == v for k, v in raw.items() if k != 'reason'))
+        scope, measurement_period, aggregation = catalog[raw['metric']]
+        require((raw.get('scope'), raw.get('period'), raw.get('aggregation')) == (scope, measurement_period, aggregation))
+        require(raw.get('object_id') == saved['page_id'] if scope == 'page' else raw.get('object_id') in originals)
+        identity = (raw['object_id'], raw['metric'])
+        require(identity not in found)
+        found[identity] = row
+        require(raw.get('status') in statuses and raw.get('unit') == 'count')
+        require(isinstance(raw.get('values'), list) and len(raw['values']) <= (90 if measurement_period == 'day' else 1))
+        require(isinstance(row.get('label'), str) and isinstance(row.get('reason'), str))
+        require(row.get('report_status') in statuses | {'period_boundary_mismatch'})
+        require(row.get('value') is None or type(row['value']) is int and row['value'] >= 0)
+        coverage = row.get('coverage')
+        require(isinstance(coverage, dict) and type(coverage.get('available')) is int and type(coverage.get('expected')) is int)
+        require(coverage['available'] >= 0 and coverage['expected'] >= 0)
+        require(coverage.get('unit') == ('days' if measurement_period == 'day' else 'observations'))
+        for point in raw['values']:
+            require(isinstance(point, dict) and set(point) == {'value', 'end_time'})
+            require(point['value'] is None or type(point['value']) is int and point['value'] >= 0)
+            if measurement_period == 'day' or point['end_time'] is not None:
+                try:
+                    require(isinstance(point['end_time'], str) and datetime.fromisoformat(point['end_time'].replace('Z', '+00:00')).tzinfo is not None)
+                except (TypeError, ValueError):
+                    require(False)
+        if raw['values']:
+            require({'read_insights', 'pages_read_engagement'}.issubset(saved['permissions']))
+            require('ANALYZE' in saved['page_tasks'] and saved.get('graph_version') == 'v26.0')
+        if row['report_status'] != 'available':
+            require(row['value'] is None)
+        elif measurement_period == 'lifetime':
+            require(len(raw['values']) == 1 and row['value'] == raw['values'][0]['value'])
+        elif aggregation != 'sum_exact_intervals':
+            require(row['value'] is None)
+        if measurement_period == 'day' and raw['values'] and raw['status'] in ('available', 'partial'):
+            chart_rows.append(raw)
+    charts = projected.get('charts')
+    require(isinstance(charts, list) and len(charts) == len(chart_rows))
+    for chart, row in zip(charts, chart_rows):
+        require(isinstance(chart, dict) and chart.get('timezone') == 'provider_end_time')
+        require(chart.get('labels') == [p['end_time'] for p in row['values']])
+        require(chart.get('values') == [p['value'] for p in row['values']])
+        require(chart.get('status') == row['status'] and chart.get('unit') == 'count')
+        require(chart.get('title') == row['label'] + ' · mốc kết thúc ngày Meta')
+        require(chart.get('source') == 'Facebook Page Insights' and chart.get('kind') == 'bar')
+    return found

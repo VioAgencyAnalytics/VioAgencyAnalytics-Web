@@ -1,1 +1,1 @@
-"""KDH marketing dashboard application package."""
+"""VioAgencyAnalytics marketing dashboard by VIO Agency."""

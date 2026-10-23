@@ -186,7 +186,7 @@
   });
   $('#seo-strategy').addEventListener('click', () => {
     const cards = $$('#seo-insights .space-y-4 > div');
-    detail('Chiến lược SEO kỳ tiếp theo', cards.map((card) => `<section class="seo-detail-page"><h3>${escape(card.querySelector('h4').textContent.trim())}</h3><p>${escape(card.querySelector('p').textContent.trim())}</p></section>`).join('') + '<p class="seo-sample-note">Đề xuất theo bộ dữ liệu mẫu tháng 9/2026 · KDH SEO Team.</p>');
+    detail('Chiến lược SEO kỳ tiếp theo', cards.map((card) => `<section class="seo-detail-page"><h3>${escape(card.querySelector('h4').textContent.trim())}</h3><p>${escape(card.querySelector('p').textContent.trim())}</p></section>`).join('') + '<p class="seo-sample-note">Đề xuất theo bộ dữ liệu mẫu tháng 9/2026.</p>');
   });
   $('#seo-weekly').addEventListener('click', async () => {
     const button = $('#seo-weekly'); button.disabled = true;

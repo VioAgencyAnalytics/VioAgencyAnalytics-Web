@@ -5,10 +5,10 @@
     <div class="sidebar-brand shrink-0">
         <a class="flex items-center gap-3 group" href="{{ snapshot_home if dashboard is defined else '/overview' }}" data-path="tong-quan-toan-bo-du-an">
             <div class="sidebar-logo-wrap">
-                <img alt="KDH" class="h-9 w-9 shrink-0 object-contain" height="36" src="/static/img/kdh-logo.png" width="36" />
+                <img alt="VioAgencyAnalytics" class="h-9 w-9 shrink-0 object-contain" height="36" src="/static/img/analytics-mark.svg" width="36" />
             </div>
             <div class="min-w-0">
-                <div class="sidebar-app-name text-sm font-bold text-white leading-tight tracking-tight group-hover:text-blue-100 transition-colors">KDH Report</div>
+                <div class="sidebar-app-name text-sm font-bold text-white leading-tight tracking-tight group-hover:text-blue-100 transition-colors">VioAgencyAnalytics</div>
                 <div class="sidebar-client-name text-xs text-blue-200/70 leading-tight truncate" title="{{ bundle.client_name if dashboard is defined else 'KinderHealth Clinic' }}">
                     {{ bundle.client_name if dashboard is defined else 'KinderHealth Clinic' }}
                 </div>
@@ -27,7 +27,7 @@
     <div class="sidebar-footer shrink-0">
         <div class="flex items-center gap-2 text-xs text-blue-300/60">
             <span class="material-symbols-outlined text-[14px]">verified</span>
-            <span>KDH Analytics © 2026</span>
+            <span>VIO Agency © 2026</span>
         </div>
         {% if dashboard is defined and viewer_mode %}
         <div class="snapshot-session mt-2">

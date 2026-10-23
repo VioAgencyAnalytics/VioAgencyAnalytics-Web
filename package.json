@@ -1,5 +1,5 @@
 {
-  "name": "kdh-report-styles",
+  "name": "vioagencyanalytics-web-styles",
   "private": true,
   "scripts": {
     "build:css": "tailwindcss -c tailwind.config.cjs -i static/css/shared/dashboard.source.css -o static/css/dist/dashboard.css --minify"

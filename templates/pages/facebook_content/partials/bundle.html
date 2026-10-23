@@ -69,5 +69,5 @@
       {% if dashboard.evidence %}<details class="fc-evidence"><summary>Đối chiếu số liệu</summary><ul>{% for item in dashboard.evidence %}<li>{{ item.metric or item.claim }}{% if item.after is not none %}: {{ snapshot_format(item.after) }}{% endif %}</li>{% endfor %}</ul></details>{% endif %}
     </div>
   </details>
-  <footer class="fc-bundle-footer"><span>KDH / BÁO CÁO HIỆU QUẢ NỘI DUNG</span><span>Facebook · {{ dashboard.timezone }} · Phiên bản {{ bundle.revision }}</span></footer>
+  <footer class="fc-bundle-footer"><span>VioAgencyAnalytics / BÁO CÁO HIỆU QUẢ NỘI DUNG</span><span>Facebook · {{ dashboard.timezone }} · Phiên bản {{ bundle.revision }}</span></footer>
 </div>

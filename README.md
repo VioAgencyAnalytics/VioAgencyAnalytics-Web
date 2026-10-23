@@ -1,9 +1,25 @@
-# KDH Marketing Reporting Dashboard
+# VioAgencyAnalytics-Web
 
-KDH-Report-New chạy Viewer bằng FastAPI + Jinja2. Bản Docker hiện tại chỉ đọc
-Published Report Bundle từ Admin.
+**VioAgencyAnalytics do VIO Agency phát triển, sở hữu và vận hành**, hướng tới
+Self-service Multi-platform Marketing Analytics & Reporting SaaS. Sản phẩm được
+phát triển độc lập; tham khảo mô hình AgencyAnalytics không hàm ý sở hữu/hợp tác.
 
-**Source ngày 20/10/2026:** các module Viewer, handoff, Bundle mapper và giao diện
+Web dùng FastAPI + Jinja2 + Vanilla JS, hiện chủ yếu là Viewer của Published
+Report Bundle từ Admin. Google Sign-in, onboarding, Organization/Workspace,
+Live Dashboard và Report Builder customer là kế hoạch, chưa triển khai ở đây.
+Google Sign-in xác thực người dùng; provider OAuth cấp quyền dữ liệu riêng biệt.
+Web không gọi provider API hoặc nhận provider secrets từ Admin.
+
+- [Customer Workspace UX và permission flow](docs/CUSTOMER_WORKSPACE_UX.md)
+- [Product Vision](../VioAgencyAnalytics-Admin/docs/VIOAGENCYANALYTICS_PRODUCT_VISION.md)
+- [Kiến trúc và trạng thái tích hợp](../VioAgencyAnalytics-Admin/docs/VIOAGENCYANALYTICS_ARCHITECTURE.md)
+- [Roadmap](../VioAgencyAnalytics-Admin/docs/SAAS_MIGRATION_ROADMAP.md)
+- [Audit và file map](../VioAgencyAnalytics-Admin/docs/REBRAND_FILE_MAP.md)
+
+Các liên kết chéo repository giả định hai checkout nằm cạnh nhau như workspace
+hiện tại. Tên package, header/cookie, service và client ID cũ được giữ tương thích.
+
+**Ghi nhận lịch sử ngày 20/10/2026:** các module Viewer, handoff, Bundle mapper và giao diện
 Facebook Content đã được đưa vào working tree này từ bản VIO đã kiểm thử. HEAD
 không đổi; thay đổi chưa commit. Compose dùng image bất biến đã build từ source
 này. VIO sandbox giữ riêng, không chuyển database, báo cáo hoặc quyền Viewer.
@@ -16,73 +32,38 @@ này. VIO sandbox giữ riêng, không chuyển database, báo cáo hoặc quy�
 - Vanilla JS + ECharts
 - Pytest for smoke tests
 
-## Mở New — một container, một cổng
+## Viewer hiện hành và cấu hình triển khai
 
-Trong Docker Desktop, mở nhóm **`kdh-report-new`**, bấm **Run/Start** ở container
-**`kdh-report-new-app-1`**, rồi mở **http://localhost:8080**.
+Đối chiếu source ngày 23/10/2026: `compose.yaml` include `compose.shared.yaml`,
+project `kdh-report-admin`, service `new`, container `kdh-report-new-app-1` tại
+cổng 8080. Cấu hình có hai backend qua relay riêng: primary và VIO, lựa chọn theo
+origin được cấu hình. `client_id` trên URL không chọn backend và không cấp quyền.
+Cookies host-only, service credentials và grants hiện có phải được giữ nguyên.
 
-FE và BE cùng chạy trong container này. Không cần mở các cổng preview `8081` hoặc
-`18085`. Các container VIO/Meta thuộc môi trường kiểm thử riêng, không dùng để mở
-bản New này.
+Web production chuyển luồng đăng nhập/chọn báo cáo về Admin, sau đó nhận handoff
+và chỉ hiển thị Published Bundle theo revision được cấp quyền. `/overview` và
+các route dữ liệu mẫu bị chặn trong production. Preview nội bộ yêu cầu quyền
+riêng; không phải dashboard live cho khách hàng.
 
-**Xem bố cục ngay, chưa cần chọn báo cáo:**
-http://localhost:8080/static/layout-preview/overview.html
+Đây là trạng thái **source**, không phải kết quả kiểm tra container ngày 23/10.
+Các bản ghi triển khai mới nhất nằm trong
+[System Context của Admin](../VioAgencyAnalytics-Admin/docs/SYSTEM_CONTEXT.md).
+Hướng dẫn cũ tạo service `app`, image `unified-20261020` và nối trực tiếp
+`kdh-report-admin_default` không mô tả Compose shared hiện hành. Không dùng chúng
+để recreate hệ thống. Task rebrand không đổi image, network, IP, callback hoặc mount.
 
-Các trang xem trước được render từ template trong image Viewer, với KPI rỗng;
-không gọi Admin, không tạo báo cáo và không sử dụng số liệu mẫu. Menu cho phép xem
-Tổng quan, SEO/Keywords, Facebook Ads, Facebook Content, TikTok Ads và YouTube.
-Lọc kỳ và xuất báo cáo bị vô hiệu hóa vì chưa có dữ liệu.
+Cấu hình shared giữ các network `kdh-vio-host-phase9-20261019`,
+`kdh-shared-viewer-primary-20261021`, `kdh-vio-handoff-phase9-recovery-20261019`.
+Không đổi tên network `kdh-report-admin_default` của Admin. Mount
+`.work/layout-preview` chỉ dành cho HTML bố cục công khai, không chứa dữ liệu khách hàng.
+Trang layout preview có KPI rỗng, không gọi provider hoặc thay thế báo cáo đã phát hành.
 
-Các HTML nằm trong `.work/layout-preview` (không commit) và được mount chỉ đọc.
-Khi cần tạo lại, chạy các lệnh sau với container Viewer hiện có:
+Bản mock riêng dùng `compose.mock.yaml`, cổng 8082; không phải production tenant.
+Các mô tả dashboard mẫu bên dưới chỉ áp dụng development/design preview.
+`client_kinderhealth` và `client_meta_sandbox` là phạm vi hiện có; rebrand không
+chuyển dữ liệu hoặc grant giữa các database và không biến sandbox thành tenant SaaS.
 
-```powershell
-docker cp scripts/render_layout_preview.py kdh-report-new-app-1:/tmp/render_layout_preview.py
-docker exec -e PYTHONPATH=/app kdh-report-new-app-1 python /tmp/render_layout_preview.py /tmp/kdh-layout-preview
-New-Item -ItemType Directory -Force .work/layout-preview
-docker cp kdh-report-new-app-1:/tmp/kdh-layout-preview/. .work/layout-preview
-```
-
-Nếu tạo container lần đầu và chưa có thư mục này, tạo thư mục rỗng
-`.work/layout-preview` trước, khởi động container, rồi render theo hướng dẫn trên.
-Chỉ lưu HTML xem bố cục trong thư mục này vì các file ở đây mở được không cần đăng nhập.
-
-Trang gốc chuyển sang Admin tại `http://localhost:8090/viewer/reports` để đăng nhập
-và chọn báo cáo. Admin cùng database của Admin phải đang chạy; chúng vẫn là các
-dịch vụ độc lập. Sau khi chọn báo cáo đã xuất bản, Admin chuyển về Viewer ở cổng
-8080. Đường dẫn `/overview` trực tiếp bị chặn trong production.
-
-Nếu cần tạo lại container, tại `D:\KDH-Report-All\KDH-Report-New` chạy:
-
-```sh
-docker compose up -d --no-build --pull never app
-```
-
-Yêu cầu có sẵn image local `kdh-new:unified-20261020-0d8c6b94bb93`, network
-`kdh-report-admin_default` và cấu hình `REPORT_SERVICE_TOKEN` hợp lệ đã được cấp.
-Image ID:
-`sha256:87844f282565682fefffb3f1436a48b70099129a96704abb743b134df16256f9`.
-Compose không tải image thay thế nếu thiếu image local.
-Không đưa token vào source hoặc tài liệu.
-
-```sh
-docker compose ps              # Kiểm tra trạng thái / healthcheck
-docker compose logs -f app     # Xem log (Ctrl+C chỉ thoát xem log)
-docker compose stop app        # Dừng New, giữ container để bấm Run lần sau
-docker compose start app       # Chạy lại New
-```
-
-Container tự khởi động lại khi Docker Engine chạy, trừ khi đã chủ động dừng.
-Chỉ mở ứng dụng trên máy đang chạy Docker. New không gọi Google/Meta trực tiếp và
-không có database riêng. Nếu không mở được link, kiểm tra trạng thái container và
-`http://localhost:8080/api/v1/health`; sau đó kiểm tra Admin nếu lỗi xảy ra khi chuyển trang.
-
-Các mô tả dashboard mẫu bên dưới chỉ áp dụng cho chế độ development.
-Runtime production chặn các route demo; chỉ đọc Bundle đã phát hành từ Admin.
-Admin chính hiện giữ `client_meta_sandbox`. Báo cáo và Viewer grant của VIO sandbox
-không tự có ở database chính; chưa có Bundle/quyền phù hợp thì chưa mở được báo cáo.
-
-## New có dữ liệu mẫu — KDH-Report-New-MockDb
+## Viewer mẫu — container `KDH-Report-New-MockDb`
 
 Mở **http://localhost:8082** để xem dashboard có KPI, biểu đồ và bảng mẫu,
 không cần đăng nhập/chọn báo cáo. Trong Docker Desktop, mở nhóm
@@ -176,14 +157,9 @@ Run backend checks with `python -m pytest -q`.
 - YouTube chỉ có bốn video tiêu biểu trong HTML, không tạo thêm 20 video để đủ nhãn 24. Bộ lọc ngày áp dụng theo ngày đăng của bốn video; KPI toàn kênh và các video tiêu biểu là các mẫu độc lập. Kế hoạch YouTube chỉ lưu lựa chọn trên trình duyệt, không gửi phê duyệt đến hệ thống bên ngoài.
 - CSS, biểu đồ SVG, font và thumbnail phục vụ tại máy chủ; không cần CDN khi mở trang.
 
-Chạy riêng dự án này từ `D:\KDH-Report-New`:
-
-```powershell
-docker compose up -d --build
-```
-
-Mở `http://127.0.0.1:8080/report/tiktok` hoặc `http://127.0.0.1:8080/report/youtube`.
-Compose project là `kdh-report-new`, không gộp với dự án `KDH-Report` khác.
+Các route mẫu TikTok/YouTube ở trên chỉ hoạt động ngoài production.
+Không chạy Compose production để mở route demo. Repository local hiện tại là
+`D:\VioAgencyAnalytics\VioAgencyAnalytics-Web`; các tên Docker cũ vẫn là contract vận hành.
 
 ## Project structure
 

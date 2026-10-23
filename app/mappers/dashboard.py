@@ -167,11 +167,13 @@ def content_presentation(bundle, section, view):
         rows = report['sections']['posts']['rows']
         columns = [('title', 'Bài viết'), ('post_id', 'Mã bài đăng'), ('date', 'Ngày đăng (UTC)'),
                    ('format', 'Định dạng'), ('topic', 'Chủ đề'), ('reactions_lifetime', 'Cảm xúc'),
-                   ('comments_lifetime', 'Bình luận'), ('shares_lifetime', 'Chia sẻ')]
+                   ('comments_lifetime', 'Bình luận'), ('shares_lifetime', 'Chia sẻ'),
+                   ('post_media_view_lifetime', 'Lượt xem tích lũy'),
+                   ('post_total_media_view_unique_lifetime', 'Người xem duy nhất tích lũy')]
         view['detail_tables'] = [dict(title='Danh sách bài đăng', source='Facebook Content', metadata=True,
             status=report['sections']['posts']['status'],
             columns=[dict(key=k, label=label, unit='') for k, label in columns],
-            rows=[{k: dict(value=r.get(k), url=None) for k, _ in columns} for r in rows])]
+            rows=[{k: dict(value=r.get(k), url=None) for k in [c[0] for c in columns] + ['message']} for r in rows])]
         from app.bundle_safety import safe_url
         for row in rows:
             url = safe_url(row.get('permalink_url'))
@@ -280,8 +282,22 @@ def content_shell(bundle, section, view):
     cards = metric_cards(section, 'facebook_content') + content_cards(section, lifetime=True)
     view['visible_content_kpis'] = [dict(m, label=labels.get(m['key'].split('.')[-1], m['label']))
         for m in cards if m['available'] and m['value'] is not None and m['status'] not in ('no_data', 'unavailable')]
+    report = section.content_report or {}
+    insights = report.get('insights') or {}
+    view['content_insights'] = insights
+    view['content_section_details'] = report.get('sections', {})
+    view['content_missing_metrics'] = [m for m in report.get('metrics', []) if m.get('value') is None]
+    view['content_insights_charts'] = insights.get('charts', [])
+    for row in insights.get('measurements', []):
+        if row['scope'] == 'page' and row['value'] is not None and row['report_status'] == 'available':
+            view['visible_content_kpis'].append(dict(key='facebook_content.' + row['metric'],
+                label=row['label'], value=row['value'], text=display(row['value'], row['unit']),
+                unit_text='', icon='monitoring', previous=None, previous_text='',
+                coverage=row['coverage'], status=row['report_status'],
+                scope_label='Toàn Page · kỳ đã chốt', grain='period', aggregation=row['aggregation']))
     view['visible_content_charts'] = [c for c in view.get('content_charts', view['charts'])
         if c['status'] not in ('no_data', 'unavailable') and any(v is not None for v in c['values'])]
+    view['visible_content_charts'] += view['content_insights_charts']
     def populated(tables):
         result = []
         for table in tables:
@@ -306,6 +322,11 @@ def content_shell(bundle, section, view):
             view['visible_content_sections'].append(section_id)
     if view['content_approved_notes'] or view['opportunities']:
         view['visible_content_sections'].append('fc-insights')
+    if report:
+        # All seven published sections have either saved content or an exact
+        # Admin-owned limitation. Do not invent a replacement KPI.
+        view['visible_content_sections'] = ['fc-summary', 'fc-formats', 'fc-topics', 'fc-posts',
+                                            'fc-engagement', 'fc-reach', 'fc-insights']
 
 
 def preview_dashboard(candidate, issues, candidate_id):

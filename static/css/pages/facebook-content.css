@@ -208,6 +208,18 @@
 .fc-live-shell .fc-two-columns:has(>section:only-child) { grid-template-columns:minmax(0,1fr); }
 .fc-live-shell .fc-scope-note { font-size:12px; line-height:1.7; color:#64748b; }
 .fc-live-shell .fc-scope-note summary { cursor:pointer; font-weight:600; }
+.published-dashboard #facebook-content-dashboard.fc-live-shell #fc-engagement .snapshot-chart-group { margin-top:20px; min-width:0; }
+.published-dashboard #facebook-content-dashboard.fc-live-shell #fc-engagement .snapshot-chart-group>label { display:flex; flex-direction:column; align-items:stretch; gap:8px; font-size:13px; font-weight:600; }
+.published-dashboard #facebook-content-dashboard.fc-live-shell #fc-engagement select { width:100%; min-width:0; max-width:100%; font-size:13px; }
+.published-dashboard #facebook-content-dashboard.fc-live-shell #fc-engagement .pb-chart-surface { padding-top:16px; }
+.published-dashboard #facebook-content-dashboard.fc-live-shell #fc-engagement .pb-chart-surface>svg { display:block; height:auto; max-height:none; }
+.published-dashboard #facebook-content-dashboard.fc-live-shell #fc-engagement .pb-chart-surface svg text { font-size:12px; }
+.published-dashboard #facebook-content-dashboard.fc-live-shell #fc-engagement rect[role="img"] { fill:#4f73d9; }
+.published-dashboard #facebook-content-dashboard.fc-live-shell #fc-engagement rect[role="img"]:hover,
+.published-dashboard #facebook-content-dashboard.fc-live-shell #fc-engagement rect[role="img"]:focus { fill:#3155b6; outline:2px solid #b4c7ff; outline-offset:2px; }
+.published-dashboard #facebook-content-dashboard.fc-live-shell #fc-engagement .pb-chart-legend { font-size:12px; line-height:1.6; padding-top:8px; }
+.published-dashboard #facebook-content-dashboard.fc-live-shell #fc-engagement .pb-chart-legend circle { fill:#4f73d9; }
+.published-dashboard #facebook-content-dashboard.fc-live-shell #fc-engagement .fc-scope-note { margin-top:16px; padding-top:12px; border-top:1px solid #e9edf8; }
 .fc-live-shell #fc-posts th:nth-child(n+3), .fc-live-shell #fc-posts td:nth-child(n+3) { text-align:right; font-variant-numeric:tabular-nums; }
 .fc-live-shell #fc-posts th:nth-child(n+3) button { display:block; width:100%; text-align:right; }
 .fc-live-shell .fc-post-external { display:inline-flex; margin-top:6px; color:#2458aa; text-decoration:underline; }

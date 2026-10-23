@@ -1,0 +1,8 @@
+{% macro section_status(key, notes=true) %}
+{% set item = dashboard.content_section_details.get(key) if dashboard.content_section_details is defined else none %}
+{% if item %}
+  {% if item.reason and item.status != 'available' %}<p class="fc-section-status" data-section-status="{{ item.status }}">{{ item.reason }}</p>{% endif %}
+  {% if item.coverage %}<p class="fc-subtitle">Đã phân loại {{ item.coverage.available }}/{{ item.coverage.expected }} bài.</p>{% endif %}
+  {% if notes and item.commentary and item.commentary.status == 'approved' %}<div class="fc-approved" data-note-kind="approved"><strong>Nhận xét</strong><p>{{ item.commentary.text }}</p></div>{% endif %}
+{% endif %}
+{% endmacro %}

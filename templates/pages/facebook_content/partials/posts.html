@@ -1,5 +1,6 @@
 {% if dashboard is defined %}
 {% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
+{% if dashboard.content_live %}{{ section_status('posts') }}{% endif %}
 <div class="fc-post-heading"><div><h2>Hiệu quả bài đăng</h2><p class="fc-subtitle">{{ 'Cảm xúc, bình luận và chia sẻ tích lũy đến ngày chốt báo cáo.' if dashboard.content_live and dashboard.source_identity else 'Chọn tiêu đề cột để sắp xếp.' }}</p></div></div>{{ tables(dashboard.visible_content_tables if dashboard.content_live else dashboard.detail_tables) }}
 {% else %}
 {% from 'pages/facebook_content/partials/helpers.html' import n, pct %}
