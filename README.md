@@ -4,12 +4,17 @@
 Self-service Multi-platform Marketing Analytics & Reporting SaaS. Sản phẩm được
 phát triển độc lập; tham khảo mô hình AgencyAnalytics không hàm ý sở hữu/hợp tác.
 
-Web dùng FastAPI + Jinja2 + Vanilla JS, hiện chủ yếu là Viewer của Published
-Report Bundle từ Admin. Google Sign-in, onboarding, Organization/Workspace,
-Live Dashboard và Report Builder customer là kế hoạch, chưa triển khai ở đây.
+Web dùng FastAPI + Jinja2 + Vanilla JS. Giao diện khách hàng đã được tổ chức thành
+9 trang theo bộ thiết kế người dùng cung cấp, có thể chạy bằng `app.design_preview:app`.
+Các báo cáo cũ được mở trong **Phân tích kênh**. Trang 01–02 đã có tài khoản và
+Workspace trên DB thật khi bật `CUSTOMER_AUTH_ENABLED`; xem hướng dẫn bên dưới.
+Google/SMTP cần cấu hình để bật. Luồng Viewer của Published Bundle từ Admin được
+giữ tương thích. Live Dashboard và Report Builder customer chưa được triển khai.
 Google Sign-in xác thực người dùng; provider OAuth cấp quyền dữ liệu riêng biệt.
 Web không gọi provider API hoặc nhận provider secrets từ Admin.
 
+- [Giao diện 9 trang, cách chạy và phạm vi đã triển khai](docs/CUSTOMER_UI_IMPLEMENTATION.md)
+- [Trang 01–02: FE, backend, DB và cách chạy bản thật cổng 8084](docs/CUSTOMER_IDENTITY_IMPLEMENTATION.md)
 - [Customer Workspace UX và permission flow](docs/CUSTOMER_WORKSPACE_UX.md)
 - [Product Vision](../VioAgencyAnalytics-Admin/docs/VIOAGENCYANALYTICS_PRODUCT_VISION.md)
 - [Kiến trúc và trạng thái tích hợp](../VioAgencyAnalytics-Admin/docs/VIOAGENCYANALYTICS_ARCHITECTURE.md)
@@ -31,6 +36,26 @@ này. VIO sandbox giữ riêng, không chuyển database, báo cáo hoặc quy�
 - Jinja2 templates
 - Vanilla JS + ECharts
 - Pytest for smoke tests
+
+## Giao diện khách hàng mới — 9 trang
+
+```sh
+python -m uvicorn app.design_preview:app --host 127.0.0.1 --port 8083
+```
+
+Mở **http://127.0.0.1:8083/**: Đăng nhập → Thiết lập Workspace → Tổng quan →
+Kết nối nền tảng → Dashboard Marketing → Phân tích kênh → Báo cáo → Thành viên →
+Cài đặt. Nút **Khám phá giao diện mới** mở luồng xem thử, không tạo phiên đăng nhập.
+Các tùy chọn và bản nháp xem thử chỉ lưu trong phiên tab trình duyệt.
+Trang 04 có nội dung **Kết nối nền tảng**, dù tên thư mục ZIP là Agency Overview.
+
+Tại **Phân tích kênh**, báo cáo Tổng quan, SEO, Facebook Ads, Facebook Content,
+TikTok và YouTube giữ các bộ lọc và chức năng xuất file hiện có. Trang báo cáo được
+nhúng cùng nguồn vào khung điều hướng mới. Kênh chưa có báo cáo hiện trạng thái trống.
+CSS, logo và font được phục vụ tại máy chủ, không phụ thuộc Tailwind CDN.
+
+`/workspace*` chỉ mở trong development/test hoặc ứng dụng preview riêng. Production
+tiếp tục chặn giao diện mẫu và dùng luồng xác thực, handoff, grant hiện hành.
 
 ## Viewer hiện hành và cấu hình triển khai
 

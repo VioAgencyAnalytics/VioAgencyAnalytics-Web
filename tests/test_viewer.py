@@ -57,7 +57,7 @@ def use_viewer_session(client):
     client.cookies.set(viewer.CSRF, 'fixture-csrf', domain='new.invalid', path='/')
 
 
-@pytest.mark.parametrize('path', ['/', '/login', '/reports', '/login?next=https://evil.invalid', '/reports?next=//evil.invalid'])
+@pytest.mark.parametrize('path', ['/reports', '/reports?next=//evil.invalid'])
 def test_entry_routes_return_to_admin_without_a_login_or_list(env, path):
     client, calls, _, _ = env
     response = client.get(path, follow_redirects=False)
@@ -184,5 +184,5 @@ def test_expired_preview_resumes_via_admin_handoff(env):
 def test_invalid_admin_origin_fails_without_redirect(env, origin):
     client, calls, _, _ = env
     main.app.dependency_overrides[get_settings]().report_admin_public_url = origin
-    response = client.get('/', follow_redirects=False)
+    response = client.get('/reports', follow_redirects=False)
     assert response.status_code == 503 and 'location' not in response.headers and not calls

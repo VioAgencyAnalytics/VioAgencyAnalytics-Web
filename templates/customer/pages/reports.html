@@ -1,0 +1,1204 @@
+{% extends "customer/shell.html" %}
+{% block content %}
+<main class="customer-page p-8 space-y-6">
+ <div class="flex flex-col w-full">
+  <section class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+   <div class="space-y-1">
+    <div class="flex items-center gap-3">
+     <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+      Trung tâm Báo cáo Marketing
+     </h1>
+     <span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-on-surface-variant">
+      KinderHealth Workspace
+     </span>
+    </div>
+    <p class="font-body-md text-body-md text-on-surface-variant">
+     Xem báo cáo tự động từ 10 kênh dữ liệu hoặc thiết lập báo cáo tùy chỉnh đa kênh chuyên sâu.
+    </p>
+   </div>
+   <div class="flex items-center gap-3">
+    <button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors" data-action="export-history" type="button">
+     <span class="material-symbols-outlined text-[19px]">
+      history
+     </span>
+     <span class="">
+      Lịch sử xuất file
+     </span>
+    </button>
+    <button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary-container text-on-primary-container font-label-md text-label-md shadow-sm hover:brightness-105 transition-all" data-action="create-report" type="button">
+     <span class="material-symbols-outlined text-[19px]">
+      add
+     </span>
+     <span class="">
+      + Tạo báo cáo tùy chỉnh
+     </span>
+    </button>
+   </div>
+  </section>
+  <section class="mb-10 space-y-5">
+   <div class="flex flex-col md:flex-row md:items-end justify-between gap-3 border-b border-slate-200 pb-4">
+    <div>
+     <div class="flex items-center gap-2.5">
+      <span class="material-symbols-outlined text-primary text-[24px]">
+       auto_awesome
+      </span>
+      <h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">
+       Báo cáo có sẵn
+      </h2>
+      <span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-emerald-50 text-emerald-700 border border-emerald-200">
+       Tự động tổng hợp
+      </span>
+     </div>
+     <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+      Xem và xuất báo cáo tự động ngay khi dữ liệu được đồng bộ từ các nền tảng Marketing đã kết nối. Không cần khởi tạo thủ công.
+     </p>
+    </div>
+    <span class="text-label-sm font-label-sm text-on-surface-variant whitespace-nowrap">
+     10 báo cáo nền tảng
+    </span>
+   </div>
+   <div class="flex items-center gap-2 overflow-x-auto pb-1" id="reportFilterBar">
+    <button class="px-3.5 py-1.5 rounded-xl text-label-md font-label-md bg-slate-900 text-white shadow-xs filter-btn" data-category="all" type="button">
+     Tất cả (10)
+    </button>
+    <button class="px-3.5 py-1.5 rounded-xl text-label-md font-label-md bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors filter-btn" data-category="cross" type="button">
+     Đa kênh
+    </button>
+    <button class="px-3.5 py-1.5 rounded-xl text-label-md font-label-md bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors filter-btn" data-category="ads" type="button">
+     Quảng cáo trả phí
+    </button>
+    <button class="px-3.5 py-1.5 rounded-xl text-label-md font-label-md bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors filter-btn" data-category="seo" type="button">
+     SEO &amp; Website
+    </button>
+    <button class="px-3.5 py-1.5 rounded-xl text-label-md font-label-md bg-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors filter-btn" data-category="social" type="button">
+     Mạng xã hội &amp; Video
+    </button>
+   </div>
+   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5" id="reportsGrid">
+    <article class="report-card flex flex-col rounded-2xl bg-surface-container-lowest border border-slate-200/80 shadow-xs hover:shadow-md transition-all p-5 justify-between relative group" data-category="cross">
+     <div class="space-y-4">
+      <div class="flex items-start justify-between gap-3">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-primary-fixed/40 text-primary flex items-center justify-center font-bold text-lg flex-shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          stacked_bar_chart
+         </span>
+        </div>
+        <div>
+         <div class="flex items-center gap-2">
+          <h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+           Báo cáo Marketing tổng hợp
+          </h3>
+         </div>
+         <span class="text-[11px] text-slate-500 font-medium">
+          Multi-channel Cross-platform
+         </span>
+        </div>
+       </div>
+       <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-red-100 text-[#D9232E] border border-red-200 flex-shrink-0">
+        Báo cáo chủ lực
+       </span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+       Báo cáo hợp nhất hiệu suất toàn bộ chiến dịch đa kênh: Chi phí, Doanh thu ước tính, ROAS, Tổng lượt tiếp cận và Chuyển đổi đặt lịch khám.
+      </p>
+      <div class="flex items-center justify-between text-label-sm font-label-sm py-2 px-3 rounded-lg bg-surface-container-low">
+       <div class="flex items-center gap-1.5 text-slate-500">
+        <span class="w-2 h-2 rounded-full bg-slate-400">
+        </span>
+        <span class="">
+         Trạng thái dữ liệu
+        </span>
+       </div>
+       <span class="font-medium text-slate-600">
+        Chờ đồng bộ đủ kênh
+       </span>
+      </div>
+      <div class="grid grid-cols-4 gap-2 py-2 border-y border-slate-100 text-center">
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Chi phí
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Lượt nhấp
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Chuyển đổi
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         ROAS
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center gap-2 pt-4 mt-2">
+      <button class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-primary-container text-on-primary-container font-label-md text-label-md shadow-xs hover:brightness-105 transition-all" data-action="unavailable" type="button">
+       <span class="material-symbols-outlined text-[17px]">
+        visibility
+       </span>
+       <span class="">
+        Xem báo cáo
+       </span>
+      </button>
+      <button aria-label="Xuất PDF" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-label-md transition-colors" data-action="report-unavailable" title="Xem mẫu PDF" type="button">
+       <span class="material-symbols-outlined text-[17px]">
+        picture_as_pdf
+       </span>
+      </button>
+     </div>
+    </article>
+    <article class="report-card flex flex-col rounded-2xl bg-surface-container-lowest border border-slate-200/80 shadow-xs hover:shadow-md transition-all p-5 justify-between relative group" data-category="social">
+     <div class="space-y-4">
+      <div class="flex items-start justify-between gap-3">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center font-bold text-lg flex-shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          post
+         </span>
+        </div>
+        <div>
+         <h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+          Facebook Content
+         </h3>
+         <span class="text-[11px] text-slate-500 font-medium">
+          Fanpage &amp; Tương tác bài viết
+         </span>
+        </div>
+       </div>
+       <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 flex-shrink-0">
+        Chưa kết nối
+       </span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+       Hiệu suất nội dung Fanpage KinderHealth: Lượt tiếp cận tự nhiên, lượt tương tác, tỷ lệ bình luận và tăng trưởng người theo dõi.
+      </p>
+      <div class="flex items-center justify-between text-label-sm font-label-sm py-2 px-3 rounded-lg bg-surface-container-low">
+       <div class="flex items-center gap-1.5 text-slate-500">
+        <span class="w-2 h-2 rounded-full bg-amber-400">
+        </span>
+        <span class="">
+         Nguồn API
+        </span>
+       </div>
+       <span class="font-medium text-amber-700">
+        Cần cấp quyền Fanpage
+       </span>
+      </div>
+      <div class="grid grid-cols-4 gap-2 py-2 border-y border-slate-100 text-center">
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Bài viết
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Tiếp cận
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Tương tác
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Tỷ lệ ER
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center gap-2 pt-4 mt-2">
+      <a class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all" href="/workspace/integrations">
+       <span class="material-symbols-outlined text-[17px]">
+        link
+       </span>
+       <span class="">
+        Kết nối nền tảng
+       </span>
+      </a>
+      <button aria-label="Xem báo cáo" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-label-md transition-colors" data-action="report-unavailable" title="Xem mẫu PDF" type="button">
+       <span class="material-symbols-outlined text-[17px]">
+        visibility
+       </span>
+      </button>
+     </div>
+    </article>
+    <article class="report-card flex flex-col rounded-2xl bg-surface-container-lowest border border-slate-200/80 shadow-xs hover:shadow-md transition-all p-5 justify-between relative group" data-category="ads">
+     <div class="space-y-4">
+      <div class="flex items-start justify-between gap-3">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 flex items-center justify-center font-bold text-lg flex-shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          campaign
+         </span>
+        </div>
+        <div>
+         <h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+          Facebook Ads
+         </h3>
+         <span class="text-[11px] text-slate-500 font-medium">
+          Chiến dịch &amp; Chuyển đổi quảng cáo
+         </span>
+        </div>
+       </div>
+       <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 flex-shrink-0">
+        Chưa kết nối
+       </span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+       Chi tiết chi tiêu Meta Ads, CPC, CTR, CPA theo từng nhóm quảng cáo khám nhi, tiêm chủng và gói khám định kỳ.
+      </p>
+      <div class="flex items-center justify-between text-label-sm font-label-sm py-2 px-3 rounded-lg bg-surface-container-low">
+       <div class="flex items-center gap-1.5 text-slate-500">
+        <span class="w-2 h-2 rounded-full bg-amber-400">
+        </span>
+        <span class="">
+         Tài khoản QC
+        </span>
+       </div>
+       <span class="font-medium text-amber-700">
+        Chờ kết nối Meta Ads
+       </span>
+      </div>
+      <div class="grid grid-cols-4 gap-2 py-2 border-y border-slate-100 text-center">
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Chi tiêu
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Lượt Click
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         CPC
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Tin nhắn
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center gap-2 pt-4 mt-2">
+      <a class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all" href="/workspace/integrations">
+       <span class="material-symbols-outlined text-[17px]">
+        link
+       </span>
+       <span class="">
+        Kết nối nền tảng
+       </span>
+      </a>
+      <button aria-label="Xem báo cáo" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-label-md transition-colors" data-action="report-unavailable" title="Xem mẫu PDF" type="button">
+       <span class="material-symbols-outlined text-[17px]">
+        visibility
+       </span>
+      </button>
+     </div>
+    </article>
+    <article class="report-card flex flex-col rounded-2xl bg-surface-container-lowest border border-slate-200/80 shadow-xs hover:shadow-md transition-all p-5 justify-between relative group" data-category="ads">
+     <div class="space-y-4">
+      <div class="flex items-start justify-between gap-3">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          music_video
+         </span>
+        </div>
+        <div>
+         <h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+          TikTok Ads
+         </h3>
+         <span class="text-[11px] text-slate-500 font-medium">
+          Video ngắn &amp; Chuyển đổi quảng cáo
+         </span>
+        </div>
+       </div>
+       <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 flex-shrink-0">
+        Chưa kết nối
+       </span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+       Hiệu quả phân phối video ngắn tư vấn dinh dưỡng và chăm sóc bé: Chi phí, Lượt xem trọn vẹn, Click và Đơn tư vấn.
+      </p>
+      <div class="flex items-center justify-between text-label-sm font-label-sm py-2 px-3 rounded-lg bg-surface-container-low">
+       <div class="flex items-center gap-1.5 text-slate-500">
+        <span class="w-2 h-2 rounded-full bg-amber-400">
+        </span>
+        <span class="">
+         TikTok Business
+        </span>
+       </div>
+       <span class="font-medium text-amber-700">
+        Chờ kết nối TikTok
+       </span>
+      </div>
+      <div class="grid grid-cols-4 gap-2 py-2 border-y border-slate-100 text-center">
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Ngân sách
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Video Views
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         CPM
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Chuyển đổi
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center gap-2 pt-4 mt-2">
+      <a class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all" href="/workspace/integrations">
+       <span class="material-symbols-outlined text-[17px]">
+        link
+       </span>
+       <span class="">
+        Kết nối nền tảng
+       </span>
+      </a>
+      <button aria-label="Xem báo cáo" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-label-md transition-colors" data-action="report-unavailable" title="Xem mẫu PDF" type="button">
+       <span class="material-symbols-outlined text-[17px]">
+        visibility
+       </span>
+      </button>
+     </div>
+    </article>
+    <article class="report-card flex flex-col rounded-2xl bg-surface-container-lowest border border-slate-200/80 shadow-xs hover:shadow-md transition-all p-5 justify-between relative group" data-category="ads">
+     <div class="space-y-4">
+      <div class="flex items-start justify-between gap-3">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center font-bold text-lg flex-shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          ads_click
+         </span>
+        </div>
+        <div>
+         <h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+          Google Ads
+         </h3>
+         <span class="text-[11px] text-slate-500 font-medium">
+          Search, Display &amp; Performance Max
+         </span>
+        </div>
+       </div>
+       <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 flex-shrink-0">
+        Chưa kết nối
+       </span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+       Báo cáo từ khóa tìm kiếm có chủ đích khám bệnh nhi khoa, tỷ lệ hiển thị vị trí hàng đầu và chi phí mỗi chuyển đổi form đặt lịch.
+      </p>
+      <div class="flex items-center justify-between text-label-sm font-label-sm py-2 px-3 rounded-lg bg-surface-container-low">
+       <div class="flex items-center gap-1.5 text-slate-500">
+        <span class="w-2 h-2 rounded-full bg-amber-400">
+        </span>
+        <span class="">
+         Google Ads ID
+        </span>
+       </div>
+       <span class="font-medium text-amber-700">
+        Chưa liên kết
+       </span>
+      </div>
+      <div class="grid grid-cols-4 gap-2 py-2 border-y border-slate-100 text-center">
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Chi phí
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Hiển thị
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         CTR
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Cuộc gọi
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center gap-2 pt-4 mt-2">
+      <a class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all" href="/workspace/integrations">
+       <span class="material-symbols-outlined text-[17px]">
+        link
+       </span>
+       <span class="">
+        Kết nối nền tảng
+       </span>
+      </a>
+      <button aria-label="Xem báo cáo" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-label-md transition-colors" data-action="report-unavailable" title="Xem mẫu PDF" type="button">
+       <span class="material-symbols-outlined text-[17px]">
+        visibility
+       </span>
+      </button>
+     </div>
+    </article>
+    <article class="report-card flex flex-col rounded-2xl bg-surface-container-lowest border border-slate-200/80 shadow-xs hover:shadow-md transition-all p-5 justify-between relative group" data-category="seo">
+     <div class="space-y-4">
+      <div class="flex items-start justify-between gap-3">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 border border-teal-200 flex items-center justify-center font-bold text-lg flex-shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          query_stats
+         </span>
+        </div>
+        <div>
+         <h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+          SEO &amp; Thứ hạng từ khóa
+         </h3>
+         <span class="text-[11px] text-slate-500 font-medium">
+          Keywords &amp; SERP Rankings
+         </span>
+        </div>
+       </div>
+       <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 flex-shrink-0">
+        Chưa kết nối
+       </span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+       Theo dõi biến động thứ hạng bộ từ khóa chuyên khoa Nhi (Top 3, Top 10, Top 30) và các trang đích bệnh học hút traffic.
+      </p>
+      <div class="flex items-center justify-between text-label-sm font-label-sm py-2 px-3 rounded-lg bg-surface-container-low">
+       <div class="flex items-center gap-1.5 text-slate-500">
+        <span class="w-2 h-2 rounded-full bg-amber-400">
+        </span>
+        <span class="">
+         Từ khóa theo dõi
+        </span>
+       </div>
+       <span class="font-medium text-amber-700">
+        0 từ khóa kích hoạt
+       </span>
+      </div>
+      <div class="grid grid-cols-4 gap-2 py-2 border-y border-slate-100 text-center">
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Top 3
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Top 10
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Tăng hạng
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Giảm hạng
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center gap-2 pt-4 mt-2">
+      <a class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all" href="/workspace/integrations">
+       <span class="material-symbols-outlined text-[17px]">
+        link
+       </span>
+       <span class="">
+        Kết nối nền tảng
+       </span>
+      </a>
+      <button aria-label="Xem báo cáo" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-label-md transition-colors" data-action="report-unavailable" title="Xem mẫu PDF" type="button">
+       <span class="material-symbols-outlined text-[17px]">
+        visibility
+       </span>
+      </button>
+     </div>
+    </article>
+    <article class="report-card flex flex-col rounded-2xl bg-surface-container-lowest border border-slate-200/80 shadow-xs hover:shadow-md transition-all p-5 justify-between relative group" data-category="seo">
+     <div class="space-y-4">
+      <div class="flex items-start justify-between gap-3">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 border border-orange-200 flex items-center justify-center font-bold text-lg flex-shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          analytics
+         </span>
+        </div>
+        <div>
+         <h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+          Google Analytics 4
+         </h3>
+         <span class="text-[11px] text-slate-500 font-medium">
+          Lưu lượng &amp; Hành vi Website
+         </span>
+        </div>
+       </div>
+       <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 flex-shrink-0">
+        Chưa kết nối
+       </span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+       Phân tích hành vi phụ huynh trên trang web phòng khám: Phiên truy cập, Nguồn giới thiệu (Traffic Source), Tỷ lệ tương tác và Phễu chuyển đổi.
+      </p>
+      <div class="flex items-center justify-between text-label-sm font-label-sm py-2 px-3 rounded-lg bg-surface-container-low">
+       <div class="flex items-center gap-1.5 text-slate-500">
+        <span class="w-2 h-2 rounded-full bg-amber-400">
+        </span>
+        <span class="">
+         Luồng dữ liệu GA4
+        </span>
+       </div>
+       <span class="font-medium text-amber-700">
+        Chưa kích hoạt
+       </span>
+      </div>
+      <div class="grid grid-cols-4 gap-2 py-2 border-y border-slate-100 text-center">
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Người dùng
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Số phiên
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Thời lượng
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Tỷ lệ thoát
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center gap-2 pt-4 mt-2">
+      <a class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all" href="/workspace/integrations">
+       <span class="material-symbols-outlined text-[17px]">
+        link
+       </span>
+       <span class="">
+        Kết nối nền tảng
+       </span>
+      </a>
+      <button aria-label="Xem báo cáo" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-label-md transition-colors" data-action="report-unavailable" title="Xem mẫu PDF" type="button">
+       <span class="material-symbols-outlined text-[17px]">
+        visibility
+       </span>
+      </button>
+     </div>
+    </article>
+    <article class="report-card flex flex-col rounded-2xl bg-surface-container-lowest border border-slate-200/80 shadow-xs hover:shadow-md transition-all p-5 justify-between relative group" data-category="seo">
+     <div class="space-y-4">
+      <div class="flex items-start justify-between gap-3">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center justify-center font-bold text-lg flex-shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          manage_search
+         </span>
+        </div>
+        <div>
+         <h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+          Google Search Console
+         </h3>
+         <span class="text-[11px] text-slate-500 font-medium">
+          Tìm kiếm tự nhiên &amp; Clicks Organic
+         </span>
+        </div>
+       </div>
+       <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 flex-shrink-0">
+        Chưa kết nối
+       </span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+       Hiệu suất trang trên kết quả tìm kiếm tự nhiên: Tổng số lần nhấp, Lượt hiển thị thương hiệu và Vị trí trung bình trên Google.
+      </p>
+      <div class="flex items-center justify-between text-label-sm font-label-sm py-2 px-3 rounded-lg bg-surface-container-low">
+       <div class="flex items-center gap-1.5 text-slate-500">
+        <span class="w-2 h-2 rounded-full bg-amber-400">
+        </span>
+        <span class="">
+         Xác thực Domain
+        </span>
+       </div>
+       <span class="font-medium text-amber-700">
+        Chưa xác thực
+       </span>
+      </div>
+      <div class="grid grid-cols-4 gap-2 py-2 border-y border-slate-100 text-center">
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Lượt Click
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Lượt hiển thị
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         CTR TB
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Vị trí TB
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center gap-2 pt-4 mt-2">
+      <a class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all" href="/workspace/integrations">
+       <span class="material-symbols-outlined text-[17px]">
+        link
+       </span>
+       <span class="">
+        Kết nối nền tảng
+       </span>
+      </a>
+      <button aria-label="Xem báo cáo" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-label-md transition-colors" data-action="report-unavailable" title="Xem mẫu PDF" type="button">
+       <span class="material-symbols-outlined text-[17px]">
+        visibility
+       </span>
+      </button>
+     </div>
+    </article>
+    <article class="report-card flex flex-col rounded-2xl bg-surface-container-lowest border border-slate-200/80 shadow-xs hover:shadow-md transition-all p-5 justify-between relative group" data-category="social">
+     <div class="space-y-4">
+      <div class="flex items-start justify-between gap-3">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 border border-red-100 flex items-center justify-center font-bold text-lg flex-shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          video_library
+         </span>
+        </div>
+        <div>
+         <h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+          YouTube
+         </h3>
+         <span class="text-[11px] text-slate-500 font-medium">
+          Video y khoa &amp; Tương tác kênh
+         </span>
+        </div>
+       </div>
+       <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 flex-shrink-0">
+        Chưa kết nối
+       </span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+       Đo lường thời gian xem, số lượt đăng ký kênh mới từ các chuỗi video tư vấn bác sĩ nhi và giải đáp sức khỏe mẹ bé.
+      </p>
+      <div class="flex items-center justify-between text-label-sm font-label-sm py-2 px-3 rounded-lg bg-surface-container-low">
+       <div class="flex items-center gap-1.5 text-slate-500">
+        <span class="w-2 h-2 rounded-full bg-amber-400">
+        </span>
+        <span class="">
+         YouTube Channel
+        </span>
+       </div>
+       <span class="font-medium text-amber-700">
+        Chưa đồng bộ kênh
+       </span>
+      </div>
+      <div class="grid grid-cols-4 gap-2 py-2 border-y border-slate-100 text-center">
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Lượt xem
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Giờ xem
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Subscribers
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Lượt chia sẻ
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center gap-2 pt-4 mt-2">
+      <a class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all" href="/workspace/integrations">
+       <span class="material-symbols-outlined text-[17px]">
+        link
+       </span>
+       <span class="">
+        Kết nối nền tảng
+       </span>
+      </a>
+      <button aria-label="Xem báo cáo" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-label-md transition-colors" data-action="report-unavailable" title="Xem mẫu PDF" type="button">
+       <span class="material-symbols-outlined text-[17px]">
+        visibility
+       </span>
+      </button>
+     </div>
+    </article>
+    <article class="report-card flex flex-col rounded-2xl bg-surface-container-lowest border border-slate-200/80 shadow-xs hover:shadow-md transition-all p-5 justify-between relative group" data-category="seo">
+     <div class="space-y-4">
+      <div class="flex items-start justify-between gap-3">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center font-bold text-lg flex-shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          location_on
+         </span>
+        </div>
+        <div>
+         <h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">
+          Google Business Profile
+         </h3>
+         <span class="text-[11px] text-slate-500 font-medium">
+          Maps, Cuộc gọi &amp; Đánh giá phòng khám
+         </span>
+        </div>
+       </div>
+       <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 flex-shrink-0">
+        Chưa kết nối
+       </span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+       Hiệu quả hiện diện địa phương tại phòng khám: Lượt tìm đường trên Google Maps, Cuộc gọi trực tiếp hotline và đánh giá sao từ phụ huynh.
+      </p>
+      <div class="flex items-center justify-between text-label-sm font-label-sm py-2 px-3 rounded-lg bg-surface-container-low">
+       <div class="flex items-center gap-1.5 text-slate-500">
+        <span class="w-2 h-2 rounded-full bg-amber-400">
+        </span>
+        <span class="">
+         Địa điểm Maps
+        </span>
+       </div>
+       <span class="font-medium text-amber-700">
+        Chưa kết nối Profile
+       </span>
+      </div>
+      <div class="grid grid-cols-4 gap-2 py-2 border-y border-slate-100 text-center">
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Lượt tìm đường
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Cuộc gọi
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Đánh giá
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+       <div>
+        <span class="block text-[10px] text-slate-400 uppercase">
+         Điểm sao
+        </span>
+        <span class="font-headline-sm text-headline-sm text-slate-400 font-semibold">
+         —
+        </span>
+       </div>
+      </div>
+     </div>
+     <div class="flex items-center gap-2 pt-4 mt-2">
+      <a class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all" href="/workspace/integrations">
+       <span class="material-symbols-outlined text-[17px]">
+        link
+       </span>
+       <span class="">
+        Kết nối nền tảng
+       </span>
+      </a>
+      <button aria-label="Xem báo cáo" class="px-3 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-label-md transition-colors" data-action="report-unavailable" title="Xem mẫu PDF" type="button">
+       <span class="material-symbols-outlined text-[17px]">
+        visibility
+       </span>
+      </button>
+     </div>
+    </article>
+   </div>
+  </section>
+  <section class="rounded-2xl bg-surface-container-lowest border border-slate-200/80 shadow-xs overflow-hidden mb-10">
+   <div class="p-6 border-b border-slate-200 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+    <div>
+     <div class="flex items-center gap-2.5">
+      <span class="material-symbols-outlined text-primary text-[22px]">
+       folder_special
+      </span>
+      <h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">
+       Báo cáo của tôi
+      </h2>
+      <span class="px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-on-surface-variant">
+       0 báo cáo lưu
+      </span>
+     </div>
+     <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+      Quản lý các báo cáo tùy chỉnh đã lưu, lên lịch định kỳ và xuất bản liên kết chia sẻ bảo mật.
+     </p>
+    </div>
+    <div class="flex flex-wrap items-center gap-3">
+     <div class="relative w-full sm:w-64">
+      <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-slate-400 pointer-events-none">
+       search
+      </span>
+      <input aria-label="Tìm kiếm báo cáo đã lưu..." class="w-full pl-9 pr-3 py-2 rounded-xl bg-surface text-label-md font-label-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container-lowest border border-slate-200/70 transition-colors" id="reports-field-0" placeholder="Tìm kiếm báo cáo đã lưu..." type="text"/>
+     </div>
+     <button class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-container text-on-primary-container font-label-md text-label-md shadow-xs hover:brightness-105 transition-all" data-action="create-report" type="button">
+      <span class="material-symbols-outlined text-[18px]">
+       add
+      </span>
+      <span class="">
+       + Tạo báo cáo tùy chỉnh
+      </span>
+     </button>
+    </div>
+   </div>
+   <div class="px-6 flex items-center gap-2 overflow-x-auto bg-surface py-2.5 border-b border-slate-200/70">
+    <button class="px-3.5 py-1.5 rounded-lg text-label-md font-label-md bg-surface-container-lowest text-primary shadow-xs font-semibold" data-draft-tab="Tất cả" type="button">
+     Tất cả
+     <span class="ml-1 text-label-sm font-label-sm text-on-surface-variant">
+      0
+     </span>
+    </button>
+    <button class="px-3.5 py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-draft-tab="Bản nháp" type="button">
+     Bản nháp
+     <span class="ml-1 text-label-sm font-label-sm opacity-60">
+      0
+     </span>
+    </button>
+    <button class="px-3.5 py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-draft-tab="Định kỳ" type="button">
+     Định kỳ
+     <span class="ml-1 text-label-sm font-label-sm opacity-60">
+      0
+     </span>
+    </button>
+    <button class="px-3.5 py-1.5 rounded-lg text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-draft-tab="Đã chia sẻ" type="button">
+     Đã chia sẻ
+     <span class="ml-1 text-label-sm font-label-sm opacity-60">
+      0
+     </span>
+    </button>
+   </div>
+   <div class="w-full overflow-x-auto">
+    <table class="w-full text-left">
+     <thead class="bg-surface text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">
+      <tr>
+       <th class="py-3 px-6" scope="col">
+        Tên báo cáo
+       </th>
+       <th class="py-3 px-4" scope="col">
+        Kỳ báo cáo
+       </th>
+       <th class="py-3 px-4" scope="col">
+        Nguồn dữ liệu
+       </th>
+       <th class="py-3 px-4" scope="col">
+        Trạng thái
+       </th>
+       <th class="py-3 px-4" scope="col">
+        Cập nhật lần cuối
+       </th>
+       <th class="py-3 px-6 text-right" scope="col">
+        Thao tác
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <td class="py-14 px-6 text-center" colspan="6">
+        <div class="max-w-md mx-auto flex flex-col items-center">
+         <div class="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center text-slate-400 mb-3">
+          <span class="material-symbols-outlined text-[28px]">
+           draft
+          </span>
+         </div>
+         <h3 class="font-headline-sm text-headline-sm text-on-surface mb-1.5">
+          Chưa có báo cáo tùy chỉnh nào
+         </h3>
+         <p class="font-body-sm text-body-sm text-on-surface-variant mb-5 text-center leading-relaxed">
+          Bạn có thể xem ngay các
+          <strong>
+           Báo cáo có sẵn
+          </strong>
+          ở trên, hoặc tạo báo cáo tùy chỉnh ghép nhiều chỉ số theo nhu cầu riêng của KinderHealth.
+         </p>
+         <button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary-container text-on-primary-container font-label-md text-label-md shadow-xs hover:brightness-105 transition-all" data-action="create-report" type="button">
+          <span class="material-symbols-outlined text-[18px]">
+           add
+          </span>
+          <span class="">
+           + Tạo báo cáo tùy chỉnh
+          </span>
+         </button>
+        </div>
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+  </section>
+  <div class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4" id="createReportModal">
+   <div class="w-full max-w-xl rounded-2xl bg-surface-container-lowest shadow-2xl overflow-hidden flex flex-col">
+    <div class="p-5 flex items-center justify-between bg-surface border-b border-slate-200">
+     <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-primary-fixed flex items-center justify-center text-primary">
+       <span class="material-symbols-outlined text-[20px]">
+        post_add
+       </span>
+      </div>
+      <div>
+       <h3 class="font-headline-sm text-headline-sm text-on-surface" id="modalTitle">
+        Khởi tạo báo cáo tùy chỉnh mới
+       </h3>
+       <p class="font-body-sm text-body-sm text-on-surface-variant">
+        Không gian làm việc: KinderHealth
+       </p>
+      </div>
+     </div>
+     <button aria-label="Đóng" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors" data-action="close-modal" type="button">
+      <span class="material-symbols-outlined text-[20px]">
+       close
+      </span>
+     </button>
+    </div>
+    <form class="p-6 space-y-4" data-local-form="report" id="createReportForm">
+     <div>
+      <label class="block font-label-md text-label-md text-on-surface mb-1.5">
+       Tên báo cáo
+      </label>
+      <input aria-label="Ví dụ: Báo cáo Marketing Tổng hợp Tháng 10/2026" class="w-full px-3.5 py-2.5 rounded-xl bg-surface text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container-lowest border border-slate-200" id="reportNameInput" placeholder="Ví dụ: Báo cáo Marketing Tổng hợp Tháng 10/2026" required="" type="text"/>
+     </div>
+     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+       <label class="block font-label-md text-label-md text-on-surface mb-1.5" for="reports-field-2">
+        Kỳ báo cáo
+       </label>
+       <select aria-label="Kỳ báo cáo" class="w-full px-3.5 py-2.5 rounded-xl bg-surface text-body-md font-body-md text-on-surface focus:outline-none border border-slate-200" id="reports-field-2">
+        <option>
+         Tháng 10/2026 (Hiện tại)
+        </option>
+        <option>
+         Tháng 09/2026
+        </option>
+        <option>
+         Quý 3/2026
+        </option>
+        <option>
+         Tùy chỉnh khoảng ngày
+        </option>
+       </select>
+      </div>
+      <div>
+       <label class="block font-label-md text-label-md text-on-surface mb-1.5" for="reports-field-3">
+        Bố cục mẫu
+       </label>
+       <select aria-label="Bố cục mẫu" class="w-full px-3.5 py-2.5 rounded-xl bg-surface text-body-md font-body-md text-on-surface focus:outline-none border border-slate-200" id="reports-field-3">
+        <option>
+         Mẫu Đa kênh Toàn diện
+        </option>
+        <option>
+         Mẫu Paid Media &amp; Chuyển đổi
+        </option>
+        <option>
+         Mẫu SEO &amp; Từ khóa
+        </option>
+        <option>
+         Báo cáo tùy chỉnh trống
+        </option>
+       </select>
+      </div>
+     </div>
+     <div>
+      <label class="block font-label-md text-label-md text-on-surface mb-1.5">
+       Nguồn dữ liệu tích hợp
+      </label>
+      <div class="grid grid-cols-2 gap-2 text-label-md font-label-md">
+       <label class="flex items-center gap-2 p-2.5 rounded-xl bg-surface cursor-pointer hover:bg-surface-container">
+        <input aria-label="Facebook (Meta Ads)" checked="" class="w-4 h-4 rounded text-primary focus:ring-0" id="reports-field-4" type="checkbox"/>
+        <span class="">
+         Facebook (Meta Ads)
+        </span>
+       </label>
+       <label class="flex items-center gap-2 p-2.5 rounded-xl bg-surface cursor-pointer hover:bg-surface-container">
+        <input aria-label="Google Ads" checked="" class="w-4 h-4 rounded text-primary focus:ring-0" id="reports-field-5" type="checkbox"/>
+        <span class="">
+         Google Ads
+        </span>
+       </label>
+       <label class="flex items-center gap-2 p-2.5 rounded-xl bg-surface cursor-pointer hover:bg-surface-container">
+        <input aria-label="Google Analytics 4" checked="" class="w-4 h-4 rounded text-primary focus:ring-0" id="reports-field-6" type="checkbox"/>
+        <span class="">
+         Google Analytics 4
+        </span>
+       </label>
+       <label class="flex items-center gap-2 p-2.5 rounded-xl bg-surface cursor-pointer hover:bg-surface-container">
+        <input aria-label="Google Search Console" checked="" class="w-4 h-4 rounded text-primary focus:ring-0" id="reports-field-7" type="checkbox"/>
+        <span class="">
+         Google Search Console
+        </span>
+       </label>
+      </div>
+     </div>
+     <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+      <button class="px-4 py-2.5 rounded-xl bg-surface text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors" data-action="close-modal" type="button">
+       Hủy
+      </button>
+      <button class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary-container text-on-primary-container font-label-md text-label-md shadow-sm hover:brightness-105 transition-all" data-action="save-report" type="submit">
+       <span class="material-symbols-outlined text-[18px]">
+        check_circle
+       </span>
+       <span class="">
+        Tạo và mở bản nháp
+       </span>
+      </button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+ <section aria-label="Bản nháp trên trình duyệt" class="space-y-3" id="local-report-list">
+ </section>
+</main>
+
+{% endblock %}

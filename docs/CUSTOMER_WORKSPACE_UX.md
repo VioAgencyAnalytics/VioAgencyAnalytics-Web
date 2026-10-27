@@ -1,5 +1,15 @@
 # VioAgencyAnalytics — Customer Workspace UX
 
+**Triển khai tiếp ngày 26/10/2026:** trang 01–02 có customer identity, phiên, Workspace,
+membership và lời mời trên DB, bật riêng bằng feature flag. Google/SMTP cần cấu hình;
+các trang dữ liệu Marketing tiếp tục nằm trong kế hoạch. Xem
+[phạm vi và nghiệm thu](CUSTOMER_IDENTITY_IMPLEMENTATION.md).
+
+**Cập nhật 26/10/2026:** đã triển khai bộ giao diện 9 trang theo HTML người dùng cung
+cấp và đưa báo cáo cũ vào Phân tích kênh. Xem [phạm vi triển khai UI](CUSTOMER_UI_IMPLEMENTATION.md).
+Các phần dưới đây vẫn mô tả kiến trúc backend đích; giao diện xem thử không có nghĩa
+Google login, Organization, OAuth hay đồng bộ self-service đã hoạt động.
+
 Ngày 23/10/2026, bổ sung rà soát customer-first sau rebrand. **Thiết kế mục tiêu, chưa phải các màn hình/routes SaaS đang hoạt động.** VIO Agency phát triển, sở hữu và vận hành VioAgencyAnalytics. Web hiện chủ yếu hiển thị Published Bundle theo Viewer grant do backend kiểm tra; demo/design preview và preview nội bộ không phải customer Live Dashboard.
 
 Tài liệu nền: [Product Vision](../../VioAgencyAnalytics-Admin/docs/VIOAGENCYANALYTICS_PRODUCT_VISION.md), [Architecture](../../VioAgencyAnalytics-Admin/docs/VIOAGENCYANALYTICS_ARCHITECTURE.md), [Roadmap](../../VioAgencyAnalytics-Admin/docs/SAAS_MIGRATION_ROADMAP.md). Các liên kết giả định hai repository nằm cạnh nhau.

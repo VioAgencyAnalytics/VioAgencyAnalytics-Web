@@ -16,6 +16,9 @@
         </a>
     </div>
     <!-- Nav label -->
+    {% if dashboard is not defined %}
+    <a href="/workspace/channels" class="px-5 pt-4 text-sm text-blue-100 hover:text-white">← Phân tích kênh</a>
+    {% endif %}
     <div class="px-5 pt-5 pb-1">
         <span class="sidebar-section-label">Báo cáo kênh</span>
     </div>

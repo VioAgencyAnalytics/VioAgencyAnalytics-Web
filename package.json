@@ -2,7 +2,9 @@
   "name": "vioagencyanalytics-web-styles",
   "private": true,
   "scripts": {
-    "build:css": "tailwindcss -c tailwind.config.cjs -i static/css/shared/dashboard.source.css -o static/css/dist/dashboard.css --minify"
+    "build:css": "npm run build:reports && npm run build:customer",
+    "build:reports": "tailwindcss -c tailwind.config.cjs -i static/css/shared/dashboard.source.css -o static/css/dist/dashboard.css --minify",
+    "build:customer": "tailwindcss -c tailwind.customer.config.cjs -i static/css/customer/tailwind.source.css -o static/css/dist/customer.css --minify"
   },
   "devDependencies": { "tailwindcss": "3.4.17" }
 }

@@ -1,0 +1,45 @@
+{% extends 'customer/base.html' %}
+{% block layout %}
+<div class="ov-shell" id="customer-content">
+  <aside class="ov-sidebar" aria-label="Điều hướng Workspace">
+    <a class="ov-brand" href="/workspace"><img src="/static/customer/vio-logo.png" alt="VIO Agency"><strong>VioAgency<span>Analytics</span></strong></a>
+    <a id="workspace-switch" class="ov-workspace" href="/workspace/onboarding"><span class="material-symbols-outlined" aria-hidden="true">domain</span><span><small>WORKSPACE</small><strong>{{ details.workspace.name }}</strong></span><span aria-hidden="true">⌄</span></a>
+    <div class="ov-nav-label">KHÔNG GIAN LÀM VIỆC</div>
+    <nav class="ov-nav">
+      <a href="/workspace" aria-current="page"><span class="material-symbols-outlined" aria-hidden="true">space_dashboard</span>Tổng quan</a>
+      <button type="button" data-feature="integrations"><span class="material-symbols-outlined" aria-hidden="true">hub</span>Kết nối nền tảng</button>
+      <button type="button" id="nav-dashboard" data-feature="dashboard"><span class="material-symbols-outlined" aria-hidden="true">monitoring</span>Dashboard Marketing</button>
+      <button type="button" id="nav-channels" data-feature="channels"><span class="material-symbols-outlined" aria-hidden="true">query_stats</span>Phân tích kênh</button>
+      <button type="button" id="nav-reports" data-feature="reports"><span class="material-symbols-outlined" aria-hidden="true">description</span>Báo cáo</button>
+      <a id="nav-members" href="/workspace/onboarding#invite-panel"><span class="material-symbols-outlined" aria-hidden="true">group</span>Thành viên</a>
+      <button type="button" id="nav-settings" data-feature="settings"><span class="material-symbols-outlined" aria-hidden="true">settings</span>Cài đặt</button>
+    </nav>
+    <div class="ov-side-bottom"><span class="ov-help-icon material-symbols-outlined" aria-hidden="true">explore</span><strong>Làm quen với Workspace</strong><p>Khám phá các khu vực trong 8 bước ngắn.</p><button type="button" class="ov-text-button" data-start-tour>Xem hướng dẫn</button></div>
+  </aside>
+  <div class="ov-body">
+    <header class="ov-topbar"><span>Tổng quan Workspace</span><div><span class="ov-account">{{ account.user.name }}</span><button type="button" id="overview-logout" class="ov-text-button">Đăng xuất</button></div></header>
+    <main class="ov-main">
+      <div class="ov-heading"><div><p class="ov-eyebrow">KHỞI ĐẦU CÙNG VIOAGENCYANALYTICS</p><h1>Chào mừng đến với {{ details.workspace.name }}</h1><p>Một nơi để quản lý khách hàng, kết nối dữ liệu và theo dõi hiệu quả Marketing.</p></div><button type="button" class="ov-button ov-secondary" data-start-tour><span class="material-symbols-outlined" aria-hidden="true">explore</span>Hướng dẫn sử dụng</button></div>
+      <p class="ov-status" id="overview-status" role="status" hidden></p>
+      <section class="ov-welcome"><div class="ov-welcome-icon material-symbols-outlined" aria-hidden="true">waving_hand</div><div><h2>Workspace đã sẵn sàng. Cùng bắt đầu nhé!</h2><p>Khám phá từng mục được làm nổi bật để biết dữ liệu và báo cáo của bạn sẽ nằm ở đâu.</p><p id="tour-summary" class="ov-tour-summary">Hướng dẫn làm quen · 8 bước</p></div><button type="button" class="ov-button" data-start-tour>Bắt đầu hướng dẫn <span aria-hidden="true">→</span></button></section>
+      <section class="ov-stat-grid" aria-label="Thông tin Workspace">
+        <article class="ov-stat"><span>Khách hàng / thương hiệu</span><strong>{{ details.clients|length }}</strong><small>Đã lưu trong Workspace</small></article>
+        <article class="ov-stat"><span>Thành viên</span><strong>{{ details.member_count }}</strong><small>Đang có quyền truy cập</small></article>
+        <article class="ov-stat"><span>Dữ liệu Marketing</span><strong class="ov-empty-value">Chưa có dữ liệu</strong><small>Cần kết nối nguồn dữ liệu</small></article>
+      </section>
+      <div class="ov-content-grid">
+        <section class="ov-card" id="client-card" tabindex="-1"><div class="ov-card-heading"><span class="ov-icon material-symbols-outlined" aria-hidden="true">business_center</span><h2>Khách hàng & thương hiệu</h2></div><p>Mỗi khách hàng là một khu vực tổ chức tài khoản nền tảng và báo cáo.</p><ul class="ov-clients">{% for client in details.clients %}<li><span class="ov-client-initial" aria-hidden="true">{{ client.name[:1] }}</span><span><strong>{{ client.name }}</strong><small>Chưa kết nối nguồn dữ liệu</small></span></li>{% else %}<li>Chưa thêm khách hàng hoặc thương hiệu.</li>{% endfor %}</ul><p class="ov-footnote">Quản lý thêm khách hàng sẽ được bổ sung ở bước tiếp theo.</p></section>
+        <section class="ov-card ov-connect" id="integration-card"><span class="ov-icon material-symbols-outlined" aria-hidden="true">hub</span><h2>Đưa các kênh Marketing về một nơi</h2><p>Bạn tự cấp quyền và chọn tài khoản nguồn cho từng khách hàng. Dữ liệu chỉ được lấy sau khi bạn kết nối.</p><div class="ov-platforms"><span>Google Analytics</span><span>Search Console</span><span>Meta</span></div><button type="button" class="ov-button" data-feature="integrations">Tìm hiểu kết nối nền tảng <span aria-hidden="true">→</span></button><p class="ov-footnote">Chức năng kết nối đang được triển khai.</p></section>
+      </div>
+      <section class="ov-card ov-next"><h2>Từ dữ liệu đến báo cáo</h2><ol><li><b>1</b><span>Kết nối nền tảng<small>Tự cấp quyền truy cập</small></span></li><li><b>2</b><span>Đồng bộ dữ liệu<small>Theo dõi trạng thái cập nhật</small></span></li><li><b>3</b><span>Phân tích & báo cáo<small>Xem và chia sẻ kết quả</small></span></li></ol><p class="ov-footnote">Các bước này sẽ khả dụng khi luồng kết nối và báo cáo được hoàn thiện.</p></section>
+    </main>
+    <footer class="ov-footer">© VIO Agency · Dữ liệu được tổ chức riêng theo Workspace</footer>
+  </div>
+</div>
+<dialog id="feature-dialog" class="ov-feature" aria-labelledby="feature-title"><h2 id="feature-title"></h2><p id="feature-description"></p><dl id="workspace-settings" hidden><dt>Workspace</dt><dd>{{ details.workspace.name }}</dd><dt>Website</dt><dd>{{ details.workspace.website or 'Chưa thêm' }}</dd><dt>Tiền tệ</dt><dd>{{ details.workspace.currency }}</dd><dt>Múi giờ</dt><dd>{{ details.workspace.timezone }}</dd></dl><form method="dialog"><button class="ov-button">Đã hiểu</button></form></dialog>
+<dialog id="product-tour" class="ov-tour" aria-labelledby="tour-title" aria-describedby="tour-description">
+  <button type="button" id="tour-highlight" aria-label="Tiếp tục từ mục được làm nổi bật"></button>
+  <section id="tour-tooltip" class="ov-tooltip"><div class="ov-tour-top"><span id="tour-counter">BƯỚC 1 / 8</span><button type="button" id="tour-dismiss" aria-label="Đóng hướng dẫn">×</button></div><div class="ov-tour-progress" aria-hidden="true"><span id="tour-progress"></span></div><h2 id="tour-title"></h2><p id="tour-description"></p><p class="ov-tour-tip">Bấm vào vùng nổi bật hoặc chọn Tiếp tục.</p><p id="tour-error" role="alert" hidden></p><div class="ov-tour-actions"><button type="button" id="tour-skip" class="ov-text-button">Để sau</button><div><button type="button" id="tour-back" class="ov-button ov-secondary">Quay lại</button><button type="button" id="tour-next" class="ov-button">Tiếp tục</button></div></div></section>
+</dialog>
+<script id="overview-data" type="application/json">{{ details|tojson }}</script>
+{% endblock %}

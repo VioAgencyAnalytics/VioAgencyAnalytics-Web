@@ -2,7 +2,7 @@ FROM node:22-bookworm-slim AS frontend
 WORKDIR /build
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund --fetch-timeout=30000 --fetch-retries=1 --loglevel=http
-COPY tailwind.config.cjs ./
+COPY tailwind.config.cjs tailwind.customer.config.cjs ./
 COPY templates ./templates
 COPY static ./static
 RUN npm run build:css
@@ -21,6 +21,7 @@ COPY --chown=appuser:appuser ops ./ops
 COPY --chown=appuser:appuser templates ./templates
 COPY --chown=appuser:appuser static ./static
 COPY --from=frontend --chown=appuser:appuser /build/static/css/dist/dashboard.css ./static/css/dist/dashboard.css
+COPY --from=frontend --chown=appuser:appuser /build/static/css/dist/customer.css ./static/css/dist/customer.css
 USER appuser
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \

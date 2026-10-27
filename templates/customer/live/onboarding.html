@@ -1,0 +1,39 @@
+{% extends 'customer/auth.html' %}
+{% block content %}
+<header class="identity-topbar"><a class="identity-brand" href="/workspace/onboarding"><img src="/static/customer/vio-logo.png" alt="VIO Agency"><span>VioAgencyAnalytics<small>Không gian làm việc của bạn</small></span></a><div class="identity-account"><span id="account-name">{{ account.user.name }}</span><button type="button" data-logout class="identity-link">Đăng xuất</button></div></header>
+<main class="identity-setup">
+  <div class="identity-heading"><span class="identity-eyebrow">BẮT ĐẦU CÙNG VIOAGENCYANALYTICS</span><h1>Thiết lập Workspace của bạn</h1><p>Tạo không gian cho Agency hoặc doanh nghiệp, rồi mời mọi người cùng làm việc.</p></div>
+  <div id="identity-status" role="status" aria-live="polite" class="identity-status" hidden></div>
+  <div id="verification-note" class="identity-note" hidden><div><strong>Xác minh địa chỉ email</strong><p id="verification-text">Xác minh email để tạo lời mời và tham gia Workspace của người khác.</p></div><button type="button" id="verify-email" class="identity-button identity-secondary" disabled>Gửi email xác minh</button></div>
+  <section id="workspace-success" class="identity-card identity-success" hidden aria-labelledby="workspace-success-heading">
+    <span class="material-symbols-outlined identity-success-icon">check_circle</span><div><span class="identity-eyebrow">WORKSPACE CỦA BẠN</span><h2 id="workspace-success-heading"></h2><p id="workspace-success-detail"></p><p id="workspace-client-detail"></p><a class="identity-button" href="/workspace">Vào Tổng quan Workspace</a></div>
+    <details id="invite-panel" hidden><summary>Tạo mã mời thành viên</summary><form id="invite-form"><label>Email người nhận<input type="email" name="email" required maxlength="254" autocomplete="off"></label><label>Quyền trong Workspace<select name="role"><option value="member">Thành viên</option><option value="viewer">Chỉ xem</option><option value="admin" id="invite-admin-option">Quản trị Workspace</option></select></label><button class="identity-button" type="submit">Tạo mã mời</button><label id="invitation-result" hidden>Mã mời (hiệu lực 7 ngày)<textarea id="invitation-code" readonly rows="2"></textarea><span class="identity-hint">Gửi mã riêng cho đúng người nhận. Hệ thống chưa gửi email lời mời.</span></label></form></details>
+  </section>
+  <section id="workspace-list-section" class="identity-workspaces" hidden><h2>Workspace bạn có thể truy cập</h2><div id="workspace-list"></div></section>
+  <div class="identity-setup-grid">
+    <section class="identity-card" aria-labelledby="create-heading">
+      <div class="identity-section-title"><span class="material-symbols-outlined">domain_add</span><div><h2 id="create-heading">Tạo Workspace mới</h2><p>Bạn sẽ là chủ sở hữu Workspace này.</p></div></div>
+      <ol class="identity-steps" aria-label="Tiến trình thiết lập"><li data-step-indicator="1" aria-current="step"><b>1</b> Thông tin</li><li data-step-indicator="2"><b>2</b> Khách hàng</li><li data-step-indicator="3"><b>3</b> Xác nhận</li></ol>
+      <form id="workspace-form">
+        <fieldset id="workspace-fields" disabled>
+          <section data-step="1">
+            <label>Tên Workspace<input name="name" required maxlength="100" placeholder="VD: VIO Agency"></label>
+            <fieldset class="identity-types"><legend>Bạn sử dụng cho</legend><label><input type="radio" name="kind" value="agency" checked><span><strong>Agency</strong><small>Quản lý nhiều khách hàng</small></span></label><label><input type="radio" name="kind" value="business"><span><strong>Doanh nghiệp</strong><small>Quản lý thương hiệu của bạn</small></span></label></fieldset>
+            <label>Website <small>(không bắt buộc)</small><input name="website" type="url" maxlength="500" placeholder="https://congty.vn"></label>
+            <div class="identity-two-columns"><label>Quốc gia<select name="country"><option value="VN">Việt Nam</option><option value="SG">Singapore</option><option value="US">Hoa Kỳ</option><option value="DE">Đức</option><option value="TH">Thái Lan</option><option value="MY">Malaysia</option></select></label><label>Tiền tệ<select name="currency"><option value="VND">VND — Việt Nam Đồng</option><option value="USD">USD — Đô la Mỹ</option><option value="EUR">EUR — Euro</option><option value="SGD">SGD — Đô la Singapore</option><option value="THB">THB — Baht Thái</option><option value="MYR">MYR — Ringgit</option></select></label></div>
+            <label>Múi giờ<select name="timezone"><option value="Asia/Ho_Chi_Minh">Việt Nam (Asia/Ho_Chi_Minh)</option><option value="Asia/Singapore">Singapore</option><option value="Asia/Bangkok">Bangkok</option><option value="Asia/Kuala_Lumpur">Kuala Lumpur</option><option value="America/New_York">New York</option><option value="America/Los_Angeles">Los Angeles</option><option value="Europe/Berlin">Berlin</option><option value="UTC">UTC</option></select></label>
+          </section>
+          <section data-step="2" hidden><h3>Khách hàng / thương hiệu đầu tiên</h3><p>Thêm tên để tổ chức dữ liệu ngay từ đầu. Bạn có thể bỏ qua bước này.</p><label>Tên khách hàng / thương hiệu<input name="first_client" maxlength="100" placeholder="VD: Thương hiệu ABC"></label><p class="identity-hint">Với Workspace doanh nghiệp, nếu bỏ trống thì tên thương hiệu sẽ dùng tên Workspace.</p></section>
+          <section data-step="3" hidden><h3>Kiểm tra trước khi tạo</h3><dl id="workspace-review"></dl><p class="identity-hint">Chưa có nền tảng nào được kết nối. Bạn sẽ tự cấp quyền truy cập dữ liệu ở bước kết nối nền tảng.</p></section>
+          <div class="identity-wizard-actions"><button type="button" id="step-back" class="identity-button identity-secondary" hidden>Quay lại</button><button type="button" id="step-next" class="identity-button">Tiếp tục</button><button type="submit" id="workspace-submit" class="identity-button" hidden>Tạo Workspace</button></div>
+        </fieldset>
+      </form>
+    </section>
+    <aside class="identity-setup-aside">
+      <section class="identity-card"><span class="material-symbols-outlined identity-aside-icon">group_add</span><h2>Đã được mời tham gia?</h2><p>Dùng mã do chủ sở hữu hoặc quản trị Workspace gửi cho email của bạn.</p><form id="join-form"><label>Mã lời mời<input name="invitation_code" required maxlength="128" autocomplete="off" placeholder="Dán mã lời mời tại đây"></label><button type="submit" class="identity-button identity-secondary" id="join-submit" disabled>Tham gia Workspace</button></form></section>
+      <section class="identity-tips"><h3>Một nơi cho cả đội ngũ</h3><p><span class="material-symbols-outlined">verified_user</span> Chỉ thành viên được cấp quyền mới có thể truy cập Workspace.</p><p><span class="material-symbols-outlined">hub</span> Bạn chọn nền tảng và tài khoản muốn kết nối.</p><p><span class="material-symbols-outlined">folder_shared</span> Dữ liệu được tổ chức riêng theo Workspace và khách hàng.</p></section>
+    </aside>
+  </div>
+</main>
+<footer class="identity-footer">© VIO Agency · VioAgencyAnalytics</footer>
+{% endblock %}

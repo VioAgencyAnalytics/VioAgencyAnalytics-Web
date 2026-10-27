@@ -1,0 +1,356 @@
+{% extends "customer/auth.html" %}
+{% block content %}
+<main class="min-h-screen w-full flex items-center justify-center p-gutter">
+ <div class="flex flex-col w-full">
+  <header class="w-full bg-white border-b border-[#e2e8f0] shadow-sm">
+   <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="flex items-center gap-3">
+     <img alt="VIO Agency Logo" class="h-10 w-auto object-contain" loading="lazy" src="/static/customer/vio-logo.png"/>
+     <div class="flex flex-col">
+      <div class="flex items-center gap-2">
+       <span class="font-headline-sm text-headline-sm text-[#0f172a] tracking-tight font-bold">
+        VioAgencyAnalytics
+       </span>
+      </div>
+      <span class="font-body-sm text-body-sm text-[#64748b]">
+       Cổng quản trị báo cáo chiến dịch VIO Agency • vioagency.vn
+      </span>
+     </div>
+    </div>
+    <div class="flex items-center gap-4 self-end md:self-auto">
+     <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#f1f5f9] text-[#334155] font-label-md text-label-md">
+      <span class="w-7 h-7 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center text-xs">
+       VA
+      </span>
+      <span class="font-medium">
+       Tài khoản Agency
+      </span>
+      <span class="material-symbols-outlined text-[16px] text-[#64748b]">
+       expand_more
+      </span>
+     </div>
+     <button class="flex items-center gap-1.5 px-2 py-1.5 text-[#64748b] hover:text-primary transition-colors font-body-sm text-body-sm" data-action="help" type="button">
+      <span class="material-symbols-outlined text-[18px]">
+       help_outline
+      </span>
+      <span class="">
+       Trợ giúp
+      </span>
+     </button>
+     <a class="flex items-center gap-1 px-2 py-1.5 text-[#64748b] hover:text-primary transition-colors font-body-sm text-body-sm" href="/workspace/login">
+      <span class="material-symbols-outlined text-[18px]">
+       logout
+      </span>
+      <span class="">
+       Đăng xuất
+      </span>
+     </a>
+    </div>
+   </div>
+   <div class="bg-[#f8fafc] border-t border-[#e2e8f0] px-6 py-3">
+    <div class="max-w-7xl mx-auto">
+     <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+      <div class="flex items-center gap-3 p-2.5 rounded-lg bg-white border border-[#fed7aa] shadow-sm">
+       <div class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white font-headline-sm text-headline-sm font-bold">
+        1
+       </div>
+       <div class="flex flex-col min-w-0">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">
+         Bước 01 • Đang thực hiện
+        </span>
+        <span class="font-label-md text-label-md font-semibold text-[#0f172a] truncate">
+         Thông tin Agency
+        </span>
+       </div>
+      </div>
+      <div class="flex items-center gap-3 p-2.5 rounded-lg opacity-80">
+       <div class="flex items-center justify-center w-8 h-8 rounded-full bg-[#e2e8f0] text-[#64748b] font-headline-sm text-headline-sm font-bold">
+        2
+       </div>
+       <div class="flex flex-col min-w-0">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-[#94a3b8] font-medium">
+         Bước 02 (Bỏ qua được)
+        </span>
+        <span class="font-label-md text-label-md font-medium text-[#475569] truncate">
+         Khách hàng đầu tiên
+        </span>
+       </div>
+      </div>
+      <div class="flex items-center gap-3 p-2.5 rounded-lg opacity-80 hidden md:flex">
+       <div class="flex items-center justify-center w-8 h-8 rounded-full bg-[#e2e8f0] text-[#64748b] font-headline-sm text-headline-sm font-bold">
+        3
+       </div>
+       <div class="flex flex-col min-w-0">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-[#94a3b8] font-medium">
+         Bước 03 (Bỏ qua được)
+        </span>
+        <span class="font-label-md text-label-md font-medium text-[#475569] truncate">
+         Kết nối nguồn dữ liệu
+        </span>
+       </div>
+      </div>
+      <div class="flex items-center gap-3 p-2.5 rounded-lg opacity-80 hidden md:flex">
+       <div class="flex items-center justify-center w-8 h-8 rounded-full bg-[#e2e8f0] text-[#64748b] font-headline-sm text-headline-sm font-bold">
+        4
+       </div>
+       <div class="flex flex-col min-w-0">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-[#94a3b8] font-medium">
+         Bước 04 (Bỏ qua được)
+        </span>
+        <span class="font-label-md text-label-md font-medium text-[#475569] truncate">
+         Mời cộng sự
+        </span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 py-8">
+   <div class="flex justify-center mb-8">
+    <div class="inline-flex p-1 rounded-xl bg-[#e2e8f0]/80 border border-[#cbd5e1]">
+     <button class="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-primary font-headline-sm text-headline-sm font-bold shadow-sm transition-all" data-action="create-mode" type="button">
+      <span class="material-symbols-outlined text-[20px]">
+       add_business
+      </span>
+      <span class="">
+       Tạo Agency mới
+      </span>
+     </button>
+     <button class="flex items-center gap-2 px-5 py-2.5 rounded-lg text-[#64748b] hover:text-[#0f172a] font-headline-sm text-headline-sm font-medium transition-all" data-action="join-workspace" type="button">
+      <span class="material-symbols-outlined text-[20px]">
+       group_add
+      </span>
+      <span class="">
+       Tham gia Agency đã có
+      </span>
+     </button>
+    </div>
+   </div>
+   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <section class="lg:col-span-7 flex flex-col gap-6">
+     <div class="bg-white p-6 sm:p-8 rounded-xl border border-[#e2e8f0] shadow-sm">
+      <h1 class="font-headline-lg text-headline-lg text-[#0f172a] font-extrabold tracking-tight">
+       Thiết lập Không gian làm việc Agency
+      </h1>
+      <p class="font-body-md text-body-md text-[#64748b] mt-2">
+       Khởi tạo không gian làm việc để quản lý khách hàng, kênh tiếp thị và đội ngũ của bạn.
+      </p>
+      <div class="mt-8 flex flex-col gap-5">
+       <div class="flex flex-col gap-1.5">
+        <label class="font-label-md text-label-md text-[#0f172a] font-semibold flex items-center justify-between" for="agency-name">
+         <span class="">
+          Tên Agency / Tổ chức
+          <span class="text-primary">
+           *
+          </span>
+         </span>
+         <span class="text-[#64748b] font-body-sm text-body-sm">
+          Bắt buộc
+         </span>
+        </label>
+        <div class="relative">
+         <span class="material-symbols-outlined absolute left-3.5 top-3 text-[#94a3b8] text-[20px]">
+          business
+         </span>
+         <input aria-label="Ví dụ: Alpha Digital Agency" class="w-full h-11 pl-11 pr-4 bg-[#f8fafc] border border-[#cbd5e1] text-[#0f172a] rounded-lg font-body-md text-body-md focus:outline-none focus:border-primary focus:bg-white transition-all" id="agency-name" name="agency-name" placeholder="Ví dụ: Alpha Digital Agency" required="" type="text" value=""/>
+        </div>
+       </div>
+       <div class="flex flex-col gap-1.5">
+        <label class="font-label-md text-label-md text-[#0f172a] font-semibold flex items-center justify-between" for="agency-website">
+         <span class="">
+          Website Agency
+         </span>
+         <span class="text-[#94a3b8] font-body-sm text-body-sm">
+          Tùy chọn
+         </span>
+        </label>
+        <div class="relative">
+         <span class="material-symbols-outlined absolute left-3.5 top-3 text-[#94a3b8] text-[20px]">
+          language
+         </span>
+         <input aria-label="https://agency.com" class="w-full h-11 pl-11 pr-4 bg-[#f8fafc] border border-[#cbd5e1] text-[#0f172a] rounded-lg font-body-md text-body-md focus:outline-none focus:border-primary focus:bg-white transition-all" id="agency-website" name="agency-website" placeholder="https://agency.com" type="url"/>
+        </div>
+       </div>
+       <div class="flex flex-col gap-1.5">
+        <label class="font-label-md text-label-md text-[#0f172a] font-semibold" for="agency-country">
+         Quốc gia
+        </label>
+        <div class="relative">
+         <span class="material-symbols-outlined absolute left-3.5 top-3 text-[#94a3b8] text-[20px]">
+          public
+         </span>
+         <select aria-label="agency-country" class="w-full h-11 pl-11 pr-8 bg-[#f8fafc] border border-[#cbd5e1] text-[#0f172a] rounded-lg font-body-md text-body-md appearance-none focus:outline-none focus:border-primary focus:bg-white transition-all" id="agency-country" name="agency-country">
+          <option selected="" value="VN">
+           Việt Nam
+          </option>
+          <option value="SG">
+           Singapore
+          </option>
+          <option value="US">
+           Hoa Kỳ (United States)
+          </option>
+          <option value="DE">
+           Đức (Germany)
+          </option>
+          <option value="TH">
+           Thái Lan
+          </option>
+         </select>
+         <span class="material-symbols-outlined absolute right-3 top-3 text-[#94a3b8] pointer-events-none text-[20px]">
+          expand_more
+         </span>
+        </div>
+       </div>
+       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-1.5">
+         <label class="font-label-md text-label-md text-[#0f172a] font-semibold" for="agency-timezone">
+          Múi giờ báo cáo
+         </label>
+         <div class="relative">
+          <select aria-label="agency-timezone" class="w-full h-11 pl-3.5 pr-8 bg-[#f8fafc] border border-[#cbd5e1] text-[#0f172a] rounded-lg font-body-md text-body-md appearance-none focus:outline-none focus:border-primary focus:bg-white transition-all" id="agency-timezone" name="agency-timezone">
+           <option selected="" value="Asia/Bangkok">
+            (GMT+07:00) Bangkok, Hanoi, Jakarta
+           </option>
+           <option value="Asia/Singapore">
+            (GMT+08:00) Singapore, Kuala Lumpur
+           </option>
+           <option value="Europe/Berlin">
+            (GMT+01:00) Berlin, Frankfurt, Paris
+           </option>
+           <option value="America/New_York">
+            (GMT-05:00) New York, Washington
+           </option>
+          </select>
+          <span class="material-symbols-outlined absolute right-3 top-3 text-[#94a3b8] pointer-events-none text-[20px]">
+           expand_more
+          </span>
+         </div>
+        </div>
+        <div class="flex flex-col gap-1.5">
+         <label class="font-label-md text-label-md text-[#0f172a] font-semibold" for="agency-currency">
+          Đơn vị tiền tệ chính
+         </label>
+         <div class="relative">
+          <select aria-label="agency-currency" class="w-full h-11 pl-3.5 pr-8 bg-[#f8fafc] border border-[#cbd5e1] text-[#0f172a] rounded-lg font-body-md text-body-md appearance-none focus:outline-none focus:border-primary focus:bg-white transition-all" id="agency-currency" name="agency-currency">
+           <option selected="" value="VND">
+            VND (₫) — Đồng Việt Nam
+           </option>
+           <option value="USD">
+            USD ($) — Đô la Mỹ
+           </option>
+           <option value="EUR">
+            EUR (€) — Euro
+           </option>
+          </select>
+          <span class="material-symbols-outlined absolute right-3 top-3 text-[#94a3b8] pointer-events-none text-[20px]">
+           expand_more
+          </span>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+      <a class="w-full sm:w-auto px-5 py-3 rounded-lg border border-[#cbd5e1] bg-white text-[#475569] hover:bg-[#f8fafc] transition-colors font-label-md text-label-md font-semibold flex items-center justify-center gap-2" href="/workspace/login">
+       <span class="material-symbols-outlined text-[18px]">
+        arrow_back
+       </span>
+       <span class="">
+        Quay lại
+       </span>
+      </a>
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+       <a class="w-full sm:w-auto px-4 py-3 rounded-lg text-[#64748b] hover:text-[#0f172a] transition-colors font-label-md text-label-md font-medium" href="/workspace">
+        Bỏ qua bước này
+       </a>
+       <button class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-primary text-white hover:bg-[#b91c1c] transition-all shadow-md font-headline-sm text-headline-sm font-bold flex items-center justify-center gap-2" data-action="create-workspace" type="button">
+        Lưu thiết lập &amp; tiếp tục →
+       </button>
+      </div>
+     </div>
+    </section>
+    <aside class="lg:col-span-5 flex flex-col gap-6">
+     <div class="bg-white p-6 sm:p-7 rounded-xl border border-[#e2e8f0] shadow-sm flex flex-col gap-6">
+      <div class="flex flex-col gap-1 border-b border-[#e2e8f0] pb-5">
+       <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
+         <span class="material-symbols-outlined text-[20px]">
+          dashboard_customize
+         </span>
+        </div>
+        <h2 class="font-headline-sm text-headline-sm font-bold text-[#0f172a]">
+         Thiết lập Workspace của bạn
+        </h2>
+       </div>
+       <p class="font-body-sm text-body-sm text-[#64748b] mt-1">
+        Chỉ mất 2 phút để hoàn tất và bắt đầu chuẩn hóa dữ liệu báo cáo cho khách hàng.
+       </p>
+      </div>
+      <div class="flex flex-col gap-5">
+       <div class="flex items-start gap-3.5">
+        <div class="w-9 h-9 rounded-lg bg-[#eff6ff] text-[#2563eb] flex items-center justify-center shrink-0 mt-0.5">
+         <span class="material-symbols-outlined text-[20px]">
+          domain
+         </span>
+        </div>
+        <div class="flex flex-col gap-0.5">
+         <span class="font-label-md text-label-md font-bold text-[#0f172a]">
+          1. Tạo không gian làm việc
+         </span>
+         <p class="font-body-sm text-body-sm text-[#64748b]">
+          Thiết lập nhận diện thương hiệu, tiền tệ và cấu hình Agency của bạn.
+         </p>
+        </div>
+       </div>
+       <div class="flex items-start gap-3.5">
+        <div class="w-9 h-9 rounded-lg bg-[#f0fdf4] text-[#16a34a] flex items-center justify-center shrink-0 mt-0.5">
+         <span class="material-symbols-outlined text-[20px]">
+          group
+         </span>
+        </div>
+        <div class="flex flex-col gap-0.5">
+         <span class="font-label-md text-label-md font-bold text-[#0f172a]">
+          2. Thêm khách hàng
+         </span>
+         <p class="font-body-sm text-body-sm text-[#64748b]">
+          Quản lý danh mục thương hiệu và phân quyền chuyên viên phụ trách.
+         </p>
+        </div>
+       </div>
+       <div class="flex items-start gap-3.5">
+        <div class="w-9 h-9 rounded-lg bg-[#fff7ed] text-[#ea580c] flex items-center justify-center shrink-0 mt-0.5">
+         <span class="material-symbols-outlined text-[20px]">
+          hub
+         </span>
+        </div>
+        <div class="flex flex-col gap-0.5">
+         <span class="font-label-md text-label-md font-bold text-[#0f172a]">
+          3. Kết nối nguồn dữ liệu
+         </span>
+         <p class="font-body-sm text-body-sm text-[#64748b]">
+          Tích hợp Google Analytics 4, Meta Ads, Search Console chỉ với vài thao tác.
+         </p>
+        </div>
+       </div>
+      </div>
+      <div class="p-4 rounded-lg bg-[#f8fafc] border border-[#e2e8f0] flex items-start gap-3 text-[#475569]">
+       <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">
+        info
+       </span>
+       <span class="font-body-sm text-body-sm leading-relaxed">
+        Bạn có thể mời thêm đồng nghiệp và bổ sung khách hàng bất cứ lúc nào trong mục
+        <strong>
+         Cài đặt hệ thống
+        </strong>
+        .
+       </span>
+      </div>
+     </div>
+    </aside>
+   </div>
+  </div>
+ </div>
+</main>
+
+{% endblock %}

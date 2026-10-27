@@ -1,0 +1,5 @@
+{% extends 'customer/base.html' %}
+{% block layout %}
+{% if not customer_live %}<div class="customer-auth-notice">Bản xem thử giao diện · Chưa đăng nhập tài khoản thật</div>{% endif %}
+<div id="customer-content" class="customer-auth" tabindex="-1">{% block content %}{% endblock %}</div>
+{% endblock %}

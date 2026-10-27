@@ -12,6 +12,7 @@
   {% block sidebar_script %}<script src="/static/js/shared/sidebar.js" defer></script>{% endblock %}
   {% block page_styles %}{% endblock %}
   <link rel="stylesheet" href="/static/css/pages/executive.css">
+  {% if dashboard is not defined and request.query_params.get('workspace_embed') == '1' %}<link rel="stylesheet" href="/static/css/customer/report-embed.css">{% endif %}
   {% if dashboard is defined %}<link rel="stylesheet" href="/static/css/pages/executive-polish.css">{% endif %}
   {% block page_script %}{% endblock %}
 </head>

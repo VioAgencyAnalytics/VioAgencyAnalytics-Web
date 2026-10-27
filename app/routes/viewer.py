@@ -82,6 +82,12 @@ def safe_json(response, settings):
 @router.get('/login', include_in_schema=False)
 @router.get('/reports')
 def admin_selection(request: Request, settings=Depends(viewer_settings)):
+    from app.customer_auth import enabled
+    if request.url.path in ('/', '/login') and enabled(request):
+        return RedirectResponse('/workspace/login', 303, headers=HEADERS)
+    if (request.url.path in ('/', '/login') and settings.app_env != 'production'
+            and getattr(request.state, 'runtime_env', settings.app_env) != 'production'):
+        return RedirectResponse('/workspace/login', 303, headers=HEADERS)
     # Old bookmarks remain usable, but authentication and selection live on Admin.
     # Query strings (including arbitrary next URLs) never select the redirect host.
     try:
