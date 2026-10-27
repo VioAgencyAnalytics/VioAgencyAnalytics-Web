@@ -13,13 +13,15 @@ from app.config import get_runtime_mode
 from app.routes.published import router as published_router
 from app.routes.viewer import router as viewer_router
 from app.routes.handoff import router as handoff_router
+from app.routes.customer import router as customer_router
+from app.customer_auth import router as customer_auth_router, enabled as customer_auth_enabled
 
 
 BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI(
-    title="KDH Marketing Dashboard",
-    description="Marketing reporting dashboard",
+    title="VioAgencyAnalytics",
+    description="Marketing analytics and reporting by VIO Agency",
     version="0.1.0",
 )
 
@@ -46,19 +48,22 @@ def health_check():
 # APPLICATION ROUTES
 # ==========================================
 app.include_router(viewer_router)
+app.include_router(customer_router)
+app.include_router(customer_auth_router)
 app.include_router(handoff_router)
 app.include_router(published_router)
 app.include_router(video_router)
 app.include_router(pages_router)
 app.include_router(reports_router)
 
-# Report Bundle DEMO tu KDH-Report-Admin
+# Report Bundle DEMO tu VioAgencyAnalytics-Admin
 app.include_router(demo_bundle_router)
 
 
 @app.middleware("http")
 async def production_reports_only(request: Request, call_next):
     path = request.url.path
+    request.state.runtime_env = get_runtime_mode().app_env
 
     # Production dashboards are reached through authenticated Bundle routes.
     # Legacy demonstration URLs stay available only outside production.
@@ -79,8 +84,12 @@ async def production_reports_only(request: Request, call_next):
         "/published/",
     )
 
+    if customer_auth_enabled(request):
+        public_paths.update({'/workspace', '/workspace/login', '/workspace/onboarding', '/workspace/'})
+        public_prefixes += ('/api/customer/', '/auth/customer/')
+
     if (
-        get_runtime_mode().app_env == "production"
+        request.state.runtime_env == "production"
         and path not in public_paths
         and not path.startswith(public_prefixes)
     ):

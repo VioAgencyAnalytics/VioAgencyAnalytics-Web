@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#D9232E">
+  <title>{{ title }} | VioAgencyAnalytics</title>
+  <link rel="icon" href="/static/customer/vio-logo.png">
+  <link rel="stylesheet" href="/static/css/shared/fonts.css">
+  <link rel="stylesheet" href="/static/customer/fonts.css">
+  <link rel="stylesheet" href="/static/css/dist/customer.css">
+  {% if customer_live %}
+  <link rel="stylesheet" href="/static/css/customer/identity.css">
+  {% if customer_page == 'overview' %}
+  <link rel="stylesheet" href="/static/css/customer/overview.css">
+  <script src="/static/js/customer/overview.js" defer></script>
+  {% else %}
+  <script src="/static/js/customer/identity.js" defer></script>
+  {% endif %}
+  {% else %}
+  <link rel="stylesheet" href="/static/css/customer/workspace.css">
+  <script src="/static/js/customer/workspace.js" defer></script>{% endif %}
+</head>
+<body data-customer-page="{{ customer_page }}" class="bg-surface font-sans text-slate-800 antialiased">
+  <a class="customer-skip" href="#customer-content">Đến nội dung chính</a>
+  {% block layout %}{% endblock %}
+  <dialog id="customer-dialog" aria-labelledby="customer-dialog-title">
+    <form method="dialog"><button class="customer-dialog-close" aria-label="Đóng">×</button></form>
+    <span class="material-symbols-outlined customer-dialog-icon">info</span>
+    <h2 id="customer-dialog-title">Thông tin</h2>
+    <p id="customer-dialog-message"></p>
+    <form method="dialog"><button class="customer-primary">Đã hiểu</button></form>
+  </dialog>
+  <div id="customer-toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

@@ -1,0 +1,723 @@
+{% extends "customer/shell.html" %}
+{% block content %}
+<main class="customer-page customer-page-contained">
+ <div class="flex flex-col w-full">
+  <div class="p-margin space-y-gutter-lg max-w-[1600px] mx-auto w-full">
+   <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/20 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+    <div class="flex items-center gap-space-md min-w-0">
+     <div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-sm">
+      <span class="material-symbols-outlined text-[26px]">
+       cable
+      </span>
+     </div>
+     <div class="flex flex-col min-w-0">
+      <div class="flex items-center gap-space-sm flex-wrap">
+       <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-sm md:text-headline-lg text-on-surface font-bold tracking-tight">
+        Kết nối nền tảng
+       </h1>
+       <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 font-label-sm text-label-sm flex items-center gap-1 font-semibold">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500">
+        </span>
+        4/9 Kênh đang đồng bộ
+       </span>
+      </div>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-0.5">
+       Kết nối các tài khoản Marketing để theo dõi hiệu suất và quản lý dữ liệu trên một nền tảng.
+      </p>
+     </div>
+    </div>
+    <div class="flex items-center gap-space-sm shrink-0 flex-wrap">
+     <div class="relative min-w-[240px] sm:min-w-[280px]">
+      <span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-[18px]">
+       search
+      </span>
+      <input aria-label="Tìm kiếm nền tảng..." class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low border border-outline-variant/30 text-body-sm font-body-sm text-on-surface placeholder:text-on-surface-variant/70 focus:outline-none focus:ring-1 focus:ring-primary-container" data-platform-search="" id="integrations-field-0" placeholder="Tìm kiếm nền tảng..." type="text"/>
+     </div>
+     <button class="flex items-center gap-space-xs h-10 px-space-md rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors border border-outline-variant/20" data-action="connect-unavailable" type="button">
+      <span class="material-symbols-outlined text-[18px]">
+       sync
+      </span>
+      <span class="">
+       Kiểm tra kết nối
+      </span>
+     </button>
+    </div>
+   </div>
+   <div class="space-y-space-md">
+    <div class="flex items-center justify-between">
+     <div class="flex items-center gap-space-xs">
+      <span class="w-2 h-4 rounded-full bg-primary-container">
+      </span>
+      <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">
+       Tài khoản đã kết nối
+      </h2>
+      <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold">
+       4 tài khoản
+      </span>
+     </div>
+     <span class="text-body-sm text-on-surface-variant">
+      Tự động làm mới dữ liệu mỗi 30 phút
+     </span>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md">
+     <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-outline-variant/20 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden group">
+      <div class="flex items-start justify-between gap-space-xs">
+       <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          query_stats
+         </span>
+        </div>
+        <div class="flex flex-col min-w-0">
+         <div class="font-label-md text-label-md text-on-surface font-semibold truncate">
+          Google Analytics 4
+         </div>
+         <span class="text-[11px] text-on-surface-variant font-mono truncate">
+          GA4-KDH-9841
+         </span>
+        </div>
+       </div>
+       <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 text-[11px] font-semibold shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500">
+        </span>
+        Đã kết nối
+       </span>
+      </div>
+      <div class="my-space-sm py-space-xs px-2.5 rounded-lg bg-surface-container-low flex flex-col gap-1">
+       <div class="flex items-center justify-between text-[11px]">
+        <span class="text-on-surface-variant">
+         Tài sản:
+        </span>
+        <span class="font-semibold text-on-surface truncate max-w-[140px]">
+         demo.kinderhealth.vn
+        </span>
+       </div>
+       <div class="flex items-center justify-between text-[11px]">
+        <span class="text-on-surface-variant">
+         Đồng bộ gần nhất:
+        </span>
+        <span class="text-emerald-700 font-medium">
+         15 phút trước
+        </span>
+       </div>
+      </div>
+      <div class="flex items-center justify-between pt-space-xs border-t border-outline-variant/20">
+       <button class="text-label-sm font-label-sm text-on-surface-variant hover:text-primary flex items-center gap-1 transition-colors" data-action="unavailable" type="button">
+        <span class="material-symbols-outlined text-[15px]">
+         visibility
+        </span>
+        <span class="">
+         Xem báo cáo
+        </span>
+       </button>
+       <button class="px-space-sm py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm font-medium transition-colors border border-outline-variant/20" data-action="connect-unavailable" type="button">
+        Quản lý
+       </button>
+      </div>
+     </div>
+     <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-outline-variant/20 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden group">
+      <div class="flex items-start justify-between gap-space-xs">
+       <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          public
+         </span>
+        </div>
+        <div class="flex flex-col min-w-0">
+         <div class="font-label-md text-label-md text-on-surface font-semibold truncate">
+          Meta Ads
+         </div>
+         <span class="text-[11px] text-on-surface-variant font-mono truncate">
+          act_fb_kdh_33109
+         </span>
+        </div>
+       </div>
+       <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 text-[11px] font-semibold shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500">
+        </span>
+        Đã kết nối
+       </span>
+      </div>
+      <div class="my-space-sm py-space-xs px-2.5 rounded-lg bg-surface-container-low flex flex-col gap-1">
+       <div class="flex items-center justify-between text-[11px]">
+        <span class="text-on-surface-variant">
+         Tài sản:
+        </span>
+        <span class="font-semibold text-on-surface truncate max-w-[140px]">
+         KinderHealth Fanpage &amp; Ads
+        </span>
+       </div>
+       <div class="flex items-center justify-between text-[11px]">
+        <span class="text-on-surface-variant">
+         Đồng bộ gần nhất:
+        </span>
+        <span class="text-emerald-700 font-medium">
+         30 phút trước
+        </span>
+       </div>
+      </div>
+      <div class="flex items-center justify-between pt-space-xs border-t border-outline-variant/20">
+       <button class="text-label-sm font-label-sm text-on-surface-variant hover:text-primary flex items-center gap-1 transition-colors" data-action="unavailable" type="button">
+        <span class="material-symbols-outlined text-[15px]">
+         visibility
+        </span>
+        <span class="">
+         Xem báo cáo
+        </span>
+       </button>
+       <button class="px-space-sm py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm font-medium transition-colors border border-outline-variant/20" data-action="connect-unavailable" type="button">
+        Quản lý
+       </button>
+      </div>
+     </div>
+     <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-outline-variant/20 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden group">
+      <div class="flex items-start justify-between gap-space-xs">
+       <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-lg bg-tertiary-container/10 text-tertiary-container flex items-center justify-center shrink-0">
+         <span class="material-symbols-outlined text-[22px]">
+          travel_explore
+         </span>
+        </div>
+        <div class="flex flex-col min-w-0">
+         <div class="font-label-md text-label-md text-on-surface font-semibold truncate">
+          Google Search Console
+         </div>
+         <span class="text-[11px] text-on-surface-variant font-mono truncate">
+          Domain Property
+         </span>
+        </div>
+       </div>
+       <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 text-[11px] font-semibold shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500">
+        </span>
+        Đã kết nối
+       </span>
+      </div>
+      <div class="my-space-sm py-space-xs px-2.5 rounded-lg bg-surface-container-low flex flex-col gap-1">
+       <div class="flex items-center justify-between text-[11px]">
+        <span class="text-on-surface-variant">
+         Tài sản:
+        </span>
+        <span class="font-semibold text-on-surface truncate max-w-[140px]">
+         kinderhealth.vn
+        </span>
+       </div>
+       <div class="flex items-center justify-between text-[11px]">
+        <span class="text-on-surface-variant">
+         Đồng bộ gần nhất:
+        </span>
+        <span class="text-emerald-700 font-medium">
+         1 giờ trước
+        </span>
+       </div>
+      </div>
+      <div class="flex items-center justify-between pt-space-xs border-t border-outline-variant/20">
+       <button class="text-label-sm font-label-sm text-on-surface-variant hover:text-primary flex items-center gap-1 transition-colors" data-action="unavailable" type="button">
+        <span class="material-symbols-outlined text-[15px]">
+         visibility
+        </span>
+        <span class="">
+         Xem báo cáo
+        </span>
+       </button>
+       <button class="px-space-sm py-1 rounded bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm font-medium transition-colors border border-outline-variant/20" data-action="connect-unavailable" type="button">
+        Quản lý
+       </button>
+      </div>
+     </div>
+     <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-amber-500/40 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden group">
+      <div class="flex items-start justify-between gap-space-xs">
+       <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-lg bg-blue-600/10 text-blue-600 flex items-center justify-center shrink-0 font-bold text-sm">
+         Zalo
+        </div>
+        <div class="flex flex-col min-w-0">
+         <div class="font-label-md text-label-md text-on-surface font-semibold truncate">
+          Zalo Official Account
+         </div>
+         <span class="text-[11px] text-on-surface-variant font-mono truncate">
+          OA-KDH-552
+         </span>
+        </div>
+       </div>
+       <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 text-[11px] font-semibold shrink-0">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-500">
+        </span>
+        Cần kết nối lại
+       </span>
+      </div>
+      <div class="my-space-sm py-space-xs px-2.5 rounded-lg bg-amber-500/10 flex flex-col gap-1 text-[11px]">
+       <div class="flex items-center justify-between text-amber-700 font-semibold">
+        <span class="">
+         Phiên kết nối sắp hết hạn
+        </span>
+        <span class="material-symbols-outlined text-[15px]">
+         warning
+        </span>
+       </div>
+       <span class="text-on-surface-variant">
+        Cần ủy quyền lại mã Token API
+       </span>
+      </div>
+      <div class="flex items-center justify-between pt-space-xs border-t border-outline-variant/20">
+       <button class="text-label-sm font-label-sm text-on-surface-variant hover:text-primary flex items-center gap-1 transition-colors" data-action="help" type="button">
+        <span class="material-symbols-outlined text-[15px]">
+         help_outline
+        </span>
+        <span class="">
+         Chi tiết
+        </span>
+       </button>
+       <button class="px-space-sm py-1 rounded bg-amber-500 text-on-primary font-label-md text-label-sm font-semibold hover:bg-amber-600 transition-colors shadow-xs" data-action="connect-unavailable" type="button">
+        Kết nối lại
+       </button>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/20 flex flex-col">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md mb-space-lg">
+     <div class="flex flex-col">
+      <div class="flex items-center gap-space-xs">
+       <span class="w-2 h-4 rounded-full bg-secondary-container">
+       </span>
+       <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">
+        Khám phá nền tảng
+       </h2>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+       Tích hợp đa kênh để đồng bộ tự động số liệu chiến dịch, ngân sách và lượt chuyển đổi đặt khám.
+      </p>
+     </div>
+     <div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-xl overflow-x-auto">
+      <button class="px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md font-semibold shrink-0 shadow-sm" data-platform-category="all" type="button">
+       Tất cả (9)
+      </button>
+      <button class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md shrink-0 transition-colors" data-platform-category="ads" type="button">
+       Quảng cáo
+      </button>
+      <button class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md shrink-0 transition-colors" data-platform-category="social" type="button">
+       Mạng xã hội
+      </button>
+      <button class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md shrink-0 transition-colors" data-platform-category="web" type="button">
+       Phân tích Website
+      </button>
+      <button class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md shrink-0 transition-colors" data-platform-category="seo" type="button">
+       SEO
+      </button>
+      <button class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md shrink-0 transition-colors" data-platform-category="video" type="button">
+       Video
+      </button>
+      <button class="px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md shrink-0 transition-colors" data-platform-category="local" type="button">
+       Doanh nghiệp địa phương
+      </button>
+     </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md">
+     <div class="p-space-md rounded-xl bg-surface-container-lowest border border-outline-variant/30 hover:border-primary-container/40 flex flex-col justify-between hover:shadow-md transition-all group" data-category="ads" data-platform-card="" data-platform-name="Facebook Ads">
+      <div class="space-y-space-sm">
+       <div class="flex items-start justify-between">
+        <div class="flex items-center gap-space-sm">
+         <div class="w-11 h-11 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">
+           campaign
+          </span>
+         </div>
+         <div>
+          <h3 class="font-headline-sm text-[15px] font-bold text-on-surface">
+           Facebook Ads
+          </h3>
+          <span class="text-[11px] text-on-surface-variant">
+           Meta for Business
+          </span>
+         </div>
+        </div>
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 text-[11px] font-semibold">
+         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500">
+         </span>
+         Đã kết nối
+        </span>
+       </div>
+       <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Theo dõi hiệu suất quảng cáo Facebook và Instagram, chi phí click, lượt đặt lịch và doanh thu chuyển đổi.
+       </p>
+      </div>
+      <div class="mt-space-md pt-space-sm border-t border-outline-variant/20 flex items-center justify-between">
+       <span class="text-[11px] text-on-surface-variant font-medium">
+        1 Tài khoản liên kết
+       </span>
+       <button class="px-space-md py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md font-semibold transition-colors border border-outline-variant/20" data-action="connect-unavailable" type="button">
+        Quản lý
+       </button>
+      </div>
+     </div>
+     <div class="p-space-md rounded-xl bg-surface-container-lowest border border-outline-variant/30 hover:border-primary-container/40 flex flex-col justify-between hover:shadow-md transition-all group" data-category="ads" data-platform-card="" data-platform-name="TikTok Ads">
+      <div class="space-y-space-sm">
+       <div class="flex items-start justify-between">
+        <div class="flex items-center gap-space-sm">
+         <div class="w-11 h-11 rounded-xl bg-slate-900/10 text-on-surface flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">
+           play_circle
+          </span>
+         </div>
+         <div>
+          <h3 class="font-headline-sm text-[15px] font-bold text-on-surface">
+           TikTok Ads
+          </h3>
+          <span class="text-[11px] text-on-surface-variant">
+           TikTok for Business
+          </span>
+         </div>
+        </div>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-medium">
+         Chưa kết nối
+        </span>
+       </div>
+       <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Phân tích chiến dịch và hiệu suất quảng cáo TikTok, lượt xem video, tỷ lệ hoàn tất và lượt đăng ký khám.
+       </p>
+      </div>
+      <div class="mt-space-md pt-space-sm border-t border-outline-variant/20 flex items-center justify-between">
+       <span class="text-[11px] text-on-surface-variant font-medium">
+        Hỗ trợ Pixel &amp; Lead Form
+       </span>
+       <button class="px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md font-semibold hover:bg-primary transition-colors shadow-xs flex items-center gap-1" data-action="connect-unavailable" type="button">
+        <span class="material-symbols-outlined text-[16px]">
+         add_link
+        </span>
+        <span class="">
+         Kết nối
+        </span>
+       </button>
+      </div>
+     </div>
+     <div class="p-space-md rounded-xl bg-surface-container-lowest border border-outline-variant/30 hover:border-primary-container/40 flex flex-col justify-between hover:shadow-md transition-all group" data-category="ads" data-platform-card="" data-platform-name="Google Ads">
+      <div class="space-y-space-sm">
+       <div class="flex items-start justify-between">
+        <div class="flex items-center gap-space-sm">
+         <div class="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">
+           ads_click
+          </span>
+         </div>
+         <div>
+          <h3 class="font-headline-sm text-[15px] font-bold text-on-surface">
+           Google Ads
+          </h3>
+          <span class="text-[11px] text-on-surface-variant">
+           Search &amp; PMax
+          </span>
+         </div>
+        </div>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-medium">
+         Chưa kết nối
+        </span>
+       </div>
+       <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Theo dõi chi phí, lượt nhấp và hiệu suất chiến dịch Google Ads từ khoá nhi khoa, chiến dịch hiển thị và bản đồ.
+       </p>
+      </div>
+      <div class="mt-space-md pt-space-sm border-t border-outline-variant/20 flex items-center justify-between">
+       <span class="text-[11px] text-on-surface-variant font-medium">
+        Báo cáo MCC đa tài khoản
+       </span>
+       <button class="px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md font-semibold hover:bg-primary transition-colors shadow-xs flex items-center gap-1" data-action="connect-unavailable" type="button">
+        <span class="material-symbols-outlined text-[16px]">
+         add_link
+        </span>
+        <span class="">
+         Kết nối
+        </span>
+       </button>
+      </div>
+     </div>
+     <div class="p-space-md rounded-xl bg-surface-container-lowest border border-outline-variant/30 hover:border-primary-container/40 flex flex-col justify-between hover:shadow-md transition-all group" data-category="social" data-platform-card="" data-platform-name="Facebook Content">
+      <div class="space-y-space-sm">
+       <div class="flex items-start justify-between">
+        <div class="flex items-center gap-space-sm">
+         <div class="w-11 h-11 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">
+           post_add
+          </span>
+         </div>
+         <div>
+          <h3 class="font-headline-sm text-[15px] font-bold text-on-surface">
+           Facebook Content
+          </h3>
+          <span class="text-[11px] text-on-surface-variant">
+           Fanpage Organic
+          </span>
+         </div>
+        </div>
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 text-[11px] font-semibold">
+         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500">
+         </span>
+         Đã kết nối
+        </span>
+       </div>
+       <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Theo dõi nội dung, bài đăng và tương tác Fanpage KinderHealth Clinic, phản hồi bình luận và tin nhắn phụ huynh.
+       </p>
+      </div>
+      <div class="mt-space-md pt-space-sm border-t border-outline-variant/20 flex items-center justify-between">
+       <span class="text-[11px] text-on-surface-variant font-medium">
+        1 Fanpage liên kết
+       </span>
+       <button class="px-space-md py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md font-semibold transition-colors border border-outline-variant/20" data-action="connect-unavailable" type="button">
+        Quản lý
+       </button>
+      </div>
+     </div>
+     <div class="p-space-md rounded-xl bg-surface-container-low/40 border border-outline-variant/20 flex flex-col justify-between group" data-category="social" data-platform-card="" data-platform-name="Instagram">
+      <div class="space-y-space-sm">
+       <div class="flex items-start justify-between">
+        <div class="flex items-center gap-space-sm">
+         <div class="w-11 h-11 rounded-xl bg-purple-500/10 text-purple-700 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">
+           photo_camera
+          </span>
+         </div>
+         <div>
+          <h3 class="font-headline-sm text-[15px] font-bold text-on-surface">
+           Instagram
+          </h3>
+          <span class="text-[11px] text-on-surface-variant">
+           Instagram Business
+          </span>
+         </div>
+        </div>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-medium">
+         Sắp hỗ trợ
+        </span>
+       </div>
+       <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Phân tích hiệu suất nội dung và tài khoản Instagram, câu chuyện kiến thức nhi khoa và reel bác sĩ tư vấn.
+       </p>
+      </div>
+      <div class="mt-space-md pt-space-sm border-t border-outline-variant/20 flex items-center justify-between">
+       <span class="text-[11px] text-on-surface-variant font-medium">
+        Đang phát triển
+       </span>
+       <button class="px-space-md py-1.5 rounded-lg bg-surface-container-high text-on-surface-variant/70 font-label-md text-label-md font-medium cursor-not-allowed" data-action="unavailable" disabled="" type="button">
+        Sắp hỗ trợ
+       </button>
+      </div>
+     </div>
+     <div class="p-space-md rounded-xl bg-surface-container-lowest border border-outline-variant/30 hover:border-primary-container/40 flex flex-col justify-between hover:shadow-md transition-all group" data-category="web" data-platform-card="" data-platform-name="Google Analytics 4">
+      <div class="space-y-space-sm">
+       <div class="flex items-start justify-between">
+        <div class="flex items-center gap-space-sm">
+         <div class="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">
+           query_stats
+          </span>
+         </div>
+         <div>
+          <h3 class="font-headline-sm text-[15px] font-bold text-on-surface">
+           Google Analytics 4
+          </h3>
+          <span class="text-[11px] text-on-surface-variant">
+           Web &amp; App Stream
+          </span>
+         </div>
+        </div>
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 text-[11px] font-semibold">
+         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500">
+         </span>
+         Đã kết nối
+        </span>
+       </div>
+       <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Phân tích người dùng, phiên truy cập và hành vi Website đặt lịch, sự kiện đo lường gói khám trẻ em.
+       </p>
+      </div>
+      <div class="mt-space-md pt-space-sm border-t border-outline-variant/20 flex items-center justify-between">
+       <span class="text-[11px] text-on-surface-variant font-medium">
+        GA4 Realtime Data
+       </span>
+       <button class="px-space-md py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md font-semibold transition-colors border border-outline-variant/20" data-action="connect-unavailable" type="button">
+        Quản lý
+       </button>
+      </div>
+     </div>
+     <div class="p-space-md rounded-xl bg-surface-container-lowest border border-outline-variant/30 hover:border-primary-container/40 flex flex-col justify-between hover:shadow-md transition-all group" data-category="seo" data-platform-card="" data-platform-name="Google Search Console">
+      <div class="space-y-space-sm">
+       <div class="flex items-start justify-between">
+        <div class="flex items-center gap-space-sm">
+         <div class="w-11 h-11 rounded-xl bg-tertiary-container/10 text-tertiary-container flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">
+           travel_explore
+          </span>
+         </div>
+         <div>
+          <h3 class="font-headline-sm text-[15px] font-bold text-on-surface">
+           Google Search Console
+          </h3>
+          <span class="text-[11px] text-on-surface-variant">
+           Search Visibility
+          </span>
+         </div>
+        </div>
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 text-[11px] font-semibold">
+         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500">
+         </span>
+         Đã kết nối
+        </span>
+       </div>
+       <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Theo dõi lượt nhấp, lượt hiển thị và hiệu suất tìm kiếm tự nhiên của các bài viết y khoa và bảng giá khám.
+       </p>
+      </div>
+      <div class="mt-space-md pt-space-sm border-t border-outline-variant/20 flex items-center justify-between">
+       <span class="text-[11px] text-on-surface-variant font-medium">
+        Tự động lập chỉ mục
+       </span>
+       <button class="px-space-md py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md font-semibold transition-colors border border-outline-variant/20" data-action="connect-unavailable" type="button">
+        Quản lý
+       </button>
+      </div>
+     </div>
+     <div class="p-space-md rounded-xl bg-surface-container-lowest border border-outline-variant/30 hover:border-primary-container/40 flex flex-col justify-between hover:shadow-md transition-all group" data-category="video" data-platform-card="" data-platform-name="YouTube">
+      <div class="space-y-space-sm">
+       <div class="flex items-start justify-between">
+        <div class="flex items-center gap-space-sm">
+         <div class="w-11 h-11 rounded-xl bg-primary-container/10 text-primary-container flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">
+           smart_display
+          </span>
+         </div>
+         <div>
+          <h3 class="font-headline-sm text-[15px] font-bold text-on-surface">
+           YouTube
+          </h3>
+          <span class="text-[11px] text-on-surface-variant">
+           Video Analytics
+          </span>
+         </div>
+        </div>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-medium">
+         Chưa kết nối
+        </span>
+       </div>
+       <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Theo dõi hiệu suất kênh, video và tương tác, thời lượng xem các video hướng dẫn chăm sóc trẻ sơ sinh.
+       </p>
+      </div>
+      <div class="mt-space-md pt-space-sm border-t border-outline-variant/20 flex items-center justify-between">
+       <span class="text-[11px] text-on-surface-variant font-medium">
+        Đồng bộ YouTube Channel
+       </span>
+       <button class="px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md font-semibold hover:bg-primary transition-colors shadow-xs flex items-center gap-1" data-action="connect-unavailable" type="button">
+        <span class="material-symbols-outlined text-[16px]">
+         add_link
+        </span>
+        <span class="">
+         Kết nối
+        </span>
+       </button>
+      </div>
+     </div>
+     <div class="p-space-md rounded-xl bg-surface-container-lowest border border-outline-variant/30 hover:border-primary-container/40 flex flex-col justify-between hover:shadow-md transition-all group" data-category="local" data-platform-card="" data-platform-name="Google Business Profile">
+      <div class="space-y-space-sm">
+       <div class="flex items-start justify-between">
+        <div class="flex items-center gap-space-sm">
+         <div class="w-11 h-11 rounded-xl bg-purple-500/10 text-purple-700 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[24px]">
+           store
+          </span>
+         </div>
+         <div>
+          <h3 class="font-headline-sm text-[15px] font-bold text-on-surface">
+           Google Business Profile
+          </h3>
+          <span class="text-[11px] text-on-surface-variant">
+           Google Maps &amp; Reviews
+          </span>
+         </div>
+        </div>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-medium">
+         Chưa kết nối
+        </span>
+       </div>
+       <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Theo dõi hoạt động và hiệu suất hồ sơ doanh nghiệp, cuộc gọi trực tiếp, yêu cầu chỉ đường tới phòng khám.
+       </p>
+      </div>
+      <div class="mt-space-md pt-space-sm border-t border-outline-variant/20 flex items-center justify-between">
+       <span class="text-[11px] text-on-surface-variant font-medium">
+        Cơ sở Q7 &amp; Tân Bình
+       </span>
+       <button class="px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md font-semibold hover:bg-primary transition-colors shadow-xs flex items-center gap-1" data-action="connect-unavailable" type="button">
+        <span class="material-symbols-outlined text-[16px]">
+         add_link
+        </span>
+        <span class="">
+         Kết nối
+        </span>
+       </button>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="bg-surface-container-low rounded-xl p-space-lg border border-outline-variant/30 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-lg">
+    <div class="flex items-start gap-space-md max-w-2xl">
+     <div class="w-12 h-12 rounded-xl bg-primary-container/10 text-primary-container flex items-center justify-center shrink-0 mt-0.5">
+      <span class="material-symbols-outlined text-[26px]">
+       lock_person
+      </span>
+     </div>
+     <div class="space-y-1">
+      <div class="flex items-center gap-2">
+       <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">
+        Tiêu chuẩn Bảo mật &amp; Quyền riêng tư Y tế
+       </h3>
+       <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 font-label-sm text-[11px] font-semibold">
+        Phân quyền theo vai trò Workspace
+       </span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+       VioAgencyAnalytics chỉ yêu cầu quyền đọc số liệu tiếp thị tổng hợp (Read-Only) để xây dựng dashboard. Hệ thống cam kết tuyệt đối không lưu trữ dữ liệu cá nhân nhạy cảm của bệnh nhi theo quy định y tế.
+      </p>
+     </div>
+    </div>
+    <div class="flex items-center gap-space-sm shrink-0">
+     <button class="px-space-md py-2 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md font-medium border border-outline-variant/30 transition-colors" data-action="unavailable" type="button">
+      Xem tài liệu bảo mật
+     </button>
+     <button class="px-space-md py-2 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md font-semibold hover:bg-primary transition-colors shadow-xs" data-action="unavailable" type="button">
+      Yêu cầu ký NDA bảo mật
+     </button>
+    </div>
+   </div>
+   <div class="p-space-md rounded-xl bg-surface-container-lowest border border-outline-variant/20 flex flex-col md:flex-row items-center justify-between gap-space-md text-on-surface-variant text-body-sm font-body-sm">
+    <div class="flex items-center gap-space-sm">
+     <span class="material-symbols-outlined text-primary text-[20px]">
+      verified
+     </span>
+     <span class="">
+      Hệ thống đồng bộ dữ liệu thời gian thực cho chuỗi phòng khám KinderHealth • Hỗ trợ kết nối API tự động.
+     </span>
+    </div>
+    <div class="flex items-center gap-space-md font-label-sm text-label-sm">
+     <a class="hover:text-primary transition-colors" href="/workspace/integrations">
+      Hướng dẫn kết nối API
+     </a>
+     <span class="">
+      •
+     </span>
+     <a class="hover:text-primary transition-colors" data-action="unavailable" href="#customer-dialog">
+      Quản lý Webhook
+     </a>
+     <span class="">
+      •
+     </span>
+     <a class="hover:text-primary transition-colors" data-action="unavailable" href="#customer-dialog">
+      Hỗ trợ kỹ thuật 24/7
+     </a>
+    </div>
+   </div>
+  </div>
+ </div>
+</main>
+
+{% endblock %}

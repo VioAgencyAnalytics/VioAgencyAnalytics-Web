@@ -1,0 +1,49 @@
+{% extends 'customer/base.html' %}
+{% block layout %}
+<button id="customer-backdrop" aria-label="Đóng menu" hidden></button>
+<aside id="customer-sidebar" aria-label="Điều hướng chính">
+  <a href="/workspace" class="customer-brand">
+    <img src="/static/customer/vio-logo.png" alt="VIO Agency" width="34" height="34">
+    <span><strong>VioAgencyAnalytics</strong><small>Nền tảng Phân tích Tiếp thị</small></span>
+  </a>
+  <a class="customer-workspace" href="/workspace/onboarding">
+    <small>KHÔNG GIAN LÀM VIỆC</small>
+    <span><span class="material-symbols-outlined">domain</span><strong data-workspace-name>KinderHealth</strong><em>Mẫu</em></span>
+  </a>
+  <nav class="customer-nav">
+    <p>ĐIỀU HƯỚNG CHÍNH</p>
+    {% for key, path, icon, label in customer_nav %}
+    {% if key == 'members' %}<p>CẤU HÌNH TÀI KHOẢN</p>{% endif %}
+    <div class="customer-nav-row">
+      <a href="/workspace{{ '/' ~ path if path else '' }}" {% if customer_page == key %}aria-current="page"{% endif %}>
+        <span class="material-symbols-outlined">{{ icon }}</span><span>{{ label }}</span>
+      </a>
+      {% if key == 'channels' %}<button id="customer-channel-toggle" aria-label="Danh sách báo cáo kênh" aria-expanded="{{ 'true' if customer_page == 'channels' else 'false' }}" aria-controls="customer-channel-links"><span class="material-symbols-outlined">expand_more</span></button>{% endif %}
+    </div>
+    {% if key == 'channels' %}
+    <div id="customer-channel-links" {% if customer_page != 'channels' %}hidden{% endif %}>
+      {% for slug, details in customer_channels.items() %}
+      <a href="/workspace/channels/{{ slug }}" {% if channel is defined and channel == slug %}aria-current="page"{% endif %}>{{ details[0] }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endfor %}
+  </nav>
+  <div class="customer-profile"><span class="customer-avatar">VIO</span><span><strong>Khách xem thử</strong><small>Dữ liệu minh họa</small></span><a href="/workspace/login" aria-label="Về trang đăng nhập"><span class="material-symbols-outlined">logout</span></a></div>
+</aside>
+<div class="customer-shell">
+  <header class="customer-topbar">
+    <button id="customer-menu" aria-label="Mở menu" aria-controls="customer-sidebar" aria-expanded="false"><span class="material-symbols-outlined">menu</span></button>
+    <nav aria-label="Đường dẫn"><a href="/workspace">Trang chủ</a><span>›</span><strong>{{ title }}</strong></nav>
+    <label class="customer-global-search"><span class="material-symbols-outlined">search</span><input id="customer-search" type="search" placeholder="Tìm trang, báo cáo…" aria-label="Tìm trang, báo cáo"><kbd>Ctrl K</kbd></label>
+    <span class="customer-top-workspace"><span class="material-symbols-outlined">domain</span><span data-workspace-name>KinderHealth</span></span>
+    <button data-action="help" aria-label="Trợ giúp"><span class="material-symbols-outlined">help_outline</span></button>
+    <button data-action="notifications" aria-label="Thông báo"><span class="material-symbols-outlined">notifications</span></button>
+    <a href="/workspace/settings" class="customer-avatar" aria-label="Cài đặt">VIO</a>
+    <div id="customer-search-results" hidden></div>
+  </header>
+  <div class="customer-preview-bar"><span><span class="material-symbols-outlined">visibility</span> Bản xem thử · Các tài khoản, số liệu và trạng thái trong mẫu chưa phải dữ liệu kết nối thật.</span><a href="/workspace/login">Trang 01 →</a></div>
+  <div id="customer-content" tabindex="-1">{% block content %}{% endblock %}</div>
+  <footer class="customer-footer"><span>© 2026 VIO Agency · VioAgencyAnalytics</span><span>Trang {{ '%02d'|format(page_number) }} / 09</span></footer>
+</div>
+{% endblock %}

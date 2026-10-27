@@ -24,6 +24,10 @@ class MetricView:
     data_date: str | None = None
     available: bool = False
     source_key: str = ''
+    status: str = 'unavailable'
+    coverage: dict[str, Any] = field(default_factory=dict)
+    grain: str | None = None
+    aggregation: str | None = None
 
 
 @dataclass
@@ -107,6 +111,10 @@ class SectionView:
     limitations: list[str] = field(default_factory=list)
     approval: dict[str, Any] = field(default_factory=dict)
     platforms: list[dict[str, str]] = field(default_factory=list)
+    source_identity: dict[str, str] = field(default_factory=dict)
+    timezone: str | None = None
+    fetched_at: str | None = None
+    content_report: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass

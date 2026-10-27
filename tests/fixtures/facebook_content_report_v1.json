@@ -1,0 +1,412 @@
+{
+  "source": "facebook_content",
+  "requested_start": "2026-09-01",
+  "requested_end": "2026-09-02",
+  "status": "ready",
+  "data_origin": "meta_api_unverified",
+  "timezone": "UTC",
+  "latest_available_date": "2026-09-02",
+  "latest_post_date": "2026-09-02",
+  "daily": [
+    {
+      "date": "2026-09-01",
+      "posts_published": 1,
+      "reactions": null,
+      "comments": null,
+      "shares": null,
+      "engagements": null
+    },
+    {
+      "date": "2026-09-02",
+      "posts_published": 1,
+      "reactions": null,
+      "comments": null,
+      "shares": null,
+      "engagements": null
+    }
+  ],
+  "entries": [
+    {
+      "date": "2026-09-01",
+      "post_id": "1234_1",
+      "reactions_lifetime": 0,
+      "comments_lifetime": 2,
+      "shares_lifetime": null,
+      "message": "Nội dung bài thật từ fixture",
+      "title": "Nội dung bài thật từ fixture",
+      "permalink_url": "https://www.facebook.com/1234/posts/1",
+      "format": "photo",
+      "format_source": "photo",
+      "title_source": "message_excerpt"
+    },
+    {
+      "date": "2026-09-02",
+      "post_id": "1234_2",
+      "reactions_lifetime": 3,
+      "comments_lifetime": null,
+      "shares_lifetime": 1,
+      "message": null,
+      "title": null,
+      "permalink_url": null,
+      "format": null,
+      "format_source": null,
+      "title_source": null
+    }
+  ],
+  "totals": {
+    "posts_published": 2,
+    "reactions": null,
+    "comments": null,
+    "shares": null,
+    "engagements": null
+  },
+  "warnings": [
+    "Tương tác trên từng post là lifetime tại thời điểm lấy; không cộng vào KPI tương tác theo ngày.",
+    "Page/Post views, reach và follower Insights chưa được truy vấn; không suy đoán các giá trị này.",
+    "Đồng bộ Meta thành công không tự thay thế xác minh nguồn và phê duyệt phát hành."
+  ],
+  "contract_version": "meta-reporting-v1",
+  "fetched_at": "2026-09-03T00:00:00+00:00",
+  "identity": {
+    "client_id": "client_meta_sandbox",
+    "external_id": "1234",
+    "asset_type": "facebook_page"
+  },
+  "provenance": {
+    "permissions": [
+      "pages_show_list",
+      "pages_read_engagement",
+      "ads_read"
+    ]
+  },
+  "content_report": {
+    "schema_version": "facebook-content-report-v1",
+    "source": "facebook_content",
+    "identity": {
+      "client_id": "client_meta_sandbox",
+      "external_id": "1234",
+      "asset_type": "facebook_page"
+    },
+    "period": {
+      "start": "2026-09-01",
+      "end": "2026-09-02"
+    },
+    "timezone": "UTC",
+    "fetched_at": "2026-09-03T00:00:00+00:00",
+    "comparison": {
+      "status": "unsupported",
+      "reason": "Meta contract hiện chỉ hỗ trợ một kỳ; chưa có snapshot kỳ so sánh."
+    },
+    "metrics": [
+      {
+        "key": "posts_published",
+        "metric_id": "facebook_content.posts_published",
+        "label": "Bài đăng mới trong kỳ",
+        "unit": "count",
+        "currency": null,
+        "value": 2,
+        "status": "available",
+        "coverage": {
+          "available": 2,
+          "expected": 2,
+          "unit": "days"
+        },
+        "observed_sum": null,
+        "aggregation": "sum",
+        "grain": "day",
+        "fetched_at": "2026-09-03T00:00:00+00:00",
+        "attribution": null,
+        "provider": "meta",
+        "verified": false,
+        "publishable": false,
+        "reason": ""
+      },
+      {
+        "key": "engagements",
+        "metric_id": "facebook_content.engagements",
+        "label": "Tương tác phát sinh trong kỳ",
+        "unit": "count",
+        "currency": null,
+        "value": null,
+        "status": "no_data",
+        "coverage": {
+          "available": 0,
+          "expected": 2,
+          "unit": "days"
+        },
+        "observed_sum": null,
+        "aggregation": "sum",
+        "grain": "day",
+        "fetched_at": "2026-09-03T00:00:00+00:00",
+        "attribution": null,
+        "provider": "meta",
+        "verified": false,
+        "publishable": false,
+        "reason": "Thiếu quyền read_insights trong lần thu thập; adapter chưa thu thập Page/Post Insights."
+      },
+      {
+        "key": "reactions_lifetime",
+        "metric_id": "facebook_content.reactions_lifetime",
+        "label": "Reactions lifetime",
+        "unit": "count",
+        "currency": null,
+        "value": 3,
+        "status": "available",
+        "coverage": {
+          "available": 2,
+          "expected": 2,
+          "unit": "posts"
+        },
+        "observed_sum": 3,
+        "aggregation": "sum_posts_at_fetch",
+        "grain": "snapshot",
+        "fetched_at": "2026-09-03T00:00:00+00:00",
+        "attribution": null,
+        "provider": "meta",
+        "verified": false,
+        "publishable": false,
+        "reason": ""
+      },
+      {
+        "key": "comments_lifetime",
+        "metric_id": "facebook_content.comments_lifetime",
+        "label": "Comments lifetime",
+        "unit": "count",
+        "currency": null,
+        "value": null,
+        "status": "partial",
+        "coverage": {
+          "available": 1,
+          "expected": 2,
+          "unit": "posts"
+        },
+        "observed_sum": 2,
+        "aggregation": "sum_posts_at_fetch",
+        "grain": "snapshot",
+        "fetched_at": "2026-09-03T00:00:00+00:00",
+        "attribution": null,
+        "provider": "meta",
+        "verified": false,
+        "publishable": false,
+        "reason": "Chưa có đủ bộ đếm từng bài."
+      },
+      {
+        "key": "shares_lifetime",
+        "metric_id": "facebook_content.shares_lifetime",
+        "label": "Shares lifetime",
+        "unit": "count",
+        "currency": null,
+        "value": null,
+        "status": "partial",
+        "coverage": {
+          "available": 1,
+          "expected": 2,
+          "unit": "posts"
+        },
+        "observed_sum": 1,
+        "aggregation": "sum_posts_at_fetch",
+        "grain": "snapshot",
+        "fetched_at": "2026-09-03T00:00:00+00:00",
+        "attribution": null,
+        "provider": "meta",
+        "verified": false,
+        "publishable": false,
+        "reason": "Chưa có đủ bộ đếm từng bài."
+      },
+      {
+        "key": "reach",
+        "label": "Lượt tiếp cận",
+        "value": null,
+        "status": "unsupported",
+        "reason": "Thiếu quyền read_insights trong lần thu thập; adapter chưa thu thập Page/Post Insights. Unique viewers mới cần xác minh tương đương và kỳ; không cộng unique theo ngày."
+      },
+      {
+        "key": "engagement_rate",
+        "label": "Tỷ lệ tương tác (ER)",
+        "value": null,
+        "status": "unsupported",
+        "reason": "Cần tương tác và reach cùng phạm vi, kỳ, định nghĩa; Admin chưa đủ đầu vào để tính."
+      },
+      {
+        "key": "followers_gained",
+        "label": "Người theo dõi mới",
+        "value": null,
+        "status": "unsupported",
+        "reason": "Thiếu quyền read_insights trong lần thu thập; adapter chưa thu thập Page/Post Insights. Phân biệt follows mới, unfollows và tổng followers."
+      },
+      {
+        "key": "link_clicks",
+        "label": "Lượt nhấp liên kết",
+        "value": null,
+        "status": "unsupported",
+        "reason": "Thiếu quyền read_insights trong lần thu thập; adapter chưa thu thập Page/Post Insights. Cần xác minh click loại link trên v26."
+      },
+      {
+        "key": "ctr",
+        "label": "CTR",
+        "value": null,
+        "status": "unsupported",
+        "reason": "Chưa đủ click và mẫu số đã thống nhất; không tự lấy CTR quảng cáo."
+      },
+      {
+        "key": "response_rate",
+        "label": "Tỷ lệ phản hồi tin nhắn",
+        "value": null,
+        "status": "unsupported",
+        "reason": "Ngoài contract Content hiện tại; chưa có nguồn và định nghĩa được nghiệm thu."
+      }
+    ],
+    "sections": {
+      "overview": {
+        "key": "overview",
+        "label": "Kết quả tổng quan",
+        "status": "partial",
+        "reason": "Chỉ số lifetime được tách riêng; không thay thế tương tác trong kỳ.",
+        "rows": []
+      },
+      "formats": {
+        "key": "formats",
+        "label": "Phân bổ định dạng nội dung",
+        "status": "partial",
+        "reason": "Phân bố số bài; chưa có reach/ER theo nhóm.",
+        "rows": [
+          {
+            "key": "photo",
+            "label": "Ảnh",
+            "count": 1,
+            "percent": 50.0,
+            "reach": null,
+            "engagement_rate": null
+          },
+          {
+            "key": "unknown",
+            "label": "Chưa phân loại",
+            "count": 1,
+            "percent": 50.0,
+            "reach": null,
+            "engagement_rate": null
+          }
+        ],
+        "coverage": {
+          "available": 1,
+          "expected": 2,
+          "unit": "posts"
+        }
+      },
+      "topics": {
+        "key": "topics",
+        "label": "Hiệu quả theo chủ đề",
+        "status": "partial",
+        "reason": "Phân bố số bài; chưa có reach/ER theo nhóm.",
+        "rows": [
+          {
+            "key": "Product",
+            "label": "Product",
+            "count": 1,
+            "percent": 50.0,
+            "reach": null,
+            "engagement_rate": null
+          },
+          {
+            "key": "unknown",
+            "label": "Chưa phân loại",
+            "count": 1,
+            "percent": 50.0,
+            "reach": null,
+            "engagement_rate": null
+          }
+        ],
+        "coverage": {
+          "available": 1,
+          "expected": 2,
+          "unit": "posts"
+        }
+      },
+      "posts": {
+        "key": "posts",
+        "label": "Hiệu quả bài đăng",
+        "status": "partial",
+        "reason": "Reach, ER và click chưa được thu thập; ô thiếu giữ nguyên null.",
+        "rows": [
+          {
+            "post_id": "1234_1",
+            "date": "2026-09-01",
+            "title": "Nội dung bài thật từ fixture",
+            "message": "Nội dung bài thật từ fixture",
+            "permalink_url": "https://www.facebook.com/1234/posts/1",
+            "format": "photo",
+            "reactions_lifetime": 0,
+            "comments_lifetime": 2,
+            "shares_lifetime": null,
+            "topic": "Product",
+            "reach": null,
+            "engagements": null,
+            "engagement_rate": null,
+            "link_clicks": null
+          },
+          {
+            "post_id": "1234_2",
+            "date": "2026-09-02",
+            "title": null,
+            "message": null,
+            "permalink_url": null,
+            "format": null,
+            "reactions_lifetime": 3,
+            "comments_lifetime": null,
+            "shares_lifetime": 1,
+            "topic": null,
+            "reach": null,
+            "engagements": null,
+            "engagement_rate": null,
+            "link_clicks": null
+          }
+        ],
+        "commentary": {
+          "text": "<script>Editorial fixture, not runtime data</script>",
+          "origin": "editorial",
+          "status": "approved"
+        }
+      },
+      "engagement": {
+        "key": "engagement",
+        "label": "Cấu trúc tương tác trong kỳ",
+        "status": "unsupported",
+        "reason": "Thiếu quyền read_insights trong lần thu thập; adapter chưa thu thập Page/Post Insights. Không cộng lifetime thành tương tác trong kỳ.",
+        "rows": []
+      },
+      "reach": {
+        "key": "reach",
+        "label": "Tiếp cận tự nhiên và trả phí",
+        "status": "unsupported",
+        "reason": "Chưa có bộ metric reach organic/paid tương đương được xác minh trên v26; không thay bằng impressions hoặc Ads.",
+        "rows": []
+      },
+      "insights": {
+        "key": "insights",
+        "label": "Nhận định và đề xuất",
+        "status": "available",
+        "reason": "Nhận xét đã duyệt cùng bản phát hành.",
+        "rows": []
+      }
+    },
+    "editorial": {
+      "notes": {
+        "posts": "<script>Editorial fixture, not runtime data</script>"
+      },
+      "topics": {
+        "1234_1": "Product"
+      }
+    },
+    "daily_posts": [
+      {
+        "date": "2026-09-01",
+        "posts_published": 1
+      },
+      {
+        "date": "2026-09-02",
+        "posts_published": 1
+      }
+    ],
+    "review_status": "approved"
+  }
+}

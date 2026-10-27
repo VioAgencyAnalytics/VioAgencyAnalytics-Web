@@ -1,0 +1,247 @@
+{% extends "customer/auth.html" %}
+{% block content %}
+<header class="w-full py-space-xl flex justify-center items-center">
+ <div class="flex items-center gap-space-sm">
+  <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm">
+   <span class="material-symbols-outlined text-[20px]">
+    insights
+   </span>
+  </div>
+  <span class="font-headline-md text-headline-md tracking-tight text-on-surface">
+   VIO
+   <span class="text-primary">
+    Agency
+   </span>
+   Analytics
+  </span>
+ </div>
+</header>
+<main class="w-full flex-1 flex flex-col items-center justify-center px-gutter-lg pb-space-xl">
+ <div class="flex flex-col w-full items-center justify-center py-space-md">
+  <div class="relative w-full max-w-6xl mx-auto flex flex-col items-center">
+   <div class="absolute -top-16 -left-12 w-96 h-96 bg-primary-fixed-dim/30 rounded-full blur-3xl pointer-events-none -z-10">
+   </div>
+   <div class="absolute top-1/3 -right-16 w-80 h-80 bg-secondary-fixed/40 rounded-full blur-3xl pointer-events-none -z-10">
+   </div>
+   <div class="w-full grid grid-cols-1 lg:grid-cols-12 bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden">
+    <div class="lg:col-span-5 from-surface-container-low via-surface-container to-surface-container-high p-space-xl flex flex-col justify-between relative overflow-hidden bg-surface-container-low">
+     <div class="flex flex-col justify-between h-full p-space-xl">
+      <div class="space-y-space-md">
+       <div class="inline-flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-lowest rounded-md shadow-sm border border-outline-variant/30">
+        <span class="material-symbols-outlined text-[16px] text-primary">
+         insights
+        </span>
+        <span class="font-label-sm text-label-sm text-on-surface font-semibold tracking-wide uppercase">
+         NỀN TẢNG BÁO CÁO MARKETING CHO AGENCY
+        </span>
+       </div>
+       <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight leading-tight">
+        Quản lý dữ liệu Marketing trên
+        <span class="text-primary">
+         một nền tảng
+        </span>
+       </h2>
+       <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+        Quản lý khách hàng, kết nối các kênh Marketing, theo dõi hiệu suất và xây dựng báo cáo chuyên nghiệp cùng VioAgencyAnalytics.
+       </p>
+       <div class="pt-space-sm space-y-space-md">
+        <div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-lowest/90 border border-outline-variant/30 shadow-sm">
+         <div class="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 mt-0.5">
+          <span class="material-symbols-outlined text-[18px]">
+           groups
+          </span>
+         </div>
+         <div>
+          <div class="font-headline-sm text-headline-sm text-on-surface font-semibold">
+           Quản lý nhiều khách hàng
+          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+           Tập trung dữ liệu từ nhiều thương hiệu và khách hàng trên cùng một giao diện.
+          </p>
+         </div>
+        </div>
+        <div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-lowest/90 border border-outline-variant/30 shadow-sm">
+         <div class="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 mt-0.5">
+          <span class="material-symbols-outlined text-[18px]">
+           query_stats
+          </span>
+         </div>
+         <div>
+          <div class="font-headline-sm text-headline-sm text-on-surface font-semibold">
+           Phân tích hiệu suất đa kênh
+          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+           Kết nối Google Ads, Meta, SEO và theo dõi số liệu tự động theo thời gian thực.
+          </p>
+         </div>
+        </div>
+        <div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-lowest/90 border border-outline-variant/30 shadow-sm">
+         <div class="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center text-primary flex-shrink-0 mt-0.5">
+          <span class="material-symbols-outlined text-[18px]">
+           analytics
+          </span>
+         </div>
+         <div>
+          <div class="font-headline-sm text-headline-sm text-on-surface font-semibold">
+           Dashboard &amp; Báo cáo Marketing
+          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+           Tự động hóa báo cáo định kỳ chuyên nghiệp, trực quan và chuẩn hóa.
+          </p>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="pt-space-md flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+       <span class="material-symbols-outlined text-[16px] text-tertiary">
+        verified
+       </span>
+       <span class="">
+        Được phát triển và vận hành bởi VIO Agency
+       </span>
+      </div>
+     </div>
+    </div>
+    <div class="lg:col-span-7 p-space-xl lg:p-12 flex flex-col justify-between bg-surface-container-lowest">
+     <div class="flex flex-col justify-between h-full">
+      <div>
+       <div class="flex items-center gap-space-md pb-space-lg">
+        <img alt="VIO Agency Official Logo" class="h-12 w-12 object-contain rounded-lg p-1 bg-surface-container shadow-sm" loading="lazy" src="/static/customer/vio-logo.png"/>
+        <div>
+         <h1 class="font-headline-md text-headline-md tracking-tight text-on-surface font-bold">
+          VioAgencyAnalytics
+         </h1>
+         <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Đăng nhập vào Workspace của bạn
+         </p>
+        </div>
+       </div>
+       <form class="space-y-space-md" data-local-form="auth" id="auth-form">
+        <p class="customer-inline-note">
+         Giao diện đăng nhập mới đang được chuẩn bị. Bạn có thể xem thử đầy đủ 9 trang mà không nhập tài khoản.
+        </p>
+        <div>
+         <button class="w-full flex items-center justify-center gap-space-sm py-2.5 px-space-md bg-surface-container-lowest hover:bg-surface-container border border-outline-variant/30 text-on-surface font-label-md text-label-md rounded-lg shadow-sm transition-all duration-150 active:scale-[0.99]" data-action="auth-unavailable" type="button">
+          <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
+           <path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.15z" fill="#4285F4">
+           </path>
+           <path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.26 21.36 7.35 24 12 24z" fill="#34A853">
+           </path>
+           <path d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.26C.46 8.16 0 9.94 0 12s.46 3.84 1.26 5.42l4.02-3.15z" fill="#FBBC05">
+           </path>
+           <path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.26 2.64 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z" fill="#EA4335">
+           </path>
+          </svg>
+          <span class="font-medium">
+           Tiếp tục với Google
+          </span>
+         </button>
+        </div>
+        <div class="relative flex items-center justify-center my-space-md">
+         <div class="w-full bg-surface-container-high h-[1px]">
+         </div>
+         <span class="absolute px-space-sm bg-surface-container-lowest font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">
+          HOẶC ĐĂNG NHẬP BẰNG EMAIL
+         </span>
+        </div>
+        <div class="space-y-1">
+         <label class="block font-label-md text-label-md text-on-surface font-medium" for="email">
+          Email công việc
+         </label>
+         <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-space-sm pointer-events-none text-on-surface-variant">
+           <span class="material-symbols-outlined text-[18px]">
+            mail
+           </span>
+          </span>
+          <input aria-label="Đăng nhập tài khoản chưa được kích hoạt" class="w-full pl-9 pr-space-md py-2.5 text-body-md font-body-md text-on-surface bg-surface-container-lowest rounded-lg border border-outline-variant/30 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/60" disabled="" id="email" placeholder="Đăng nhập tài khoản chưa được kích hoạt" required="" type="email"/>
+         </div>
+        </div>
+        <div class="space-y-1">
+         <div class="flex items-center justify-between">
+          <label class="block font-label-md text-label-md text-on-surface font-medium" for="password">
+           Mật khẩu
+          </label>
+          <a class="font-label-sm text-label-sm text-primary hover:text-primary-container font-semibold transition-colors" data-action="auth-unavailable" href="#customer-dialog">
+           Quên mật khẩu?
+          </a>
+         </div>
+         <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-space-sm pointer-events-none text-on-surface-variant">
+           <span class="material-symbols-outlined text-[18px]">
+            lock
+           </span>
+          </span>
+          <input aria-label="Đăng nhập tài khoản chưa được kích hoạt" class="w-full pl-9 pr-10 py-2.5 text-body-md font-body-md text-on-surface bg-surface-container-lowest rounded-lg border border-outline-variant/30 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/60" disabled="" id="password" placeholder="Đăng nhập tài khoản chưa được kích hoạt" required="" type="password"/>
+          <button aria-label="Xem báo cáo" class="absolute inset-y-0 right-0 flex items-center pr-space-sm text-on-surface-variant hover:text-on-surface transition-colors" data-action="password" id="toggle-password" type="button">
+           <span class="material-symbols-outlined text-[18px]" id="eye-icon">
+            visibility
+           </span>
+          </button>
+         </div>
+        </div>
+        <div class="flex items-center justify-between pt-1">
+         <label class="flex items-center gap-2 cursor-pointer select-none">
+          <input aria-label="Ghi nhớ đăng nhập" checked="" class="w-4 h-4 rounded text-primary accent-primary bg-surface-container-low cursor-pointer" id="remember-me" type="checkbox"/>
+          <span class="font-body-sm text-body-sm text-on-surface-variant">
+           Ghi nhớ đăng nhập
+          </span>
+         </label>
+        </div>
+        <div class="pt-space-sm">
+         <button class="w-full py-3 px-space-lg bg-primary hover:bg-primary-container text-on-primary font-headline-sm text-headline-sm rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-space-sm group active:scale-[0.99]" data-action="auth-unavailable" id="submit-btn" type="submit">
+          <span class="" id="submit-text">
+           Đăng nhập vào Workspace
+          </span>
+          <span class="material-symbols-outlined text-[20px] transition-transform duration-200 group-hover:translate-x-1">
+           arrow_forward
+          </span>
+         </button>
+        </div>
+        <a class="customer-primary customer-explore" href="/workspace/onboarding">
+         Khám phá giao diện mới →
+        </a>
+       </form>
+       <div class="mt-space-lg text-center">
+        <span class="font-body-sm text-body-sm text-on-surface-variant">
+         Chưa có tài khoản?
+        </span>
+        <a class="font-label-md text-label-md text-primary font-bold hover:underline" href="/workspace/onboarding" id="switch-register-inline">
+         Bắt đầu ngay
+        </a>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="mt-space-lg text-center">
+    <p class="font-body-sm text-body-sm text-on-surface-variant">
+     Bản quyền © 2026
+     <strong class="text-on-surface font-semibold">
+      VIO Agency
+     </strong>
+     (
+     <a class="text-primary hover:underline" href="https://vioagency.vn/" target="_blank">
+      vioagency.vn
+     </a>
+     ). Nền tảng phân tích và báo cáo hiệu suất Marketing đa kênh.
+    </p>
+   </div>
+  </div>
+ </div>
+</main>
+<footer class="w-full py-space-lg border-t border-outline-variant/30 text-center">
+ <p class="font-body-sm text-body-sm text-on-surface-variant">
+  © 2026 VIO Agency. All rights reserved. •
+  <a class="hover:text-primary transition-colors" data-action="unavailable" href="#customer-dialog">
+   Chính sách bảo mật
+  </a>
+  •
+  <a class="hover:text-primary transition-colors" data-action="unavailable" href="#customer-dialog">
+   Điều khoản dịch vụ
+  </a>
+ </p>
+</footer>
+
+
+{% endblock %}

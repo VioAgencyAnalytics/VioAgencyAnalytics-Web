@@ -1,0 +1,943 @@
+{% extends "customer/shell.html" %}
+{% block content %}
+<main class="customer-page p-8 space-y-6">
+ <div class="flex flex-col w-full space-y-6">
+  <section class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-2" data-purpose="dashboard-header-toolbar">
+   <div class="space-y-1">
+    <div class="flex items-center gap-2 text-label-sm font-label-sm text-outline">
+     <span class="">
+      Trang chủ
+     </span>
+     <span class="material-symbols-outlined text-[14px]">
+      chevron_right
+     </span>
+     <span class="text-primary font-semibold">
+      Dashboard Marketing
+     </span>
+    </div>
+    <h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">
+     Dashboard Marketing
+    </h1>
+    <p class="text-body-sm font-body-sm text-outline">
+     Phân tích hiệu suất Marketing trên các nền tảng đã kết nối cho hệ sinh thái phòng khám.
+    </p>
+   </div>
+   <div class="flex flex-wrap items-center gap-2.5">
+    <div class="flex items-center gap-2 bg-surface-container-lowest px-3 py-2 rounded-lg shadow-sm">
+     <span class="material-symbols-outlined text-outline text-[18px]">
+      calendar_today
+     </span>
+     <span class="text-label-md font-label-md text-on-surface">
+      30 ngày gần nhất (T10/2026)
+     </span>
+     <span class="material-symbols-outlined text-outline text-[16px]">
+      expand_more
+     </span>
+    </div>
+    <div class="flex items-center gap-2 bg-surface-container-lowest px-3 py-2 rounded-lg shadow-sm">
+     <span class="material-symbols-outlined text-outline text-[18px]">
+      compare_arrows
+     </span>
+     <span class="text-label-md font-label-md text-on-surface">
+      So sánh: Kỳ trước (T9/2026)
+     </span>
+     <span class="material-symbols-outlined text-outline text-[16px]">
+      expand_more
+     </span>
+    </div>
+    <div class="flex items-center gap-2 bg-surface-container-lowest px-3 py-2 rounded-lg shadow-sm">
+     <span class="material-symbols-outlined text-outline text-[18px]">
+      hub
+     </span>
+     <span class="text-label-md font-label-md text-on-surface">
+      Tất cả nguồn (5 kênh)
+     </span>
+     <span class="material-symbols-outlined text-outline text-[16px]">
+      expand_more
+     </span>
+    </div>
+    <button class="flex items-center gap-2 bg-surface-container-lowest text-on-surface hover:bg-surface-container px-3.5 py-2 rounded-lg shadow-sm transition-all duration-150" data-action="export-empty" type="button">
+     <span class="material-symbols-outlined text-primary text-[18px]">
+      download
+     </span>
+     <span class="text-label-md font-label-md font-medium">
+      Xuất dữ liệu
+     </span>
+    </button>
+   </div>
+  </section>
+  <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4" data-purpose="kpi-metrics-row">
+   <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden transition-all hover:shadow-md">
+    <div class="flex items-center justify-between mb-3">
+     <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+       <span class="material-symbols-outlined text-[20px]">
+        payments
+       </span>
+      </div>
+      <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">
+       Tổng chi tiêu quảng cáo
+      </span>
+     </div>
+     <button aria-label="Thông tin" class="text-outline-variant hover:text-outline transition-colors" data-action="help" title="Thông tin cách tính chi tiêu quảng cáo" type="button">
+      <span class="material-symbols-outlined text-[16px]">
+       info
+      </span>
+     </button>
+    </div>
+    <div class="my-2">
+     <div class="text-display-kpi font-display-kpi text-on-surface font-bold leading-none tracking-tight">
+      —
+     </div>
+    </div>
+    <div class="mt-3 pt-3 flex flex-col gap-1.5">
+     <div class="flex items-center gap-1.5">
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-outline">
+       Chưa có dữ liệu
+      </span>
+      <span class="text-body-sm font-body-sm text-outline">
+       Cần kết nối Google &amp; Meta Ads
+      </span>
+     </div>
+     <p class="text-label-sm font-label-sm text-outline-variant">
+      Theo dõi chi phí đa nền tảng thời gian thực
+     </p>
+    </div>
+   </div>
+   <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden transition-all hover:shadow-md">
+    <div class="flex items-center justify-between mb-3">
+     <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-tertiary">
+       <span class="material-symbols-outlined text-[20px]">
+        visibility
+       </span>
+      </div>
+      <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">
+       Lượt hiển thị
+      </span>
+     </div>
+     <button aria-label="Thông tin" class="text-outline-variant hover:text-outline transition-colors" data-action="help" title="Thông tin lượt hiển thị" type="button">
+      <span class="material-symbols-outlined text-[16px]">
+       info
+      </span>
+     </button>
+    </div>
+    <div class="my-2">
+     <div class="text-display-kpi font-display-kpi text-on-surface font-bold leading-none tracking-tight">
+      —
+     </div>
+    </div>
+    <div class="mt-3 pt-3 flex flex-col gap-1.5">
+     <div class="flex items-center gap-1.5">
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-outline">
+       Chưa có dữ liệu
+      </span>
+      <span class="text-body-sm font-body-sm text-outline">
+       0 kênh sẵn sàng
+      </span>
+     </div>
+     <p class="text-label-sm font-label-sm text-outline-variant">
+      Tổng hợp hiển thị từ Quảng cáo &amp; SEO
+     </p>
+    </div>
+   </div>
+   <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden transition-all hover:shadow-md">
+    <div class="flex items-center justify-between mb-3">
+     <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary">
+       <span class="material-symbols-outlined text-[20px]">
+        ads_click
+       </span>
+      </div>
+      <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">
+       Lượt nhấp
+      </span>
+     </div>
+     <button aria-label="Thông tin" class="text-outline-variant hover:text-outline transition-colors" data-action="help" title="Thông tin lượt nhấp chuột" type="button">
+      <span class="material-symbols-outlined text-[16px]">
+       info
+      </span>
+     </button>
+    </div>
+    <div class="my-2">
+     <div class="text-display-kpi font-display-kpi text-on-surface font-bold leading-none tracking-tight">
+      —
+     </div>
+    </div>
+    <div class="mt-3 pt-3 flex flex-col gap-1.5">
+     <div class="flex items-center gap-1.5">
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-outline">
+       Chưa có dữ liệu
+      </span>
+      <span class="text-body-sm font-body-sm text-outline">
+       Lưu lượng truy cập
+      </span>
+     </div>
+     <p class="text-label-sm font-label-sm text-outline-variant">
+      Tương tác nhấp chuột đa kênh
+     </p>
+    </div>
+   </div>
+   <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden transition-all hover:shadow-md">
+    <div class="flex items-center justify-between mb-3">
+     <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-primary-fixed flex items-center justify-center text-primary">
+       <span class="material-symbols-outlined text-[20px]">
+        verified_user
+       </span>
+      </div>
+      <span class="text-label-sm font-label-sm text-outline uppercase tracking-wider">
+       Lượt chuyển đổi
+      </span>
+     </div>
+     <button aria-label="Thông tin" class="text-outline-variant hover:text-outline transition-colors" data-action="help" title="Thông tin chuyển đổi đăng ký khám" type="button">
+      <span class="material-symbols-outlined text-[16px]">
+       info
+      </span>
+     </button>
+    </div>
+    <div class="my-2">
+     <div class="text-display-kpi font-display-kpi text-on-surface font-bold leading-none tracking-tight">
+      —
+     </div>
+    </div>
+    <div class="mt-3 pt-3 flex flex-col gap-1.5">
+     <div class="flex items-center gap-1.5">
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-surface-container text-outline">
+       Chưa có dữ liệu
+      </span>
+      <span class="text-body-sm font-body-sm text-outline">
+       Theo dõi mục tiêu khám
+      </span>
+     </div>
+     <p class="text-label-sm font-label-sm text-outline-variant">
+      Lượt đăng ký khám &amp; cuộc gọi Hotline
+     </p>
+    </div>
+   </div>
+  </section>
+  <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start" data-purpose="performance-trends-and-freshness">
+   <div class="lg:col-span-8 bg-surface-container-lowest p-6 rounded-xl shadow-sm flex flex-col space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+     <div>
+      <h2 class="text-headline-sm font-headline-sm text-on-surface">
+       Xu hướng hiệu suất Marketing
+      </h2>
+      <p class="text-body-sm font-body-sm text-outline">
+       So sánh các chỉ số theo thời gian và nguồn dữ liệu.
+      </p>
+     </div>
+     <div class="flex flex-wrap items-center gap-2">
+      <div class="inline-flex bg-surface-container p-0.5 rounded-lg text-label-sm font-label-sm">
+       <button class="px-2.5 py-1 rounded bg-surface-container-lowest text-primary font-semibold shadow-xs" data-action="metric-tab" type="button">
+        Chi tiêu
+       </button>
+       <button class="px-2.5 py-1 rounded text-outline hover:text-on-surface" data-action="metric-tab" type="button">
+        Lượt nhấp
+       </button>
+       <button class="px-2.5 py-1 rounded text-outline hover:text-on-surface" data-action="metric-tab" type="button">
+        Chuyển đổi
+       </button>
+       <button class="px-2.5 py-1 rounded text-outline hover:text-on-surface" data-action="metric-tab" type="button">
+        Tất cả
+       </button>
+      </div>
+      <div class="inline-flex bg-surface-container p-0.5 rounded-lg text-label-sm font-label-sm">
+       <button class="px-2 py-1 rounded bg-surface-container-lowest text-on-surface font-semibold shadow-xs" data-action="metric-tab" type="button">
+        Ngày
+       </button>
+       <button class="px-2 py-1 rounded text-outline hover:text-on-surface" data-action="metric-tab" type="button">
+        Tuần
+       </button>
+       <button class="px-2 py-1 rounded text-outline hover:text-on-surface" data-action="metric-tab" type="button">
+        Tháng
+       </button>
+      </div>
+     </div>
+    </div>
+    <div class="relative w-full h-80 rounded-xl bg-surface p-4 flex flex-col justify-between overflow-hidden">
+     <div class="absolute inset-0 p-6 flex flex-col justify-between pointer-events-none opacity-40">
+      <div class="flex items-center justify-between w-full">
+       <span class="text-[10px] font-mono text-outline">
+        100M
+       </span>
+       <div class="flex-1 ml-4 h-[1px] bg-surface-container-highest">
+       </div>
+      </div>
+      <div class="flex items-center justify-between w-full">
+       <span class="text-[10px] font-mono text-outline">
+        75M
+       </span>
+       <div class="flex-1 ml-4 h-[1px] bg-surface-container-highest">
+       </div>
+      </div>
+      <div class="flex items-center justify-between w-full">
+       <span class="text-[10px] font-mono text-outline">
+        50M
+       </span>
+       <div class="flex-1 ml-4 h-[1px] bg-surface-container-highest">
+       </div>
+      </div>
+      <div class="flex items-center justify-between w-full">
+       <span class="text-[10px] font-mono text-outline">
+        25M
+       </span>
+       <div class="flex-1 ml-4 h-[1px] bg-surface-container-highest">
+       </div>
+      </div>
+      <div class="flex items-center justify-between w-full">
+       <span class="text-[10px] font-mono text-outline">
+        0
+       </span>
+       <div class="flex-1 ml-4 h-[1px] bg-surface-container-highest">
+       </div>
+      </div>
+      <div class="flex justify-between pl-10 text-[10px] font-mono text-outline pt-2">
+       <span class="">
+        01/04
+       </span>
+       <span class="">
+        07/04
+       </span>
+       <span class="">
+        14/04
+       </span>
+       <span class="">
+        21/04
+       </span>
+       <span class="">
+        28/04
+       </span>
+      </div>
+     </div>
+     <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+      <svg class="w-full h-44 text-surface-container-highest" preserveaspectratio="none" viewBox="0 0 500 150">
+       <path d="M0,130 C120,110 180,90 250,95 C320,100 400,60 500,40" fill="none" stroke="currentColor" stroke-dasharray="6,6" stroke-width="2">
+       </path>
+       <path d="M0,140 C100,135 220,120 300,115 C380,110 440,80 500,70" fill="none" stroke="currentColor" stroke-dasharray="4,4" stroke-width="2">
+       </path>
+      </svg>
+     </div>
+     <div class="relative z-10 m-auto max-w-md text-center flex flex-col items-center p-6 bg-surface-container-lowest/90 backdrop-blur-sm rounded-xl shadow-sm">
+      <div class="w-12 h-12 rounded-full bg-primary-fixed text-primary flex items-center justify-center mb-3">
+       <span class="material-symbols-outlined text-[26px]">
+        query_stats
+       </span>
+      </div>
+      <h3 class="text-headline-sm font-headline-sm text-on-surface mb-1">
+       Chưa có dữ liệu để hiển thị biểu đồ
+      </h3>
+      <p class="text-body-sm font-body-sm text-outline mb-4">
+       Dữ liệu xu hướng sẽ tự động kích hoạt và cập nhật biểu đồ tương quan thời gian thực ngay khi kết nối nền tảng tiếp thị đầu tiên.
+      </p>
+      <a class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-label-md font-label-md shadow-sm transition-colors" href="/workspace/integrations">
+       <span class="material-symbols-outlined text-[18px]">
+        add_link
+       </span>
+       <span class="">
+        + Kết nối nền tảng ngay
+       </span>
+      </a>
+     </div>
+    </div>
+   </div>
+   <div class="lg:col-span-4 bg-surface-container-lowest p-6 rounded-xl shadow-sm flex flex-col space-y-5">
+    <div>
+     <div class="flex items-center justify-between">
+      <h2 class="text-headline-sm font-headline-sm text-on-surface">
+       Trạng thái dữ liệu &amp; Nguồn cấp
+      </h2>
+      <span class="text-label-sm font-label-sm text-primary font-semibold">
+       0/5 Sẵn sàng
+      </span>
+     </div>
+     <p class="text-body-sm font-body-sm text-outline mt-0.5">
+      Tình trạng sẵn sàng của các luồng dữ liệu kỳ báo cáo.
+     </p>
+    </div>
+    <div class="space-y-3">
+     <div class="flex items-center justify-between p-3 rounded-lg bg-surface">
+      <div class="flex items-center gap-3">
+       <div class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-secondary shadow-xs">
+        <span class="material-symbols-outlined text-[18px]">
+         analytics
+        </span>
+       </div>
+       <div>
+        <div class="text-label-md font-label-md text-on-surface font-semibold">
+         Google Analytics 4
+        </div>
+        <div class="text-label-sm font-label-sm text-outline">
+         Lưu lượng Web &amp; Chuyển đổi
+        </div>
+       </div>
+      </div>
+      <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-error-container text-on-error-container">
+       Chưa kết nối
+      </span>
+     </div>
+     <div class="flex items-center justify-between p-3 rounded-lg bg-surface">
+      <div class="flex items-center gap-3">
+       <div class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary shadow-xs">
+        <span class="material-symbols-outlined text-[18px]">
+         campaign
+        </span>
+       </div>
+       <div>
+        <div class="text-label-md font-label-md text-on-surface font-semibold">
+         Meta Ads
+        </div>
+        <div class="text-label-sm font-label-sm text-outline">
+         Facebook &amp; Instagram Ads
+        </div>
+       </div>
+      </div>
+      <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-error-container text-on-error-container">
+       Chưa kết nối
+      </span>
+     </div>
+     <div class="flex items-center justify-between p-3 rounded-lg bg-surface">
+      <div class="flex items-center gap-3">
+       <div class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-tertiary shadow-xs">
+        <span class="material-symbols-outlined text-[18px]">
+         troubleshoot
+        </span>
+       </div>
+       <div>
+        <div class="text-label-md font-label-md text-on-surface font-semibold">
+         Google Search Console
+        </div>
+        <div class="text-label-sm font-label-sm text-outline">
+         Tìm kiếm tự nhiên (SEO)
+        </div>
+       </div>
+      </div>
+      <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-error-container text-on-error-container">
+       Chưa kết nối
+      </span>
+     </div>
+     <div class="flex items-center justify-between p-3 rounded-lg bg-surface">
+      <div class="flex items-center gap-3">
+       <div class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-on-surface shadow-xs">
+        <span class="material-symbols-outlined text-[18px]">
+         play_circle
+        </span>
+       </div>
+       <div>
+        <div class="text-label-md font-label-md text-on-surface font-semibold">
+         TikTok Ads
+        </div>
+        <div class="text-label-sm font-label-sm text-outline">
+         Video &amp; Quảng cáo chuyển đổi
+        </div>
+       </div>
+      </div>
+      <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-error-container text-on-error-container">
+       Chưa kết nối
+      </span>
+     </div>
+     <div class="flex items-center justify-between p-3 rounded-lg bg-surface">
+      <div class="flex items-center gap-3">
+       <div class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-secondary shadow-xs">
+        <span class="material-symbols-outlined text-[18px]">
+         store
+        </span>
+       </div>
+       <div>
+        <div class="text-label-md font-label-md text-on-surface font-semibold">
+         Google Business Profile
+        </div>
+        <div class="text-label-sm font-label-sm text-outline">
+         Google Maps &amp; Đánh giá
+        </div>
+       </div>
+      </div>
+      <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-error-container text-on-error-container">
+       Chưa kết nối
+      </span>
+     </div>
+    </div>
+    <a class="inline-flex items-center gap-1.5 text-label-md font-label-md text-primary font-semibold hover:underline pt-1" href="/workspace/integrations">
+     <span class="">
+      Quản lý kết nối nền tảng
+     </span>
+     <span class="material-symbols-outlined text-[16px]">
+      arrow_forward
+     </span>
+    </a>
+    <div class="p-3.5 rounded-lg bg-surface-container text-on-surface space-y-1">
+     <div class="flex items-center gap-1.5 text-label-sm font-label-sm font-semibold text-primary">
+      <span class="material-symbols-outlined text-[16px]">
+       verified
+      </span>
+      <span class="">
+       Lưu ý về độ phủ dữ liệu
+      </span>
+     </div>
+     <p class="text-[12px] leading-relaxed text-outline">
+      Các chỉ số tổng hợp chỉ phản ánh chính xác khi tất cả nguồn tiếp thị được xác thực và đồng bộ hoàn tất.
+     </p>
+    </div>
+   </div>
+  </section>
+  <section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4" data-purpose="channel-breakdown-section">
+   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div>
+     <h2 class="text-headline-sm font-headline-sm text-on-surface">
+      Hiệu suất theo nền tảng
+     </h2>
+     <p class="text-body-sm font-body-sm text-outline">
+      Bảng phân bổ chi tiết số liệu theo từng kênh tiếp thị được phân loại.
+     </p>
+    </div>
+    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+     <button class="px-3 py-1.5 rounded-lg text-label-sm font-label-sm bg-primary-fixed text-on-primary-fixed-variant font-semibold" data-action="unavailable" type="button">
+      Tất cả (7)
+     </button>
+     <button class="px-3 py-1.5 rounded-lg text-label-sm font-label-sm bg-surface text-outline hover:text-on-surface" data-action="unavailable" type="button">
+      Quảng cáo trả phí (3)
+     </button>
+     <button class="px-3 py-1.5 rounded-lg text-label-sm font-label-sm bg-surface text-outline hover:text-on-surface" data-action="unavailable" type="button">
+      Tìm kiếm &amp; Website (2)
+     </button>
+     <button class="px-3 py-1.5 rounded-lg text-label-sm font-label-sm bg-surface text-outline hover:text-on-surface" data-action="unavailable" type="button">
+      Nội dung &amp; Xã hội (2)
+     </button>
+    </div>
+   </div>
+   <div class="overflow-x-auto">
+    <table class="w-full text-left">
+     <thead>
+      <tr class="bg-surface text-outline text-[11px] font-label-sm uppercase tracking-wider">
+       <th class="py-3 px-4 rounded-l-lg font-semibold">
+        Nền tảng
+       </th>
+       <th class="py-3 px-4 font-semibold">
+        Loại kênh
+       </th>
+       <th class="py-3 px-4 text-right font-semibold">
+        Chi tiêu (VND)
+       </th>
+       <th class="py-3 px-4 text-right font-semibold">
+        Lượt hiển thị
+       </th>
+       <th class="py-3 px-4 text-right font-semibold">
+        Lượt nhấp
+       </th>
+       <th class="py-3 px-4 text-right font-semibold">
+        CTR (%)
+       </th>
+       <th class="py-3 px-4 text-right font-semibold">
+        CPC (TB)
+       </th>
+       <th class="py-3 px-4 text-right font-semibold">
+        Chuyển đổi (Khám)
+       </th>
+       <th class="py-3 px-4 text-center rounded-r-lg font-semibold">
+        Thao tác
+       </th>
+      </tr>
+     </thead>
+     <tbody class="divide-y-0 text-table-data font-table-data text-on-surface">
+      <tr class="hover:bg-surface transition-colors">
+       <td class="py-3 px-4">
+        <div class="flex items-center gap-2.5">
+         <div class="w-7 h-7 rounded bg-surface-container flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[18px]">
+           ad
+          </span>
+         </div>
+         <div>
+          <div class="font-semibold text-on-surface">
+           Facebook Ads
+          </div>
+          <div class="text-[11px] text-outline">
+           Meta Business
+          </div>
+         </div>
+        </div>
+       </td>
+       <td class="py-3 px-4">
+        <span class="inline-flex px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-outline">
+         Quảng cáo trả phí
+        </span>
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-center">
+        <a class="inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:underline" href="/workspace/integrations">
+         <span class="">
+          Kết nối
+         </span>
+         <span class="material-symbols-outlined text-[14px]">
+          arrow_outward
+         </span>
+        </a>
+       </td>
+      </tr>
+      <tr class="hover:bg-surface transition-colors">
+       <td class="py-3 px-4">
+        <div class="flex items-center gap-2.5">
+         <div class="w-7 h-7 rounded bg-surface-container flex items-center justify-center text-secondary">
+          <span class="material-symbols-outlined text-[18px]">
+           search
+          </span>
+         </div>
+         <div>
+          <div class="font-semibold text-on-surface">
+           Google Ads
+          </div>
+          <div class="text-[11px] text-outline">
+           Search &amp; Performance Max
+          </div>
+         </div>
+        </div>
+       </td>
+       <td class="py-3 px-4">
+        <span class="inline-flex px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-outline">
+         Quảng cáo trả phí
+        </span>
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-center">
+        <a class="inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:underline" href="/workspace/integrations">
+         <span class="">
+          Kết nối
+         </span>
+         <span class="material-symbols-outlined text-[14px]">
+          arrow_outward
+         </span>
+        </a>
+       </td>
+      </tr>
+      <tr class="hover:bg-surface transition-colors">
+       <td class="py-3 px-4">
+        <div class="flex items-center gap-2.5">
+         <div class="w-7 h-7 rounded bg-surface-container flex items-center justify-center text-on-surface">
+          <span class="material-symbols-outlined text-[18px]">
+           play_arrow
+          </span>
+         </div>
+         <div>
+          <div class="font-semibold text-on-surface">
+           TikTok Ads
+          </div>
+          <div class="text-[11px] text-outline">
+           Video Chuyển đổi
+          </div>
+         </div>
+        </div>
+       </td>
+       <td class="py-3 px-4">
+        <span class="inline-flex px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-outline">
+         Quảng cáo trả phí
+        </span>
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-center">
+        <a class="inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:underline" href="/workspace/integrations">
+         <span class="">
+          Kết nối
+         </span>
+         <span class="material-symbols-outlined text-[14px]">
+          arrow_outward
+         </span>
+        </a>
+       </td>
+      </tr>
+      <tr class="hover:bg-surface transition-colors">
+       <td class="py-3 px-4">
+        <div class="flex items-center gap-2.5">
+         <div class="w-7 h-7 rounded bg-surface-container flex items-center justify-center text-tertiary">
+          <span class="material-symbols-outlined text-[18px]">
+           troubleshoot
+          </span>
+         </div>
+         <div>
+          <div class="font-semibold text-on-surface">
+           Google Search Console
+          </div>
+          <div class="text-[11px] text-outline">
+           Từ khóa Nhi khoa Organic
+          </div>
+         </div>
+        </div>
+       </td>
+       <td class="py-3 px-4">
+        <span class="inline-flex px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-outline">
+         Tìm kiếm &amp; SEO
+        </span>
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        0 ₫
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-center">
+        <a class="inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:underline" href="/workspace/integrations">
+         <span class="">
+          Kết nối
+         </span>
+         <span class="material-symbols-outlined text-[14px]">
+          arrow_outward
+         </span>
+        </a>
+       </td>
+      </tr>
+      <tr class="hover:bg-surface transition-colors">
+       <td class="py-3 px-4">
+        <div class="flex items-center gap-2.5">
+         <div class="w-7 h-7 rounded bg-surface-container flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-[18px]">
+           post_add
+          </span>
+         </div>
+         <div>
+          <div class="font-semibold text-on-surface">
+           Facebook Content
+          </div>
+          <div class="text-[11px] text-outline">
+           Fanpage Phòng khám KinderHealth
+          </div>
+         </div>
+        </div>
+       </td>
+       <td class="py-3 px-4">
+        <span class="inline-flex px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-outline">
+         Nội dung &amp; Xã hội
+        </span>
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        0 ₫
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-right font-table-numeric text-outline font-medium">
+        —
+       </td>
+       <td class="py-3 px-4 text-center">
+        <a class="inline-flex items-center gap-1 text-[12px] font-medium text-primary hover:underline" data-action="unavailable" href="#customer-dialog">
+         <span class="">
+          Xem chi tiết
+         </span>
+         <span class="material-symbols-outlined text-[14px]">
+          arrow_forward
+         </span>
+        </a>
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+  </section>
+  <section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm space-y-4" data-purpose="campaign-performance-section">
+   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+     <h2 class="text-headline-sm font-headline-sm text-on-surface">
+      Hiệu suất chiến dịch quảng cáo
+     </h2>
+     <p class="text-body-sm font-body-sm text-outline">
+      Chi tiết các chiến dịch trả phí từ Meta Ads, Google Ads và TikTok Ads.
+     </p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+     <div class="relative w-64">
+      <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-outline">
+       <span class="material-symbols-outlined text-[16px]">
+        search
+       </span>
+      </div>
+      <input aria-label="Tìm kiếm chiến dịch..." class="w-full pl-8 pr-3 py-1.5 text-body-sm font-body-sm bg-surface rounded-lg focus:outline-none focus:bg-surface-container-lowest text-on-surface placeholder:text-outline" id="marketing-field-0" placeholder="Tìm kiếm chiến dịch..." type="text"/>
+     </div>
+     <div class="flex items-center gap-1.5 bg-surface px-3 py-1.5 rounded-lg text-label-sm font-label-sm text-outline">
+      <span class="">
+       Tất cả nền tảng
+      </span>
+      <span class="material-symbols-outlined text-[14px]">
+       expand_more
+      </span>
+     </div>
+    </div>
+   </div>
+   <div class="overflow-x-auto">
+    <table class="w-full text-left">
+     <thead>
+      <tr class="bg-surface text-outline text-[11px] font-label-sm uppercase tracking-wider">
+       <th class="py-3 px-4 rounded-l-lg font-semibold">
+        Tên chiến dịch
+       </th>
+       <th class="py-3 px-4 font-semibold">
+        Nền tảng
+       </th>
+       <th class="py-3 px-4 font-semibold">
+        Trạng thái
+       </th>
+       <th class="py-3 px-4 text-right font-semibold">
+        Ngân sách / ngày
+       </th>
+       <th class="py-3 px-4 text-right font-semibold">
+        Chi tiêu
+       </th>
+       <th class="py-3 px-4 text-right font-semibold">
+        Lượt nhấp
+       </th>
+       <th class="py-3 px-4 text-right font-semibold">
+        CTR
+       </th>
+       <th class="py-3 px-4 text-right font-semibold">
+        Chuyển đổi
+       </th>
+       <th class="py-3 px-4 text-right rounded-r-lg font-semibold">
+        CPA (TB)
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+      <tr>
+       <td class="py-12 px-4 text-center" colspan="9">
+        <div class="max-w-md mx-auto flex flex-col items-center">
+         <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-outline mb-3">
+          <span class="material-symbols-outlined text-[24px]">
+           folder_off
+          </span>
+         </div>
+         <h4 class="text-label-md font-label-md font-semibold text-on-surface mb-1">
+          Chưa có dữ liệu chiến dịch quảng cáo
+         </h4>
+         <p class="text-body-sm font-body-sm text-outline mb-4">
+          Kết nối tài khoản Meta Ads hoặc Google Ads để đồng bộ danh sách chiến dịch và chỉ số hiệu suất chi tiết.
+         </p>
+         <a class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-label-md font-label-md shadow-sm transition-colors" href="/workspace/integrations">
+          <span class="material-symbols-outlined text-[18px]">
+           add
+          </span>
+          <span class="">
+           Kết nối tài khoản quảng cáo
+          </span>
+         </a>
+        </div>
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+  </section>
+  <section class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2" data-purpose="quick-reporting-actions">
+   <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm flex items-center justify-between gap-4 transition-all hover:shadow-md">
+    <div class="flex items-start gap-3.5">
+     <div class="w-10 h-10 rounded-lg bg-primary-fixed text-primary flex items-center justify-center flex-shrink-0">
+      <span class="material-symbols-outlined text-[22px]">
+       description
+      </span>
+     </div>
+     <div>
+      <h3 class="text-headline-sm font-headline-sm text-on-surface">
+       Tạo báo cáo Marketing T10/2026
+      </h3>
+      <p class="text-body-sm font-body-sm text-outline mt-0.5">
+       Tự động tổng hợp dữ liệu các kênh thành báo cáo gửi ban giám đốc phòng khám.
+      </p>
+     </div>
+    </div>
+    <a class="px-3.5 py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-label-md font-semibold flex-shrink-0 transition-colors" href="/workspace/reports?create=1">
+     Tạo báo cáo
+    </a>
+   </div>
+   <div class="bg-surface-container-lowest p-5 rounded-xl shadow-sm flex items-center justify-between gap-4 transition-all hover:shadow-md">
+    <div class="flex items-start gap-3.5">
+     <div class="w-10 h-10 rounded-lg bg-surface-container text-secondary flex items-center justify-center flex-shrink-0">
+      <span class="material-symbols-outlined text-[22px]">
+       insights
+      </span>
+     </div>
+     <div>
+      <h3 class="text-headline-sm font-headline-sm text-on-surface">
+       Khám phá Phân tích chuyên sâu
+      </h3>
+      <p class="text-body-sm font-body-sm text-outline mt-0.5">
+       Xem báo cáo chuyên biệt về SEO Từ khóa Nhi khoa, Facebook Content hoặc Google Ads.
+      </p>
+     </div>
+    </div>
+    <a class="px-3.5 py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high text-label-md font-label-md font-semibold flex-shrink-0 transition-colors" href="/workspace/channels">
+     Xem phân tích kênh
+    </a>
+   </div>
+  </section>
+ </div>
+</main>
+
+{% endblock %}

@@ -23,7 +23,32 @@
 .published-dashboard .report-submenu { margin:6px 0 10px 21px; border-left:1px solid #dce5f2; }
 .published-dashboard .report-submenu a { padding:8px; color:#475569; font-size:.875rem; line-height:1.5; }
 .published-dashboard .report-nav-toggle { color:#8090a7; }
-.published-dashboard .report-nav-link[aria-disabled=true] { opacity:.65; }
+.published-dashboard .report-nav-link[aria-disabled=true] { opacity:1; }
+/* Published Viewer uses a light sidebar, including brand, submenus and session controls. */
+.published-dashboard .sidebar-app-name { color:#172b48; font-size:1rem; }
+.published-dashboard .sidebar-client-name { color:#475569; white-space:normal; overflow:visible; overflow-wrap:anywhere; line-height:1.5; margin-top:5px; }
+.published-dashboard .sidebar-logo-wrap { flex-shrink:0; background:#fff; box-shadow:none; }
+.published-dashboard #dashboard-sidebar .sidebar-logo-wrap { position:relative; width:40px; height:40px; overflow:hidden; }
+.published-dashboard #dashboard-sidebar .sidebar-logo-wrap img { position:absolute; width:176px; height:176px; max-width:none; left:-2px; top:-68px; padding:0; background:transparent; border-radius:0; }
+.published-dashboard .sidebar-section-label { color:#475569; }
+.published-dashboard .header-status-pill { color:#475569; }
+.published-dashboard .sidebar-footer { background:#f8fafd; border-top:1px solid var(--report-line); }
+.published-dashboard .sidebar-footer>div:first-child { color:#475569; }
+.published-dashboard .snapshot-session { flex-wrap:wrap; gap:8px 12px; }
+.published-dashboard .snapshot-session form { margin:0; }
+.published-dashboard .snapshot-session :is(a,button) { color:#2259ca; padding:5px 0; font-weight:600; }
+.published-dashboard .snapshot-session button { color:#9b2335; }
+.published-dashboard .snapshot-session :is(a,button):hover { text-decoration:underline; }
+.published-dashboard .sidebar-scroll { scrollbar-color:#94a3b8 transparent; }
+.published-dashboard .sidebar-unavailable { display:block; color:#475569; font-size:.6875rem; font-weight:400; line-height:1.4; }
+.published-dashboard .report-nav-link[aria-disabled=true]:hover { background:#f8fafd; color:#475569; }
+.published-dashboard .report-nav-toggle { color:#475569; }
+.published-dashboard .report-nav-toggle:disabled { visibility:hidden; }
+.published-dashboard .report-nav-link:not([aria-disabled=true]):hover,
+.published-dashboard .report-submenu a:hover,
+.published-dashboard .report-nav-toggle:not(:disabled):hover { background:#edf3ff; color:#2259ca; }
+.published-dashboard .report-submenu .material-symbols-outlined { color:#475569; }
+.published-dashboard .dashboard-sidebar nav a[aria-current=location] { background:#edf3ff; color:#2259ca; }
 .published-dashboard .dashboard-header { left:240px; padding:0 32px; background:#ffffffed; border-color:var(--report-line); }
 .published-dashboard .dashboard-header .header-filters { gap:16px; }
 .published-dashboard :is(#date-range,#data-source) { border:1px solid var(--report-line); background:#fff; box-shadow:none; border-radius:8px; color:#475569; font-size:.875rem; }

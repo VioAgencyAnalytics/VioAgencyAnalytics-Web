@@ -1,0 +1,938 @@
+{% extends "customer/shell.html" %}
+{% block content %}
+<main class="customer-page p-8 space-y-6">
+ <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+  <div>
+   <h1 class="font-display text-2xl font-bold text-slate-900 tracking-tight">
+    Phân tích kênh
+   </h1>
+   <p class="text-sm text-slate-500 mt-1">
+    Khám phá và theo dõi hiệu suất Marketing theo từng nền tảng đã kết nối.
+   </p>
+  </div>
+  <div class="flex flex-wrap items-center gap-3">
+   <div class="relative w-64">
+    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-slate-400 pointer-events-none">
+     search
+    </span>
+    <input aria-label="Tìm kiếm kênh Marketing..." class="w-full pl-9 pr-3 py-2 bg-white text-slate-800 placeholder:text-slate-400 text-xs border border-slate-200 rounded-xl shadow-xs focus:outline-none focus:ring-1 focus:ring-[#D9232E] focus:border-[#D9232E] transition-all" id="channelSearch" placeholder="Tìm kiếm kênh Marketing..." type="text"/>
+   </div>
+   <div class="relative">
+    <button class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 shadow-xs hover:bg-slate-50 transition-colors text-xs font-semibold" data-action="period" type="button">
+     <span class="material-symbols-outlined text-[17px] text-[#D9232E]">
+      calendar_today
+     </span>
+     <span>
+      30 ngày gần nhất (T10/2026)
+     </span>
+     <span class="material-symbols-outlined text-[16px] text-slate-400">
+      expand_more
+     </span>
+    </button>
+   </div>
+   <a class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors text-xs font-semibold shadow-xs" href="/workspace/integrations">
+    <span class="material-symbols-outlined text-[18px] text-slate-500">
+     cable
+    </span>
+    <span>
+     Quản lý kết nối
+    </span>
+   </a>
+  </div>
+ </div>
+ <section class="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative overflow-hidden">
+  <div class="flex items-start sm:items-center gap-3.5 z-10 min-w-0">
+   <div class="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 text-orange-600 flex items-center justify-center flex-shrink-0">
+    <span class="material-symbols-outlined text-[22px]">
+     sync
+    </span>
+   </div>
+   <div class="min-w-0">
+    <div class="flex items-center gap-2 flex-wrap">
+     <h2 class="font-display text-sm font-bold text-slate-900">
+      Tình trạng dữ liệu theo kênh
+     </h2>
+     <span class="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-600 text-[11px] font-medium">
+      Đồng bộ tự động định kỳ 15 phút
+     </span>
+    </div>
+    <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+     Chưa có dữ liệu phân tích chi tiết cho chu kỳ này. Kết nối hoặc kích hoạt đồng bộ để bắt đầu xem báo cáo.
+    </p>
+   </div>
+  </div>
+  <div class="flex flex-wrap items-center gap-4 z-10 w-full lg:w-auto justify-between lg:justify-end border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-100">
+   <div class="flex flex-wrap items-center gap-3 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 font-medium">
+    <span class="flex items-center gap-1.5">
+     <span class="w-2 h-2 rounded-full bg-slate-400">
+     </span>
+     Chưa kết nối (9)
+    </span>
+    <span class="text-slate-300">
+     ·
+    </span>
+    <span class="flex items-center gap-1.5">
+     <span class="w-2 h-2 rounded-full bg-blue-500">
+     </span>
+     Đang đồng bộ (0)
+    </span>
+    <span class="text-slate-300">
+     ·
+    </span>
+    <span class="flex items-center gap-1.5">
+     <span class="w-2 h-2 rounded-full bg-emerald-500">
+     </span>
+     Có dữ liệu (0)
+    </span>
+    <span class="text-slate-300">
+     ·
+    </span>
+    <span class="flex items-center gap-1.5">
+     <span class="w-2 h-2 rounded-full bg-amber-500">
+     </span>
+     Cần kết nối lại (0)
+    </span>
+   </div>
+   <a class="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#D9232E] hover:bg-[#b91c1c] text-white text-xs font-semibold shadow-xs transition-colors flex-shrink-0" href="/workspace/integrations">
+    <span class="material-symbols-outlined text-[17px]">
+     add_link
+    </span>
+    <span>
+     + Kết nối nền tảng
+    </span>
+   </a>
+  </div>
+ </section>
+ <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+  <div class="inline-flex p-1 bg-slate-200/70 rounded-xl overflow-x-auto max-w-full scrollbar-none" id="categoryTabs">
+   <button class="category-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white text-slate-900 shadow-xs" data-category="all" type="button">
+    <span>
+     Tất cả
+    </span>
+    <span class="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700 text-[10px]">
+     9
+    </span>
+   </button>
+   <button class="category-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition-all" data-category="ads" type="button">
+    <span>
+     Quảng cáo
+    </span>
+    <span class="px-1.5 py-0.2 rounded-full bg-slate-300/60 text-slate-700 text-[10px]">
+     3
+    </span>
+   </button>
+   <button class="category-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition-all" data-category="social" type="button">
+    <span>
+     Mạng xã hội
+    </span>
+    <span class="px-1.5 py-0.2 rounded-full bg-slate-300/60 text-slate-700 text-[10px]">
+     1
+    </span>
+   </button>
+   <button class="category-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition-all" data-category="seo-web" type="button">
+    <span>
+     SEO &amp; Website
+    </span>
+    <span class="px-1.5 py-0.2 rounded-full bg-slate-300/60 text-slate-700 text-[10px]">
+     3
+    </span>
+   </button>
+   <button class="category-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition-all" data-category="video" type="button">
+    <span>
+     Video
+    </span>
+    <span class="px-1.5 py-0.2 rounded-full bg-slate-300/60 text-slate-700 text-[10px]">
+     1
+    </span>
+   </button>
+   <button class="category-btn flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 transition-all" data-category="local" type="button">
+    <span>
+     Doanh nghiệp địa phương
+    </span>
+    <span class="px-1.5 py-0.2 rounded-full bg-slate-300/60 text-slate-700 text-[10px]">
+     1
+    </span>
+   </button>
+  </div>
+  <div class="flex items-center gap-2 self-start md:self-auto">
+   <label class="text-xs text-slate-500 font-medium whitespace-nowrap" for="statusFilter">
+    Trạng thái dữ liệu:
+   </label>
+   <div class="relative">
+    <select aria-label="statusFilter" class="appearance-none bg-white text-slate-800 text-xs font-medium pl-3 pr-8 py-1.5 rounded-xl border border-slate-200 shadow-xs focus:ring-1 focus:ring-[#D9232E] focus:border-[#D9232E] cursor-pointer" id="statusFilter">
+     <option>
+      Tất cả trạng thái
+     </option>
+     <option>
+      Chưa kết nối (9)
+     </option>
+     <option>
+      Đang đồng bộ (0)
+     </option>
+     <option>
+      Có dữ liệu (0)
+     </option>
+    </select>
+    <span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-[16px] text-slate-400 pointer-events-none">
+     expand_more
+    </span>
+   </div>
+  </div>
+ </div>
+ <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="channelsGrid">
+  <article class="channel-card flex flex-col justify-between bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:shadow-md hover:border-slate-300 transition-all group" data-category="ads" data-channel-name="facebook ads" data-status="unconnected" id="facebook-ads">
+   <div>
+    <div class="flex items-start justify-between gap-3">
+     <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 text-[#1877F2] flex items-center justify-center flex-shrink-0 shadow-xs">
+       <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z">
+        </path>
+       </svg>
+      </div>
+      <div>
+       <span class="inline-block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        Quảng cáo
+       </span>
+       <h3 class="font-display text-sm font-bold text-slate-900 group-hover:text-[#D9232E] transition-colors">
+        Facebook Ads
+       </h3>
+      </div>
+     </div>
+     <span class="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-medium flex items-center gap-1 whitespace-nowrap">
+      <span class="w-1.5 h-1.5 rounded-full bg-slate-400">
+      </span>
+      Chưa kết nối
+     </span>
+    </div>
+    <p class="text-xs text-slate-500 mt-3.5 leading-relaxed min-h-[36px]">
+     Phân tích chiến dịch, chi tiêu và hiệu suất quảng cáo Facebook, Instagram.
+    </p>
+    <div class="flex flex-wrap gap-1.5 mt-3">
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Chi phí &amp; ROAS
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Lượt click &amp; CTR
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Chuyển đổi đặt hẹn
+     </span>
+    </div>
+    <div class="mt-4 p-3 rounded-xl bg-slate-50/80 border border-slate-100 grid grid-cols-3 gap-2 text-center">
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Chi tiêu
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Clicks
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       ROAS
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="mt-4 pt-3 border-t border-slate-100">
+    <a class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-[#D9232E] text-slate-700 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all group/btn" href="/workspace/channels/facebook-ads">
+     Xem báo cáo →
+    </a>
+   </div>
+  </article>
+  <article class="channel-card flex flex-col justify-between bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:shadow-md hover:border-slate-300 transition-all group" data-category="ads" data-channel-name="tiktok ads" data-status="unconnected" id="tiktok-ads">
+   <div>
+    <div class="flex items-start justify-between gap-3">
+     <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-slate-900 text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+       <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z">
+        </path>
+       </svg>
+      </div>
+      <div>
+       <span class="inline-block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        Quảng cáo
+       </span>
+       <h3 class="font-display text-sm font-bold text-slate-900 group-hover:text-[#D9232E] transition-colors">
+        TikTok Ads
+       </h3>
+      </div>
+     </div>
+     <span class="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-medium flex items-center gap-1 whitespace-nowrap">
+      <span class="w-1.5 h-1.5 rounded-full bg-slate-400">
+      </span>
+      Chưa kết nối
+     </span>
+    </div>
+    <p class="text-xs text-slate-500 mt-3.5 leading-relaxed min-h-[36px]">
+     Theo dõi hiệu suất chiến dịch và quảng cáo video ngắn TikTok.
+    </p>
+    <div class="flex flex-wrap gap-1.5 mt-3">
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Spark Ads &amp; Views
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Chi tiêu &amp; CPC
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Lượt chuyển đổi
+     </span>
+    </div>
+    <div class="mt-4 p-3 rounded-xl bg-slate-50/80 border border-slate-100 grid grid-cols-3 gap-2 text-center">
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Chi tiêu
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Video Views
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Chuyển đổi
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="mt-4 pt-3 border-t border-slate-100">
+    <a class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-[#D9232E] text-slate-700 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all group/btn" href="/workspace/channels/tiktok">
+     Xem báo cáo →
+    </a>
+   </div>
+  </article>
+  <article class="channel-card flex flex-col justify-between bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:shadow-md hover:border-slate-300 transition-all group" data-category="ads" data-channel-name="google ads" data-status="unconnected" id="google-ads">
+   <div>
+    <div class="flex items-start justify-between gap-3">
+     <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center flex-shrink-0 shadow-xs">
+       <svg class="w-6 h-6" viewBox="0 0 24 24">
+        <path d="M12.017 10.985v2.85h4.16c-.167 1.085-1.27 3.178-4.16 3.178-2.505 0-4.55-2.078-4.55-4.636s2.045-4.636 4.55-4.636c1.428 0 2.38.61 2.927 1.134l2.253-2.17C15.753 5.342 14.045 4.5 12.017 4.5 7.864 4.5 4.5 7.864 4.5 12.017s3.364 7.517 7.517 7.517c4.34 0 7.22-3.048 7.22-7.348 0-.494-.053-.872-.119-1.2h-7.1v-.001z" fill="#4285F4">
+        </path>
+       </svg>
+      </div>
+      <div>
+       <span class="inline-block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        Quảng cáo
+       </span>
+       <h3 class="font-display text-sm font-bold text-slate-900 group-hover:text-[#D9232E] transition-colors">
+        Google Ads
+       </h3>
+      </div>
+     </div>
+     <span class="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-medium flex items-center gap-1 whitespace-nowrap">
+      <span class="w-1.5 h-1.5 rounded-full bg-slate-400">
+      </span>
+      Chưa kết nối
+     </span>
+    </div>
+    <p class="text-xs text-slate-500 mt-3.5 leading-relaxed min-h-[36px]">
+     Đánh giá chi phí, lượt nhấp và hiệu quả chiến dịch Google Search, PMax.
+    </p>
+    <div class="flex flex-wrap gap-1.5 mt-3">
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Từ khóa đấu thầu
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Tỷ lệ hiển thị &amp; CTR
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Chi phí / Chuyển đổi
+     </span>
+    </div>
+    <div class="mt-4 p-3 rounded-xl bg-slate-50/80 border border-slate-100 grid grid-cols-3 gap-2 text-center">
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Chi tiêu
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       CTR
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Chuyển đổi
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="mt-4 pt-3 border-t border-slate-100">
+    <a class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-[#D9232E] text-slate-700 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all group/btn" href="/workspace/channels/google-ads">
+     Xem báo cáo →
+    </a>
+   </div>
+  </article>
+  <article class="channel-card flex flex-col justify-between bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:shadow-md hover:border-slate-300 transition-all group" data-category="social" data-channel-name="facebook content" data-status="unconnected" id="facebook-content">
+   <div>
+    <div class="flex items-start justify-between gap-3">
+     <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 text-[#0084FF] flex items-center justify-center flex-shrink-0 shadow-xs">
+       <span class="material-symbols-outlined text-[24px]">
+        post_add
+       </span>
+      </div>
+      <div>
+       <span class="inline-block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        Mạng xã hội
+       </span>
+       <h3 class="font-display text-sm font-bold text-slate-900 group-hover:text-[#D9232E] transition-colors">
+        Facebook Content
+       </h3>
+      </div>
+     </div>
+     <span class="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-medium flex items-center gap-1 whitespace-nowrap">
+      <span class="w-1.5 h-1.5 rounded-full bg-slate-400">
+      </span>
+      Chưa kết nối
+     </span>
+    </div>
+    <p class="text-xs text-slate-500 mt-3.5 leading-relaxed min-h-[36px]">
+     Theo dõi bài đăng Fanpage KinderHealth, tương tác và hiệu suất nội dung.
+    </p>
+    <div class="flex flex-wrap gap-1.5 mt-3">
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Tiếp cận Fanpage
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Tương tác &amp; Chia sẻ
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Tăng trưởng theo dõi
+     </span>
+    </div>
+    <div class="mt-4 p-3 rounded-xl bg-slate-50/80 border border-slate-100 grid grid-cols-3 gap-2 text-center">
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Bài viết
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Tương tác
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Độ phủ
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="mt-4 pt-3 border-t border-slate-100">
+    <a class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-[#D9232E] text-slate-700 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all group/btn" href="/workspace/channels/facebook-content">
+     Xem báo cáo →
+    </a>
+   </div>
+  </article>
+  <article class="channel-card flex flex-col justify-between bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:shadow-md hover:border-slate-300 transition-all group" data-category="seo-web" data-channel-name="seo &amp; keywords" data-status="unconnected" id="seo-keywords">
+   <div>
+    <div class="flex items-start justify-between gap-3">
+     <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-orange-50 border border-orange-100 text-orange-600 flex items-center justify-center flex-shrink-0 shadow-xs">
+       <span class="material-symbols-outlined text-[24px]">
+        troubleshoot
+       </span>
+      </div>
+      <div>
+       <span class="inline-block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        SEO &amp; Website
+       </span>
+       <h3 class="font-display text-sm font-bold text-slate-900 group-hover:text-[#D9232E] transition-colors">
+        SEO &amp; Keywords
+       </h3>
+      </div>
+     </div>
+     <span class="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-medium flex items-center gap-1 whitespace-nowrap">
+      <span class="w-1.5 h-1.5 rounded-full bg-slate-400">
+      </span>
+      Chưa kết nối
+     </span>
+    </div>
+    <p class="text-xs text-slate-500 mt-3.5 leading-relaxed min-h-[36px]">
+     Theo dõi thứ hạng từ khóa nhi khoa, xu hướng SEO và hiệu quả tìm kiếm.
+    </p>
+    <div class="flex flex-wrap gap-1.5 mt-3">
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Thứ hạng Top 5, 10, 30
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Biến động vị trí
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Khối lượng tìm kiếm
+     </span>
+    </div>
+    <div class="mt-4 p-3 rounded-xl bg-slate-50/80 border border-slate-100 grid grid-cols-3 gap-2 text-center">
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Top 10
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Điểm hiển thị
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Từ khóa theo dõi
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="mt-4 pt-3 border-t border-slate-100">
+    <a class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-[#D9232E] text-slate-700 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all group/btn" href="/workspace/channels/seo">
+     Xem báo cáo →
+    </a>
+   </div>
+  </article>
+  <article class="channel-card flex flex-col justify-between bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:shadow-md hover:border-slate-300 transition-all group" data-category="seo-web" data-channel-name="google analytics 4" data-status="unconnected" id="ga4">
+   <div>
+    <div class="flex items-start justify-between gap-3">
+     <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-amber-50 border border-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 shadow-xs">
+       <span class="material-symbols-outlined text-[24px]">
+        analytics
+       </span>
+      </div>
+      <div>
+       <span class="inline-block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        SEO &amp; Website
+       </span>
+       <h3 class="font-display text-sm font-bold text-slate-900 group-hover:text-[#D9232E] transition-colors">
+        Google Analytics 4
+       </h3>
+      </div>
+     </div>
+     <span class="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-medium flex items-center gap-1 whitespace-nowrap">
+      <span class="w-1.5 h-1.5 rounded-full bg-slate-400">
+      </span>
+      Chưa kết nối
+     </span>
+    </div>
+    <p class="text-xs text-slate-500 mt-3.5 leading-relaxed min-h-[36px]">
+     Phân tích người dùng, phiên truy cập và hành vi đặt lịch khám trên website.
+    </p>
+    <div class="flex flex-wrap gap-1.5 mt-3">
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Người dùng &amp; Phiên
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Nguồn truy cập
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Phễu đặt hẹn
+     </span>
+    </div>
+    <div class="mt-4 p-3 rounded-xl bg-slate-50/80 border border-slate-100 grid grid-cols-3 gap-2 text-center">
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Người dùng
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Phiên
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Tỷ lệ tương tác
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="mt-4 pt-3 border-t border-slate-100">
+    <a class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-[#D9232E] text-slate-700 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all group/btn" href="/workspace/channels/ga4">
+     Xem báo cáo →
+    </a>
+   </div>
+  </article>
+  <article class="channel-card flex flex-col justify-between bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:shadow-md hover:border-slate-300 transition-all group" data-category="seo-web" data-channel-name="google search console" data-status="unconnected" id="gsc">
+   <div>
+    <div class="flex items-start justify-between gap-3">
+     <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-cyan-50 border border-cyan-100 text-cyan-700 flex items-center justify-center flex-shrink-0 shadow-xs">
+       <span class="material-symbols-outlined text-[24px]">
+        manage_search
+       </span>
+      </div>
+      <div>
+       <span class="inline-block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        SEO &amp; Website
+       </span>
+       <h3 class="font-display text-sm font-bold text-slate-900 group-hover:text-[#D9232E] transition-colors">
+        Google Search Console
+       </h3>
+      </div>
+     </div>
+     <span class="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-medium flex items-center gap-1 whitespace-nowrap">
+      <span class="w-1.5 h-1.5 rounded-full bg-slate-400">
+      </span>
+      Chưa kết nối
+     </span>
+    </div>
+    <p class="text-xs text-slate-500 mt-3.5 leading-relaxed min-h-[36px]">
+     Theo dõi lượt nhấp, lượt hiển thị và vị trí tìm kiếm tự nhiên của KinderHealth.
+    </p>
+    <div class="flex flex-wrap gap-1.5 mt-3">
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Tổng Clicks &amp; Hiển thị
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      CTR trung bình
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Vị trí SERP TB
+     </span>
+    </div>
+    <div class="mt-4 p-3 rounded-xl bg-slate-50/80 border border-slate-100 grid grid-cols-3 gap-2 text-center">
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Clicks
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Hiển thị
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Vị trí TB
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="mt-4 pt-3 border-t border-slate-100">
+    <a class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-[#D9232E] text-slate-700 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all group/btn" href="/workspace/channels/gsc">
+     Xem báo cáo →
+    </a>
+   </div>
+  </article>
+  <article class="channel-card flex flex-col justify-between bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:shadow-md hover:border-slate-300 transition-all group" data-category="video" data-channel-name="youtube" data-status="unconnected" id="youtube">
+   <div>
+    <div class="flex items-start justify-between gap-3">
+     <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-red-50 border border-red-100 text-[#FF0000] flex items-center justify-center flex-shrink-0 shadow-xs">
+       <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z">
+        </path>
+       </svg>
+      </div>
+      <div>
+       <span class="inline-block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        Video
+       </span>
+       <h3 class="font-display text-sm font-bold text-slate-900 group-hover:text-[#D9232E] transition-colors">
+        YouTube
+       </h3>
+      </div>
+     </div>
+     <span class="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-medium flex items-center gap-1 whitespace-nowrap">
+      <span class="w-1.5 h-1.5 rounded-full bg-slate-400">
+      </span>
+      Chưa kết nối
+     </span>
+    </div>
+    <p class="text-xs text-slate-500 mt-3.5 leading-relaxed min-h-[36px]">
+     Phân tích hiệu suất video, thời gian xem và tương tác tư vấn sức khỏe nhi khoa.
+    </p>
+    <div class="flex flex-wrap gap-1.5 mt-3">
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Lượt xem video
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Thời lượng xem TB
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Tăng trưởng Subscribe
+     </span>
+    </div>
+    <div class="mt-4 p-3 rounded-xl bg-slate-50/80 border border-slate-100 grid grid-cols-3 gap-2 text-center">
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Lượt xem
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Thời gian xem
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Đăng ký mới
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="mt-4 pt-3 border-t border-slate-100">
+    <a class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-[#D9232E] text-slate-700 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all group/btn" href="/workspace/channels/youtube">
+     Xem báo cáo →
+    </a>
+   </div>
+  </article>
+  <article class="channel-card flex flex-col justify-between bg-white rounded-2xl p-5 border border-slate-200 shadow-xs hover:shadow-md hover:border-slate-300 transition-all group" data-category="local" data-channel-name="google business profile" data-status="unconnected" id="gbp">
+   <div>
+    <div class="flex items-start justify-between gap-3">
+     <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 shadow-xs">
+       <span class="material-symbols-outlined text-[24px]">
+        storefront
+       </span>
+      </div>
+      <div>
+       <span class="inline-block text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        Doanh nghiệp địa phương
+       </span>
+       <h3 class="font-display text-sm font-bold text-slate-900 group-hover:text-[#D9232E] transition-colors">
+        Google Business Profile
+       </h3>
+      </div>
+     </div>
+     <span class="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-[10px] font-medium flex items-center gap-1 whitespace-nowrap">
+      <span class="w-1.5 h-1.5 rounded-full bg-slate-400">
+      </span>
+      Chưa kết nối
+     </span>
+    </div>
+    <p class="text-xs text-slate-500 mt-3.5 leading-relaxed min-h-[36px]">
+     Theo dõi hiệu suất hồ sơ phòng khám trên Google Search &amp; Maps (Q.7 &amp; Tân Bình).
+    </p>
+    <div class="flex flex-wrap gap-1.5 mt-3">
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Cuộc gọi Hotline
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Chỉ đường Maps
+     </span>
+     <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium">
+      Đánh giá &amp; Reviews
+     </span>
+    </div>
+    <div class="mt-4 p-3 rounded-xl bg-slate-50/80 border border-slate-100 grid grid-cols-3 gap-2 text-center">
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Cuộc gọi
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Lượt chỉ đường
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+     <div>
+      <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
+       Đánh giá TB
+      </div>
+      <div class="font-display text-base font-bold text-slate-700 mt-0.5">
+       —
+      </div>
+      <div class="text-[10px] text-slate-400">
+       Chưa có dữ liệu
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="mt-4 pt-3 border-t border-slate-100">
+    <a class="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-[#D9232E] text-slate-700 hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all group/btn" href="/workspace/channels/business-profile">
+     Xem báo cáo →
+    </a>
+   </div>
+  </article>
+ </div>
+ <section class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col md:flex-row items-center justify-between gap-5">
+  <div class="flex items-center gap-4">
+   <div class="w-12 h-12 rounded-xl bg-red-50 border border-red-100 text-[#D9232E] flex items-center justify-center flex-shrink-0">
+    <span class="material-symbols-outlined text-[26px]">
+     insights
+    </span>
+   </div>
+   <div>
+    <h4 class="font-display text-sm font-bold text-slate-900">
+     Bắt đầu phân tích các kênh Marketing
+    </h4>
+    <p class="text-xs text-slate-500 mt-0.5">
+     Kết nối tài khoản Marketing để kích hoạt báo cáo và số liệu phân tích chuyên sâu theo từng nền tảng.
+    </p>
+   </div>
+  </div>
+  <a class="px-5 py-2.5 rounded-xl bg-[#D9232E] hover:bg-[#b91c1c] text-white text-xs font-semibold flex items-center gap-2 shadow-xs transition-colors flex-shrink-0" href="/workspace/integrations">
+   <span class="material-symbols-outlined text-[18px]">
+    add_link
+   </span>
+   <span>
+    Kết nối nền tảng ngay
+   </span>
+  </a>
+ </section>
+ <a class="customer-secondary" href="/workspace/channels/overview">
+  Mở báo cáo tổng quan hiện có →
+ </a>
+</main>
+
+{% endblock %}

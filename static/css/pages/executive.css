@@ -1,4 +1,31 @@
 /* Presentation refinements only. Published values and source copy stay intact. */
+/* Light blue navigation for the sample dashboard. */
+body:not(.published-dashboard) .dashboard-sidebar {
+  background:#f1f5fb; border-right:1px solid #dce5f0; box-shadow:2px 0 12px #172b4806;
+}
+body:not(.published-dashboard) .sidebar-brand { background:#f8faff; border-color:#dce5f0; }
+body:not(.published-dashboard) .sidebar-logo-wrap { background:#fff; box-shadow:0 1px 4px #172b4810; }
+body:not(.published-dashboard) .sidebar-app-name { color:#172b48; }
+body:not(.published-dashboard) .sidebar-client-name,
+body:not(.published-dashboard) .sidebar-section-label { color:#52657e; }
+body:not(.published-dashboard) .sidebar-footer { background:#eaf0f8; border-color:#dce5f0; }
+body:not(.published-dashboard) .sidebar-footer>div { color:#52657e; }
+body:not(.published-dashboard) .report-nav-link,
+body:not(.published-dashboard) .report-submenu a { color:#344861; }
+body:not(.published-dashboard) .report-nav-toggle,
+body:not(.published-dashboard) .report-nav-link .material-symbols-outlined,
+body:not(.published-dashboard) .report-submenu .material-symbols-outlined { color:#526d90; }
+body:not(.published-dashboard) .report-submenu { border-color:#ccd9eb; }
+body:not(.published-dashboard) .report-nav-link:hover,
+body:not(.published-dashboard) .report-nav-toggle:hover,
+body:not(.published-dashboard) .report-submenu a:hover { background:#e4ecfa; color:#1d4fb0; }
+body:not(.published-dashboard) .report-nav-row:has([aria-current="page"]),
+body:not(.published-dashboard) .dashboard-sidebar nav a[aria-current="page"] { background:#dce8ff; color:#1d4fb0; }
+body:not(.published-dashboard) .dashboard-sidebar nav a[aria-current="page"] { box-shadow:inset 3px 0 #2563eb; }
+body:not(.published-dashboard) .dashboard-sidebar nav a[aria-current="page"] .material-symbols-outlined,
+body:not(.published-dashboard) .report-nav-link:hover .material-symbols-outlined { color:#1d4fb0; }
+body:not(.published-dashboard) .dashboard-sidebar nav a[aria-current="location"] { background:#e4ecfa; color:#1d4fb0; }
+body:not(.published-dashboard) .sidebar-scroll { scrollbar-color:#a8b9d0 transparent; }
 .dashboard-header { left:260px; gap:12px; box-shadow:none; }
 .dashboard-header button { min-height:40px; }
 .header-comparison { color:#64748b; font-size:12px; white-space:nowrap; }

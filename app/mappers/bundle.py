@@ -198,6 +198,15 @@ class BundleViewMapper:
                 q.warnings.append('Một nguồn trong snapshot sai cấu trúc; không được hiển thị.')
                 continue
             self._source(view, str(source_key), source, compare_ok)
+            if source_key == 'facebook_content' and source.get('contract_version') == 'meta-reporting-v1':
+                identity = source.get('identity')
+                if not isinstance(identity, dict) or identity.get('client_id') != client_id:
+                    fail('Nguồn Meta không khớp khách hàng của Bundle.')
+                view.source_identity = {k: text(identity.get(k)) for k in ('client_id', 'external_id', 'asset_type')}
+                view.timezone = text(source.get('timezone'))
+                view.fetched_at = text(source.get('fetched_at'))
+                from app.mappers.facebook_content import content_report
+                view.content_report = content_report(source.get('content_report'), source, report_period, released)
         view.evidence = self._evidence(data.get('evidence'), released)
         view.opportunities = self._opportunities(data.get('opportunities'), released)
         if released:
@@ -212,6 +221,16 @@ class BundleViewMapper:
                 if not isinstance(widget, dict) or not text(widget.get('metric_id')):
                     fail('KPI phát hành không hợp lệ.')
                 current = scalar(widget.get('value'))
+                status = widget.get('status', 'available' if current is not None else 'no_data')
+                if status not in ('available', 'no_data', 'partial', 'unavailable'):
+                    fail('Trạng thái KPI không được hỗ trợ.')
+                coverage = widget.get('coverage') or {}
+                if (not isinstance(coverage, dict) or (coverage and
+                        (any(type(coverage.get(k)) is not int or coverage[k] < 0 for k in ('available', 'expected'))
+                         or coverage['available'] > coverage['expected'] or coverage.get('unit') not in ('days', 'posts')))):
+                    fail('Độ phủ KPI không hợp lệ.')
+                if status in ('no_data', 'unavailable', 'partial') and current is not None:
+                    fail('KPI thiếu dữ liệu không được biểu diễn như tổng đầy đủ.')
                 if current is not None and (widget.get('verified') is not True or widget.get('publishable') is not True):
                     fail('KPI chưa được xác minh.')
                 previous = widget.get('comparison') or {}
@@ -221,7 +240,8 @@ class BundleViewMapper:
                     current, text(widget.get('unit')) or '', scalar(previous.get('previous_value')) if compare_ok else None,
                     scalar(previous.get('delta')) if compare_ok else None, text(widget.get('source')) or '',
                     text((widget.get('freshness') or {}).get('latest_available_date')), current is not None,
-                    widget['metric_id'].split('.')[0]))
+                    widget['metric_id'].split('.')[0], status, dict(coverage),
+                    text(widget.get('grain')), text(widget.get('aggregation'))))
                 if compare_ok and number(current) and number(previous.get('previous_value')):
                     view.charts.append(ChartView('So sánh · ' + (text(widget.get('label')) or widget['metric_id']),
                         'bar', ['Kỳ trước', 'Kỳ này'], [previous['previous_value'], current],

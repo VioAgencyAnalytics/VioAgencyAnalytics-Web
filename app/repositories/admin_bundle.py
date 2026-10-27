@@ -146,16 +146,16 @@ class AdminBundleRepository:
             )
         except httpx.TimeoutException:
             raise AdminBundleTimeoutError(
-                "Hết thời gian chờ KDH-Report-Admin."
+                "Hết thời gian chờ VioAgencyAnalytics Admin."
             ) from None
         except httpx.RequestError:
             raise AdminBundleUnavailableError(
-                "Không thể kết nối KDH-Report-Admin."
+                "Không thể kết nối VioAgencyAnalytics Admin."
             ) from None
 
         if response.status_code == 401:
             raise AdminBundleAuthError(
-                "KDH-Report-Admin từ chối REPORT_SERVICE_TOKEN."
+                "VioAgencyAnalytics Admin từ chối REPORT_SERVICE_TOKEN."
             )
 
         if response.status_code == 404:
@@ -170,7 +170,7 @@ class AdminBundleRepository:
 
         if response.status_code != 200:
             raise AdminBundleUpstreamError(
-                "KDH-Report-Admin trả về lỗi "
+                "VioAgencyAnalytics Admin trả về lỗi "
                 f"HTTP {response.status_code}."
             )
 
@@ -178,7 +178,7 @@ class AdminBundleRepository:
             payload = response.json()
         except ValueError:
             raise AdminBundleContractError(
-                "KDH-Report-Admin không trả về JSON hợp lệ."
+                "VioAgencyAnalytics Admin không trả về JSON hợp lệ."
             ) from None
 
         self._validate_contract(

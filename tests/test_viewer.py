@@ -58,7 +58,11 @@ def use_viewer_session(client):
 
 
 @pytest.mark.parametrize('path', ['/', '/login', '/reports', '/login?next=https://evil.invalid', '/reports?next=//evil.invalid'])
-def test_entry_routes_return_to_admin_without_a_login_or_list(env, path):
+def test_entry_routes_return_to_admin_without_a_login_or_list(env, path, monkeypatch):
+    from app import customer_auth
+    monkeypatch.setattr(customer_auth, 'enabled', lambda request: False)
+    monkeypatch.setattr(main, 'get_runtime_mode', lambda: SimpleNamespace(app_env='production'))
+    main.app.dependency_overrides[get_settings]().app_env = 'production'
     client, calls, _, _ = env
     response = client.get(path, follow_redirects=False)
     assert response.status_code == 303
@@ -181,8 +185,22 @@ def test_expired_preview_resumes_via_admin_handoff(env):
 
 @pytest.mark.parametrize('origin', ['https://admin.invalid/evil', 'https://admin.invalid?next=evil',
                                     'https://user:secret@admin.invalid', 'http://admin.invalid', 'https://admin.invalid:bad'])
-def test_invalid_admin_origin_fails_without_redirect(env, origin):
+@pytest.mark.parametrize('path', ['/', '/reports'])
+def test_invalid_admin_origin_fails_without_redirect(env, origin, path, monkeypatch):
+    from app import customer_auth
+    monkeypatch.setattr(customer_auth, 'enabled', lambda request: False)
+    monkeypatch.setattr(main, 'get_runtime_mode', lambda: SimpleNamespace(app_env='production'))
+    main.app.dependency_overrides[get_settings]().app_env = 'production'
     client, calls, _, _ = env
     main.app.dependency_overrides[get_settings]().report_admin_public_url = origin
-    response = client.get('/', follow_redirects=False)
+    response = client.get(path, follow_redirects=False)
     assert response.status_code == 503 and 'location' not in response.headers and not calls
+
+
+@pytest.mark.parametrize('path', ['/', '/login', '/login?next=https://evil.invalid'])
+def test_development_entry_opens_customer_login_without_following_next(env, path):
+    client, calls, _, _ = env
+    response = client.get(path, follow_redirects=False)
+    assert response.status_code == 303
+    assert response.headers['location'] == '/workspace/login'
+    assert not calls

@@ -4,17 +4,17 @@
 {% set url = snapshot_links.get(key, '') if snapshot_links is defined else url %}
 <div class="report-nav-group" data-report-group="{{ key }}">
   <div class="report-nav-row">
-    <a class="report-nav-link" data-path="{{ path }}" {% if enabled %}href="{{ url }}"{% else %}aria-disabled="true" title="Section chưa được cho phép trong Bundle"{% endif %} {% if current == key %}aria-current="page"{% endif %}>
-      <span class="material-symbols-outlined" aria-hidden="true">{{ icon }}</span><span>{{ label }}</span>
+    <a class="report-nav-link" data-path="{{ path }}" {% if enabled %}href="{{ url }}"{% else %}aria-disabled="true" title="Chưa có báo cáo được cấp quyền xem"{% endif %} {% if current == key %}aria-current="page"{% endif %}>
+      <span class="material-symbols-outlined" aria-hidden="true">{{ icon if enabled else 'lock' }}</span><span>{{ label }}{% if not enabled %}<small class="sidebar-unavailable">{{ 'Chưa có báo cáo' if dashboard is defined and dashboard.channel == 'facebook_content' else 'Ngoài Bundle' }}</small>{% endif %}</span>
     </a>
     <button class="report-nav-toggle" type="button" {% if not enabled %}disabled{% endif %} aria-label="Menu con {{ label }}" aria-controls="{{ key }}-submenu" aria-expanded="{{ 'true' if current == key else 'false' }}">
       <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
     </button>
   </div>
   <div id="{{ key }}-submenu" class="report-submenu {{ 'seo-submenu' if key == 'seo' else '' }}" {% if current != key %}hidden{% endif %}>
-    {% for view, text, symbol, section in items %}
+    {% for view, text, symbol, section in items if not (key == 'facebook-content' and dashboard is defined and dashboard.channel == 'facebook_content' and dashboard.content_live) or section in dashboard.visible_content_sections %}
     <a {% if enabled %}href="{{ url }}{{ "&" if snapshot_links is defined else "?" }}view={{ view }}"{% else %}aria-disabled="true"{% endif %} data-path="{{ view }}" data-section="{{ section }}">
-      <span class="material-symbols-outlined" aria-hidden="true">{{ symbol }}</span><span>{{ text }}</span>
+      <span class="material-symbols-outlined" aria-hidden="true">{{ symbol }}</span><span>{{ 'Biểu đồ trong báo cáo' if key == 'facebook-content' and section == 'fc-formats' and dashboard is defined and dashboard.content_live else text }}</span>
     </a>
     {% endfor %}
   </div>
@@ -70,6 +70,6 @@
   {% for key, path, label, icon in [
     ('google-maps', 'google-maps-va-ho-so-doanh-nghiep', 'Google Maps', 'storefront')
   ] %}
-  <a class="report-nav-link" data-path="{{ path }}" {% if snapshot_links is not defined %}href="/report/{{ key }}"{% elif "gmb" in snapshot_links %}href="{{ snapshot_links.gmb }}"{% else %}aria-disabled="true" title="Section chưa được cho phép trong Bundle"{% endif %} {% if current == key %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">{{ icon }}</span><span>{{ label }}</span></a>
+  <a class="report-nav-link" data-path="{{ path }}" {% if snapshot_links is not defined %}href="/report/{{ key }}"{% elif "gmb" in snapshot_links %}href="{{ snapshot_links.gmb }}"{% else %}aria-disabled="true" title="Chưa có báo cáo được cấp quyền xem"{% endif %} {% if current == key %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">{{ 'lock' if snapshot_links is defined and 'gmb' not in snapshot_links else icon }}</span><span>{{ label }}{% if snapshot_links is defined and 'gmb' not in snapshot_links %}<small class="sidebar-unavailable">{{ 'Chưa có báo cáo' if dashboard is defined and dashboard.channel == 'facebook_content' else 'Ngoài Bundle' }}</small>{% endif %}</span></a>
   {% endfor %}
 </nav>

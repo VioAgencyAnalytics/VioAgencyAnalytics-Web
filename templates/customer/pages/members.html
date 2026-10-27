@@ -1,0 +1,832 @@
+{% extends "customer/shell.html" %}
+{% block content %}
+<main class="customer-page p-8 space-y-6">
+ <div class="flex flex-col w-full">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+   <div class="space-y-1">
+    <div class="flex items-center gap-2.5">
+     <h1 class="font-headline-lg text-headline-lg text-slate-900 tracking-tight">
+      Thành viên
+     </h1>
+     <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-label-sm font-label-sm border border-emerald-200/60">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse">
+      </span>
+      Đang kích hoạt
+     </span>
+    </div>
+    <p class="font-body-md text-body-md text-slate-500">
+     Quản lý danh sách thành viên, cấu hình quyền phân cấp và giám sát an toàn truy cập dữ liệu y tế KinderHealth.
+    </p>
+   </div>
+   <div class="flex items-center gap-2.5 flex-shrink-0">
+    <button class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors font-label-md text-label-md shadow-xs" data-action="matrix" id="scrollToMatrixBtn" type="button">
+     <span class="material-symbols-outlined text-[18px] text-slate-500" style="font-variation-settings: 'FILL' 1;">
+      shield_person
+     </span>
+     <span>
+      Ma trận phân quyền
+     </span>
+    </button>
+    <button class="js-open-invite-modal inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-on-primary hover:bg-[#B91C1C] transition-all font-label-md text-label-md shadow-xs hover:shadow-md cursor-pointer" data-action="invite-open" type="button">
+     <span class="material-symbols-outlined text-[19px]">
+      person_add
+     </span>
+     <span>
+      + Mời thành viên
+     </span>
+    </button>
+   </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6">
+   <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-xs relative overflow-hidden group hover:border-slate-300 transition-colors">
+    <div class="flex items-center justify-between mb-3">
+     <span class="font-label-sm text-label-sm uppercase tracking-wider text-slate-500">
+      Tổng thành viên hiện diện
+     </span>
+     <div class="w-9 h-9 rounded-lg bg-red-50 text-primary flex items-center justify-center">
+      <span class="material-symbols-outlined text-[20px]">
+       group
+      </span>
+     </div>
+    </div>
+    <div class="flex items-baseline gap-2 mb-2">
+     <span class="font-display-kpi text-display-kpi text-slate-900 leading-none">
+      1
+     </span>
+     <span class="font-body-sm text-body-sm text-slate-400">
+      / 10 người dùng khả dụng
+     </span>
+    </div>
+    <div class="w-full bg-slate-100 rounded-full h-1.5 mb-2 overflow-hidden">
+     <div class="bg-primary h-1.5 rounded-full" style="width: 10%;">
+     </div>
+    </div>
+    <p class="font-body-sm text-body-sm text-slate-500 flex items-center justify-between">
+     <span>
+      Gói vận hành hiện tại:
+      <strong class="text-slate-700 font-medium">
+       Standard Clinic
+      </strong>
+     </span>
+     <span class="text-emerald-600 font-medium">
+      Còn 9 vị trí trống
+     </span>
+    </p>
+   </div>
+   <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-xs relative overflow-hidden group hover:border-slate-300 transition-colors">
+    <div class="flex items-center justify-between mb-3">
+     <span class="font-label-sm text-label-sm uppercase tracking-wider text-slate-500">
+      Lời mời đang chờ phản hồi
+     </span>
+     <div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+      <span class="material-symbols-outlined text-[20px]">
+       mark_email_unread
+      </span>
+     </div>
+    </div>
+    <div class="flex items-baseline gap-2 mb-2">
+     <span class="font-display-kpi text-display-kpi text-slate-900 leading-none">
+      0
+     </span>
+     <span class="font-body-sm text-body-sm text-slate-400">
+      lời mời hiệu lực
+     </span>
+    </div>
+    <p class="font-body-sm text-body-sm text-slate-500 flex items-center gap-1.5 mt-3.5">
+     <span class="material-symbols-outlined text-[16px] text-slate-400">
+      check_circle
+     </span>
+     <span>
+      Không có thư mời nào hết hạn hoặc đang đợi xác nhận
+     </span>
+    </p>
+   </div>
+   <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-xs relative overflow-hidden group hover:border-slate-300 transition-colors">
+    <div class="flex items-center justify-between mb-3">
+     <span class="font-label-sm text-label-sm uppercase tracking-wider text-slate-500">
+      Cấu trúc vai trò định sẵn
+     </span>
+     <div class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+      <span class="material-symbols-outlined text-[20px]">
+       admin_panel_settings
+      </span>
+     </div>
+    </div>
+    <div class="flex items-baseline gap-2 mb-2">
+     <span class="font-display-kpi text-display-kpi text-slate-900 leading-none">
+      4
+     </span>
+     <span class="font-body-sm text-body-sm text-slate-400">
+      cấp độ kiểm soát phân quyền
+     </span>
+    </div>
+    <p class="font-body-sm text-body-sm text-slate-500 flex items-center gap-1.5 mt-3.5">
+     <span class="material-symbols-outlined text-[16px] text-emerald-500">
+      lock
+     </span>
+     <span class="truncate">
+      Chủ sở hữu • Quản trị • Thành viên • Người xem
+     </span>
+    </p>
+   </div>
+  </div>
+  <div class="mt-6 bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+   <div class="border-b border-slate-200 px-6 pt-2">
+    <div class="flex items-center justify-between flex-wrap gap-4">
+     <div class="flex items-center gap-8 -mb-px">
+      <button class="tab-btn pb-3.5 border-b-2 border-primary text-primary font-label-md text-label-md font-semibold flex items-center gap-2 transition-all" data-tab="tab-members" type="button">
+       <span class="material-symbols-outlined text-[18px]">
+        group
+       </span>
+       <span>
+        Danh sách thành viên
+       </span>
+       <span class="px-2 py-0.5 rounded-full bg-red-50 text-primary text-label-sm font-bold">
+        1
+       </span>
+      </button>
+      <button class="tab-btn pb-3.5 border-b-2 border-transparent text-slate-500 hover:text-slate-700 font-label-md text-label-md font-medium flex items-center gap-2 transition-all" data-tab="tab-pending" type="button">
+       <span class="material-symbols-outlined text-[18px]">
+        forward_to_inbox
+       </span>
+       <span>
+        Lời mời đang chờ
+       </span>
+       <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-label-sm">
+        0
+       </span>
+      </button>
+      <button class="tab-btn pb-3.5 border-b-2 border-transparent text-slate-500 hover:text-slate-700 font-label-md text-label-md font-medium flex items-center gap-2 transition-all" data-tab="tab-logs" type="button">
+       <span class="material-symbols-outlined text-[18px]">
+        history
+       </span>
+       <span>
+        Nhật ký truy cập &amp; phân quyền
+       </span>
+      </button>
+     </div>
+     <div class="pb-3 text-body-sm font-body-sm text-slate-400 flex items-center gap-1">
+      <span class="material-symbols-outlined text-[15px] text-slate-400">
+       verified_user
+      </span>
+      <span>
+       Không gian bảo mật:
+       <strong>
+        KinderHealth Workspace
+       </strong>
+      </span>
+     </div>
+    </div>
+   </div>
+   <div class="p-6 space-y-5" id="panel-members">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+     <div class="relative flex-1 max-w-md">
+      <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+       <span class="material-symbols-outlined text-[18px]">
+        search
+       </span>
+      </div>
+      <input aria-label="Tìm theo tên hoặc email thành viên... (bấm '/' để tìm)" class="w-full pl-9 pr-12 py-2 text-table-data font-table-data bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" data-member-filter="" id="members-field-0" placeholder="Tìm theo tên hoặc email thành viên... (bấm '/' để tìm)" type="text"/>
+      <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+       <kbd class="px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-slate-100 border border-slate-200 rounded">
+        /
+       </kbd>
+      </div>
+     </div>
+     <div class="flex items-center gap-2.5 flex-wrap">
+      <div class="relative">
+       <select aria-label="members-field-1" class="appearance-none bg-white border border-slate-200 text-slate-700 text-body-sm font-body-sm py-2 pl-3 pr-8 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer shadow-xs" data-member-filter="" id="members-field-1">
+        <option value="all">
+         Tất cả vai trò
+        </option>
+        <option value="owner">
+         Chủ sở hữu Workspace
+        </option>
+        <option value="admin">
+         Quản trị Workspace
+        </option>
+        <option value="member">
+         Thành viên
+        </option>
+        <option value="viewer">
+         Người xem
+        </option>
+       </select>
+       <div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none text-slate-400">
+        <span class="material-symbols-outlined text-[16px]">
+         expand_more
+        </span>
+       </div>
+      </div>
+      <div class="relative">
+       <select aria-label="members-field-2" class="appearance-none bg-white border border-slate-200 text-slate-700 text-body-sm font-body-sm py-2 pl-3 pr-8 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer shadow-xs" data-member-filter="" id="members-field-2">
+        <option value="all">
+         Tất cả trạng thái
+        </option>
+        <option value="active">
+         Đang hoạt động
+        </option>
+        <option value="pending">
+         Chờ kích hoạt
+        </option>
+        <option value="suspended">
+         Đã tạm khóa
+        </option>
+       </select>
+       <div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none text-slate-400">
+        <span class="material-symbols-outlined text-[16px]">
+         expand_more
+        </span>
+       </div>
+      </div>
+      <button class="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg text-body-sm font-body-sm transition-colors" data-action="unavailable" type="button">
+       <span class="material-symbols-outlined text-[16px] text-slate-400">
+        swap_vert
+       </span>
+       <span>
+        Sắp xếp: Mới nhất
+       </span>
+      </button>
+     </div>
+    </div>
+    <div class="overflow-x-auto rounded-lg border border-slate-200">
+     <table class="w-full text-left border-collapse">
+      <thead>
+       <tr class="bg-slate-50 border-b border-slate-200 font-label-sm text-label-sm uppercase tracking-wider text-slate-500">
+        <th class="py-3 px-4" scope="col">
+         Thành viên
+        </th>
+        <th class="py-3 px-4" scope="col">
+         Email liên kết
+        </th>
+        <th class="py-3 px-4" scope="col">
+         Vai trò Workspace
+        </th>
+        <th class="py-3 px-4" scope="col">
+         Trạng thái
+        </th>
+        <th class="py-3 px-4" scope="col">
+         Ngày tham gia
+        </th>
+        <th class="py-3 px-4 text-right" scope="col">
+         Thao tác
+        </th>
+       </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+       <tr class="hover:bg-slate-50/70 transition-colors group" data-member-row="">
+        <td class="py-3.5 px-4">
+         <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-[#D9232E] text-white font-bold text-body-sm font-body-sm flex items-center justify-center shadow-xs flex-shrink-0">
+           NP
+          </div>
+          <div class="flex flex-col min-w-0">
+           <div class="flex items-center gap-2">
+            <span class="font-headline-sm text-[14px] text-slate-900 leading-snug">
+             Nguyễn Minh Phương
+            </span>
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-[#D9232E] border border-red-200">
+             Thành viên minh họa
+            </span>
+           </div>
+           <span class="font-body-sm text-[12px] text-slate-400">
+            Trưởng bộ phận Tiếp thị &amp; Tăng trưởng
+           </span>
+          </div>
+         </div>
+        </td>
+        <td class="py-3.5 px-4 font-table-data text-table-data text-slate-600">
+         <div class="flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[15px] text-slate-400">
+           mail
+          </span>
+          <span>
+           marketing@kinderhealth.vn
+          </span>
+         </div>
+        </td>
+        <td class="py-3.5 px-4">
+         <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-purple-50 text-purple-700 border border-purple-200 text-label-sm font-label-sm">
+          <span class="material-symbols-outlined text-[14px] text-purple-600" style="font-variation-settings: 'FILL' 1;">
+           shield
+          </span>
+          <span>
+           Chủ sở hữu Workspace
+          </span>
+         </div>
+        </td>
+        <td class="py-3.5 px-4">
+         <div class="inline-flex items-center gap-1.5 text-body-sm font-body-sm text-emerald-700">
+          <span class="w-2 h-2 rounded-full bg-emerald-500">
+          </span>
+          <span class="font-medium">
+           Đang hoạt động
+          </span>
+         </div>
+        </td>
+        <td class="py-3.5 px-4 font-table-numeric text-table-numeric text-slate-500">
+         01/01/2025
+        </td>
+        <td class="py-3.5 px-4 text-right">
+         <div class="relative inline-block text-left">
+          <button aria-label="Tùy chọn thành viên" class="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" data-action="unavailable" title="Tùy chọn tài khoản" type="button">
+           <span class="material-symbols-outlined text-[19px]">
+            more_vert
+           </span>
+          </button>
+         </div>
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="rounded-xl border border-dashed border-slate-300 bg-slate-50/70 p-8 text-center flex flex-col items-center justify-center space-y-3">
+     <div class="w-12 h-12 rounded-full bg-red-50 text-primary flex items-center justify-center shadow-xs">
+      <span class="material-symbols-outlined text-[26px]">
+       group_add
+      </span>
+     </div>
+     <div class="max-w-md space-y-1">
+      <h4 class="font-headline-sm text-headline-sm text-slate-800">
+       Thêm đồng nghiệp vào KinderHealth
+      </h4>
+      <p class="font-body-sm text-body-sm text-slate-500">
+       Bạn là người duy nhất trong Workspace. Hãy gửi thư mời cho ban giám đốc, bác sĩ điều hành hoặc chuyên viên marketing cùng phân tích dữ liệu phòng khám.
+      </p>
+     </div>
+     <div class="pt-2">
+      <button class="js-open-invite-modal inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-slate-300 hover:border-primary text-primary hover:bg-red-50 font-label-md text-label-md transition-all shadow-xs cursor-pointer" data-action="invite-open" type="button">
+       <span class="material-symbols-outlined text-[18px]">
+        add_circle
+       </span>
+       <span>
+        + Mời đồng nghiệp đầu tiên
+       </span>
+      </button>
+     </div>
+    </div>
+   </div>
+   <div class="p-8 text-center space-y-3 hidden" id="panel-pending">
+    <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+     <span class="material-symbols-outlined text-[24px]">
+      forward_to_inbox
+     </span>
+    </div>
+    <h4 class="font-headline-sm text-headline-sm text-slate-700">
+     Chưa có lời mời nào đang chờ
+    </h4>
+    <p class="font-body-sm text-body-sm text-slate-400 max-w-sm mx-auto">
+     Tất cả thư mời kích hoạt tài khoản sẽ xuất hiện tại đây cho tới khi người nhận xác nhận qua email.
+    </p>
+   </div>
+   <div class="p-6 hidden space-y-4" id="panel-logs">
+    <div class="text-body-sm font-body-sm text-slate-500 pb-2">
+     Ghi nhận các hoạt động đăng nhập và phân bổ vai trò gần đây nhất trong hệ thống:
+    </div>
+    <div class="border border-slate-200 rounded-lg divide-y divide-slate-100 text-body-sm font-body-sm">
+     <div class="p-3.5 flex items-center justify-between hover:bg-slate-50 transition-colors">
+      <div class="flex items-center gap-3">
+       <span class="w-2 h-2 rounded-full bg-emerald-500">
+       </span>
+       <div>
+        <strong class="text-slate-800">
+         Nguyễn Minh Phương
+        </strong>
+        đã đăng nhập thành công vào phiên làm việc qua xác thực 2 bước.
+        <div class="text-[11px] text-slate-400">
+         Địa chỉ IP: 118.69.182.42 • Trình duyệt: Chrome trên macOS
+        </div>
+       </div>
+      </div>
+      <span class="font-table-numeric text-table-numeric text-slate-400">
+       Hôm nay, 08:30
+      </span>
+     </div>
+     <div class="p-3.5 flex items-center justify-between hover:bg-slate-50 transition-colors">
+      <div class="flex items-center gap-3">
+       <span class="w-2 h-2 rounded-full bg-blue-500">
+       </span>
+       <div>
+        Hệ thống kích hoạt bảo mật tự động cho không gian làm việc KinderHealth.
+        <div class="text-[11px] text-slate-400">
+         Cấu hình: Single Tenant Isolation Mode
+        </div>
+       </div>
+      </div>
+      <span class="font-table-numeric text-table-numeric text-slate-400">
+       01/01/2025
+      </span>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="mt-8 bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden" id="permissionsMatrixSection">
+   <div class="p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="space-y-1">
+     <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-[20px] text-primary">
+       policy
+      </span>
+      <h3 class="font-headline-md text-headline-md text-slate-900 tracking-tight">
+       Ma trận phân quyền truy cập chi tiết
+      </h3>
+     </div>
+     <p class="font-body-sm text-body-sm text-slate-500">
+      Quy chuẩn bảo mật tuân thủ nghiêm ngặt theo các cấp bậc nhân sự phòng khám &amp; nhà thuốc KinderHealth.
+     </p>
+    </div>
+    <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-body-sm font-body-sm text-slate-600">
+     <span class="material-symbols-outlined text-[16px] text-slate-400">
+      lock_outline
+     </span>
+     <span>
+      Phân quyền y tế:
+      <strong>
+       Phân quyền theo vai trò Workspace
+      </strong>
+     </span>
+    </div>
+   </div>
+   <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+     <thead>
+      <tr class="bg-slate-50 border-b border-slate-200">
+       <th class="py-3.5 px-6 font-label-sm text-label-sm uppercase tracking-wider text-slate-500 w-2/5">
+        Tính năng &amp; Năng lực phân quyền
+       </th>
+       <th class="py-3.5 px-4 font-label-sm text-label-sm uppercase tracking-wider text-center text-purple-700 bg-purple-50/40">
+        Chủ sở hữu
+        <br/>
+        <span class="text-[10px] lowercase font-normal text-slate-500">
+         (Workspace Owner)
+        </span>
+       </th>
+       <th class="py-3.5 px-4 font-label-sm text-label-sm uppercase tracking-wider text-center text-blue-700 bg-blue-50/30">
+        Quản trị Workspace
+        <br/>
+        <span class="text-[10px] lowercase font-normal text-slate-500">
+         (Admin)
+        </span>
+       </th>
+       <th class="py-3.5 px-4 font-label-sm text-label-sm uppercase tracking-wider text-center text-slate-700">
+        Thành viên
+        <br/>
+        <span class="text-[10px] lowercase font-normal text-slate-500">
+         (Member)
+        </span>
+       </th>
+       <th class="py-3.5 px-4 font-label-sm text-label-sm uppercase tracking-wider text-center text-slate-500">
+        Người xem
+        <br/>
+        <span class="text-[10px] lowercase font-normal text-slate-500">
+         (Viewer)
+        </span>
+       </th>
+      </tr>
+     </thead>
+     <tbody class="divide-y divide-slate-100 font-body-sm text-body-sm">
+      <tr class="hover:bg-slate-50/50 transition-colors">
+       <td class="py-3.5 px-6 font-medium text-slate-800">
+        <div class="flex flex-col">
+         <span>
+          Xem Dashboard Marketing &amp; Kênh phân tích
+         </span>
+         <span class="text-[11px] text-slate-400 font-normal">
+          Truy cập tổng quan 9 kênh quảng cáo, chuyển đổi đặt lịch khám
+         </span>
+        </div>
+       </td>
+       <td class="py-3.5 px-4 text-center bg-purple-50/20">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center bg-blue-50/10">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+      </tr>
+      <tr class="hover:bg-slate-50/50 transition-colors">
+       <td class="py-3.5 px-6 font-medium text-slate-800">
+        <div class="flex flex-col">
+         <span>
+          Xem Báo cáo tự động &amp; Báo cáo định kỳ hàng tháng
+         </span>
+         <span class="text-[11px] text-slate-400 font-normal">
+          Tải về file PDF, bảng tính Excel báo cáo hiệu quả chiến dịch
+         </span>
+        </div>
+       </td>
+       <td class="py-3.5 px-4 text-center bg-purple-50/20">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center bg-blue-50/10">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+      </tr>
+      <tr class="hover:bg-slate-50/50 transition-colors">
+       <td class="py-3.5 px-6 font-medium text-slate-800">
+        <div class="flex flex-col">
+         <span>
+          Tạo &amp; Chỉnh sửa mẫu Báo cáo tùy biến
+         </span>
+         <span class="text-[11px] text-slate-400 font-normal">
+          Cấu hình các trường chỉ số mới, biểu đồ phễu chuyển đổi
+         </span>
+        </div>
+       </td>
+       <td class="py-3.5 px-4 text-center bg-purple-50/20">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center bg-blue-50/10">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center">
+        <span class="material-symbols-outlined text-[19px] text-slate-300">
+         cancel
+        </span>
+       </td>
+      </tr>
+      <tr class="hover:bg-slate-50/50 transition-colors">
+       <td class="py-3.5 px-6 font-medium text-slate-800">
+        <div class="flex flex-col">
+         <span>
+          Kết nối &amp; Quản trị API nền tảng tiếp thị
+         </span>
+         <span class="text-[11px] text-slate-400 font-normal">
+          OAuth Facebook Ads, Google Ads, TikTok Ads, GA4, Search Console
+         </span>
+        </div>
+       </td>
+       <td class="py-3.5 px-4 text-center bg-purple-50/20">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center bg-blue-50/10">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center">
+        <span class="material-symbols-outlined text-[19px] text-slate-300">
+         cancel
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center">
+        <span class="material-symbols-outlined text-[19px] text-slate-300">
+         cancel
+        </span>
+       </td>
+      </tr>
+      <tr class="hover:bg-slate-50/50 transition-colors">
+       <td class="py-3.5 px-6 font-medium text-slate-800">
+        <div class="flex flex-col">
+         <span>
+          Mời, hủy lời mời &amp; Cấp quyền thành viên
+         </span>
+         <span class="text-[11px] text-slate-400 font-normal">
+          Quản lý thêm nhân sự vào tổ chức và gán vai trò truy cập
+         </span>
+        </div>
+       </td>
+       <td class="py-3.5 px-4 text-center bg-purple-50/20">
+        <span class="material-symbols-outlined text-[19px] text-emerald-600">
+         check_circle
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center bg-blue-50/10">
+        <span class="inline-flex items-center gap-1 text-[11px] font-medium text-blue-700 bg-blue-100/70 px-2 py-0.5 rounded">
+         <span class="material-symbols-outlined text-[13px]">
+          info
+         </span>
+         <span>
+          Trừ quyền Owner
+         </span>
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center">
+        <span class="material-symbols-outlined text-[19px] text-slate-300">
+         cancel
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center">
+        <span class="material-symbols-outlined text-[19px] text-slate-300">
+         cancel
+        </span>
+       </td>
+      </tr>
+      <tr class="hover:bg-slate-50/50 transition-colors">
+       <td class="py-3.5 px-6 font-medium text-slate-800">
+        <div class="flex flex-col">
+         <span>
+          Cài đặt Workspace &amp; Chuyển giao quyền sở hữu
+         </span>
+         <span class="text-[11px] text-slate-400 font-normal">
+          Cấu hình tên doanh nghiệp, múi giờ, webhook dữ liệu, xoá không gian
+         </span>
+        </div>
+       </td>
+       <td class="py-3.5 px-4 text-center bg-purple-50/20">
+        <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-purple-800 bg-purple-100 px-2 py-0.5 rounded">
+         Toàn quyền
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center bg-blue-50/10">
+        <span class="inline-flex items-center gap-1 text-[11px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+         Hạn chế
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center">
+        <span class="material-symbols-outlined text-[19px] text-slate-300">
+         cancel
+        </span>
+       </td>
+       <td class="py-3.5 px-4 text-center">
+        <span class="material-symbols-outlined text-[19px] text-slate-300">
+         cancel
+        </span>
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+   <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-start gap-2.5">
+    <span class="material-symbols-outlined text-[18px] text-slate-500 mt-0.5">
+     verified
+    </span>
+    <p class="font-body-sm text-body-sm text-slate-600">
+     <strong class="text-slate-800 font-medium">
+      Lưu ý an toàn:
+     </strong>
+     Cơ chế phân quyền đảm bảo tính bảo mật và cách ly dữ liệu y tế của KinderHealth. Chỉ duy nhất
+     <strong>
+      Chủ sở hữu Workspace (Nguyễn Minh Phương)
+     </strong>
+     mới có quyền chuyển giao Workspace hoặc xóa tài nguyên tích hợp.
+    </p>
+   </div>
+  </div>
+  <div aria-labelledby="modal-title" aria-modal="true" class="hidden fixed inset-0 z-50 overflow-y-auto" id="inviteModal" role="dialog">
+   <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity js-close-invite-modal" data-action="close-modal">
+   </div>
+   <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
+    <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-slate-200">
+     <div class="border-b border-slate-100 px-6 py-4 flex items-center justify-between bg-slate-50/60">
+      <div class="flex items-center gap-2.5">
+       <div class="w-8 h-8 rounded-lg bg-red-50 text-primary flex items-center justify-center">
+        <span class="material-symbols-outlined text-[20px]">
+         person_add
+        </span>
+       </div>
+       <div>
+        <h3 class="font-headline-sm text-headline-sm text-slate-900" id="modal-title">
+         Mời thành viên mới
+        </h3>
+        <p class="text-[12px] text-slate-500">
+         Thêm nhân sự vào Workspace KinderHealth
+        </p>
+       </div>
+      </div>
+      <button aria-label="Đóng" class="js-close-invite-modal text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-colors" data-action="close-modal" type="button">
+       <span class="material-symbols-outlined text-[20px]">
+        close
+       </span>
+      </button>
+     </div>
+     <div class="p-6 space-y-4">
+      <div>
+       <label class="block font-label-md text-label-md text-slate-700 mb-1.5" for="inviteEmail">
+        Địa chỉ Email đồng nghiệp
+        <span class="text-primary">
+         *
+        </span>
+       </label>
+       <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+         <span class="material-symbols-outlined text-[18px]">
+          alternate_email
+         </span>
+        </div>
+        <input aria-label="vd: baogia@kinderhealth.vn, bacsi@kinderhealth.vn" class="w-full pl-9 pr-3.5 py-2 text-body-md font-body-md bg-white border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" id="inviteEmail" placeholder="vd: baogia@kinderhealth.vn, bacsi@kinderhealth.vn" type="email"/>
+       </div>
+       <p class="mt-1 text-[11px] text-slate-500">
+        Khuyến nghị sử dụng hòm thư công ty có tên miền @kinderhealth.vn để đảm bảo quyền truy cập.
+       </p>
+      </div>
+      <div>
+       <label class="block font-label-md text-label-md text-slate-700 mb-1.5">
+        Chọn vai trò phân bổ
+        <span class="text-primary">
+         *
+        </span>
+       </label>
+       <div class="space-y-2">
+        <label class="flex items-start gap-3 p-3 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 cursor-pointer transition-colors">
+         <input aria-label="Quản trị Workspace (Admin) Quyền cao Toàn quyền quản trị chiến dịch, kết nối API và mời thêm thành viên mới." class="mt-1 text-primary focus:ring-primary" id="members-field-4" name="inviteRole" type="radio" value="admin"/>
+         <div class="flex-1">
+          <div class="flex items-center justify-between">
+           <span class="font-headline-sm text-[13px] text-slate-900">
+            Quản trị Workspace (Admin)
+           </span>
+           <span class="text-[10px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded">
+            Quyền cao
+           </span>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-0.5">
+           Toàn quyền quản trị chiến dịch, kết nối API và mời thêm thành viên mới.
+          </p>
+         </div>
+        </label>
+        <label class="flex items-start gap-3 p-3 rounded-lg border border-primary/40 bg-red-50/20 hover:bg-red-50/30 cursor-pointer transition-colors">
+         <input aria-label="Thành viên (Member) Phổ biến Được xem dữ liệu báo cáo, tạo báo cáo tuỳ chỉnh nhưng không thể thay đổi cài đặt hệ thống." checked="" class="mt-1 text-primary focus:ring-primary" id="members-field-5" name="inviteRole" type="radio" value="member"/>
+         <div class="flex-1">
+          <div class="flex items-center justify-between">
+           <span class="font-headline-sm text-[13px] text-slate-900">
+            Thành viên (Member)
+           </span>
+           <span class="text-[10px] font-semibold bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded">
+            Phổ biến
+           </span>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-0.5">
+           Được xem dữ liệu báo cáo, tạo báo cáo tuỳ chỉnh nhưng không thể thay đổi cài đặt hệ thống.
+          </p>
+         </div>
+        </label>
+        <label class="flex items-start gap-3 p-3 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 cursor-pointer transition-colors">
+         <input aria-label="Người xem (Viewer) Chỉ đọc Chỉ xem Dashboard và báo cáo sẵn có. Không thể chỉnh sửa hoặc thao tác cấu hình." class="mt-1 text-primary focus:ring-primary" id="members-field-6" name="inviteRole" type="radio" value="viewer"/>
+         <div class="flex-1">
+          <div class="flex items-center justify-between">
+           <span class="font-headline-sm text-[13px] text-slate-900">
+            Người xem (Viewer)
+           </span>
+           <span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
+            Chỉ đọc
+           </span>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-0.5">
+           Chỉ xem Dashboard và báo cáo sẵn có. Không thể chỉnh sửa hoặc thao tác cấu hình.
+          </p>
+         </div>
+        </label>
+       </div>
+      </div>
+      <div class="pt-1">
+       <label class="flex items-center gap-2 cursor-pointer">
+        <input aria-label="Gửi thông báo qua Email kèm đường dẫn bảo mật kích hoạt tài khoản" checked="" class="rounded text-primary focus:ring-primary w-4 h-4" id="members-field-7" type="checkbox"/>
+        <span class="text-body-sm font-body-sm text-slate-700">
+         Gửi thông báo qua Email kèm đường dẫn bảo mật kích hoạt tài khoản
+        </span>
+       </label>
+      </div>
+     </div>
+     <div class="border-t border-slate-100 px-6 py-3.5 bg-slate-50 flex items-center justify-end gap-2.5">
+      <button class="js-close-invite-modal px-4 py-2 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors font-label-md text-label-md" data-action="close-modal" type="button">
+       Hủy bỏ
+      </button>
+      <button class="js-close-invite-modal px-4 py-2 rounded-lg bg-primary text-on-primary hover:bg-[#B91C1C] transition-colors font-label-md text-label-md shadow-xs" data-action="invite-send" type="button">
+       Gửi lời mời ngay
+      </button>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</main>
+
+{% endblock %}

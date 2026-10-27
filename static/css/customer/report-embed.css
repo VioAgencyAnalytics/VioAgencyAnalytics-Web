@@ -1,0 +1,7 @@
+/* Only loaded for mock report pages explicitly embedded by the customer hub. */
+#dashboard-sidebar, #sidebar-backdrop, .sidebar-toggle, .mobile-menu-toggle { display: none !important; }
+.dashboard-shell { margin-left: 0 !important; padding-left: 0 !important; width: 100% !important; }
+.dashboard-header { left: 0 !important; }
+.dashboard-main { min-width: 0; }
+html, body { min-width: 0 !important; }
+@media print { .dashboard-shell { margin: 0 !important; } }

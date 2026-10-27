@@ -9,7 +9,7 @@ from urllib.parse import urlencode
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse, RedirectResponse
 
-from app.config import get_settings
+from app.viewer_environment import viewer_settings
 from app.admin_access import public_origin
 from app.routes import viewer
 from app.routes.pages import templates
@@ -21,11 +21,11 @@ HANDOFF_HEADERS = {**HEADERS, 'Referrer-Policy': 'no-referrer'}
 
 
 def binding_cookie(secure):
-    return '__Host-kdh_handoff' if secure else 'kdh_handoff'
+    return ('__Host-' if secure else '') + viewer.COOKIE_PREFIX + '_handoff'
 
 
 @router.get('/auth/handoff/start')
-def start(request: Request, settings=Depends(get_settings)):
+def start(request: Request, settings=Depends(viewer_settings)):
     try:
         query = request.query_params
         mode, target, revision = query.get('mode'), query.get('target_id', ''), query.get('revision', '')
@@ -42,7 +42,7 @@ def start(request: Request, settings=Depends(get_settings)):
         state, verifier = secrets.token_urlsafe(32), secrets.token_urlsafe(48)
         challenge = base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest()).decode().rstrip('=')
         result = viewer.repository(request, settings).call('POST', '/api/internal/v1/handoffs', {
-            'state': state, 'challenge': challenge, 'client_id': 'client_kinderhealth', 'target_id': target,
+            'state': state, 'challenge': challenge, 'target_id': target,
             'revision': int(revision) if revision else 0, 'mode': mode, 'audience': origin,
             'callback': origin + '/auth/handoff/callback'}).json()
         transaction = result.get('transaction', '')
@@ -62,7 +62,7 @@ def start(request: Request, settings=Depends(get_settings)):
 
 
 @router.get('/auth/handoff/callback')
-def callback_page(request: Request):
+def callback_page(request: Request, settings=Depends(viewer_settings)):
     csrf = request.cookies.get(viewer.CSRF) or secrets.token_urlsafe(32)
     response = templates.TemplateResponse(request=request, name='pages/published/handoff.html',
         context={'csrf': csrf}, headers=HANDOFF_HEADERS)
@@ -72,7 +72,7 @@ def callback_page(request: Request):
 
 
 @router.post('/auth/handoff/callback')
-async def callback(request: Request, settings=Depends(get_settings)):
+async def callback(request: Request, settings=Depends(viewer_settings)):
     try:
         origin = public_origin(settings.report_new_public_url)
         secure = origin.startswith('https:')

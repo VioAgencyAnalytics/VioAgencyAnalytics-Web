@@ -1,6 +1,6 @@
 {% if dashboard is defined %}
 {% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
-{{ unavailable('Tiếp cận tự nhiên & trả phí') }}
+{% if dashboard.content_live %}<h2>Tiếp cận tự nhiên & trả phí</h2>{{ section_status('reach') }}{% if dashboard.visible_content_breakdowns.get('reach') %}{{ tables(dashboard.visible_content_breakdowns.reach) }}{% endif %}{% else %}{{ unavailable('Tiếp cận tự nhiên & trả phí') }}{% endif %}
 {% else %}
 {% from 'pages/facebook_content/partials/helpers.html' import n, pct, heading %}
 {{ heading('So Sánh Tiếp Cận: Tự Nhiên (Organic) vs Quảng Cáo (Paid)', 'bar_chart', 'Hiệu quả phân bổ nguồn lực reach giữa traffic tự nhiên và phân phối trả phí.') }}
