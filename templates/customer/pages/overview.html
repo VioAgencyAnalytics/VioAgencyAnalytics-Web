@@ -1,0 +1,607 @@
+{% extends "customer/shell.html" %}
+{% block content %}
+<main class="customer-page p-8 space-y-6">
+ <section class="flex flex-col md:flex-row md:items-center justify-between gap-4" data-purpose="page-header">
+  <div>
+   <h1 class="font-display text-2xl font-bold text-slate-900 tracking-tight">
+    Tổng quan
+   </h1>
+   <p class="text-xs text-slate-500 mt-1">
+    Theo dõi hiệu suất Marketing và tình trạng dữ liệu của doanh nghiệp trên một giao diện thống nhất.
+   </p>
+  </div>
+  <div class="flex items-center gap-3">
+   <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-1.5 shadow-xs text-xs font-medium text-slate-700">
+    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+     <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+     </path>
+    </svg>
+    <span>
+     30 ngày gần nhất (T10/2026)
+    </span>
+    <svg class="w-3.5 h-3.5 text-slate-400 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+     <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+     </path>
+    </svg>
+   </div>
+   <div class="hidden lg:flex items-center text-xs text-slate-500 font-medium px-2 py-1 bg-slate-100 rounded-md">
+    so với 30 ngày trước
+   </div>
+   <button class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-semibold shadow-xs transition-colors" data-action="export-empty" type="button">
+    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+     <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+     </path>
+    </svg>
+    <span>
+     Xuất tóm tắt
+    </span>
+   </button>
+  </div>
+ </section>
+ <section class="bg-gradient-to-r from-red-50/80 via-white to-red-50/50 border border-red-200/80 rounded-xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4" data-purpose="onboarding-banner">
+  <div class="flex items-start gap-3.5">
+   <div class="w-10 h-10 rounded-lg bg-red-100 text-brand-600 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-xs">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+     <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+     </path>
+    </svg>
+   </div>
+   <div>
+    <h2 class="text-sm font-semibold text-slate-900">
+     Bắt đầu theo dõi hiệu suất Marketing
+    </h2>
+    <p class="text-xs text-slate-600 mt-0.5">
+     Kết nối nền tảng đầu tiên để đồng bộ dữ liệu và kích hoạt bảng điều khiển phân tích số liệu tự động.
+    </p>
+   </div>
+  </div>
+  <div class="flex items-center gap-3">
+   <a class="inline-flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors whitespace-nowrap" href="/workspace/integrations">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+     <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+     </path>
+    </svg>
+    <span>
+     Kết nối nền tảng
+    </span>
+   </a>
+  </div>
+ </section>
+ <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" data-purpose="marketing-kpis">
+  <article class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs hover:border-slate-300 transition-all">
+   <div class="flex items-center justify-between">
+    <span class="text-xs font-semibold text-slate-500">
+     Tổng chi tiêu quảng cáo
+    </span>
+    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-500">
+     Chưa có dữ liệu
+    </span>
+   </div>
+   <div class="mt-4 flex items-baseline gap-2">
+    <span class="font-display text-2xl font-bold text-slate-400 tracking-tight">
+     —
+    </span>
+   </div>
+   <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+    <span>
+     Kết nối nền tảng để xem chỉ số
+    </span>
+    <span class="font-medium text-slate-500">
+     Meta &amp; Google Ads
+    </span>
+   </div>
+  </article>
+  <article class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs hover:border-slate-300 transition-all">
+   <div class="flex items-center justify-between">
+    <span class="text-xs font-semibold text-slate-500">
+     Lượt hiển thị (Impressions)
+    </span>
+    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-500">
+     Chưa có dữ liệu
+    </span>
+   </div>
+   <div class="mt-4 flex items-baseline gap-2">
+    <span class="font-display text-2xl font-bold text-slate-400 tracking-tight">
+     —
+    </span>
+   </div>
+   <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+    <span>
+     Cần đồng bộ kênh quảng cáo &amp; SEO
+    </span>
+    <span class="font-medium text-slate-500">
+     Đa kênh Marketing
+    </span>
+   </div>
+  </article>
+  <article class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs hover:border-slate-300 transition-all">
+   <div class="flex items-center justify-between">
+    <span class="text-xs font-semibold text-slate-500">
+     Lượt nhấp (Clicks)
+    </span>
+    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-500">
+     Chưa có dữ liệu
+    </span>
+   </div>
+   <div class="mt-4 flex items-baseline gap-2">
+    <span class="font-display text-2xl font-bold text-slate-400 tracking-tight">
+     —
+    </span>
+   </div>
+   <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+    <span>
+     Theo dõi tương tác truy cập
+    </span>
+    <span class="font-medium text-slate-500">
+     GA4, Search, Ads
+    </span>
+   </div>
+  </article>
+  <article class="bg-white border border-slate-200 rounded-xl p-5 shadow-xs hover:border-slate-300 transition-all">
+   <div class="flex items-center justify-between">
+    <span class="text-xs font-semibold text-slate-500">
+     Lượt chuyển đổi (Conversions)
+    </span>
+    <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-500">
+     Chưa có dữ liệu
+    </span>
+   </div>
+   <div class="mt-4 flex items-baseline gap-2">
+    <span class="font-display text-2xl font-bold text-slate-400 tracking-tight">
+     —
+    </span>
+   </div>
+   <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+    <span>
+     Lượt hẹn khám nhi &amp; cuộc gọi
+    </span>
+    <span class="font-medium text-slate-500">
+     Cổng hẹn khám
+    </span>
+   </div>
+  </article>
+ </section>
+ <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-6 shadow-xs flex flex-col justify-between" data-purpose="trend-chart-card">
+   <div>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+     <div>
+      <h3 class="font-display text-sm font-bold text-slate-900">
+       Xu hướng hiệu suất Marketing
+      </h3>
+      <p class="text-xs text-slate-500 mt-0.5">
+       Theo dõi sự thay đổi của các chỉ số trong khoảng thời gian đã chọn.
+      </p>
+     </div>
+     <div class="flex items-center p-1 bg-slate-100 rounded-lg text-xs font-medium text-slate-600">
+      <button class="px-2.5 py-1 rounded-md bg-white text-slate-900 font-semibold shadow-xs" data-action="metric-tab" type="button">
+       Chi tiêu
+      </button>
+      <button class="px-2.5 py-1 rounded-md hover:text-slate-900 transition-colors" data-action="metric-tab" type="button">
+       Lượt nhấp
+      </button>
+      <button class="px-2.5 py-1 rounded-md hover:text-slate-900 transition-colors" data-action="metric-tab" type="button">
+       Chuyển đổi
+      </button>
+     </div>
+    </div>
+    <div class="relative mt-6 h-64 w-full bg-slate-50/70 rounded-lg border border-dashed border-slate-200 flex flex-col items-center justify-center p-6 text-center overflow-hidden">
+     <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: linear-gradient(to right, #cbd5e1 1px, transparent 1px), linear-gradient(to bottom, #cbd5e1 1px, transparent 1px); background-size: 2.5rem 2.5rem;">
+     </div>
+     <div class="relative z-10 max-w-sm flex flex-col items-center">
+      <div class="w-12 h-12 rounded-full bg-white border border-slate-200 shadow-xs flex items-center justify-center text-slate-400 mb-3">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+        </path>
+       </svg>
+      </div>
+      <h4 class="text-xs font-bold text-slate-800">
+       Chưa có dữ liệu để hiển thị biểu đồ
+      </h4>
+      <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
+       Dữ liệu xu hướng sẽ tự động kích hoạt khi có ít nhất một nguồn cấp dữ liệu hoạt động.
+      </p>
+      <a class="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-brand-600 text-brand-600 hover:bg-brand-50 text-xs font-semibold transition-colors" href="/workspace/integrations">
+       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+        </path>
+       </svg>
+       <span>
+        Kết nối nền tảng ngay
+       </span>
+      </a>
+     </div>
+    </div>
+   </div>
+   <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+    <span>
+     Dữ liệu được làm mới tự động theo chu kỳ mỗi 30 phút.
+    </span>
+    <span class="text-slate-400">
+     Trạng thái: 0 hoạt động
+    </span>
+   </div>
+  </div>
+  <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-xs flex flex-col justify-between" data-purpose="integration-status-card">
+   <div>
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+     <h3 class="font-display text-sm font-bold text-slate-900">
+      Tình trạng kết nối dữ liệu
+     </h3>
+     <a class="text-xs font-semibold text-brand-600 hover:text-brand-700 transition-colors flex items-center gap-1" data-action="unavailable" href="#customer-dialog">
+      <span>
+       Quản lý
+      </span>
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+       <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+       </path>
+      </svg>
+     </a>
+    </div>
+    <div class="mt-3 divide-y divide-slate-100 text-xs">
+     <div class="py-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+       <div class="w-7 h-7 rounded-md bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-[10px] border border-amber-200">
+        GA4
+       </div>
+       <div>
+        <div class="font-semibold text-slate-800">
+         Google Analytics 4
+        </div>
+        <div class="text-[10px] text-slate-400">
+         Web &amp; App Stream
+        </div>
+       </div>
+      </div>
+      <a class="px-2.5 py-1 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold border border-slate-200 text-[11px] transition-colors" href="/workspace/integrations">
+       Kết nối
+      </a>
+     </div>
+     <div class="py-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+       <div class="w-7 h-7 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-[10px] border border-blue-200">
+        Meta
+       </div>
+       <div>
+        <div class="font-semibold text-slate-800">
+         Meta Ads
+        </div>
+        <div class="text-[10px] text-slate-400">
+         Facebook &amp; IG Ads
+        </div>
+       </div>
+      </div>
+      <a class="px-2.5 py-1 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold border border-slate-200 text-[11px] transition-colors" href="/workspace/integrations">
+       Kết nối
+      </a>
+     </div>
+     <div class="py-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+       <div class="w-7 h-7 rounded-md bg-sky-50 text-sky-600 flex items-center justify-center font-bold text-[10px] border border-sky-200">
+        GSC
+       </div>
+       <div>
+        <div class="font-semibold text-slate-800">
+         Google Search Console
+        </div>
+        <div class="text-[10px] text-slate-400">
+         Hiệu suất tìm kiếm
+        </div>
+       </div>
+      </div>
+      <a class="px-2.5 py-1 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold border border-slate-200 text-[11px] transition-colors" href="/workspace/integrations">
+       Kết nối
+      </a>
+     </div>
+     <div class="py-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+       <div class="w-7 h-7 rounded-md bg-slate-900 text-white flex items-center justify-center font-bold text-[10px]">
+        TT
+       </div>
+       <div>
+        <div class="font-semibold text-slate-800">
+         TikTok Ads
+        </div>
+        <div class="text-[10px] text-slate-400">
+         Video Campaign
+        </div>
+       </div>
+      </div>
+      <a class="px-2.5 py-1 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold border border-slate-200 text-[11px] transition-colors" href="/workspace/integrations">
+       Kết nối
+      </a>
+     </div>
+     <div class="py-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+       <div class="w-7 h-7 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-[10px] border border-indigo-200">
+        GBP
+       </div>
+       <div>
+        <div class="font-semibold text-slate-800">
+         Google Business Profile
+        </div>
+        <div class="text-[10px] text-slate-400">
+         Bản đồ Maps &amp; Review
+        </div>
+       </div>
+      </div>
+      <a class="px-2.5 py-1 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold border border-slate-200 text-[11px] transition-colors" href="/workspace/integrations">
+       Kết nối
+      </a>
+     </div>
+     <div class="py-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+       <div class="w-7 h-7 rounded-md bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-[10px]">
+        FB
+       </div>
+       <div>
+        <div class="font-semibold text-slate-800">
+         Facebook Content
+        </div>
+        <div class="text-[10px] text-slate-400">
+         Fanpage KinderHealth
+        </div>
+       </div>
+      </div>
+      <a class="px-2.5 py-1 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold border border-slate-200 text-[11px] transition-colors" href="/workspace/integrations">
+       Kết nối
+      </a>
+     </div>
+     <div class="py-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+       <div class="w-7 h-7 rounded-md bg-red-50 text-red-600 flex items-center justify-center font-bold text-[10px] border border-red-200">
+        YT
+       </div>
+       <div>
+        <div class="font-semibold text-slate-800">
+         YouTube Channel
+        </div>
+        <div class="text-[10px] text-slate-400">
+         Video sức khỏe nhi khoa
+        </div>
+       </div>
+      </div>
+      <a class="px-2.5 py-1 rounded bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold border border-slate-200 text-[11px] transition-colors" href="/workspace/integrations">
+       Kết nối
+      </a>
+     </div>
+    </div>
+   </div>
+   <div class="mt-4 pt-3 border-t border-slate-100 text-center">
+    <span class="text-[11px] text-slate-400">
+     Phân quyền theo vai trò Workspace
+    </span>
+   </div>
+  </div>
+ </section>
+ <section class="space-y-3" data-purpose="channel-shortcuts">
+  <div class="flex items-center justify-between">
+   <h3 class="font-display text-sm font-bold text-slate-900">
+    Phân tích theo kênh
+   </h3>
+   <span class="text-xs text-slate-500">
+    Truy cập nhanh báo cáo chuyên biệt từng kênh tiếp thị
+   </span>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
+   <a class="group p-4 bg-white border border-slate-200 rounded-xl hover:border-brand-600 hover:shadow-xs transition-all flex flex-col justify-between" data-action="unavailable" href="#customer-dialog">
+    <div>
+     <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z">
+       </path>
+      </svg>
+     </div>
+     <div class="font-semibold text-xs text-slate-900 group-hover:text-brand-600 transition-colors">
+      Facebook Ads
+     </div>
+     <div class="text-[11px] text-slate-400 mt-1">
+      Chi phí, ROI &amp; chiến dịch
+     </div>
+    </div>
+    <div class="mt-3 flex items-center justify-between text-[11px] font-semibold text-slate-500 group-hover:text-brand-600 pt-2 border-t border-slate-50">
+     <span>
+      Xem chi tiết
+     </span>
+     <svg class="w-3 h-3 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      </path>
+     </svg>
+    </div>
+   </a>
+   <a class="group p-4 bg-white border border-slate-200 rounded-xl hover:border-brand-600 hover:shadow-xs transition-all flex flex-col justify-between" data-action="unavailable" href="#customer-dialog">
+    <div>
+     <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mb-3">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+       <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z">
+       </path>
+      </svg>
+     </div>
+     <div class="font-semibold text-xs text-slate-900 group-hover:text-brand-600 transition-colors">
+      Google Ads
+     </div>
+     <div class="text-[11px] text-slate-400 mt-1">
+      Từ khoá, Search &amp; PMax
+     </div>
+    </div>
+    <div class="mt-3 flex items-center justify-between text-[11px] font-semibold text-slate-500 group-hover:text-brand-600 pt-2 border-t border-slate-50">
+     <span>
+      Xem chi tiết
+     </span>
+     <svg class="w-3 h-3 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      </path>
+     </svg>
+    </div>
+   </a>
+   <a class="group p-4 bg-white border border-slate-200 rounded-xl hover:border-brand-600 hover:shadow-xs transition-all flex flex-col justify-between" data-action="unavailable" href="#customer-dialog">
+    <div>
+     <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+       <path d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+       </path>
+      </svg>
+     </div>
+     <div class="font-semibold text-xs text-slate-900 group-hover:text-brand-600 transition-colors">
+      SEO &amp; Keywords
+     </div>
+     <div class="text-[11px] text-slate-400 mt-1">
+      Thứ hạng bài viết nhi khoa
+     </div>
+    </div>
+    <div class="mt-3 flex items-center justify-between text-[11px] font-semibold text-slate-500 group-hover:text-brand-600 pt-2 border-t border-slate-50">
+     <span>
+      Xem chi tiết
+     </span>
+     <svg class="w-3 h-3 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      </path>
+     </svg>
+    </div>
+   </a>
+   <a class="group p-4 bg-white border border-slate-200 rounded-xl hover:border-brand-600 hover:shadow-xs transition-all flex flex-col justify-between" data-action="unavailable" href="#customer-dialog">
+    <div>
+     <div class="w-8 h-8 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center mb-3">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+       <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+       </path>
+      </svg>
+     </div>
+     <div class="font-semibold text-xs text-slate-900 group-hover:text-brand-600 transition-colors">
+      Analytics (GA4)
+     </div>
+     <div class="text-[11px] text-slate-400 mt-1">
+      Phiên, hành vi &amp; phễu hẹn
+     </div>
+    </div>
+    <div class="mt-3 flex items-center justify-between text-[11px] font-semibold text-slate-500 group-hover:text-brand-600 pt-2 border-t border-slate-50">
+     <span>
+      Xem chi tiết
+     </span>
+     <svg class="w-3 h-3 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      </path>
+     </svg>
+    </div>
+   </a>
+   <a class="group p-4 bg-white border border-slate-200 rounded-xl hover:border-brand-600 hover:shadow-xs transition-all flex flex-col justify-between" data-action="unavailable" href="#customer-dialog">
+    <div>
+     <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center mb-3">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+       <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 2.89 3.5 2.77 1.81-.02 3.25-1.57 3.25-3.38V.02z">
+       </path>
+      </svg>
+     </div>
+     <div class="font-semibold text-xs text-slate-900 group-hover:text-brand-600 transition-colors">
+      TikTok Ads
+     </div>
+     <div class="text-[11px] text-slate-400 mt-1">
+      Lead form &amp; xem video
+     </div>
+    </div>
+    <div class="mt-3 flex items-center justify-between text-[11px] font-semibold text-slate-500 group-hover:text-brand-600 pt-2 border-t border-slate-50">
+     <span>
+      Xem chi tiết
+     </span>
+     <svg class="w-3 h-3 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      </path>
+     </svg>
+    </div>
+   </a>
+   <a class="group p-4 bg-white border border-slate-200 rounded-xl hover:border-brand-600 hover:shadow-xs transition-all flex flex-col justify-between" data-action="unavailable" href="#customer-dialog">
+    <div>
+     <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+       <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+       </path>
+       <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+       </path>
+      </svg>
+     </div>
+     <div class="font-semibold text-xs text-slate-900 group-hover:text-brand-600 transition-colors">
+      Google Maps
+     </div>
+     <div class="text-[11px] text-slate-400 mt-1">
+      Cuộc gọi &amp; chỉ đường Q7
+     </div>
+    </div>
+    <div class="mt-3 flex items-center justify-between text-[11px] font-semibold text-slate-500 group-hover:text-brand-600 pt-2 border-t border-slate-50">
+     <span>
+      Xem chi tiết
+     </span>
+     <svg class="w-3 h-3 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      </path>
+     </svg>
+    </div>
+   </a>
+  </div>
+ </section>
+ <section class="bg-white border border-slate-200 rounded-xl p-6 shadow-xs" data-purpose="recent-reports-section">
+  <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+   <div>
+    <h3 class="font-display text-sm font-bold text-slate-900">
+     Báo cáo gần đây
+    </h3>
+    <p class="text-xs text-slate-500 mt-0.5">
+     Danh sách các báo cáo định kỳ và tệp tổng kết hiệu suất hàng tháng.
+    </p>
+   </div>
+   <a class="text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1" href="/workspace/reports">
+    <span>
+     Xem tất cả báo cáo
+    </span>
+    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+     <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+     </path>
+    </svg>
+   </a>
+  </div>
+  <div class="py-10 flex flex-col items-center justify-center text-center">
+   <div class="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 mb-3">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+     <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+     </path>
+    </svg>
+   </div>
+   <h4 class="text-xs font-bold text-slate-800">
+    Chưa có báo cáo nào
+   </h4>
+   <p class="text-xs text-slate-500 mt-1 max-w-sm">
+    Tạo báo cáo đầu tiên sau khi kết nối và đồng bộ dữ liệu của chuỗi phòng khám KinderHealth.
+   </p>
+   <a class="mt-4 inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors" href="/workspace/reports?create=1">
+    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+     <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+     </path>
+    </svg>
+    <span>
+     Tạo báo cáo mới
+    </span>
+   </a>
+  </div>
+ </section>
+ <footer class="pt-6 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 gap-4" data-purpose="page-footer">
+  <div class="flex items-center gap-2">
+   <div class="w-2 h-2 rounded-full bg-emerald-500">
+   </div>
+   <span>
+    Hệ thống đồng bộ dữ liệu thời gian thực cho chuỗi phòng khám KinderHealth • Hỗ trợ kết nối API tự động.
+   </span>
+  </div>
+  <div class="flex items-center gap-6 font-medium">
+   <a class="hover:text-slate-600 transition-colors" href="/workspace/integrations">
+    Hướng dẫn kết nối API
+   </a>
+   <a class="hover:text-slate-600 transition-colors" data-action="unavailable" href="#customer-dialog">
+    Quản lý Webhook
+   </a>
+   <a class="hover:text-slate-600 transition-colors" data-action="unavailable" href="#customer-dialog">
+    Hỗ trợ kỹ thuật 24/7
+   </a>
+  </div>
+ </footer>
+</main>
+
+{% endblock %}

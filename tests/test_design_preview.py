@@ -5,14 +5,23 @@ from app.design_preview import app
 
 def test_design_preview_opens_existing_overview_without_login():
     with TestClient(app) as client:
-        response = client.get('/', follow_redirects=False)
-        assert response.status_code == 303
-        assert response.headers['location'] == '/overview'
-        response = client.get('/')
+        response = client.get('/overview')
         assert response.status_code == 200
         assert 'Dữ liệu mẫu' in response.text
         assert 'dashboard-sidebar' in response.text
         assert 'type="password"' not in response.text
+
+
+def test_design_preview_opens_new_customer_login_without_creating_identity():
+    with TestClient(app) as client:
+        response = client.get('/', follow_redirects=False)
+        assert response.status_code == 303
+        assert response.headers['location'] == '/workspace/login'
+        response = client.get('/')
+        assert response.status_code == 200
+        assert 'Bản xem thử' in response.text
+        assert 'Khám phá giao diện mới' in response.text
+        assert not response.cookies
 
 
 def test_design_preview_does_not_expose_real_report_or_auth_routes():

@@ -56,7 +56,7 @@ def test_overview_csv_uses_selected_period():
 def test_overview_renders_reference_dashboard():
     response = client.get('/overview')
     assert response.status_code == 200
-    assert '>Tổng quan</h1>' in response.text
+    assert '>Tổng quan hiệu quả Marketing</h1>' in response.text
     assert '482.350' in response.text
     assert '/static/css/dist/dashboard.css' in response.text
     assert 'cdn.tailwindcss.com' not in response.text

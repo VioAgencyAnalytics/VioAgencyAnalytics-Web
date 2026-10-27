@@ -11,11 +11,11 @@ class RuntimeMode(BaseSettings):
 
 
 class Settings(RuntimeMode):
-    app_name: str = Field(default="KDH Marketing Dashboard")
+    app_name: str = Field(default="VioAgencyAnalytics")
     debug: bool = False
     database_url: str = "postgresql://postgres:postgres@localhost:5432/kdh_report"
-        # =====================================================
-    # KDH REPORT ADMIN - INTERNAL REPORT API
+    # =====================================================
+    # VioAgencyAnalytics Admin - INTERNAL REPORT API
     # =====================================================
 
     report_admin_base_url: str = (
@@ -26,6 +26,14 @@ class Settings(RuntimeMode):
     # Browser origins; report_admin_base_url remains backend/internal only.
     report_admin_public_url: str = 'http://localhost:8090'
     report_new_public_url: str = 'http://localhost:8080'
+
+    # Explicit local dual-Admin mode. Each origin retains its own backend and
+    # host-only browser cookies; selecting an origin never grants report access.
+    report_vio_viewer_enabled: bool = False
+    report_vio_admin_base_url: str = ''
+    report_vio_admin_public_url: str = ''
+    report_vio_new_public_url: str = ''
+    report_vio_service_token: SecretStr = SecretStr('')
 
     report_request_timeout_seconds: float = Field(
         default=5.0,

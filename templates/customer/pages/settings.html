@@ -1,0 +1,569 @@
+{% extends "customer/shell.html" %}
+{% block content %}
+<main class="customer-page customer-page-contained">
+ <p class="customer-inline-note">
+  Các thay đổi ở bản xem thử được lưu trên trình duyệt này; chưa cập nhật Workspace trên máy chủ.
+ </p>
+ <div class="w-full max-w-7xl mx-auto px-8 py-8 space-y-6">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#CBD5E1]">
+   <div>
+    <h1 class="text-2xl font-bold text-on-surface tracking-tight font-headline-lg">
+     Cài đặt
+    </h1>
+    <p class="text-body-md text-on-surface-variant mt-1 font-body-md">
+     Quản lý thông tin doanh nghiệp và tùy chọn không gian làm việc.
+    </p>
+   </div>
+   <div class="flex items-center gap-3">
+    <button class="px-4 py-2 rounded-lg border border-[#CBD5E1] bg-surface-container-lowest text-on-surface hover:bg-surface-container-low transition-colors font-label-md text-label-md shadow-xs flex items-center gap-2" data-action="reset-settings" type="button">
+     <span class="material-symbols-outlined text-[18px]">
+      undo
+     </span>
+     <span class="">
+      Hủy thay đổi
+     </span>
+    </button>
+    <button class="customer-primary" data-action="save-settings" type="button">
+     <span class="material-symbols-outlined text-[18px]">
+      save
+     </span>
+     <span class="">
+      Lưu thay đổi
+     </span>
+    </button>
+   </div>
+  </div>
+  <section class="bg-surface-container-lowest rounded-xl border border-[#CBD5E1] p-6 shadow-sm space-y-6">
+   <div class="flex items-start justify-between border-b border-[#CBD5E1] pb-4">
+    <div class="flex items-center gap-3">
+     <div class="w-10 h-10 rounded-xl bg-primary-fixed/40 text-primary-container flex items-center justify-center">
+      <span class="material-symbols-outlined text-[24px]">
+       domain
+      </span>
+     </div>
+     <div>
+      <h2 class="font-headline-sm text-headline-sm font-semibold text-on-surface">
+       Thông tin doanh nghiệp
+      </h2>
+      <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+       Cập nhật thông tin của không gian làm việc KinderHealth.
+      </p>
+     </div>
+    </div>
+    <span class="px-2.5 py-1 rounded-lg bg-surface-container-low text-label-sm font-label-sm text-on-surface-variant">
+     ID: WSP-VN-8842
+    </span>
+   </div>
+   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="flex flex-col gap-1.5">
+     <div class="flex items-center justify-between">
+      <label class="font-label-md text-label-md text-on-surface font-medium" for="settings-field-0">
+       Tên không gian làm việc
+      </label>
+      <span class="text-body-sm text-outline flex items-center gap-1">
+       <span class="material-symbols-outlined text-[14px]">
+        lock
+       </span>
+       Mã duy nhất
+      </span>
+     </div>
+     <div class="relative flex items-center">
+      <input aria-label="Tên không gian làm việc" class="w-full h-10 px-3.5 bg-surface-container-low text-on-surface-variant font-table-data text-table-data rounded-lg border border-[#CBD5E1] cursor-not-allowed select-all focus:outline-none" data-setting="field-0" id="settings-field-0" readonly="" type="text" value="KinderHealth"/>
+      <span class="material-symbols-outlined absolute right-3 text-outline text-[18px]">
+       lock
+      </span>
+     </div>
+     <p class="text-body-sm text-outline mt-0.5">
+      Mã định danh không gian làm việc duy nhất trong hệ thống.
+     </p>
+    </div>
+    <div class="flex flex-col gap-1.5">
+     <label class="font-label-md text-label-md text-on-surface font-medium" for="settings-field-1">
+      Tên doanh nghiệp
+     </label>
+     <input aria-label="Tên doanh nghiệp" class="w-full h-10 px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg border border-[#CBD5E1] focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 transition-all" data-setting="field-1" id="settings-field-1" type="text" value="Hệ thống Phòng khám &amp; Nhà thuốc KinderHealth"/>
+     <p class="text-body-sm text-outline mt-0.5">
+      Tên đầy đủ được sử dụng trên tiêu đề các báo cáo tiếp thị.
+     </p>
+    </div>
+    <div class="flex flex-col gap-1.5">
+     <label class="font-label-md text-label-md text-on-surface font-medium" for="settings-field-2">
+      Website
+     </label>
+     <div class="relative flex items-center">
+      <input aria-label="Website" class="w-full h-10 pl-3.5 pr-10 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg border border-[#CBD5E1] focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 transition-all" data-setting="field-2" id="settings-field-2" type="url" value="https://kinderhealth.vn"/>
+      <a class="absolute right-3 text-on-surface-variant hover:text-primary-container transition-colors" href="https://kinderhealth.vn" rel="noopener noreferrer" target="_blank">
+       <span class="material-symbols-outlined text-[18px]">
+        open_in_new
+       </span>
+      </a>
+     </div>
+     <p class="text-body-sm text-outline mt-0.5">
+      Trang chủ tiếp nhận chuyển đổi và gắn mã đo lường pixel.
+     </p>
+    </div>
+    <div class="flex flex-col gap-1.5">
+     <label class="font-label-md text-label-md text-on-surface font-medium" for="settings-field-3">
+      Quốc gia / Khu vực
+     </label>
+     <div class="relative flex items-center">
+      <select aria-label="Quốc gia / Khu vực" class="w-full h-10 px-3.5 pr-10 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg border border-[#CBD5E1] appearance-none focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 cursor-pointer" data-setting="field-3" id="settings-field-3">
+       <option selected="" value="VN">
+        Việt Nam (VN) — Mặc định
+       </option>
+       <option value="SG">
+        Singapore (SG)
+       </option>
+       <option value="TH">
+        Thái Lan (TH)
+       </option>
+       <option value="MY">
+        Malaysia (MY)
+       </option>
+      </select>
+      <span class="material-symbols-outlined absolute right-3 text-on-surface-variant pointer-events-none text-[18px]">
+       expand_more
+      </span>
+     </div>
+     <p class="text-body-sm text-outline mt-0.5">
+      Khu vực kinh doanh trọng tâm để đối chiếu dữ liệu địa lý.
+     </p>
+    </div>
+   </div>
+   <div class="border-t border-[#CBD5E1] pt-5">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-4 rounded-xl bg-surface-container-low border border-[#CBD5E1]">
+     <div class="flex items-center gap-4">
+      <div class="w-16 h-16 rounded-xl bg-surface-container-lowest border border-[#CBD5E1] shadow-xs flex items-center justify-center p-2 relative flex-shrink-0">
+       <img alt="KinderHealth Logo" class="w-full h-full object-contain" data-logo-preview="" loading="lazy" src="/static/img/analytics-mark.svg"/>
+      </div>
+      <div>
+       <span class="font-label-md text-label-md font-semibold text-on-surface block">
+        Logo doanh nghiệp
+       </span>
+       <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+        Hỗ trợ định dạng PNG, JPG, SVG tối đa 2MB. Logo hiển thị trên tiêu đề xuất báo cáo.
+       </p>
+      </div>
+     </div>
+     <div class="flex items-center gap-3 flex-shrink-0">
+      <label class="cursor-pointer px-4 py-2 rounded-lg bg-surface-container-lowest border border-[#CBD5E1] text-on-surface hover:bg-surface-container-high transition-colors font-label-md text-label-md shadow-xs flex items-center gap-2">
+       <span class="material-symbols-outlined text-[18px]">
+        cloud_upload
+       </span>
+       <span class="">
+        Tải lên logo mới
+       </span>
+       <input accept="image/png,image/jpeg,image/webp" aria-label="cloud_upload Tải lên logo mới" class="hidden" data-setting="field-4" id="settings-field-4" type="file"/>
+      </label>
+      <button class="px-3 py-2 rounded-lg text-outline hover:text-error hover:bg-error-container/20 transition-colors font-label-md text-label-md flex items-center gap-1" data-action="remove-logo" type="button">
+       <span class="material-symbols-outlined text-[18px]">
+        delete
+       </span>
+       <span class="">
+        Gỡ bỏ
+       </span>
+      </button>
+     </div>
+    </div>
+   </div>
+  </section>
+  <section class="bg-surface-container-lowest rounded-xl border border-[#CBD5E1] p-6 shadow-sm space-y-6">
+   <div class="flex items-center gap-3 border-b border-[#CBD5E1] pb-4">
+    <div class="w-10 h-10 rounded-xl bg-tertiary-fixed text-tertiary flex items-center justify-center">
+     <span class="material-symbols-outlined text-[24px]">
+      public
+     </span>
+    </div>
+    <div>
+     <h2 class="font-headline-sm text-headline-sm font-semibold text-on-surface">
+      Khu vực &amp; Ngôn ngữ
+     </h2>
+     <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+      Thiết lập cách hiển thị thời gian, ngôn ngữ và tiền tệ.
+     </p>
+    </div>
+   </div>
+   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="flex flex-col gap-1.5">
+     <label class="font-label-md text-label-md text-on-surface font-medium" for="settings-field-5">
+      Ngôn ngữ giao diện
+     </label>
+     <div class="relative flex items-center">
+      <select aria-label="Ngôn ngữ giao diện" class="w-full h-10 px-3.5 pr-10 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg border border-[#CBD5E1] appearance-none focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 cursor-pointer" data-setting="field-5" id="settings-field-5">
+       <option selected="" value="vi">
+        Tiếng Việt (Mặc định)
+       </option>
+       <option value="en">
+        English (US)
+       </option>
+      </select>
+      <span class="material-symbols-outlined absolute right-3 text-on-surface-variant pointer-events-none text-[18px]">
+       expand_more
+      </span>
+     </div>
+     <span class="font-body-sm text-body-sm text-outline mt-0.5">
+      Chuẩn hóa thuật ngữ Marketing số theo tiếng Việt.
+     </span>
+    </div>
+    <div class="flex flex-col gap-1.5">
+     <label class="font-label-md text-label-md text-on-surface font-medium" for="settings-field-6">
+      Múi giờ
+     </label>
+     <div class="relative flex items-center">
+      <select aria-label="Múi giờ" class="w-full h-10 px-3.5 pr-10 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg border border-[#CBD5E1] appearance-none focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 cursor-pointer" data-setting="field-6" id="settings-field-6">
+       <option selected="" value="Asia/Ho_Chi_Minh">
+        Asia/Ho_Chi_Minh (GMT+07:00)
+       </option>
+       <option value="Asia/Bangkok">
+        Asia/Bangkok (GMT+07:00)
+       </option>
+       <option value="Asia/Singapore">
+        Asia/Singapore (GMT+08:00)
+       </option>
+       <option value="UTC">
+        UTC (GMT+00:00)
+       </option>
+      </select>
+      <span class="material-symbols-outlined absolute right-3 text-on-surface-variant pointer-events-none text-[18px]">
+       expand_more
+      </span>
+     </div>
+     <span class="font-body-sm text-body-sm text-outline mt-0.5">
+      Áp dụng tính toán chu kỳ ngày và đối soát báo cáo
+     </span>
+    </div>
+    <div class="flex flex-col gap-1.5">
+     <label class="font-label-md text-label-md text-on-surface font-medium" for="settings-field-7">
+      Tiền tệ mặc định
+     </label>
+     <div class="relative flex items-center">
+      <select aria-label="Tiền tệ mặc định" class="w-full h-10 px-3.5 pr-10 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg border border-[#CBD5E1] appearance-none focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 cursor-pointer" data-setting="field-7" id="settings-field-7">
+       <option selected="" value="VND">
+        VND — Đồng Việt Nam (₫)
+       </option>
+       <option value="USD">
+        USD ($) — Đô la Mỹ
+       </option>
+      </select>
+      <span class="material-symbols-outlined absolute right-3 text-on-surface-variant pointer-events-none text-[18px]">
+       expand_more
+      </span>
+     </div>
+     <span class="font-body-sm text-body-sm text-outline mt-0.5">
+      Tiền tệ hiển thị mặc định không tự động quy đổi tỷ giá lịch sử
+     </span>
+    </div>
+   </div>
+  </section>
+  <section class="bg-surface-container-lowest rounded-xl border border-[#CBD5E1] p-6 shadow-sm space-y-6">
+   <div class="flex items-center gap-3 border-b border-[#CBD5E1] pb-4">
+    <div class="w-10 h-10 rounded-xl bg-secondary-fixed text-secondary flex items-center justify-center">
+     <span class="material-symbols-outlined text-[24px]">
+      bar_chart
+     </span>
+    </div>
+    <div>
+     <h2 class="font-headline-sm text-headline-sm font-semibold text-on-surface">
+      Tùy chọn báo cáo
+     </h2>
+     <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+      Thiết lập các giá trị mặc định khi xem Dashboard và tạo báo cáo.
+     </p>
+    </div>
+   </div>
+   <div class="space-y-3">
+    <label class="font-label-md text-label-md text-on-surface font-medium block">
+     Khoảng thời gian mặc định khi xem Dashboard
+    </label>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+     <label class="p-3 rounded-lg border border-[#CBD5E1] bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col items-center justify-center text-center gap-1 select-none">
+      <input aria-label="7 ngày gần nhất Tuần trước" class="sr-only" data-setting="default_date_range" id="settings-field-8" name="default_date_range" type="radio" value="7d"/>
+      <span class="font-label-md text-label-md font-medium text-on-surface">
+       7 ngày gần nhất
+      </span>
+      <span class="text-[11px] text-on-surface-variant">
+       Tuần trước
+      </span>
+     </label>
+     <label class="p-3 rounded-lg border-2 border-primary-container bg-primary-fixed/20 transition-colors cursor-pointer flex flex-col items-center justify-center text-center gap-1 select-none">
+      <input aria-label="30 ngày gần nhất Khuyên dùng" checked="" class="sr-only" data-setting="default_date_range" id="settings-field-9" name="default_date_range" type="radio" value="30d"/>
+      <span class="font-label-md text-label-md font-semibold text-primary">
+       30 ngày gần nhất
+      </span>
+      <span class="text-[11px] text-primary-container font-medium">
+       Khuyên dùng
+      </span>
+     </label>
+     <label class="p-3 rounded-lg border border-[#CBD5E1] bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col items-center justify-center text-center gap-1 select-none">
+      <input aria-label="90 ngày gần nhất Theo quý" class="sr-only" data-setting="default_date_range" id="settings-field-10" name="default_date_range" type="radio" value="90d"/>
+      <span class="font-label-md text-label-md font-medium text-on-surface">
+       90 ngày gần nhất
+      </span>
+      <span class="text-[11px] text-on-surface-variant">
+       Theo quý
+      </span>
+     </label>
+     <label class="p-3 rounded-lg border border-[#CBD5E1] bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col items-center justify-center text-center gap-1 select-none">
+      <input aria-label="Tháng này Từ ngày 1" class="sr-only" data-setting="default_date_range" id="settings-field-11" name="default_date_range" type="radio" value="this_month"/>
+      <span class="font-label-md text-label-md font-medium text-on-surface">
+       Tháng này
+      </span>
+      <span class="text-[11px] text-on-surface-variant">
+       Từ ngày 1
+      </span>
+     </label>
+     <label class="p-3 rounded-lg border border-[#CBD5E1] bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col items-center justify-center text-center gap-1 select-none">
+      <input aria-label="Tháng trước Đã chốt sổ" class="sr-only" data-setting="default_date_range" id="settings-field-12" name="default_date_range" type="radio" value="last_month"/>
+      <span class="font-label-md text-label-md font-medium text-on-surface">
+       Tháng trước
+      </span>
+      <span class="text-[11px] text-on-surface-variant">
+       Đã chốt sổ
+      </span>
+     </label>
+     <label class="p-3 rounded-lg border border-[#CBD5E1] bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col items-center justify-center text-center gap-1 select-none">
+      <input aria-label="Tùy chỉnh Chọn ngày" class="sr-only" data-setting="default_date_range" id="settings-field-13" name="default_date_range" type="radio" value="custom"/>
+      <span class="font-label-md text-label-md font-medium text-on-surface">
+       Tùy chỉnh
+      </span>
+      <span class="text-[11px] text-on-surface-variant">
+       Chọn ngày
+      </span>
+     </label>
+    </div>
+   </div>
+   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+    <div class="flex items-center justify-between p-4 rounded-xl bg-surface-container-low border border-[#CBD5E1]">
+     <div class="flex flex-col pr-4">
+      <span class="font-label-md text-label-md font-semibold text-on-surface">
+       So sánh kỳ đối soát
+      </span>
+      <span class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+       Bật so sánh kỳ liền kề (Previous Period) để tính biến động delta tăng trưởng
+      </span>
+     </div>
+     <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+      <input aria-label="" checked="" class="sr-only peer" data-setting="field-14" id="settings-field-14" type="checkbox"/>
+      <div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container">
+      </div>
+     </label>
+    </div>
+    <div class="flex flex-col justify-center p-4 rounded-xl bg-surface-container-low border border-[#CBD5E1]">
+     <label class="font-label-md text-label-md font-semibold text-on-surface mb-1.5" for="settings-field-15">
+      Ngày bắt đầu trong tuần
+     </label>
+     <div class="relative flex items-center">
+      <select aria-label="Ngày bắt đầu trong tuần" class="w-full h-10 px-3.5 pr-10 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg border border-[#CBD5E1] appearance-none focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 cursor-pointer" data-setting="field-15" id="settings-field-15">
+       <option selected="" value="monday">
+        Thứ Hai (Mặc định chuẩn ISO 8601)
+       </option>
+       <option value="sunday">
+        Chủ Nhật (Mặc định US / Google)
+       </option>
+      </select>
+      <span class="material-symbols-outlined absolute right-3 text-on-surface-variant pointer-events-none text-[18px]">
+       expand_more
+      </span>
+     </div>
+    </div>
+   </div>
+   <div class="flex items-start gap-3 p-4 rounded-xl bg-tertiary-fixed/30 border border-tertiary/20 text-on-surface">
+    <span class="material-symbols-outlined text-tertiary text-[22px] mt-0.5 flex-shrink-0">
+     info
+    </span>
+    <div>
+     <span class="font-label-md text-label-md font-semibold text-tertiary block">
+      Thời điểm cập nhật dữ liệu
+     </span>
+     <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+      Thời điểm cập nhật phụ thuộc nền tảng và lần đồng bộ thành công. Kiểm tra trạng thái nguồn trước khi đối chiếu số liệu.
+     </p>
+    </div>
+   </div>
+  </section>
+  <section class="bg-surface-container-lowest rounded-xl border border-[#CBD5E1] p-6 shadow-sm space-y-6">
+   <div class="flex items-center gap-3 border-b border-[#CBD5E1] pb-4">
+    <div class="w-10 h-10 rounded-xl bg-secondary-fixed/50 text-secondary flex items-center justify-center">
+     <span class="material-symbols-outlined text-[24px]">
+      palette
+     </span>
+    </div>
+    <div>
+     <h2 class="font-headline-sm text-headline-sm font-semibold text-on-surface">
+      Thương hiệu báo cáo
+     </h2>
+     <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+      Tùy chỉnh thông tin hiển thị trên báo cáo được hỗ trợ.
+     </p>
+    </div>
+   </div>
+   <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+    <div class="lg:col-span-2 space-y-4">
+     <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface font-medium" for="settings-field-16">
+       Tên hiển thị trên báo cáo
+      </label>
+      <input aria-label="Tên hiển thị trên báo cáo" class="w-full h-10 px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg border border-[#CBD5E1] focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20" data-setting="field-16" id="settings-field-16" type="text" value="Hệ thống Phòng khám Nhi khoa KinderHealth"/>
+      <p class="text-body-sm text-outline mt-0.5">
+       Xuất hiện nổi bật tại tiêu đề đầu trang của các bản xuất PDF.
+      </p>
+     </div>
+     <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface font-medium" for="settings-field-17">
+       Tiêu đề chân trang báo cáo (Footer note)
+      </label>
+      <input aria-label="Tiêu đề chân trang báo cáo (Footer note)" class="w-full h-10 px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg border border-[#CBD5E1] focus:outline-none focus:border-primary-container focus:ring-2 focus:ring-primary-container/20" data-setting="field-17" id="settings-field-17" type="text" value="Bản quyền số liệu tiếp thị nội bộ — KinderHealth Clinic &amp; Pharmacy"/>
+      <p class="text-body-sm text-outline mt-0.5">
+       Dòng chú thích bản quyền số liệu ở cuối mỗi trang báo cáo.
+      </p>
+     </div>
+     <div class="flex flex-col gap-1.5">
+      <label class="font-label-md text-label-md text-on-surface font-medium">
+       Màu sắc điểm nhấn báo cáo (Accent Color)
+      </label>
+      <div class="flex items-center gap-3 p-3 rounded-lg border border-[#CBD5E1] bg-surface-container-low">
+       <span class="w-7 h-7 rounded-lg bg-primary-container shadow-xs flex-shrink-0 border border-white">
+       </span>
+       <div class="flex flex-col flex-1 min-w-0">
+        <span class="font-label-md text-label-md font-semibold text-on-surface">
+         #D9232E
+        </span>
+        <span class="text-body-sm text-on-surface-variant">
+         Màu đỏ thương hiệu VIO / KinderHealth (#D9232E)
+        </span>
+       </div>
+       <span class="material-symbols-outlined text-outline text-[18px]">
+        palette
+       </span>
+      </div>
+     </div>
+    </div>
+    <div class="p-4 rounded-xl border border-[#CBD5E1] bg-surface-container-low shadow-xs space-y-3">
+     <div class="flex items-center justify-between border-b border-[#CBD5E1] pb-2.5">
+      <div class="flex items-center gap-2">
+       <div class="w-6 h-6 rounded-md bg-primary-container text-on-primary flex items-center justify-center font-bold text-[10px]">
+        KH
+       </div>
+       <div>
+        <span class="font-label-sm text-label-sm font-bold text-on-surface block leading-tight">
+         Báo cáo Hiệu suất Marketing
+        </span>
+        <span class="text-[10px] text-on-surface-variant leading-tight">
+         Tháng 10/2026
+        </span>
+       </div>
+      </div>
+      <span class="text-[9px] font-semibold px-1.5 py-0.5 bg-surface-container-high rounded text-on-surface-variant">
+       XEM TRƯỚC
+      </span>
+     </div>
+     <div class="grid grid-cols-2 gap-2 pt-1">
+      <div class="bg-surface-container-lowest p-2 rounded border border-[#CBD5E1]/60">
+       <span class="text-[10px] text-on-surface-variant block uppercase font-medium">
+        Chi tiêu
+       </span>
+       <span class="font-label-md text-label-md font-bold text-on-surface">
+        42.8M ₫
+       </span>
+       <div class="w-full bg-surface-container h-1 rounded-full mt-1.5 overflow-hidden">
+        <div class="bg-primary-container h-full w-3/4">
+        </div>
+       </div>
+      </div>
+      <div class="bg-surface-container-lowest p-2 rounded border border-[#CBD5E1]/60">
+       <span class="text-[10px] text-on-surface-variant block uppercase font-medium">
+        Chuyển đổi
+       </span>
+       <span class="font-label-md text-label-md font-bold text-on-surface">
+        618 lượt
+       </span>
+       <div class="w-full bg-surface-container h-1 rounded-full mt-1.5 overflow-hidden">
+        <div class="bg-secondary h-full w-4/5">
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="border-t border-[#CBD5E1] pt-2 flex items-center justify-between text-[10px] text-on-surface-variant">
+      <span class="truncate">
+       KinderHealth Clinic &amp; Pharmacy
+      </span>
+      <span class="font-semibold text-primary-container">
+       VioAgency
+      </span>
+     </div>
+    </div>
+   </div>
+  </section>
+  <section class="bg-surface-container-lowest rounded-xl border border-[#CBD5E1] p-6 shadow-sm space-y-6">
+   <div class="flex items-center gap-3 border-b border-[#CBD5E1] pb-4">
+    <div class="w-10 h-10 rounded-xl bg-surface-container text-on-surface flex items-center justify-center">
+     <span class="material-symbols-outlined text-[24px]">
+      hub
+     </span>
+    </div>
+    <div>
+     <h2 class="font-headline-sm text-headline-sm font-semibold text-on-surface">
+      Quản lý không gian làm việc
+     </h2>
+     <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+      Lối tắt liên kết đến các phân hệ quản trị liên quan của KinderHealth.
+     </p>
+    </div>
+   </div>
+   <div class="space-y-3">
+    <div class="border border-[#CBD5E1] rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-container-low hover:bg-surface-container transition-colors">
+     <div class="flex items-center gap-3.5">
+      <div class="w-10 h-10 rounded-lg bg-surface-container-lowest border border-[#CBD5E1] text-primary-container flex items-center justify-center shadow-xs flex-shrink-0">
+       <span class="material-symbols-outlined text-[22px]">
+        manage_accounts
+       </span>
+      </div>
+      <div>
+       <span class="font-label-md text-label-md font-semibold text-on-surface block">
+        Thành viên &amp; Phân quyền
+       </span>
+       <span class="font-body-sm text-body-sm text-on-surface-variant">
+        Quản lý 1 thành viên hiện diện và phân bổ quyền truy cập
+       </span>
+      </div>
+     </div>
+     <a class="px-4 py-2 rounded-lg bg-surface-container-lowest border border-[#CBD5E1] text-on-surface hover:text-primary hover:border-primary transition-colors font-label-md text-label-md shadow-xs flex items-center gap-1.5 flex-shrink-0" href="/workspace/members">
+      <span class="material-symbols-outlined text-[18px]">
+       group
+      </span>
+      <span class="">
+       Quản lý thành viên
+      </span>
+     </a>
+    </div>
+    <div class="border border-[#CBD5E1] rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-container-low hover:bg-surface-container transition-colors">
+     <div class="flex items-center gap-3.5">
+      <div class="w-10 h-10 rounded-lg bg-surface-container-lowest border border-[#CBD5E1] text-primary-container flex items-center justify-center shadow-xs flex-shrink-0">
+       <span class="material-symbols-outlined text-[22px]">
+        sync_alt
+       </span>
+      </div>
+      <div>
+       <span class="font-label-md text-label-md font-semibold text-on-surface block">
+        Tài khoản kết nối nền tảng
+       </span>
+       <span class="font-body-sm text-body-sm text-on-surface-variant">
+        Quản lý 9 kênh Marketing và tình trạng đồng bộ dữ liệu
+       </span>
+      </div>
+     </div>
+     <a class="px-4 py-2 rounded-lg bg-surface-container-lowest border border-[#CBD5E1] text-on-surface hover:text-primary hover:border-primary transition-colors font-label-md text-label-md shadow-xs flex items-center gap-1.5 flex-shrink-0" href="/workspace/integrations">
+      <span class="material-symbols-outlined text-[18px]">
+       cable
+      </span>
+      <span class="">
+       Quản lý kết nối
+      </span>
+     </a>
+    </div>
+   </div>
+  </section>
+ </div>
+</main>
+
+{% endblock %}

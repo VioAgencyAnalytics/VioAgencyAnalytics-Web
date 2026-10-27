@@ -1,0 +1,40 @@
+name: kdh-report-new-mockdb
+
+services:
+  mockdb:
+    container_name: KDH-Report-New-MockDb
+    image: kdh-new:unified-20261020-0d8c6b94bb93
+    pull_policy: never
+    command: ["python", "-m", "uvicorn", "app.design_preview:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "127.0.0.1:8082:8000"
+    environment:
+      APP_ENV: development
+      DEBUG: "false"
+      REPORT_SERVICE_TOKEN: ""
+      REPORT_ADMIN_BASE_URL: http://127.0.0.1:1
+      REPORT_ADMIN_PUBLIC_URL: http://127.0.0.1:1
+      REPORT_NEW_PUBLIC_URL: http://localhost:8082
+    # Presentation-only override; no credentials or customer data are mounted.
+    volumes:
+      - type: bind
+        source: ./static/css/pages/executive.css
+        target: /app/static/css/pages/executive.css
+        read_only: true
+        bind:
+          create_host_path: false
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    init: true
+    networks:
+      - mock_only
+
+networks:
+  mock_only:
+    driver: bridge

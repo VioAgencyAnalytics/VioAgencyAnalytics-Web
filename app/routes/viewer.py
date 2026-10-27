@@ -1,4 +1,5 @@
 """Dashboard access through Admin sessions; New never collects credentials."""
+import os
 import re
 import secrets
 from urllib.parse import parse_qs, urlencode
@@ -8,7 +9,7 @@ from fastapi.responses import RedirectResponse
 
 from app.bundle_safety import check_safe_payload
 from app.admin_access import admin_entry
-from app.config import get_settings
+from app.viewer_environment import viewer_settings
 from app.repositories.admin_bundle import AdminBundleConfigError, AdminBundleContractError
 from app.repositories.viewer import AdminViewerRepository, ViewerError
 from app.routes.pages import templates
@@ -17,11 +18,14 @@ from app.services.bundle import BundleService, BundleServiceError
 from app.mappers.dashboard import dashboard_context, preview_dashboard
 
 router = APIRouter(tags=['viewer access'])
-SESSION = 'kdh_viewer_session'
-CSRF = 'kdh_viewer_csrf'
+COOKIE_PREFIX = os.getenv('KDH_VIEWER_COOKIE_PREFIX', 'kdh')
+if not re.fullmatch(r'[a-z][a-z0-9_]{0,31}', COOKIE_PREFIX):
+    raise RuntimeError('Invalid Viewer cookie namespace.')
+SESSION = COOKIE_PREFIX + '_viewer_session'
+CSRF = COOKIE_PREFIX + '_viewer_csrf'
 
 
-def repository(request: Request, settings=Depends(get_settings)):
+def repository(request: Request, settings=Depends(viewer_settings)):
     try:
         return AdminViewerRepository(settings.report_admin_base_url, settings.report_service_token.get_secret_value(),
                                      settings.report_request_timeout_seconds, viewer_session=request.cookies.get(SESSION, ''))
@@ -76,7 +80,13 @@ def safe_json(response, settings):
 @router.get('/')
 @router.get('/login', include_in_schema=False)
 @router.get('/reports')
-def admin_selection(request: Request, settings=Depends(get_settings)):
+def admin_selection(request: Request, settings=Depends(viewer_settings)):
+    from app.customer_auth import enabled
+    if request.url.path in ('/', '/login') and enabled(request):
+        return RedirectResponse('/workspace/login', 303, headers=HEADERS)
+    if (request.url.path in ('/', '/login') and settings.app_env != 'production'
+            and getattr(request.state, 'runtime_env', settings.app_env) != 'production'):
+        return RedirectResponse('/workspace/login', 303, headers=HEADERS)
     # Old bookmarks remain usable, but authentication and selection live on Admin.
     # Query strings (including arbitrary next URLs) never select the redirect host.
     try:
@@ -86,7 +96,7 @@ def admin_selection(request: Request, settings=Depends(get_settings)):
 
 
 @router.post('/logout')
-async def logout(request: Request, settings=Depends(get_settings)):
+async def logout(request: Request, settings=Depends(viewer_settings)):
     try:
         destination = admin_entry(settings)
         await form(request)
@@ -101,7 +111,7 @@ async def logout(request: Request, settings=Depends(get_settings)):
 
 
 @router.get('/reports/{report_id}')
-def report(request: Request, report_id: str, settings=Depends(get_settings)):
+def report(request: Request, report_id: str, settings=Depends(viewer_settings)):
     try:
         revision_text = request.query_params.get('revision')
         if (not re.fullmatch(r'rpt_[a-f0-9]{32}', report_id) or set(request.query_params) - {'revision', 'section', 'view'}
@@ -129,7 +139,7 @@ def report(request: Request, report_id: str, settings=Depends(get_settings)):
 
 
 @router.get('/internal-preview/{candidate_id}')
-def internal_preview(request: Request, candidate_id: str, settings=Depends(get_settings)):
+def internal_preview(request: Request, candidate_id: str, settings=Depends(viewer_settings)):
     try:
         if not re.fullmatch(r'[a-f0-9]{32}', candidate_id):
             raise ViewerError(404, 'Không tìm thấy bản xem trước.')

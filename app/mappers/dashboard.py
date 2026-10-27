@@ -3,6 +3,8 @@
 Only formatting and row selection happen here. No totals/rates/claims are derived.
 """
 from dataclasses import asdict
+from datetime import datetime
+import re
 from urllib.parse import urlencode
 
 from app.schemas.bundle_view import BundleView, MetricView, QualityView, SectionView
@@ -70,11 +72,133 @@ def metric_cards(section, channel):
     return result
 
 
+def content_cards(section, lifetime=False):
+    keys = ('reactions_lifetime', 'comments_lifetime', 'shares_lifetime') if lifetime else ('posts_published', 'engagements')
+    cards = []
+    for key in keys:
+        matches = [m for m in section.metrics if m.key == 'facebook_content.' + key]
+        if len(matches) != 1:
+            continue
+        metric = matches[0]
+        cards.append({**asdict(metric), 'icon': 'thumb_up' if lifetime else 'article',
+                      'text': display(metric.value, metric.unit), 'unit_text': '', 'previous_text': '—'})
+    return cards
+
+
+def content_presentation(bundle, section, view):
+    """Format saved values and deterministic scope notes; never derive performance."""
+    cards = content_cards(section) + content_cards(section, lifetime=True)
+    order = ['posts_published', 'reactions_lifetime', 'comments_lifetime', 'engagements', 'shares_lifetime']
+    by_key = {c['key'].split('.')[-1]: c for c in cards}
+    icons = dict(zip(order, ['article', 'thumb_up', 'chat_bubble', 'monitoring', 'share']))
+    view['overview_kpis'] = [dict(by_key[k], icon=icons[k]) for k in order if k in by_key]
+    name = bundle.name.split('|')[0].strip()
+    # This prefix is report naming metadata, not a client or Facebook Page name.
+    view['report_display_name'] = name.removeprefix('KDH – ').removeprefix('KDH — ')
+    view['snapshot_time'] = section.fetched_at or 'Chưa có thời điểm chốt'
+    if section.fetched_at:
+        try:
+            stamp = datetime.fromisoformat(section.fetched_at.replace('Z', '+00:00'))
+            if stamp.utcoffset() is not None and stamp.utcoffset().total_seconds() == 0:
+                view['snapshot_time'] = stamp.strftime('%d/%m/%Y %H:%M:%S UTC')
+        except ValueError:
+            pass
+    view['content_charts'] = [dict(c, title='Bài đăng theo ngày', unit='bài', integer_axis=True, kind='bar',
+                                    timezone=section.timezone) if c['title'] == 'posts_published theo ngày' else c
+                              for c in view['charts']]
+    preferred = [('post_id', 'Mã bài đăng'), ('date', 'Ngày đăng (UTC)' if section.timezone == 'UTC' else 'Ngày nguồn'),
+                 ('reactions_lifetime', 'Cảm xúc'), ('comments_lifetime', 'Bình luận'),
+                 ('shares_lifetime', 'Chia sẻ')]
+    view['detail_tables'] = []
+    view['post_links'] = {}
+    page_id = section.source_identity.get('external_id', '')
+    for table in view['tables']:
+        keys = {c['key'] for c in table['columns']}
+        if 'post_id' not in keys:
+            continue
+        columns = [dict(key=k, label=label, unit='') for k, label in preferred if k in keys]
+        view['detail_tables'].append(dict(table, title='Danh sách bài đăng', columns=columns, metadata=True))
+        # Navigation only: retain the immutable rows and metric values verbatim.
+        for row in table['rows']:
+            post_id = row.get('post_id', {}).get('value')
+            match = re.fullmatch(r'([1-9][0-9]{0,31})_([1-9][0-9]{0,31})', post_id) if isinstance(post_id, str) else None
+            if section.source_identity.get('asset_type') == 'facebook_page' and match and match[1] == page_id:
+                view['post_links'][post_id] = 'https://www.facebook.com/permalink.php?' + urlencode({'story_fbid': match[2], 'id': page_id})
+    notes = {key: {'facts': [], 'quality': [], 'approved': []} for key in
+             ('overview', 'publishing', 'posts', 'lifetime', 'formats', 'topics', 'reach', 'insights')}
+    def coverage(metric):
+        c = metric['coverage']
+        return f"{c['available']}/{c['expected']} " + ('bài' if c['unit'] == 'posts' else 'ngày') if c else 'chưa có độ phủ'
+    posts = by_key.get('posts_published')
+    if posts and posts['value'] is not None:
+        notes['overview']['facts'].append(f"Trong kỳ ghi nhận {posts['text']} bài đăng. Độ phủ dữ liệu số bài đăng: {coverage(posts)}.")
+    engagements = by_key.get('engagements')
+    if engagements and engagements['value'] is None:
+        notes['overview']['quality'].append(f"Tương tác phát sinh trong kỳ chưa có dữ liệu ({engagements['status']}; {coverage(engagements)}). Giá trị thiếu không phải 0.")
+    notes['publishing']['quality'].append(f"Ngày theo múi giờ nguồn {section.timezone or 'chưa được cung cấp'}. Biểu đồ dùng các điểm đã lưu; lọc ngày không thay đổi KPI toàn kỳ.")
+    for metric in view['lifetime_kpis']:
+        if metric['value'] is not None:
+            notes['lifetime']['facts'].append(f"{metric['text']} {metric['label']} tại snapshot {view['snapshot_time']}; độ phủ {coverage(metric)}.")
+        else:
+            notes['lifetime']['quality'].append(f"{metric['label']}: {metric['status']}, độ phủ {coverage(metric)}; chưa có tổng đã chốt trong Bundle.")
+    notes['lifetime']['quality'].append('Bộ đếm lifetime tích lũy đến snapshot, không phải lượng tương tác phát sinh riêng trong kỳ.')
+    notes['posts']['quality'].append('Ngày và bộ đếm từng bài được giữ nguyên từ Bundle. Ô chưa có dữ liệu là null; không thay bằng 0. Chọn Post ID để xem metadata đã lưu.')
+    view['content_breakdowns'] = {}
+    for key, dimensions in [('formats', {'format', 'format_name'}), ('topics', {'topic', 'topic_name'}),
+                            ('reach', {'organic_reach', 'paid_reach'})]:
+        tables = [t for t in view['tables'] if 'post_id' not in {c['key'] for c in t['columns']}
+                  and any(row.get(k, {}).get('value') is not None for row in t['rows'] for k in dimensions)]
+        view['content_breakdowns'][key] = tables
+        if not tables:
+            notes[key]['quality'].append({'formats':'Snapshot chưa có dữ liệu phân bổ định dạng nội dung.',
+                'topics':'Snapshot chưa có dữ liệu phân bổ theo chủ đề.',
+                'reach':'Snapshot hiện chưa có dữ liệu tiếp cận Organic/Paid, vì vậy chưa thể đánh giá hiệu quả tiếp cận.'}[key])
+    # The mapper has already filtered approvals. Associate exact metric labels/keys only.
+    for evidence in view['evidence']:
+        if not evidence.get('claim'):
+            continue  # A verified number alone is not a professional conclusion.
+        matched = next((k for k, m in by_key.items() if evidence.get('metric') in (m['key'], m['label'])), None)
+        target = 'lifetime' if matched and matched.endswith('_lifetime') else 'overview' if matched else 'insights'
+        notes[target]['approved'].append(evidence)
+    view['commentary'] = notes
+    report = section.content_report
+    if report:
+        # Copy the exact Admin projection; never reconstruct taxonomy or rates.
+        rows = report['sections']['posts']['rows']
+        columns = [('title', 'Bài viết'), ('post_id', 'Mã bài đăng'), ('date', 'Ngày đăng (UTC)'),
+                   ('format', 'Định dạng'), ('topic', 'Chủ đề'), ('reactions_lifetime', 'Cảm xúc'),
+                   ('comments_lifetime', 'Bình luận'), ('shares_lifetime', 'Chia sẻ'),
+                   ('post_media_view_lifetime', 'Lượt xem tích lũy'),
+                   ('post_total_media_view_unique_lifetime', 'Người xem duy nhất tích lũy')]
+        view['detail_tables'] = [dict(title='Danh sách bài đăng', source='Facebook Content', metadata=True,
+            status=report['sections']['posts']['status'],
+            columns=[dict(key=k, label=label, unit='') for k, label in columns],
+            rows=[{k: dict(value=r.get(k), url=None) for k in [c[0] for c in columns] + ['message']} for r in rows])]
+        from app.bundle_safety import safe_url
+        for row in rows:
+            url = safe_url(row.get('permalink_url'))
+            if url:
+                view['post_links'][row['post_id']] = url
+        for key in ('formats', 'topics'):
+            item = report['sections'][key]
+            view['content_breakdowns'][key] = [] if not item['rows'] else [dict(title=item['label'],
+                source='Phân loại biên tập' if key == 'topics' else 'Facebook Content', status=item['status'],
+                columns=[dict(key=k, label=label, unit='') for k, label in [('label', 'Nhóm'), ('count', 'Số bài'), ('percent', 'Tỷ trọng (%)')]],
+                rows=[{k: dict(value=r.get(k), url=None) for k in ('label', 'count', 'percent')} for r in item['rows']])]
+        for key, item in report['sections'].items():
+            note = item.get('commentary')
+            if note and note.get('status') == 'approved':
+                notes['insights']['approved'].append(dict(claim=note['text'], metric=item['label'], origin='editorial'))
+
+
 def dashboard_context(bundle, selected, path, preview=False):
     section = next(s for s in bundle.sections if s.key == selected)
     channel = ALIASES.get(selected, selected)
     view = asdict(section)
     view.update(channel=channel, kpis=metric_cards(section, channel), preview=preview)
+    if channel == 'facebook_content' and section.source_identity:
+        view['kpis'] = content_cards(section)
+        view['lifetime_kpis'] = content_cards(section, lifetime=True)
     view['channel_cards'] = [{**asdict(s), 'kpis': metric_cards(s, ALIASES.get(s.key, s.key)),
         'icon': {'seo':'search_insights','facebook_content':'thumb_up','facebook_ads':'campaign',
                  'tiktok':'play_circle','youtube':'smart_display','gmb':'storefront'}.get(s.key, 'monitoring')}
@@ -137,6 +261,10 @@ def dashboard_context(bundle, selected, path, preview=False):
     if channel in columns:
         keys = {'facebook_content':{'title','post_id'}, 'tiktok':{'campaign_name','campaign_id'}, 'youtube':{'title','video_id'}}[channel]
         view['detail_tables'] = shaped([t for t in view['tables'] if {c['key'] for c in t['columns']} & keys], 'Chi tiết ' + section.label, columns[channel])
+    if channel == 'facebook_content' and section.source_identity:
+        content_presentation(bundle, section, view)
+    if channel == 'facebook_content':
+        content_shell(bundle, section, view)
     links = {ALIASES.get(s.key, s.key).replace('_', '-'): path + '?' + urlencode({'revision': bundle.revision, 'section': s.key})
              for s in bundle.sections}
     view['links'] = links
@@ -144,6 +272,61 @@ def dashboard_context(bundle, selected, path, preview=False):
             'selected_section': selected, 'snapshot_links': links, 'snapshot_home': links.get('overview', next(iter(links.values()), path)),
             'title': section.label, 'snapshot_format': display, 'video': {'channel': channel},
             'snapshot_template': 'pages/' + TEMPLATES.get(channel, 'snapshot') + '/index.html'}
+
+
+def content_shell(bundle, section, view):
+    """Select visible components only; retain all frozen values in the view model."""
+    view['content_live'] = bundle.report_id != 'layout-preview'
+    labels = {'reactions_lifetime': 'Cảm xúc tích lũy', 'comments_lifetime': 'Bình luận tích lũy',
+              'shares_lifetime': 'Chia sẻ tích lũy'}
+    cards = metric_cards(section, 'facebook_content') + content_cards(section, lifetime=True)
+    view['visible_content_kpis'] = [dict(m, label=labels.get(m['key'].split('.')[-1], m['label']))
+        for m in cards if m['available'] and m['value'] is not None and m['status'] not in ('no_data', 'unavailable')]
+    report = section.content_report or {}
+    insights = report.get('insights') or {}
+    view['content_insights'] = insights
+    view['content_section_details'] = report.get('sections', {})
+    view['content_missing_metrics'] = [m for m in report.get('metrics', []) if m.get('value') is None]
+    view['content_insights_charts'] = insights.get('charts', [])
+    for row in insights.get('measurements', []):
+        if row['scope'] == 'page' and row['value'] is not None and row['report_status'] == 'available':
+            view['visible_content_kpis'].append(dict(key='facebook_content.' + row['metric'],
+                label=row['label'], value=row['value'], text=display(row['value'], row['unit']),
+                unit_text='', icon='monitoring', previous=None, previous_text='',
+                coverage=row['coverage'], status=row['report_status'],
+                scope_label='Toàn Page · kỳ đã chốt', grain='period', aggregation=row['aggregation']))
+    view['visible_content_charts'] = [c for c in view.get('content_charts', view['charts'])
+        if c['status'] not in ('no_data', 'unavailable') and any(v is not None for v in c['values'])]
+    view['visible_content_charts'] += view['content_insights_charts']
+    def populated(tables):
+        result = []
+        for table in tables:
+            if table.get('status') in ('no_data', 'unavailable'):
+                continue
+            columns = [c for c in table['columns']
+                if any(row.get(c['key'], {}).get('value') is not None for row in table['rows'])]
+            if columns and table['rows']:
+                result.append(dict(table, columns=columns))
+        return result
+    view['visible_content_tables'] = populated(view['detail_tables'])
+    view['visible_content_breakdowns'] = {key: populated(tables)
+        for key, tables in view.get('content_breakdowns', {}).items()}
+    view['content_approved_notes'] = [item for notes in view.get('commentary', {}).values() for item in notes['approved']]
+    view['visible_content_sections'] = ['fc-summary']
+    if view['visible_content_charts'] or view['visible_content_breakdowns'].get('formats'):
+        view['visible_content_sections'].append('fc-formats')
+    if view['visible_content_tables']:
+        view['visible_content_sections'].append('fc-posts')
+    for key, section_id in [('topics', 'fc-topics'), ('reach', 'fc-reach')]:
+        if view['visible_content_breakdowns'].get(key):
+            view['visible_content_sections'].append(section_id)
+    if view['content_approved_notes'] or view['opportunities']:
+        view['visible_content_sections'].append('fc-insights')
+    if report:
+        # All seven published sections have either saved content or an exact
+        # Admin-owned limitation. Do not invent a replacement KPI.
+        view['visible_content_sections'] = ['fc-summary', 'fc-formats', 'fc-topics', 'fc-posts',
+                                            'fc-engagement', 'fc-reach', 'fc-insights']
 
 
 def preview_dashboard(candidate, issues, candidate_id):

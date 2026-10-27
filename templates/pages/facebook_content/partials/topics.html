@@ -1,6 +1,7 @@
 {% if dashboard is defined %}
 {% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
-{{ unavailable('Hiệu quả theo chủ đề') }}
+{% if dashboard.content_live %}{{ section_status('topics') }}{% endif %}
+{% if dashboard.content_live %}<h2>Hiệu quả theo chủ đề</h2>{% if dashboard.content_report %}<p class="fc-subtitle">Phân loại do agency biên tập và duyệt.</p><div class="fc-topic-grid">{% for row in dashboard.content_report.sections.topics.rows %}<article class="fc-topic fc-color-{{ loop.index }}"><h3>{{ row.label }}</h3><p>{{ row.count }} bài · {{ row.percent }}%</p></article>{% endfor %}</div>{% else %}{{ tables(dashboard.visible_content_breakdowns.get('topics', [])) }}{% endif %}{% else %}{{ unavailable('Hiệu quả theo chủ đề') }}{% endif %}
 {% else %}
 {% from 'pages/facebook_content/partials/helpers.html' import n, pct, heading %}
 {{ heading('Hiệu Quả Theo Chủ Đề Nội Dung (Core Topics)', 'category', 'Mức độ quan tâm của cộng đồng phụ huynh đối với các nhóm chủ đề y tế trẻ em.') }}

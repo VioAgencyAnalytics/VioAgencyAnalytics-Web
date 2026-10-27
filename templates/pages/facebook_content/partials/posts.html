@@ -1,6 +1,7 @@
 {% if dashboard is defined %}
 {% from 'pages/snapshot/components.html' import kpis, charts, tables, insights, unavailable, metrics with context %}
-<div class="fc-post-heading"><div><h2>Hiệu quả bài đăng</h2><p class="fc-subtitle">Chọn tiêu đề cột để sắp xếp.</p></div></div>{{ tables(dashboard.detail_tables) }}
+{% if dashboard.content_live %}{{ section_status('posts') }}{% endif %}
+<div class="fc-post-heading"><div><h2>Hiệu quả bài đăng</h2><p class="fc-subtitle">{{ 'Cảm xúc, bình luận và chia sẻ tích lũy đến ngày chốt báo cáo.' if dashboard.content_live and dashboard.source_identity else 'Chọn tiêu đề cột để sắp xếp.' }}</p></div></div>{{ tables(dashboard.visible_content_tables if dashboard.content_live else dashboard.detail_tables) }}
 {% else %}
 {% from 'pages/facebook_content/partials/helpers.html' import n, pct %}
 <div class="fc-post-heading"><div><h2>Hiệu quả bài đăng</h2><p class="fc-subtitle">5 bài mẫu được cung cấp trong tổng số 48 bài tháng 9/2026.</p></div><div class="fc-tabs" aria-label="Sắp xếp bài viết">{% for key, label in [('all','Tất cả (5 mẫu)'),('reach_desc','Reach cao nhất'),('engagement_desc','Tương tác cao nhất'),('shares_desc','Share nhiều nhất'),('clicks_desc','Click nhiều nhất')] %}<button type="button" data-fc-sort="{{ key }}" aria-pressed="{{ 'true' if fb_content.filters.sort == key else 'false' }}">{{ label }}</button>{% endfor %}</div></div>

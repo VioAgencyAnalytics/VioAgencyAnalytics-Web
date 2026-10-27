@@ -4,14 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0051aa">
-  <title>{{ title }} | KDH Traffic Report</title>
-  <link rel="icon" href="/static/img/kdh-logo.png">
+  <title>{{ title }} | VioAgencyAnalytics</title>
+  <link rel="icon" href="/static/img/analytics-mark.svg">
   <link rel="stylesheet" href="/static/css/shared/fonts.css">
   <link rel="stylesheet" href="/static/css/dist/dashboard.css">
   {% if dashboard is defined %}<link rel="stylesheet" href="/static/css/pages/snapshot.css"><script src="/static/js/shared/charts.js" defer></script><script src="/static/js/pages/snapshot.js" defer></script>{% endif %}
   {% block sidebar_script %}<script src="/static/js/shared/sidebar.js" defer></script>{% endblock %}
   {% block page_styles %}{% endblock %}
   <link rel="stylesheet" href="/static/css/pages/executive.css">
+  {% if dashboard is not defined and request.query_params.get('workspace_embed') == '1' %}<link rel="stylesheet" href="/static/css/customer/report-embed.css">{% endif %}
   {% if dashboard is defined %}<link rel="stylesheet" href="/static/css/pages/executive-polish.css">{% endif %}
   {% block page_script %}{% endblock %}
 </head>

@@ -1,0 +1,14 @@
+{% extends 'customer/shell.html' %}
+{% block content %}
+<main class="customer-page p-8 space-y-6">
+  <a class="customer-back-link" href="/workspace/channels">← Phân tích kênh</a>
+  <div class="customer-channel-heading"><div><p class="customer-eyebrow">BÁO CÁO CHI TIẾT</p><h1>{{ title }}</h1><p>Báo cáo theo kênh trong không gian làm việc của bạn.</p></div><a class="customer-secondary" href="/workspace/integrations">Quản lý kết nối</a></div>
+  {% if legacy_url %}
+  <p class="customer-inline-note">Dữ liệu mẫu · Báo cáo hiện có được giữ nguyên bộ lọc, biểu đồ và chức năng xuất file.</p>
+  <iframe id="customer-report-frame" title="Báo cáo {{ title }} — dữ liệu mẫu" src="{{ legacy_url }}?workspace_embed=1" class="customer-report-frame"></iframe>
+  <a class="customer-back-link" href="{{ legacy_url }}" target="_blank" rel="noopener">Mở báo cáo trong cửa sổ riêng ↗</a>
+  {% else %}
+  <section class="customer-empty"><span class="material-symbols-outlined">query_stats</span><h2>Chưa có dữ liệu {{ title }}</h2><p>Kênh này chưa có báo cáo chi tiết trong phiên bản hiện tại. Dữ liệu sẽ hiển thị khi kết nối và đồng bộ được hỗ trợ.</p><a class="customer-primary" href="/workspace/integrations">Xem nền tảng kết nối</a></section>
+  {% endif %}
+</main>
+{% endblock %}

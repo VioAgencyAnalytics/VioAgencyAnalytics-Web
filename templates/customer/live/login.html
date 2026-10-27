@@ -1,0 +1,68 @@
+{% extends 'customer/auth.html' %}
+{% block content %}
+<header class="identity-brand"><img src="/static/customer/vio-logo.png" alt="VIO Agency"><span>VIO<span class="identity-accent">Agency</span>Analytics</span></header>
+<main class="identity-login">
+  <aside class="identity-story">
+    <span class="identity-eyebrow">NỀN TẢNG BÁO CÁO MARKETING CHO AGENCY</span>
+    <h2>Quản lý dữ liệu Marketing trên <span>một nền tảng</span></h2>
+    <p>Một không gian làm việc cho Agency, doanh nghiệp và những người đồng hành cùng bạn.</p>
+    <ul class="identity-benefits">
+      <li><span class="material-symbols-outlined">groups</span><div><strong>Quản lý nhiều khách hàng</strong><p>Tổ chức thương hiệu và thành viên theo từng Workspace.</p></div></li>
+      <li><span class="material-symbols-outlined">query_stats</span><div><strong>Kết nối các kênh Marketing</strong><p>Bạn chủ động cấp quyền cho từng nền tảng khi cần.</p></div></li>
+      <li><span class="material-symbols-outlined">analytics</span><div><strong>Dashboard &amp; Báo cáo</strong><p>Hành trình từ dữ liệu đến báo cáo bắt đầu tại đây.</p></div></li>
+    </ul>
+    <small>Được phát triển và vận hành bởi VIO Agency</small>
+  </aside>
+  <section class="identity-card identity-login-card" aria-labelledby="auth-heading">
+    <div class="identity-product"><img src="/static/customer/vio-logo.png" alt=""><div><strong>VioAgencyAnalytics</strong><p>Chào mừng bạn đến với Workspace</p></div></div>
+    <div id="identity-status" role="status" aria-live="polite" class="identity-status" hidden></div>
+    <div id="signed-in" class="identity-note" hidden><p id="signed-in-label"></p><a href="/workspace/onboarding" class="identity-button">Tiếp tục đến Workspace</a><button type="button" data-logout class="identity-link">Đăng xuất</button></div>
+    <div id="auth-main">
+      <div class="identity-tabs" aria-label="Tài khoản"><button type="button" data-mode="login" aria-pressed="true">Đăng nhập</button><button type="button" data-mode="register" aria-pressed="false">Tạo tài khoản</button></div>
+      <h1 id="auth-heading">Đăng nhập vào Workspace</h1>
+      <button type="button" id="google-login" class="identity-button identity-secondary" disabled>
+        <svg class="identity-google" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+          <path fill="#4285F4" d="M17.64 9.2045c0-.638-.0573-1.2518-.1636-1.8409H9v3.4818h4.8436c-.2086 1.125-.8427 2.0782-1.7963 2.7164v2.2582h2.9082c1.7027-1.5673 2.6845-3.8741 2.6845-6.6155z"/>
+          <path fill="#34A853" d="M9 18c2.43 0 4.4673-.8059 5.9564-2.18l-2.9082-2.2582c-.8059.54-1.8373.8591-3.0482.8591-2.3441 0-4.3282-1.5845-5.0368-3.7105H.9568v2.3318A9 9 0 0 0 9 18z"/>
+          <path fill="#FBBC05" d="M3.9632 10.71A5.41 5.41 0 0 1 3.6818 9c0-.5932.1018-1.17.2814-1.71V4.9582H.9568A9 9 0 0 0 0 9c0 1.4523.3482 2.8277.9568 4.0418l3.0064-2.3318z"/>
+          <path fill="#EA4335" d="M9 3.5795c1.3214 0 2.5077.4546 3.4418 1.3455l2.5818-2.5818C13.4632.8918 11.43 0 9 0A9 9 0 0 0 .9568 4.9582L3.9632 7.29C4.6718 5.1641 6.6559 3.5795 9 3.5795z"/>
+        </svg>
+        Tiếp tục với Google
+      </button>
+      <p id="google-availability" class="identity-hint"></p>
+      <div class="identity-divider"><span>hoặc sử dụng email</span></div>
+      <form id="identity-auth-form">
+        <fieldset id="auth-fields" disabled>
+          <label id="name-field" hidden>Họ và tên<input name="name" autocomplete="name" maxlength="100" placeholder="Nguyễn Minh Anh"></label>
+          <label>Email<input name="email" type="email" autocomplete="username" required maxlength="254" placeholder="ban@congty.vn"></label>
+          <label>Mật khẩu<span class="identity-password"><input name="password" id="auth-password" type="password" autocomplete="current-password" required maxlength="200" placeholder="Nhập mật khẩu"><button type="button" id="toggle-password" aria-label="Hiện mật khẩu" aria-pressed="false"><span class="material-symbols-outlined">visibility</span></button></span></label>
+          <p id="password-guidance" class="identity-hint" hidden>Sử dụng ít nhất 12 ký tự cho mật khẩu của bạn.</p>
+          <div class="identity-form-row"><label class="identity-check"><input type="checkbox" name="remember"> Ghi nhớ đăng nhập</label><button type="button" id="forgot-password" class="identity-link">Quên mật khẩu?</button></div>
+          <button id="auth-submit" class="identity-button" type="submit">Đăng nhập</button>
+        </fieldset>
+      </form>
+    </div>
+    <form id="email-action-form" hidden>
+      <h1 id="email-action-heading">Khôi phục tài khoản</h1>
+      <p id="email-action-description" class="identity-hint"></p>
+      <label id="recovery-email-label">Email đã đăng ký<input name="email" type="email" autocomplete="email" maxlength="254" placeholder="ban@congty.vn"></label>
+      <label id="new-password-label" hidden>Mật khẩu mới<span class="identity-password"><input id="reset-password" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="200" aria-describedby="reset-password-guidance"><button type="button" id="toggle-reset-password" aria-label="Hiện mật khẩu mới" aria-pressed="false"><span class="material-symbols-outlined">visibility</span></button></span></label>
+      <label id="confirm-password-label" hidden>Nhập lại mật khẩu mới<input id="reset-password-confirm" name="password_confirm" type="password" autocomplete="new-password" minlength="12" maxlength="200"></label>
+      <p id="reset-password-guidance" class="identity-hint" hidden>Sử dụng ít nhất 12 ký tự. Sau khi đổi mật khẩu, bạn cần đăng nhập lại trên các thiết bị.</p>
+      <button class="identity-button" id="email-action-submit" type="submit">Gửi hướng dẫn</button>
+      <button class="identity-link" type="button" id="request-new-reset" hidden>Yêu cầu liên kết mới</button>
+      <button class="identity-link" type="button" id="back-to-login">Quay lại đăng nhập</button>
+    </form>
+    <section id="email-sent" hidden aria-labelledby="email-sent-heading">
+      <h1 id="email-sent-heading">Kiểm tra email của bạn</h1>
+      <p>Nếu email bạn nhập có tài khoản phù hợp, bạn sẽ nhận được liên kết đặt lại mật khẩu.</p>
+      <p class="identity-hint">Kiểm tra cả thư mục Spam. Liên kết có hiệu lực 30 phút và chỉ dùng một lần.</p>
+      <button type="button" id="recovery-retry" class="identity-button identity-secondary">Nhập lại email / Gửi lại</button>
+      <a href="/workspace/login" class="identity-link">Quay lại đăng nhập</a>
+    </section>
+    <p class="identity-footnote"><span class="material-symbols-outlined">lock</span> Bạn luôn kiểm soát quyền kết nối và chia sẻ dữ liệu.</p>
+    <noscript>Vui lòng bật JavaScript để sử dụng đăng nhập và thiết lập Workspace.</noscript>
+  </section>
+</main>
+<footer class="identity-footer">© VIO Agency · VioAgencyAnalytics</footer>
+{% endblock %}

@@ -59,6 +59,7 @@ def test_start_callback_pins_revision_and_rotates_session(handoff):
     assert 'test-service' not in result.text and data['code'] not in result.text
     assert state['create']['audience'] == 'https://new.invalid'
     assert state['create']['callback'] == 'https://new.invalid/auth/handoff/callback'
+    assert 'client_id' not in state['create']  # Admin derives owner from the stored target.
 
 
 @pytest.mark.parametrize('case', ['missing_cookie','state','transaction','origin','no_origin','extra_field'])
@@ -100,3 +101,16 @@ def test_canonical_host_before_browser_binding_and_clean_callback(handoff):
     assert 'https://' not in result.text and '/static/js/pages/handoff.js' in result.text
     assert 'type="password"' not in result.text
     assert 'id="handoff-reset"' in result.text and client.cookies.get(viewer.CSRF)
+
+
+def test_browser_client_parameter_is_not_authority(handoff):
+    client, state = handoff
+    r = client.get('/auth/handoff/start?mode=published&target_id=' + REPORT + '&revision=1&client_id=client_meta_sandbox')
+    assert r.status_code == 400 and not state['calls']
+
+
+def test_sandbox_handoff_cookie_namespace(monkeypatch):
+    from app.routes.handoff import binding_cookie
+    monkeypatch.setattr(viewer, 'COOKIE_PREFIX', 'kdh_vio')
+    assert binding_cookie(False) == 'kdh_vio_handoff'
+    assert binding_cookie(True) == '__Host-kdh_vio_handoff'
