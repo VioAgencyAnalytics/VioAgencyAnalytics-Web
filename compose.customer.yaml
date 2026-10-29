@@ -1,0 +1,82 @@
+# Local customer stack. Generate private env files with scripts/customer_docker.py.
+# Reuses the existing customer database volume; never use `down --volumes`.
+name: vioagencyanalytics-web
+services:
+  customer-postgres:
+    container_name: vio-customer-postgres-dev
+    image: postgres:16
+    env_file:
+      - ./.work/customer-dev/docker-postgres.env
+    ports:
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - customer-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vio_customer -d vio_customer"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    restart: unless-stopped
+  customer-admin:
+    container_name: VioAgencyAnalytics-Customer-Admin
+    image: vioagencyanalytics-customer-admin:local
+    build:
+      context: ../VioAgencyAnalytics-Admin
+    env_file:
+      - ./.work/customer-dev/docker-admin.env
+    environment:
+      DATA_DIR: /app/instance
+      APP_URL: http://127.0.0.1:8094
+      COOKIE_SECURE: "0"
+      HOST: 0.0.0.0
+      PORT: "8094"
+    command: ["python", "-B", "-m", "kdh.customer_server"]
+    volumes:
+      - ../VioAgencyAnalytics-Admin/instance/customer-dev:/app/instance
+    depends_on:
+      customer-postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8094/health', timeout=4)"]
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 6
+    init: true
+    restart: unless-stopped
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+  web:
+    container_name: VioAgencyAnalytics-Web
+    image: vioagencyanalytics-web:local
+    build: .
+    ports:
+      - "127.0.0.1:8084:8000"
+    env_file:
+      - ./.work/customer-dev/docker-web.env
+    environment:
+      APP_ENV: production
+      DEBUG: "false"
+    # Run as a module so Python keeps /app on sys.path for `main:app`.
+    command: ["python", "-B", "-m", "ops.customer_web_entrypoint"]
+    depends_on:
+      customer-admin:
+        condition: service_healthy
+    healthcheck:
+      # Readiness covers the BFF -> Admin -> database chain, not just HTTP startup.
+      test: ["CMD", "python", "-c", "import urllib.request; r=urllib.request.Request('http://127.0.0.1:8000/api/customer/session', headers={'Host':'127.0.0.1:8084'}); urllib.request.urlopen(r, timeout=6)"]
+      interval: 15s
+      timeout: 8s
+      start_period: 15s
+      retries: 5
+    init: true
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=32m
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+volumes:
+  customer-data:
+    external: true
+    name: vio-customer-pg-data

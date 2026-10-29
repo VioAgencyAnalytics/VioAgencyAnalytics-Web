@@ -40,6 +40,18 @@ def stack(monkeypatch):
         if path == '/workspaces/' + 'a' * 32:
             return httpx.Response(200, json={'workspace':state['workspace'],'clients':[], 'member_count':1,
                                              'tour':{'version':1,'step':0,'status':'new'}})
+        if path == '/workspaces/' + 'a' * 32 + '/integrations':
+            return httpx.Response(200, json={'workspace':state['workspace'],'clients':[], 'selected_client':None,
+                'platforms':[], 'categories':[], 'connections':[], 'summary':{'connected_accounts':0},
+                'permissions':{'manage_connections':True}})
+        if path == '/workspaces/' + 'a' * 32 + '/members':
+            return httpx.Response(200, json={'workspace':state['workspace'],'members':[],'invitations':[],'events':[],
+                'roles':[{'id':'owner','name':'Chủ sở hữu'}], 'summary':{'active_members':1,'pending_invitations':0},
+                'permissions':{'manage_members':True,'view_invitations':True,'view_audit':True,'invite':False,'email_verified':False,'assignable_roles':['admin','member','viewer']}})
+        if path == '/workspaces/' + 'a' * 32 + '/settings':
+            return httpx.Response(200, json={'workspace':state['workspace'],'member_count':1,
+                'profile':{'company_name':'','report_name':'','report_footer':'','accent_color':'#D9232E','default_period':'last30','compare_previous':True,'week_start':'monday','version':1,'updated_at':None},
+                'permissions':{'manage_settings':True}})
         if path in ('/auth/login', '/auth/register', '/auth/google/finish'):
             state['logged_in'] = True
             return httpx.Response(200, json={'session_token': TOKEN, 'session_max_age': 2592000, 'user': USER})
@@ -64,7 +76,11 @@ def test_production_releases_only_live_pages_keeps_preview_isolated(stack):
     response = client.get('/workspace/onboarding', follow_redirects=False)
     assert response.status_code == 303
     assert response.headers['location'] == '/workspace/login'
-    for path in ['/workspace/integrations', '/workspace/channels', '/workspace/members', '/report/facebook-content']:
+    assert client.get('/workspace/integrations', follow_redirects=False).headers['location'] == '/workspace/login'
+    assert client.get('/workspace/dashboard', follow_redirects=False).headers['location'] == '/workspace/login'
+    for path in ['/workspace/members', '/workspace/settings', '/workspace/channels', '/workspace/reports']:
+        assert client.get(path, follow_redirects=False).headers['location'] == '/workspace/login'
+    for path in ['/workspace/channels/facebook-content', '/report/facebook-content']:
         assert client.get(path).status_code == 404
     with TestClient(preview) as separate:
         assert 'Bản xem thử' in separate.get('/workspace/login').text
@@ -175,3 +191,139 @@ def test_overview_requires_selected_workspace_and_gates_tour_mutation(stack):
     assert client.post(path, json={'version':1,'step':0,'status':'active'}).status_code == 403
     assert client.post(path, json={'version':1,'step':0,'status':'active'}, headers=csrf_headers(client)).status_code == 200
     assert calls[-1].url.path.endswith('/tour')
+
+
+def test_integrations_page_is_authenticated_and_never_loads_mock_workspace_js(stack):
+    client, calls, state, _ = stack
+    state['logged_in'] = True
+    assert client.get('/workspace/integrations', follow_redirects=False).headers['location'] == '/workspace/onboarding'
+    state['workspace'] = {'id':'a'*32,'name':'Workspace <safe>', 'role':'owner'}
+    response = client.get('/workspace/integrations')
+    assert response.status_code == 200
+    assert 'Workspace &lt;safe&gt;' in response.text
+    assert '/static/js/customer/integrations.js' in response.text
+    assert '/static/js/customer/workspace.js' not in response.text
+    assert 'KinderHealth' not in response.text
+    assert 'HIPAA' not in response.text
+    assert 'id="integrations-data"' in response.text
+    assert 'no-store' in response.headers['cache-control']
+    path = '/api/customer/workspaces/' + 'a'*32 + '/integrations'
+    response = client.get(path, headers={'X-Customer-Session':'forged'})
+    assert response.status_code == 200
+    assert calls[-1].headers['X-Customer-Session'] == ''
+    assert calls[-1].url.path == '/api/internal/customer' + path.removeprefix('/api/customer')
+    assert client.get('/api/customer/workspaces/bad/integrations').status_code == 404
+    assert client.post(path, json={}, headers=csrf_headers(client)).status_code == 404
+
+
+def test_marketing_dashboard_uses_selected_workspace_and_no_legacy_report_api(stack):
+    client, calls, state, _ = stack
+    state['logged_in'] = True
+    assert client.get('/workspace/dashboard', follow_redirects=False).headers['location'] == '/workspace/onboarding'
+    state['workspace'] = {'id':'a'*32, 'name':'Workspace <safe>', 'role':'viewer', 'currency':'VND', 'timezone':'Asia/Ho_Chi_Minh'}
+    response = client.get('/workspace/dashboard')
+    assert response.status_code == 200
+    assert 'Workspace &lt;safe&gt;' in response.text
+    assert 'id="marketing-analytics-data"' in response.text
+    assert '/static/js/customer/marketing.js' in response.text
+    assert '/static/js/customer/workspace.js' not in response.text
+    assert '/static/js/customer/overview-dashboard.js' not in response.text
+    assert 'KinderHealth' not in response.text
+    assert 'no-store' in response.headers['cache-control']
+    assert response.headers['x-frame-options'] == 'DENY'
+    assert all(req.url.path.startswith('/api/internal/customer/') for req in calls)
+    assert client.get('/api/customer/workspaces/' + 'a'*32 + '/dashboard').status_code == 405
+    for path in ['/workspace/reports', '/workspace/channels']:
+        assert client.get(path).status_code == 200
+
+
+@pytest.mark.parametrize('action', ['', '/select', '/update', '/archive', '/restore'])
+def test_client_bff_allowlist_keeps_cookie_identity_and_csrf(stack, action):
+    client, calls, _, settings = stack
+    path = '/api/customer/workspaces/' + 'a'*32 + '/clients'
+    if action:
+        path += '/' + 'b'*32 + action
+    before = len(calls)
+    assert client.post(path,json={}).status_code == 403
+    assert len(calls) == before
+    response = client.post(path,json={'version':1},headers={**csrf_headers(client),'X-Customer-Session':'forged'})
+    assert response.status_code == 200
+    upstream = calls[-1]
+    assert upstream.url.path == '/api/internal/customer' + path.removeprefix('/api/customer')
+    assert upstream.headers['X-Customer-Session'] == ''
+    assert settings.customer_service_token.get_secret_value() not in response.text
+    assert client.post(path+'/delete',json={},headers=csrf_headers(client)).status_code == 404
+
+
+@pytest.mark.parametrize('page', ['members', 'settings'])
+def test_workspace_administration_pages_are_authenticated_and_scoped(stack, page):
+    client, calls, state, _ = stack
+    state['logged_in'] = True
+    assert client.get('/workspace/' + page, follow_redirects=False).headers['location'] == '/workspace/onboarding'
+    state['workspace'] = {'id':'a'*32,'name':'Workspace <safe>','role':'owner','currency':'VND','timezone':'Asia/Ho_Chi_Minh'}
+    response = client.get('/workspace/' + page)
+    assert response.status_code == 200
+    assert 'Workspace &lt;safe&gt;' in response.text
+    assert 'id="workspace-page-data"' in response.text
+    assert '/static/js/customer/' + page + '.js' in response.text
+    assert '/static/js/customer/workspace.js' not in response.text
+    assert 'KinderHealth' not in response.text and 'HIPAA' not in response.text
+    assert 'no-store' in response.headers['cache-control']
+    reply = client.get('/api/customer/workspaces/' + 'a'*32 + '/' + page, headers={'X-Customer-Session':'forged'})
+    assert reply.status_code == 200
+    assert calls[-1].headers['X-Customer-Session'] == ''
+    assert client.get('/api/customer/workspaces/bad/' + page).status_code == 404
+
+
+@pytest.mark.parametrize('suffix', ['settings', 'members/'+'b'*32+'/role', 'members/'+'b'*32+'/remove', 'invitations/'+'b'*32+'/revoke'])
+def test_workspace_administration_mutations_keep_csrf_and_exact_allowlist(stack, suffix):
+    client, calls, state, _ = stack
+    state['workspace'] = {'id':'a'*32,'name':'Test','role':'owner'}
+    path = '/api/customer/workspaces/'+'a'*32+'/'+suffix
+    before = len(calls)
+    assert client.post(path,json={}).status_code == 403
+    assert len(calls) == before
+    assert client.post(path,json={},headers=csrf_headers(client)).status_code == 200
+    assert calls[-1].url.path == '/api/internal/customer' + path.removeprefix('/api/customer')
+    assert client.post(path+'/delete',json={},headers=csrf_headers(client)).status_code == 404
+
+
+@pytest.mark.parametrize('page', ['channels', 'reports'])
+def test_library_requires_selected_workspace_without_legacy_or_report_writes(stack, page):
+    client, calls, state, _ = stack
+    state['logged_in'] = True
+    assert client.get('/workspace/' + page, follow_redirects=False).headers['location'] == '/workspace/onboarding'
+    state['workspace'] = {'id': 'a'*32, 'name': 'Scope <safe>', 'role': 'viewer', 'currency': 'VND', 'timezone': 'Asia/Ho_Chi_Minh'}
+    response = client.get('/workspace/' + page)
+    assert response.status_code == 200
+    assert 'Scope &lt;safe&gt;' in response.text
+    assert 'id="library-model"' in response.text
+    assert '/static/js/customer/' + page + '.js' in response.text
+    assert '/static/js/customer/workspace.js' not in response.text
+    assert 'KinderHealth' not in response.text and 'HIPAA' not in response.text
+    assert '/report/facebook-content' not in response.text
+    assert 'no-store' in response.headers['cache-control']
+    assert response.headers['x-frame-options'] == 'DENY'
+    assert {r.url.path for r in calls} <= {'/api/internal/customer/session', '/api/internal/customer/workspaces/'+'a'*32, '/api/internal/customer/workspaces/'+'a'*32+'/integrations'}
+    before = len(calls)
+    for action in ['reports', 'reports/export', 'reports/publish', 'channels/seo']:
+        assert client.post('/api/customer/workspaces/'+'a'*32+'/'+action, json={}, headers=csrf_headers(client)).status_code == 404
+    assert all('reports' not in r.url.path and 'channels' not in r.url.path for r in calls[before:])
+
+
+def test_library_rejects_catalogue_from_a_different_client(stack, monkeypatch):
+    client, _, state, _ = stack
+    state['logged_in'] = True
+    state['workspace'] = {'id': 'a'*32, 'name': 'Safe', 'role': 'owner'}
+    original = auth.backend
+
+    async def mismatched(request, method, path, data=None):
+        value = await original(request, method, path, data)
+        if path.endswith('/integrations'):
+            value['selected_client'] = {'id': 'foreign-client', 'name': 'Foreign secret'}
+        return value
+
+    monkeypatch.setattr(auth, 'backend', mismatched)
+    response = client.get('/workspace/reports')
+    assert response.status_code == 409
+    assert 'Foreign secret' not in response.text

@@ -1,5 +1,9 @@
 # Tổng quan Workspace và hướng dẫn 8 bước
 
+**Cập nhật 28/10:** Trang 03 đã bổ sung quản lý khách hàng/thương hiệu, chọn khách
+hàng và checklist dựa trên DB; xem [CUSTOMER_OVERVIEW.md](CUSTOMER_OVERVIEW.md).
+Các câu nói quản lý khách hàng “sẽ bổ sung” bên dưới thuộc mốc triển khai tour ban đầu.
+
 Ngày triển khai: 27/10/2026.
 
 ## Tham khảo AgencyAnalytics

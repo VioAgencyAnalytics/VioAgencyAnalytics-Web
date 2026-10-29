@@ -1,0 +1,14 @@
+<dialog id="library-info" class="lb-dialog" aria-labelledby="library-info-title"><div class="lb-dialog-top"><span class="lb-provider lb-red material-symbols-outlined" aria-hidden="true">help</span><button type="button" class="lb-icon-button" data-library-close aria-label="Đóng hướng dẫn">×</button></div><h2 id="library-info-title"></h2><p id="library-info-description"></p><div class="lb-dialog-actions"><form method="dialog"><button class="lb-button">Đã hiểu</button></form></div></dialog>
+<dialog id="library-preview" class="lb-dialog lb-preview" aria-labelledby="library-preview-title">
+  <div class="lb-dialog-top"><span class="lb-eyebrow" id="library-preview-eyebrow">XEM TRƯỚC BỐ CỤC</span><button type="button" class="lb-icon-button" data-library-close aria-label="Đóng xem trước">×</button></div>
+  <h2 id="library-preview-title"></h2><p id="library-preview-description"></p>
+  <div class="lb-preview-context"><span id="library-preview-client"></span><span id="library-preview-period"></span><span id="library-preview-currency"></span></div>
+  <div id="library-preview-topics" class="lb-topics"></div>
+  <div id="library-preview-metrics" class="lb-preview-metrics"></div>
+  <section class="lb-preview-section"><h3>Xu hướng hiệu suất</h3><div class="lb-preview-chart"><span class="material-symbols-outlined" aria-hidden="true">monitoring</span><strong>Biểu đồ sẽ hiển thị khi có dữ liệu</strong><p>Không suy ra số liệu từ các nguồn chưa sẵn sàng.</p></div></section>
+  <section class="lb-preview-section"><h3>Chi tiết theo nguồn</h3><div id="library-preview-sources" class="lb-topics"></div><p class="lb-muted">Bảng chi tiết sẽ được điền từ dữ liệu của đúng khách hàng và kỳ báo cáo.</p></section>
+  <div id="library-preview-note" class="lb-preview-note"></div>
+  <div class="lb-dialog-actions"><button type="button" id="library-preview-edit" class="lb-button lb-secondary" hidden>Quay lại chỉnh sửa</button><a id="library-preview-connect" href="/workspace/integrations" class="lb-button lb-secondary">Quản lý nguồn dữ liệu</a><button type="button" id="library-preview-export" class="lb-button" disabled title="Khả dụng khi báo cáo đã được phát hành">Xuất PDF</button></div>
+</dialog>
+<script id="library-data" type="application/json">{{ details|tojson }}</script>
+<script id="library-model" type="application/json">{{ library|tojson }}</script>

@@ -85,7 +85,7 @@ async def production_reports_only(request: Request, call_next):
     )
 
     if customer_auth_enabled(request):
-        public_paths.update({'/workspace', '/workspace/login', '/workspace/onboarding', '/workspace/'})
+        public_paths.update({'/workspace', '/workspace/login', '/workspace/onboarding', '/workspace/', '/workspace/integrations', '/workspace/dashboard', '/workspace/channels', '/workspace/reports', '/workspace/members', '/workspace/settings'})
         public_prefixes += ('/api/customer/', '/auth/customer/')
 
     if (

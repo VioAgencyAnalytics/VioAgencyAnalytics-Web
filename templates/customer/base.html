@@ -11,15 +11,41 @@
   <link rel="stylesheet" href="/static/css/dist/customer.css">
   {% if customer_live %}
   <link rel="stylesheet" href="/static/css/customer/identity.css">
-  {% if customer_page == 'overview' %}
+  {% if customer_page in ['overview', 'integrations', 'dashboard', 'channels', 'reports', 'members', 'settings'] %}
   <link rel="stylesheet" href="/static/css/customer/overview.css">
+  {% if customer_page == 'overview' %}
+  <link rel="stylesheet" href="/static/css/customer/overview-clients.css">
   <script src="/static/js/customer/overview.js" defer></script>
+  <script src="/static/js/customer/overview-clients.js" defer></script>
+  {% elif customer_page == 'integrations' %}
+  <link rel="stylesheet" href="/static/css/customer/integrations.css">
+  <script src="/static/js/customer/integrations.js" defer></script>
+  {% elif customer_page == 'dashboard' %}
+  <link rel="stylesheet" href="/static/css/customer/marketing.css">
+  <script src="/static/js/customer/marketing.js" defer></script>
+  {% elif customer_page in ['channels', 'reports'] %}
+  <link rel="stylesheet" href="/static/css/customer/library.css">
+  <script src="/static/js/customer/library.js" defer></script>
+  <script src="/static/js/customer/{{ customer_page }}.js" defer></script>
+  {% else %}
+  <link rel="stylesheet" href="/static/css/customer/workspace-admin.css">
+  <script src="/static/js/customer/workspace-admin.js" defer></script>
+  <script src="/static/js/customer/{{ customer_page }}.js" defer></script>
+  {% endif %}
+  <link rel="stylesheet" href="/static/css/customer/shell.css">
+  <script src="/static/js/customer/shell.js" defer></script>
+  {% if customer_page == 'overview' %}
+  <link rel="stylesheet" href="/static/css/customer/overview-dashboard.css">
+  <script src="/static/js/customer/overview-dashboard.js" defer></script>
+  {% endif %}
+  <link rel="stylesheet" href="/static/css/customer/workspace-theme.css">
   {% else %}
   <script src="/static/js/customer/identity.js" defer></script>
   {% endif %}
   {% else %}
   <link rel="stylesheet" href="/static/css/customer/workspace.css">
   <script src="/static/js/customer/workspace.js" defer></script>{% endif %}
+  {% if customer_live %}<link rel="stylesheet" href="/static/css/customer/typography.css">{% endif %}
 </head>
 <body data-customer-page="{{ customer_page }}" class="bg-surface font-sans text-slate-800 antialiased">
   <a class="customer-skip" href="#customer-content">Đến nội dung chính</a>

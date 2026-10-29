@@ -1,0 +1,238 @@
+/* Shared text sizes use rem so browser text preferences remain effective. */
+:root {
+  --customer-text-xs: .75rem;
+  --customer-text-caption: .8125rem;
+  --customer-text-sm: .875rem;
+  --customer-text-base: 1rem;
+  --customer-text-lg: 1.125rem;
+}
+
+body[data-customer-page] {
+  font-size: var(--customer-text-base);
+  line-height: 1.6;
+}
+
+.ws-theme {
+  line-height: 1.6;
+}
+
+/* Form values stay comfortably readable, including on mobile devices. */
+body[data-customer-page] :is(.ov-main, .identity-card, .wh-search-dialog, .wa-dialog, .ov-client-dialog) :is(input:not([type=checkbox]):not([type=radio]):not([type=color]), select, textarea) {
+  font-size: var(--customer-text-base);
+  line-height: 1.5;
+  min-height: 44px;
+}
+
+.ws-theme .ov-workspace select {
+  font-size: var(--customer-text-sm);
+  min-height: 36px;
+}
+
+.ws-theme .ov-brand strong {
+  font-size: var(--customer-text-base);
+}
+
+.ws-theme .ov-brand strong span {
+  font-size: var(--customer-text-xs);
+  line-height: 1.5;
+}
+
+.ws-theme .ov-nav > :is(a, button),
+.ws-theme .od-channel-nav summary {
+  font-size: var(--customer-text-sm);
+  min-height: 44px;
+}
+
+.ws-theme .od-channel-nav > div button {
+  font-size: var(--customer-text-caption);
+  line-height: 1.6;
+}
+
+.ws-theme .od-channel-nav summary > a {
+  color: inherit;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.ws-theme .od-channel-nav[data-active=true] > summary {
+  background: #fef2f2;
+  color: #d9232e;
+  border-radius: 8px;
+}
+
+.ws-theme .od-channel-nav > div a {
+  display: block;
+  padding: 7px 12px 7px 14px;
+  font-size: var(--customer-text-caption);
+  line-height: 1.6;
+  color: #64748b;
+  text-decoration: none;
+  border-radius: 0 6px 6px 0;
+}
+
+.ws-theme .od-channel-nav > div a:hover,
+.ws-theme .od-channel-nav > div a[aria-current=location] {
+  color: #d9232e;
+  background: #fff5f5;
+}
+
+.ws-theme .od-channel-nav summary {
+  gap: 8px;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.ws-theme .od-channel-nav .od-nav-count {
+  font-size: var(--customer-text-xs);
+}
+
+.ws-theme .od-side-account {
+  align-items: flex-start;
+  padding: 18px 16px;
+}
+
+.ws-theme .od-side-account > div {
+  flex: 1;
+}
+
+.ws-theme .od-side-account strong {
+  display: block;
+  font-size: var(--customer-text-sm);
+  line-height: 1.5;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.ws-theme .od-side-account small {
+  font-size: var(--customer-text-xs);
+  line-height: 1.6;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.ws-theme .od-side-account button {
+  font-size: var(--customer-text-caption);
+  line-height: 1.5;
+  min-height: 32px;
+}
+
+.ws-theme .od-side-avatar {
+  width: 36px;
+  height: 36px;
+  font-size: var(--customer-text-sm);
+}
+
+.ws-theme .wh-account-text strong {
+  font-size: var(--customer-text-sm);
+}
+
+.ws-theme .wh-account-text small {
+  font-size: var(--customer-text-xs);
+}
+
+.ws-theme .wh-search-button {
+  min-height: 44px;
+}
+
+.ws-theme :is(.od-button, .ov-button, .mk-button, .wa-button),
+:is(.wa-dialog, .ig-dialog, .mk-dialog) :is(.wa-button, .ov-button, .mk-button) {
+  font-size: var(--customer-text-sm);
+  min-height: 40px;
+}
+
+.ws-theme :is(.od-card-heading, .mk-section-heading) {
+  flex-wrap: wrap;
+}
+
+.ws-theme .od-kpi h2,
+.ws-theme .mk-main .mk-kpi h2 {
+  font-size: var(--customer-text-sm);
+  line-height: 1.6;
+  max-width: none;
+}
+
+.ws-theme .od-kpi-heading {
+  flex-wrap: wrap;
+}
+
+.ws-theme .od-kpi-heading > span {
+  max-width: none;
+}
+
+.ws-theme .wa-tabs {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.ws-theme .wa-tabs > button {
+  flex-shrink: 0;
+}
+
+.ws-theme .wa-avatar {
+  font-size: var(--customer-text-sm);
+}
+
+.ws-theme .wa-color-field input[name=accent_color] {
+  font-size: var(--customer-text-base) !important;
+}
+
+.ws-theme .wa-heading-actions {
+  max-width: 100%;
+}
+
+.ws-theme .wa-summary-grid article > span:not(.wa-summary-icon) {
+  font-size: var(--customer-text-caption);
+  line-height: 1.65;
+  letter-spacing: .025em;
+}
+
+@media (min-width: 701px) {
+  .ws-theme > .ov-sidebar {
+    overflow: hidden;
+  }
+
+  .ws-theme .ov-sidebar > .ov-nav {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+}
+
+@media (max-width: 700px) {
+  .ws-theme .mk-filter-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ws-theme .wa-heading-actions {
+    width: 100%;
+  }
+
+  .ws-theme .ov-nav > :is(a, button),
+  .ws-theme .od-channel-nav summary {
+    font-size: var(--customer-text-sm);
+  }
+
+  .ws-theme .wh-breadcrumb {
+    font-size: var(--customer-text-sm);
+  }
+
+  .ws-theme .wa-period-options span {
+    min-height: 88px;
+  }
+
+  .ws-theme .wa-save-bar {
+    flex-wrap: wrap;
+  }
+
+  .ws-theme :is(.od-onboarding, .od-guide) {
+    flex-wrap: wrap;
+  }
+
+  .ws-theme .od-onboarding > div:nth-child(2) {
+    flex-basis: calc(100% - 55px);
+  }
+}

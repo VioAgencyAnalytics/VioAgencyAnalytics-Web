@@ -1,0 +1,18 @@
+{% set workspace_roles = {'owner':'Chủ sở hữu','admin':'Quản trị viên','member':'Thành viên','viewer':'Người xem'} %}
+<header class="ov-topbar workspace-topbar">
+  <nav class="wh-breadcrumb" aria-label="Đường dẫn"><a href="/workspace">Workspace</a><span aria-hidden="true">/</span><strong>{{ {'overview':'Tổng quan','integrations':'Kết nối nền tảng','dashboard':'Dashboard Marketing','channels':'Phân tích kênh','reports':'Báo cáo','members':'Thành viên','settings':'Cài đặt'}[customer_page] }}</strong></nav>
+  <button type="button" id="workspace-search-open" class="wh-search-button" aria-haspopup="dialog" aria-controls="workspace-search-dialog"><span class="material-symbols-outlined" aria-hidden="true">search</span><span>Tìm trang, khách hàng, nền tảng…</span><kbd>Ctrl K</kbd></button>
+  <div class="wh-tools">
+    <a href="/workspace" class="wh-workspace" title="{{ details.workspace.name }}"><span class="material-symbols-outlined" aria-hidden="true">domain</span><span>{{ details.workspace.name }}</span></a>
+    <button type="button" id="workspace-help" class="wh-icon-button" aria-label="Hướng dẫn sử dụng" title="Hướng dẫn sử dụng"><span class="material-symbols-outlined" aria-hidden="true">help</span></button>
+    <div class="wh-account" title="{{ account.user.name }} · {{ workspace_roles.get(details.workspace.role, 'Thành viên') }}"><span class="wh-avatar" aria-hidden="true">{{ account.user.name[:1]|upper }}</span><span class="wh-account-text"><strong>{{ account.user.name }}</strong><small>{{ workspace_roles.get(details.workspace.role, 'Thành viên') }}</small></span></div>
+    <button type="button" id="{{ {'overview':'overview-logout','integrations':'integrations-logout','dashboard':'marketing-logout','channels':'library-logout','reports':'library-logout','members':'workspace-page-logout','settings':'workspace-page-logout'}[customer_page] }}" class="ov-text-button wh-logout" disabled>Đăng xuất</button>
+  </div>
+</header>
+<dialog id="workspace-search-dialog" class="wh-search-dialog" aria-labelledby="workspace-search-title">
+  <div class="wh-search-heading"><div><h2 id="workspace-search-title">Tìm kiếm nhanh</h2><p>Trong Workspace {{ details.workspace.name }}</p></div><button type="button" id="workspace-search-close" class="wh-icon-button" aria-label="Đóng tìm kiếm">×</button></div>
+  <label class="wh-search-field"><span class="material-symbols-outlined" aria-hidden="true">search</span><span class="wh-sr-only">Tìm trang, khách hàng hoặc nền tảng</span><input id="workspace-search-input" type="search" placeholder="Nhập tên trang, khách hàng hoặc nền tảng…" maxlength="150" autocomplete="off"></label>
+  <p id="workspace-search-status" role="status" aria-live="polite"></p>
+  <div id="workspace-search-results" class="wh-results"></div>
+  <footer class="wh-search-footer"><span><kbd>↑</kbd> <kbd>↓</kbd> di chuyển · <kbd>Enter</kbd> mở</span><span><kbd>Esc</kbd> đóng</span></footer>
+</dialog>

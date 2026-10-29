@@ -174,7 +174,12 @@ POST_PATHS = {'auth/register', 'auth/login', 'auth/logout', 'auth/google/start',
 async def customer_mutation(request: Request, path: str):
     try:
         data = await read_body(request)
-        if path not in POST_PATHS and not re.fullmatch(r'workspaces/[a-f0-9]{32}/(select|invitations|tour)', path):
+        if (path not in POST_PATHS
+                and not re.fullmatch(r'workspaces/[a-f0-9]{32}/(select|invitations|tour|clients)', path)
+                and not re.fullmatch(r'workspaces/[a-f0-9]{32}/clients/[a-f0-9]{32}/(select|update|archive|restore)',path)
+                and not re.fullmatch(r'workspaces/[a-f0-9]{32}/settings', path)
+                and not re.fullmatch(r'workspaces/[a-f0-9]{32}/members/[a-f0-9]{32}/(role|remove)', path)
+                and not re.fullmatch(r'workspaces/[a-f0-9]{32}/invitations/[a-f0-9]{32}/revoke', path)):
             raise CustomerError(404, 'Không tìm thấy chức năng.')
         if path == 'auth/google/start':
             data = {'remember': data.get('remember') is True, 'browser_binding': hashlib.sha256(browser_binding(request).encode()).hexdigest()}
@@ -196,6 +201,35 @@ async def workspace_detail(request: Request, workspace_id: str):
         if not re.fullmatch(r'[a-f0-9]{32}', workspace_id):
             raise CustomerError(404, 'Không tìm thấy Workspace.')
         return JSONResponse(await backend(request, 'GET', '/workspaces/' + workspace_id), headers=HEADERS)
+    except CustomerError as exc:
+        return error_response(exc)
+
+
+@router.get('/api/customer/workspaces/{workspace_id}/integrations')
+async def workspace_integrations(request: Request, workspace_id: str):
+    try:
+        if not re.fullmatch(r'[a-f0-9]{32}', workspace_id):
+            raise CustomerError(404, 'Không tìm thấy Workspace.')
+        return JSONResponse(await backend(request, 'GET', '/workspaces/' + workspace_id + '/integrations'), headers=HEADERS)
+    except CustomerError as exc:
+        return error_response(exc)
+
+
+@router.get('/api/customer/workspaces/{workspace_id}/members')
+async def workspace_members(request: Request, workspace_id: str):
+    return await workspace_management_read(request, workspace_id, 'members')
+
+
+@router.get('/api/customer/workspaces/{workspace_id}/settings')
+async def workspace_settings(request: Request, workspace_id: str):
+    return await workspace_management_read(request, workspace_id, 'settings')
+
+
+async def workspace_management_read(request, workspace_id, section):
+    try:
+        if not re.fullmatch(r'[a-f0-9]{32}', workspace_id):
+            raise CustomerError(404, 'Không tìm thấy Workspace.')
+        return JSONResponse(await backend(request, 'GET', '/workspaces/' + workspace_id + '/' + section), headers=HEADERS)
     except CustomerError as exc:
         return error_response(exc)
 
@@ -234,14 +268,33 @@ async def live_page(request, page):
         if page != 'login' and not user:
             return RedirectResponse('/workspace/login', 303, headers=HEADERS)
         details = None
-        if page == '':
+        if page in ('', 'integrations', 'dashboard', 'channels', 'reports', 'members', 'settings'):
             if not user.get('workspace'):
                 return RedirectResponse('/workspace/onboarding', 303, headers=HEADERS)
-            details = await backend(request, 'GET', '/workspaces/' + user['workspace']['id'])
-        name = 'login' if page == 'login' else 'overview' if page == '' else 'onboarding'
+            suffix = '/' + page if page in ('integrations', 'members', 'settings') else ''
+            details = await backend(request, 'GET', '/workspaces/' + user['workspace']['id'] + suffix)
+        name = 'overview' if page == '' else page
+        overview = library = None
+        if page in ('', 'dashboard', 'channels', 'reports'):
+            from app.mappers.customer_overview import build_overview
+            catalogue = await backend(request, 'GET', '/workspaces/' + user['workspace']['id'] + '/integrations')
+            if catalogue.get('workspace', {}).get('id') != details['workspace']['id']:
+                raise CustomerError(409, 'Workspace đã thay đổi. Vui lòng tải lại trang.', 'workspace_changed')
+            if page in ('channels', 'reports'):
+                from app.mappers.customer_library import build_library
+                try:
+                    library = build_library(details, catalogue)
+                except ValueError:
+                    raise CustomerError(409, 'Khách hàng đã thay đổi. Vui lòng tải lại trang.', 'workspace_changed') from None
+            elif page == 'dashboard':
+                from app.mappers.customer_marketing import build_marketing
+                overview = build_marketing(details, catalogue)
+            else:
+                overview = build_overview(details, catalogue)
         response = templates.TemplateResponse(request=request, name=f'customer/live/{name}.html',
-            context={'title': {'login':'Đăng nhập','overview':'Tổng quan Workspace','onboarding':'Thiết lập Workspace'}[name],
-                     'customer_page': name, 'customer_live': True, 'account': user, 'details': details}, headers=HEADERS)
+            context={'title': {'login':'Đăng nhập','overview':'Tổng quan Workspace','onboarding':'Thiết lập Workspace','integrations':'Kết nối nền tảng','dashboard':'Dashboard Marketing','channels':'Phân tích kênh','reports':'Trung tâm Báo cáo','members':'Thành viên','settings':'Cài đặt'}[name],
+                     'customer_page': name, 'customer_live': True, 'account': user, 'details': details,
+                     'overview': overview, 'library': library}, headers=HEADERS)
         if not browser_binding(request):
             set_cookie(response, BINDING, secrets.token_urlsafe(48), settings)
         return response

@@ -68,7 +68,7 @@ def channel_page(request: Request, channel: str):
 @router.get('/workspace/{page}')
 async def workspace_page(request: Request, page: str = ''):
     from app.customer_auth import enabled, live_page
-    if enabled(request) and page in ('login', 'onboarding', ''):
+    if enabled(request) and page in ('login', 'onboarding', '', 'integrations', 'dashboard', 'channels', 'reports', 'members', 'settings'):
         return await live_page(request, page)
     check_preview(request)
     if page not in PAGES:

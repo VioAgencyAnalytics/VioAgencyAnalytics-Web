@@ -1,0 +1,25 @@
+{% extends 'customer/base.html' %}
+{% block layout %}
+<div class="ov-shell ws-theme lb-page" id="customer-content">
+  {% include 'customer/live/components/sidebar.html' %}
+  <div class="ov-body">{% include 'customer/live/components/topbar.html' %}
+    <main class="ov-main lb-main">
+      <section class="lb-heading"><div><span class="lb-eyebrow">HIỂU SÂU TỪNG NGUỒN DỮ LIỆU</span><h1>Phân tích kênh</h1><p>Từ cái nhìn tổng quan đến hiệu quả từng nền tảng. Khám phá chỉ số, nội dung và cơ hội tăng trưởng của khách hàng.</p></div><div class="lb-heading-actions"><button type="button" id="library-refresh" class="lb-button lb-secondary"><span class="material-symbols-outlined" aria-hidden="true">refresh</span>Tải lại</button><a href="/workspace/integrations" class="lb-button"><span class="material-symbols-outlined" aria-hidden="true">hub</span>Quản lý kết nối</a></div></section>
+      {% include 'customer/live/components/library-filters.html' %}
+      <section class="lb-health"><span class="lb-provider lb-orange material-symbols-outlined" aria-hidden="true">sync</span><div><h2>Tình trạng dữ liệu theo kênh</h2><p id="channels-health-description">Chưa có số liệu trong kỳ đang chọn. Bạn có thể xem cấu trúc phân tích của từng kênh trước khi kết nối dữ liệu.</p></div><div id="channels-health-counts" class="lb-health-counts" aria-label="Thống kê trạng thái kênh"></div></section>
+      <section aria-label="Khám phá các kênh" class="lb-explore">
+        <div class="lb-section-heading"><div><h2>Các kênh Marketing <span class="lb-count">9</span></h2><p>Chỉ số riêng cho từng nền tảng, trong cùng một không gian làm việc.</p></div><label class="lb-search"><span class="material-symbols-outlined" aria-hidden="true">search</span><span class="lb-sr-only">Tìm kênh Marketing</span><input id="library-search" type="search" maxlength="150" placeholder="Tìm kênh, chỉ số hoặc chủ đề…"></label></div>
+        <div class="lb-filter-row"><div id="library-groups" class="lb-segments" role="group" aria-label="Nhóm kênh">{% for group in library.groups %}<button type="button" data-library-group="{{ group.id }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ group.label }} <span data-group-count="{{ group.id }}">{{ library.channels|length if loop.first else library.channels|selectattr('group','equalto',group.id)|list|length }}</span></button>{% endfor %}</div><label class="lb-status-filter"><span class="lb-sr-only">Trạng thái dữ liệu</span><select id="channels-status"><option value="all">Tất cả trạng thái</option><option value="not_connected">Chưa kết nối</option><option value="empty">Chờ dữ liệu</option><option value="syncing">Đang đồng bộ</option><option value="ready">Có dữ liệu</option><option value="attention">Cần kiểm tra</option></select></label></div>
+        <p id="library-result-count" class="lb-result-count" role="status" aria-live="polite"></p>
+        <div id="channels-grid" class="lb-grid">
+          {% for channel in library.channels %}<article class="lb-card" data-channel-card="{{ channel.id }}" data-state="{{ channel.state }}"><div class="lb-card-top"><span class="lb-provider lb-{{ channel.color }} material-symbols-outlined" aria-hidden="true">{{ channel.icon }}</span><span class="lb-state" data-card-state></span></div><span class="lb-card-group">{{ channel.group_label }}</span><h3>{{ channel.name }}</h3><p class="lb-card-description">{{ channel.description }}</p><div class="lb-topics">{% for topic in channel.topics %}<span>{{ topic }}</span>{% endfor %}</div><dl class="lb-card-metrics">{% for metric in channel.metrics %}<div><dt>{{ metric.label }}</dt><dd data-value="{{ metric.key }}">—</dd><small data-metric-note>Chưa có dữ liệu</small></div>{% endfor %}</dl><div class="lb-card-footer"><button type="button" class="lb-button lb-secondary" data-open-channel="{{ channel.id }}">Xem phân tích <span aria-hidden="true">→</span></button></div></article>{% endfor %}
+        </div>
+        <div id="library-no-results" class="lb-empty" hidden><span class="material-symbols-outlined" aria-hidden="true">search_off</span><h3>Chưa tìm thấy kênh phù hợp</h3><p>Thử tên nền tảng khác hoặc xóa bộ lọc để xem lại tất cả kênh.</p><button type="button" class="lb-button lb-secondary" id="library-reset">Xóa bộ lọc</button></div>
+      </section>
+      <aside class="lb-callout"><span class="lb-provider lb-red material-symbols-outlined" aria-hidden="true">auto_graph</span><div><h2>Từ phân tích đến báo cáo</h2><p>Chọn bố cục theo kênh hoặc tổng hợp nhiều nguồn để trình bày kết quả rõ ràng hơn.</p></div><a class="lb-button lb-secondary" href="/workspace/reports">Khám phá báo cáo <span aria-hidden="true">→</span></a></aside>
+      <footer class="lb-footer"><span>© VIO Agency · VioAgencyAnalytics</span><button type="button" id="library-guide">Hướng dẫn phân tích kênh</button></footer>
+    </main>
+  </div>
+</div>
+{% include 'customer/live/components/library-dialogs.html' %}
+{% endblock %}

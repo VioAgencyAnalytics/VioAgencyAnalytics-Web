@@ -1,5 +1,17 @@
 # VioAgencyAnalytics-Web
 
+Customer stack local: [Web + Customer Admin + PostgreSQL trên Docker](docs/CUSTOMER_DOCKER.md),
+điểm vào `http://127.0.0.1:8084/workspace/login`.
+Trang 03: [Tổng quan, quản lý khách hàng và checklist thật](docs/CUSTOMER_OVERVIEW.md).
+
+Trang 04: [Danh mục 9 nền tảng, phạm vi khách hàng và trạng thái tích hợp](docs/CUSTOMER_INTEGRATIONS.md).
+
+Trang 05: [Dashboard Marketing, bộ lọc, biểu đồ và bảng hiệu suất](docs/CUSTOMER_MARKETING.md).
+
+Trang 06–07: [Phân tích 9 kênh, thư viện 10 bố cục và khung báo cáo tùy chỉnh](docs/CUSTOMER_CHANNELS_REPORTS.md).
+
+Trang 08–09: [Thành viên, lời mời, phân quyền và cài đặt Workspace](docs/CUSTOMER_MEMBERS_SETTINGS.md).
+
 **VioAgencyAnalytics do VIO Agency phát triển, sở hữu và vận hành**, hướng tới
 Self-service Multi-platform Marketing Analytics & Reporting SaaS. Sản phẩm được
 phát triển độc lập; tham khảo mô hình AgencyAnalytics không hàm ý sở hữu/hợp tác.
@@ -9,7 +21,8 @@ Web dùng FastAPI + Jinja2 + Vanilla JS. Giao diện khách hàng đã được 
 Các báo cáo cũ được mở trong **Phân tích kênh**. Trang 01–02 đã có tài khoản và
 Workspace trên DB thật khi bật `CUSTOMER_AUTH_ENABLED`; xem hướng dẫn bên dưới.
 Google/SMTP cần cấu hình để bật. Luồng Viewer của Published Bundle từ Admin được
-giữ tương thích. Live Dashboard và Report Builder customer chưa được triển khai.
+giữ tương thích. Dashboard customer đã có giao diện thật, bộ lọc và khung dữ liệu
+scoped; OAuth/sync, analytics API và Report Builder customer chưa được triển khai.
 Google Sign-in xác thực người dùng; provider OAuth cấp quyền dữ liệu riêng biệt.
 Web không gọi provider API hoặc nhận provider secrets từ Admin.
 

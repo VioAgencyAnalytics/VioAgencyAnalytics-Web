@@ -1,0 +1,49 @@
+{% extends 'customer/base.html' %}
+{% block layout %}
+<div class="ov-shell ws-theme ig-shell" id="customer-content">
+  {% include 'customer/live/components/sidebar.html' %}
+  <div class="ov-body">
+    {% include 'customer/live/components/topbar.html' %}
+    <main class="ov-main ig-main">
+      <section class="ig-hero">
+        <div class="ig-hero-title"><h1>Kết nối nền tảng</h1><p>Một nơi để kết nối, theo dõi và quản lý nguồn dữ liệu Marketing của khách hàng.</p></div>
+        <div class="ig-hero-actions"><button type="button" class="ov-button ov-secondary" data-integration-guide><span class="material-symbols-outlined" aria-hidden="true">help_outline</span>Hướng dẫn</button><button id="integrations-refresh" type="button" class="ov-button ov-secondary" disabled><span class="material-symbols-outlined" aria-hidden="true">sync</span>Kiểm tra trạng thái</button></div>
+      </section>
+      <section class="ig-context" aria-labelledby="integration-context-title">
+        <div class="ig-context-heading"><span class="material-symbols-outlined ig-context-icon" aria-hidden="true">business_center</span><div><h2 id="integration-context-title">Bạn đang kết nối cho khách hàng nào?</h2><p>Mỗi khách hàng có tài khoản nguồn và dữ liệu riêng trong Workspace.</p></div><a href="/workspace#client-card" class="ov-text-button">Quản lý khách hàng <span aria-hidden="true">↗</span></a></div>
+        <div class="ig-context-controls"><label for="integration-client">Khách hàng / thương hiệu<select id="integration-client" disabled><option value="">Chọn khách hàng</option>{% for client in details.clients %}<option value="{{ client.id }}" {% if details.selected_client and details.selected_client.id == client.id %}selected{% endif %}>{{ client.name }}</option>{% endfor %}</select></label><div><p id="integration-scope">{% if details.selected_client %}Đang làm việc: {{ details.selected_client.name }}{% else %}Chọn khách hàng để bắt đầu.{% endif %}</p><span id="integration-permission-note"></span></div></div>
+        <ol class="ig-steps" aria-label="Các bước kết nối"><li id="integration-step-client"><b>1</b><span>Chọn khách hàng</span></li><li><b>2</b><span>Khám phá nền tảng</span></li><li><b>3</b><span>Cấp quyền &amp; đồng bộ</span><small>Sắp hỗ trợ</small></li></ol>
+      </section>
+      <p id="integrations-status" class="ov-status" role="status" aria-live="polite" hidden></p>
+      <section aria-labelledby="connected-title" class="ig-connected-section">
+        <div class="ig-section-heading"><h2 id="connected-title">Tài khoản đã kết nối <span id="connected-count" class="ig-count">0 tài khoản</span></h2><span class="ig-muted" id="integration-sync-note">Chưa bật đồng bộ tự động</span></div>
+        <div class="ig-connected-grid" id="connected-list"></div>
+        <div class="ig-empty-connected" id="connected-empty"><span class="material-symbols-outlined" aria-hidden="true">link</span><div><h3 id="connected-empty-title">Chưa có tài khoản được kết nối</h3><p id="connected-description">Các tài khoản được cấp quyền cho khách hàng này sẽ xuất hiện tại đây.</p></div><a class="ov-button ov-secondary" id="connected-browse" href="#platform-catalogue">Khám phá nền tảng <span aria-hidden="true">↓</span></a></div>
+      </section>
+      <section class="ig-catalogue" id="platform-catalogue" aria-labelledby="platforms-title">
+        <div class="ig-catalogue-toolbar">
+          <div class="ig-discover-heading"><div><h2 id="platforms-title">Khám phá nền tảng <span class="ig-count">{{ details.platforms|length }} nền tảng</span></h2><p>Chọn nguồn phù hợp với mục tiêu theo dõi và báo cáo của bạn.</p></div><div class="ig-search-tools"><label class="ig-search" for="platform-search"><span class="material-symbols-outlined" aria-hidden="true">search</span><input id="platform-search" type="search" maxlength="150" placeholder="Tìm nền tảng, ví dụ GA4, Meta Ads…" autocomplete="off"><span class="ig-sr-only">Tìm kiếm nền tảng</span></label><label class="ig-status-filter"><span class="ig-sr-only">Lọc trạng thái nền tảng</span><select id="platform-status-filter"><option value="all">Tất cả trạng thái</option><option value="connected">Đã kết nối</option><option value="attention">Cần kiểm tra</option><option value="upcoming">Sắp hỗ trợ</option></select></label></div></div>
+          <div class="ig-categories" role="group" aria-label="Lọc nhóm nền tảng">{% for category in details.categories %}<button type="button" data-category="{{ category.id }}" aria-pressed="{{ 'true' if category.id == 'all' else 'false' }}"><span>{{ category.label }}</span><span data-category-count>{{ details.platforms|length if category.id == 'all' else '' }}</span></button>{% endfor %}</div>
+        </div>
+        <div class="ig-availability-note"><span class="material-symbols-outlined" aria-hidden="true">info</span><p>Đã có danh mục {{ details.platforms|length }} nền tảng. Chức năng cấp quyền và đồng bộ được mở theo từng nguồn; bạn có thể tìm hiểu trước khi kết nối.</p></div>
+        <div class="ig-result-bar"><p id="platform-result-count" class="ig-muted" role="status" aria-live="polite">Hiển thị {{ details.platforms|length }} nền tảng</p><button type="button" id="platform-clear-filters" class="ov-text-button" hidden>Xóa bộ lọc <span aria-hidden="true">×</span></button></div>
+        <div class="ig-platform-grid" id="platform-grid">
+          {% for platform in details.platforms %}
+          <article class="ig-platform" data-platform="{{ platform.id }}">
+            <div class="ig-platform-heading"><span class="material-symbols-outlined ig-provider ig-{{ platform.color }}" aria-hidden="true">{{ platform.icon }}</span><span class="ig-badge" data-platform-state>{{ platform.status_label }}</span></div>
+            <h3>{{ platform.name }}</h3><p class="ig-platform-subtitle">{{ platform.subtitle }}</p>
+            <p class="ig-description">{{ platform.description }}</p>
+            <div class="ig-platform-footer"><span><span class="material-symbols-outlined" aria-hidden="true">folder_open</span>{{ platform.asset_label }}</span><button class="ov-button ov-secondary" type="button" data-platform-details="{{ platform.id }}" aria-label="Thông tin kết nối {{ platform.name }}">Tìm hiểu <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button></div>
+          </article>
+          {% endfor %}
+        </div>
+        <div id="platform-no-results" class="ig-no-results" hidden><span class="material-symbols-outlined" aria-hidden="true">search_off</span><h3>Không tìm thấy nền tảng phù hợp</h3><p>Thử tên khác hoặc xóa bộ lọc để xem toàn bộ danh mục.</p><button type="button" id="platform-reset" class="ov-button ov-secondary">Xóa bộ lọc</button></div>
+      </section>
+      <section class="ig-security" id="integration-security"><div class="ig-security-heading"><span class="material-symbols-outlined" aria-hidden="true">verified_user</span><div><h2>Bạn luôn kiểm soát quyền truy cập</h2><p>Kết nối minh bạch, tách biệt theo từng khách hàng.</p></div></div><div class="ig-security-grid"><div><span class="material-symbols-outlined" aria-hidden="true">lock</span><h3>Tự cấp quyền trên nền tảng</h3><p>Không nhập mật khẩu Google, Facebook hoặc nền tảng khác vào VioAgencyAnalytics.</p></div><div><span class="material-symbols-outlined" aria-hidden="true">domain</span><h3>Đúng Workspace, đúng khách hàng</h3><p>Chỉ thành viên có quyền phù hợp mới được quản lý kết nối và truy cập dữ liệu.</p></div><div><span class="material-symbols-outlined" aria-hidden="true">shield</span><h3>Đăng nhập và kết nối là hai bước</h3><p>Đăng nhập thành công không tự cấp quyền lấy dữ liệu Marketing của bạn.</p></div></div></section>
+      <footer class="ov-footer ig-footer"><span>© VIO Agency · VioAgencyAnalytics</span><button type="button" id="integration-guide" class="ov-text-button">Hướng dẫn kết nối</button><a href="/workspace" class="ov-text-button">Về Tổng quan</a></footer>
+    </main>
+  </div>
+</div>
+<dialog id="integration-dialog" class="ov-feature ig-dialog" aria-labelledby="integration-dialog-title" aria-describedby="integration-dialog-description"><div class="ig-dialog-top"><span id="integration-dialog-icon" class="material-symbols-outlined ig-provider" aria-hidden="true">hub</span><span id="integration-dialog-badge" class="ig-badge"></span><button id="integration-dialog-close" type="button" aria-label="Đóng thông tin">×</button></div><h2 id="integration-dialog-title"></h2><p id="integration-dialog-description"></p><div id="integration-dialog-extra"></div><div class="ig-dialog-actions"><button type="button" id="integration-dialog-context" class="ov-button ov-secondary" hidden>Chọn khách hàng</button><form method="dialog"><button class="ov-button">Đã hiểu</button></form></div></dialog>
+<script id="integrations-data" type="application/json">{{ details|tojson }}</script>
+{% endblock %}

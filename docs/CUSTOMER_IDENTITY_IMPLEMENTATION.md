@@ -1,5 +1,14 @@
 # Trang 01–02: tài khoản và Workspace
 
+**Trang 03, 28/10/2026:** đã có quản lý khách hàng/thương hiệu, chọn khách hàng
+đang làm việc và checklist dựa trên DB; migration 11 bổ sung metadata/selection.
+Xem [Customer Overview](CUSTOMER_OVERVIEW.md) cho contract, quyền và kiểm thử.
+
+**Docker 27/10/2026:** Customer Web, Customer Admin API và PostgreSQL đã có Compose
+riêng, giữ origin 8084 và database hiện có; không còn cần tiến trình Admin trên
+Windows. Xem [chạy/cập nhật/backup Docker](CUSTOMER_DOCKER.md). Các lệnh chạy hai
+terminal bên dưới là phương án chạy trực tiếp phục vụ phát triển.
+
 **Bổ sung 27/10/2026:** Trang 03 `/workspace` đã có Tổng quan thật và hướng dẫn
 spotlight 8 bước. Tạo/chọn/tham gia Workspace chuyển sang trang này. Tiến độ tour
 lưu trong migration 10 theo tài khoản + Workspace. Xem

@@ -81,12 +81,16 @@ def run():
             detail = page.request.get(ORIGIN + '/api/customer/workspaces/' + info['workspace']['id']).json()
             assert detail['tour']['status'] == 'completed' and detail['tour']['step'] == 7
             assert detail['clients'][0]['name'] == 'QA Brand'
+            assert detail['setup']['completed'] == 3 and detail['setup']['total'] == 4
+            assert detail['setup']['steps'][-1]['state'] == 'planned'
             denied = page.request.post(ORIGIN + '/api/customer/workspaces/' + info['workspace']['id'] + '/tour', data={'version':1,'step':0,'status':'active'})
             assert denied.status == 403
             page.locator('#nav-settings').click()
-            page.locator('#feature-dialog[open]').wait_for()
-            assert f'QA Tour {width}' in page.locator('#workspace-settings').inner_text()
-            page.keyboard.press('Escape')
+            page.wait_for_url('**/workspace/settings')
+            page.locator('#settings-name:not([disabled])').wait_for()
+            assert page.locator('#settings-name').input_value() == f'QA Tour {width}'
+            page.goto(ORIGIN + '/workspace')
+            page.locator('#overview-logout:not([disabled])').wait_for()
             page.locator('.ov-heading [data-start-tour]').click()
             page.wait_for_function("document.querySelector('#tour-counter').textContent.includes('1 / 8') && document.querySelector('#product-tour').open")
             page.locator('#tour-skip').click()

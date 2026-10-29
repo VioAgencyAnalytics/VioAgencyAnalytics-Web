@@ -15,16 +15,16 @@
   const steps = [
     ['workspace-switch', 'Không gian làm việc của bạn', 'Đây là Workspace đang sử dụng. Bấm vào đây khi muốn chọn Workspace khác hoặc tạo thêm một không gian làm việc.'],
     ['client-card', 'Khách hàng & thương hiệu', 'Các khách hàng đã tạo xuất hiện tại đây. Sau này, mỗi khách hàng sẽ có nguồn dữ liệu và báo cáo riêng trong Workspace.'],
-    ['integration-card', 'Kết nối nguồn dữ liệu', 'Bước tiếp theo là tự cấp quyền Google, Meta hoặc nền tảng khác và chọn tài khoản của khách hàng. Chức năng kết nối đang được triển khai.'],
-    ['nav-dashboard', 'Dashboard Marketing', 'Khu vực theo dõi các chỉ số từ nguồn đã kết nối. Dashboard sẽ khả dụng sau khi chức năng kết nối và đồng bộ được hoàn thiện.'],
-    ['nav-channels', 'Phân tích từng kênh', 'Đây sẽ là nơi xem báo cáo chi tiết của SEO, Facebook, YouTube và các kênh được hỗ trợ. Phần báo cáo cũ sẽ được đưa vào khu vực này.'],
-    ['nav-reports', 'Tạo và chia sẻ báo cáo', 'Khu vực dành cho mẫu báo cáo, kỳ báo cáo và chia sẻ kết quả. Chức năng này đang được triển khai cho Workspace.'],
-    ['nav-members', 'Cùng làm việc với đội ngũ', 'Mục này đưa bạn về phần thiết lập Workspace. Chủ sở hữu hoặc quản trị có email đã xác minh có thể tạo mã mời và phân quyền cho thành viên.'],
-    ['nav-settings', 'Thông tin & cài đặt Workspace', 'Xem lại tên, website, tiền tệ và múi giờ của Workspace. Bạn đã biết các khu vực chính! Có thể mở lại hướng dẫn bất cứ lúc nào.'],
+    ['integration-card', 'Kết nối nguồn dữ liệu', 'Mở danh mục 9 nền tảng để khám phá nguồn dữ liệu cho khách hàng. Luồng cấp quyền và đồng bộ sẽ được mở riêng theo từng nền tảng.'],
+    ['nav-dashboard', 'Dashboard Marketing', 'Mở Dashboard để xem khung KPI, xu hướng và bảng hiệu suất đa kênh. Số liệu sẽ xuất hiện khi nguồn dữ liệu của khách hàng được kết nối và đồng bộ.'],
+    ['nav-channels', 'Phân tích từng kênh', 'Khám phá 9 kênh Marketing, lọc theo nhóm và xem khung chỉ số chuyên sâu. Dữ liệu sẽ xuất hiện sau khi nguồn của khách hàng được kết nối và đồng bộ.'],
+    ['nav-reports', 'Chuẩn bị báo cáo của bạn', 'Khám phá 10 bố cục báo cáo, chọn kỳ và thử thiết kế bố cục tùy chỉnh. Lưu, xuất file và chia sẻ sẽ được mở khi báo cáo sẵn sàng.'],
+    ['nav-members', 'Cùng làm việc với đội ngũ', 'Xem đội ngũ, lời mời và quyền truy cập trong Workspace. Chủ sở hữu hoặc quản trị có email đã xác minh có thể tạo mã mời cho thành viên mới.'],
+    ['nav-settings', 'Thông tin & cài đặt Workspace', 'Quản lý tên, website, tiền tệ, múi giờ và mặc định hiển thị của Workspace theo quyền của bạn. Bạn đã biết các khu vực chính! Có thể mở lại hướng dẫn bất cứ lúc nào.'],
   ];
   const features = {
     integrations: ['Kết nối nền tảng', 'Chức năng kết nối đang được triển khai. Khi sẵn sàng, bạn sẽ tự cấp quyền và chọn tài khoản nguồn cho từng khách hàng. Hiện chưa có nền tảng nào được kết nối qua Workspace.'],
-    dashboard: ['Dashboard Marketing', 'Dashboard của Workspace sẽ hiển thị các chỉ số sau khi bạn kết nối nguồn và dữ liệu được đồng bộ. Chức năng này chưa khả dụng.'],
+    dashboard: ['Dashboard Marketing', 'Dashboard đã có khung KPI, xu hướng, bảng nền tảng và chiến dịch. Số liệu sẽ xuất hiện khi nguồn của khách hàng được kết nối và đồng bộ.'],
     channels: ['Phân tích kênh', 'Báo cáo theo từng kênh sẽ được kết nối với khách hàng và quyền truy cập của Workspace. Chức năng này chưa khả dụng.'],
     reports: ['Báo cáo', 'Tạo báo cáo, chọn kỳ và chia sẻ kết quả sẽ được bổ sung cho Workspace. Hiện chưa có báo cáo nào trong luồng này.'],
     settings: ['Thông tin Workspace', 'Đây là thông tin đã lưu khi tạo Workspace. Chức năng chỉnh sửa sẽ được bổ sung trong trang Cài đặt.'],
@@ -140,10 +140,12 @@
   window.addEventListener('scroll', position, true);
   window.addEventListener('pageshow', (event) => { if (event.persisted) location.reload(); });
   document.querySelectorAll('[data-feature]').forEach((button) => button.addEventListener('click', () => {
+    if (['channels', 'reports'].includes(button.dataset.feature)) { location.assign('/workspace/' + button.dataset.feature); return; }
     const [title, description] = features[button.dataset.feature];
     $('#feature-title').textContent = title;
     $('#feature-description').textContent = description;
     $('#workspace-settings').hidden = button.dataset.feature !== 'settings';
+    $('#overview-feature-connect').hidden = true;
     $('#feature-dialog').showModal();
   }));
   $('#overview-logout').addEventListener('click', () => operation(async () => { await api('auth/logout', {}); location.assign('/workspace/login'); }));
