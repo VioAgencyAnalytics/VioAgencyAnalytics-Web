@@ -9,6 +9,9 @@
   let emailToken = '';
   let step = 1;
   let requestKey = crypto.randomUUID();
+  let loginBusy = false;
+  let selectingWorkspace = false, logoTicket = 0, logoTimer, logoImage = '', logoWebsite = '';
+  const Brand = window.VioWorkspaceBranding;
   const roles = {owner: 'Chủ sở hữu', admin: 'Quản trị Workspace', member: 'Thành viên', viewer: 'Chỉ xem'};
   window.addEventListener('pageshow', (event) => { if (event.persisted) location.reload(); });
 
@@ -47,12 +50,29 @@
   async function action(button, task) {
     if (button?.disabled) return;
     status('');
-    const label = button?.textContent;
-    if (button) { button.disabled = true; button.textContent = 'Đang xử lý…'; button.setAttribute('aria-busy', 'true'); }
+    const labelTarget = button?.querySelector('[data-action-label]') || button;
+    const label = labelTarget?.textContent;
+    if (button) { button.disabled = true; labelTarget.textContent = button.dataset.loadingLabel || 'Đang xử lý…'; button.setAttribute('aria-busy', 'true'); }
     try { await task(); }
     catch (error) { status(error.message); }
     finally {
-      if (button) { button.disabled = false; button.textContent = label; button.removeAttribute('aria-busy'); }
+      if (button) { button.disabled = false; labelTarget.textContent = label; button.removeAttribute('aria-busy'); }
+    }
+  }
+
+  async function loginAction(button, task) {
+    if (loginBusy || button.disabled) return;
+    loginBusy = true;
+    const controls = [$('#auth-fields'), $('#google-login'), ...$$('[data-mode]')];
+    const disabled = controls.map((control) => control.disabled);
+    try {
+      await action(button, async () => {
+        controls.forEach((control) => { control.disabled = true; });
+        await task();
+      });
+    } finally {
+      controls.forEach((control, index) => { control.disabled = disabled[index]; });
+      loginBusy = false;
     }
   }
 
@@ -109,6 +129,7 @@
     $('#auth-fields').disabled = false;
     $('#google-login').disabled = !session.capabilities.google;
     $('#google-availability').textContent = session.capabilities.google ? '' : 'Đăng nhập Google chưa khả dụng. Bạn có thể sử dụng email.';
+    $('#google-availability').hidden = session.capabilities.google;
     if (session.user) {
       $('#signed-in').hidden = false;
       $('#signed-in-label').textContent = 'Bạn đang đăng nhập với ' + session.user.email;
@@ -126,17 +147,19 @@
       const form = new FormData(event.currentTarget);
       const data = {email: form.get('email'), password: form.get('password'), remember: form.has('remember')};
       if (mode === 'register') data.name = form.get('name');
-      action($('#auth-submit'), async () => {
+      loginAction($('#auth-submit'), async () => {
         await api('auth/' + mode, data);
         $('#auth-password').value = '';
         await refresh();
         location.assign(session.workspace ? '/workspace' : '/workspace/onboarding');
       });
     });
-    $('#google-login').addEventListener('click', () => action($('#google-login'), async () => {
+    $('#google-login').addEventListener('click', () => loginAction($('#google-login'), async () => {
       const data = await api('auth/google/start', {remember: $('#identity-auth-form [name=remember]').checked});
       const url = new URL(data.authorization_url);
-      if (url.origin !== 'https://accounts.google.com' || url.pathname !== '/o/oauth2/v2/auth') throw new Error('Địa chỉ đăng nhập không hợp lệ.');
+      if (url.origin !== 'https://accounts.google.com' || url.username || url.password || url.hash
+          || url.pathname !== '/o/oauth2/v2/auth'
+          || url.searchParams.get('redirect_uri') !== location.origin + '/auth/customer/google/callback') throw new Error('Địa chỉ đăng nhập không hợp lệ.');
       location.assign(url.href);
     }));
     $('#forgot-password').addEventListener('click', () => {
@@ -212,9 +235,19 @@
     }
     window.addEventListener('hashchange', consumeEmailLink);
     if (!consumeEmailLink()) {
-      const errors = {google_cancelled: 'Bạn đã hủy đăng nhập Google.', oauth_state: 'Phiên đăng nhập Google đã hết hạn. Vui lòng thử lại.', account_link_required: 'Email đã có tài khoản. Hãy đăng nhập bằng phương thức đã đăng ký.', google_failed: 'Không thể hoàn tất đăng nhập Google. Hãy thử lại hoặc đăng nhập bằng email.'};
+      const errors = {google_cancelled: 'Bạn đã hủy đăng nhập Google. Bạn có thể chọn lại tài khoản hoặc dùng email.', oauth_state: 'Phiên đăng nhập Google đã hết hạn hoặc thay đổi. Bấm Google để bắt đầu lại.', account_link_required: 'Email này đã đăng ký bằng mật khẩu. Hãy đăng nhập bằng email; chọn Quên mật khẩu nếu cần khôi phục.', google_failed: 'Chưa thể đăng nhập Google. Thử lại hoặc dùng email và mật khẩu đã đăng ký.'};
+      Object.assign(errors, {
+        google_configuration: 'Đăng nhập Google tạm chưa sẵn sàng. Vui lòng dùng email hoặc liên hệ VIO.',
+        google_unavailable: 'Chưa kết nối được với Google. Vui lòng thử lại.',
+        google_clock: 'Chưa xác minh được phiên Google. Vui lòng thử lại sau ít phút.',
+        google_identity: 'Chưa xác minh được tài khoản Google. Vui lòng chọn lại tài khoản.'
+      });
       const code = new URLSearchParams(location.search).get('error');
-      if (errors[code]) { status(errors[code]); history.replaceState(null, '', location.pathname); }
+      if (errors[code]) {
+        status(errors[code], code === 'google_cancelled' ? 'info' : 'error');
+        history.replaceState(null, '', location.pathname);
+        if (code === 'account_link_required') $('#identity-auth-form [name=email]').focus();
+      }
     }
   }
 
@@ -224,7 +257,10 @@
 
   function review() {
     const data = workspaceData();
-    const values = [['Workspace', data.name], ['Loại hình', data.kind === 'agency' ? 'Agency' : 'Doanh nghiệp'], ['Website', data.website || 'Chưa thêm'], ['Quốc gia', $('#workspace-form [name=country]').selectedOptions[0].textContent], ['Múi giờ', data.timezone], ['Tiền tệ', data.currency], ['Khách hàng', data.first_client || (data.kind === 'business' ? data.name : 'Thêm sau')]];
+    const brand = Brand.avatar(data.name); Brand.setImage(brand, logoImage, false);
+    const heading = document.createElement('strong'); heading.textContent = data.name;
+    $('#workspace-review-brand').replaceChildren(brand, heading);
+    const values = [['Loại hình', data.kind === 'agency' ? 'Agency' : 'Doanh nghiệp'], ['Website', data.website || 'Chưa thêm'], ['Quốc gia', $('#workspace-form [name=country]').selectedOptions[0].textContent], ['Múi giờ', data.timezone], ['Tiền tệ', data.currency], ['Khách hàng', data.first_client || (data.kind === 'business' ? data.name : 'Thêm sau')]];
     $('#workspace-review').replaceChildren(...values.map(([label, value]) => {
       const row = document.createElement('div');
       const dt = document.createElement('dt');
@@ -248,7 +284,47 @@
   }
 
   function validStep() {
+    if (step === 1) normalizeWebsite();
     return $$(`[data-step="${step}"] input, [data-step="${step}"] select`).every((input) => input.reportValidity());
+  }
+
+  function websiteOrigin(value) {
+    try {
+      const url = new URL(/^https?:\/\//i.test(value) ? value : 'https://' + value);
+      return ['https:','http:'].includes(url.protocol) && url.hostname.includes('.') && !url.username && !url.password ? url.origin : '';
+    } catch { return ''; }
+  }
+  function normalizeWebsite() {
+    const input = $('#workspace-form [name=website]'), value = input.value.trim();
+    if (value && !/^[a-z][a-z0-9+.-]*:/i.test(value) && websiteOrigin(value)) input.value = 'https://' + value;
+  }
+  function updateBrandPreview() {
+    const name = $('#workspace-form [name=name]').value.trim() || 'Workspace của bạn';
+    const website = websiteOrigin($('#workspace-form [name=website]').value.trim());
+    $('#workspace-brand-name').textContent = name;
+    $('#workspace-brand-website').textContent = website ? new URL(website).hostname : 'Thêm website để tự lấy logo';
+    const avatar = $('#workspace-preview-avatar .ws-avatar');
+    Brand.setName(avatar, name);
+    if (website === logoWebsite) return;
+    clearTimeout(logoTimer);
+    logoTicket += 1; logoImage = ''; logoWebsite = website; Brand.setImage(avatar, '');
+    $('#workspace-brand-status').textContent = '';
+    if (!website) return;
+    const ticket = logoTicket;
+    logoTimer = setTimeout(async () => {
+      $('#workspace-brand-status').textContent = 'Đang tìm logo…';
+      try {
+        const result = await api('branding/preview', {website});
+        if (ticket !== logoTicket) return;
+        if (result.available && typeof result.image === 'string' && /^data:image\/(png|jpeg|gif|x-icon);base64,[A-Za-z0-9+/]+=*$/.test(result.image)) {
+          logoImage = result.image; Brand.setImage(avatar, logoImage, false);
+          $('#workspace-brand-status').textContent = 'Logo lấy từ website';
+          if (step === 3) review();
+        } else $('#workspace-brand-status').textContent = 'Chưa tìm thấy logo · Dùng chữ viết tắt';
+      } catch {
+        if (ticket === logoTicket) $('#workspace-brand-status').textContent = 'Dùng chữ viết tắt · Bạn vẫn có thể tạo Workspace';
+      }
+    }, 650);
   }
 
   async function renderWorkspaces() {
@@ -257,18 +333,37 @@
     $('#verify-email').disabled = !session.capabilities.email_delivery;
     if (!session.capabilities.email_delivery) $('#verification-text').textContent = 'Bạn có thể tạo Workspace. Xác minh email và lời mời sẽ khả dụng khi dịch vụ email được bật.';
     $('#workspace-list-section').hidden = !session.workspaces.length;
+    $('#workspace-count').textContent = String(session.workspaces.length);
     $('#workspace-list').replaceChildren(...session.workspaces.map((workspace) => {
       const button = document.createElement('button');
       button.className = 'identity-workspace-option'; button.type = 'button';
-      button.setAttribute('aria-pressed', String(workspace.id === session.workspace?.id));
-      const name = document.createElement('strong'); name.textContent = workspace.name;
-      const detail = document.createElement('span'); detail.textContent = `${roles[workspace.role]} · ${workspace.currency} · ${workspace.timezone}`;
-      button.append(name, detail);
+      const chosen = workspace.id === session.workspace?.id;
+      button.setAttribute('aria-pressed', String(chosen)); button.setAttribute('aria-label', 'Mở Workspace ' + workspace.name);
+      const body = document.createElement('span'); body.className = 'workspace-choice-body';
+      const name = document.createElement('strong'); name.className = 'workspace-choice-title'; name.textContent = workspace.name;
+      const detail = document.createElement('span'); detail.className = 'workspace-choice-meta';
+      const role = document.createElement('span'); role.className = 'workspace-role'; role.textContent = roles[workspace.role]; detail.append(role);
+      if (chosen) { const current = document.createElement('span'); current.className = 'workspace-current'; current.textContent = 'Đang chọn'; detail.append(current); }
+      body.append(name, detail);
+      if (workspace.website) {
+        const site = document.createElement('small'); site.className = 'workspace-choice-site';
+        try { site.textContent = new URL(workspace.website).hostname; } catch { site.textContent = workspace.website; }
+        body.append(site);
+      }
+      if (Number.isInteger(workspace.client_count)) {
+        const clients = document.createElement('span'); clients.className = 'workspace-choice-clients';
+        const count = document.createElement('strong'); count.textContent = `${workspace.client_count} khách hàng`; clients.append(count);
+        (workspace.client_preview || []).slice(0,2).forEach((value) => { const tag = document.createElement('span'); tag.className = 'workspace-client-chip'; tag.textContent = value; clients.append(tag); });
+        if (workspace.client_count > 2) { const extra = document.createElement('span'); extra.className = 'workspace-client-chip'; extra.textContent = '+' + (workspace.client_count - 2); clients.append(extra); }
+        body.append(clients);
+      }
+      const arrow = document.createElement('span'); arrow.className = 'workspace-choice-arrow'; arrow.textContent = '→'; arrow.setAttribute('aria-hidden','true');
+      button.append(Brand.avatar(workspace.name, workspace.id), body, arrow);
       button.addEventListener('click', () => action(null, async () => {
-        if (button.disabled) return;
-        button.disabled = true;
+        if (selectingWorkspace) return;
+        selectingWorkspace = true; $$('#workspace-list button').forEach((item) => { item.disabled = true; }); button.setAttribute('aria-busy','true');
         try { await api(`workspaces/${workspace.id}/select`, {}); location.assign('/workspace'); }
-        finally { button.disabled = false; }
+        finally { selectingWorkspace = false; $$('#workspace-list button').forEach((item) => { item.disabled = false; }); button.removeAttribute('aria-busy'); }
       }));
       return button;
     }));
@@ -277,18 +372,29 @@
     $('#invite-panel').hidden = !current || !['owner', 'admin'].includes(current.role) || !session.user.email_verified;
     $('#invitation-result').hidden = true;
     if (current) {
+      $('#workspace-active-avatar').replaceChildren(Brand.avatar(current.name, current.id));
       $('#workspace-success-heading').textContent = current.name;
       $('#workspace-success-detail').textContent = `${roles[current.role]} · ${current.kind === 'agency' ? 'Agency' : 'Doanh nghiệp'} · ${current.currency} · ${current.timezone}`;
       $('#invite-admin-option').disabled = current.role !== 'owner';
       $('#invite-form [name=role]').value = 'member';
       const details = await api(`workspaces/${current.id}`);
-      $('#workspace-client-detail').textContent = details.clients.length ? 'Khách hàng / thương hiệu: ' + details.clients.map((client) => client.name).join(', ') : 'Chưa thêm khách hàng / thương hiệu.';
+      $('#workspace-client-detail').textContent = details.clients.length ? `${details.clients.length} khách hàng / thương hiệu` : 'Chưa thêm khách hàng / thương hiệu.';
+      const tags = details.clients.slice(0,3).map((client) => { const tag = document.createElement('span'); tag.className = 'workspace-client-chip'; tag.textContent = client.name; return tag; });
+      if (details.clients.length > 3) { const more = document.createElement('span'); more.className = 'workspace-client-chip'; more.textContent = '+' + (details.clients.length - 3); tags.push(more); }
+      $('#workspace-client-tags').replaceChildren(...tags);
     }
   }
 
   async function initOnboarding() {
     if (!session.user) { location.replace('/workspace/login'); return; }
     await renderWorkspaces();
+    $('#workspace-preview-avatar').replaceChildren(Brand.avatar('Workspace của bạn'));
+    $('#workspace-form [name=name]').addEventListener('input', () => {
+      const name = $('#workspace-form [name=name]').value.trim() || 'Workspace của bạn';
+      $('#workspace-brand-name').textContent = name; Brand.setName($('#workspace-preview-avatar .ws-avatar'), name);
+    });
+    $('#workspace-form [name=website]').addEventListener('input', updateBrandPreview);
+    $('#workspace-form [name=website]').addEventListener('blur', () => { normalizeWebsite(); updateBrandPreview(); });
     $('#workspace-fields').disabled = false;
     $('#join-submit').disabled = false;
     $('#step-next').addEventListener('click', () => { if (validStep()) showStep(Math.min(3, step + 1)); });

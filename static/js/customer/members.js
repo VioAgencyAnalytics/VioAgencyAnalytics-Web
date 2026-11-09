@@ -53,7 +53,7 @@
     const data = W.data;
     $('#members-active-count').textContent = W.ready ? data.summary.active_members : '—';
     $('#members-invite-count').textContent = W.ready && data.summary.pending_invitations !== null ? data.summary.pending_invitations : '—';
-    $('#members-invite-summary').textContent = data.permissions.view_invitations ? 'Mã mời riêng theo email, có thời hạn sử dụng.' : 'Chỉ Owner/Admin xem và quản lý lời mời.';
+    $('#members-invite-summary').textContent = data.permissions.view_invitations ? '' : 'Chỉ chủ sở hữu và quản trị viên xem lời mời.';
     $('#members-tab-count').textContent = W.ready ? data.members.length : '';
     $('#invitations-tab-count').textContent = W.ready && data.summary.pending_invitations !== null ? data.summary.pending_invitations : '';
     $('#members-verification').hidden = !W.ready || !data.permissions.manage_members || data.permissions.email_verified;

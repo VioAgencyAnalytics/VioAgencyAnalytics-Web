@@ -1,7 +1,15 @@
 # VioAgencyAnalytics-Web
 
+**Cập nhật 09/11/2026:** Customer Web đã có luồng ba bước và khung báo cáo cho
+chín nguồn dữ liệu, chạy Docker HTTPS local. Cấu hình ứng dụng là việc một lần
+của Vio; khách hàng chỉ đăng nhập/cấp quyền tại nhà cung cấp. Xem
+[hướng dẫn cấu hình chín connector](docs/CUSTOMER_CONNECTORS_SETUP_VI.md) và
+[kết quả kiểm tra, phần còn lại](docs/CUSTOMER_CONNECTORS_VALIDATION_20261109.md).
+
 Customer stack local: [Web + Customer Admin + PostgreSQL trên Docker](docs/CUSTOMER_DOCKER.md),
 điểm vào `http://127.0.0.1:8084/workspace/login`.
+Kết nối Meta cần HTTPS: [thiết lập HTTPS localhost và callback Google/Meta](docs/CUSTOMER_LOCAL_HTTPS.md),
+điểm vào sau khi bật là `https://localhost:8444/workspace/login`.
 Trang 03: [Tổng quan, quản lý khách hàng và checklist thật](docs/CUSTOMER_OVERVIEW.md).
 
 Trang 04: [Danh mục 9 nền tảng, phạm vi khách hàng và trạng thái tích hợp](docs/CUSTOMER_INTEGRATIONS.md).
@@ -9,6 +17,7 @@ Trang 04: [Danh mục 9 nền tảng, phạm vi khách hàng và trạng thái t
 Trang 05: [Dashboard Marketing, bộ lọc, biểu đồ và bảng hiệu suất](docs/CUSTOMER_MARKETING.md).
 
 Trang 06–07: [Phân tích 9 kênh, thư viện 10 bố cục và khung báo cáo tùy chỉnh](docs/CUSTOMER_CHANNELS_REPORTS.md).
+Facebook Content đã kết nối: [KPI, biểu đồ, bài viết và bản báo cáo riêng tư](docs/CUSTOMER_FACEBOOK_CONTENT_UX.md).
 
 Trang 08–09: [Thành viên, lời mời, phân quyền và cài đặt Workspace](docs/CUSTOMER_MEMBERS_SETTINGS.md).
 
@@ -291,3 +300,109 @@ Preview không nhận service token, không nối DB/network Admin; scripts và 
 chỉ mount read-only trong preview và không nằm trong image production.
 Không ghép compose preview với compose production. Các file `.env`, `.work`,
 virtualenv và `node_modules` không được đưa vào image runtime.
+
+# Kết nối nguồn dữ liệu Customer (30/10/2026)
+
+GA4, Google Search Console, Facebook Content và Facebook Ads có luồng Customer
+OAuth, chọn tài sản, đồng bộ khởi tạo/thủ công và ngắt tại Vio. Cấu hình app ở
+Customer Admin bằng `scripts/configure_customer_providers.py google` hoặc `meta`;
+không dùng secret đăng nhập Google thay cho consent đọc dữ liệu. Helper nhập ẩn,
+lưu env private và in callback đúng `CUSTOMER_WEB_ORIGIN`. Web không nhận provider
+secret/token. Khi app chưa cấu hình, catalogue báo **Chờ cấu hình ứng dụng**.
+
+Xem contract và hướng dẫn đầy đủ trong
+`../VioAgencyAnalytics-Admin/docs/CUSTOMER_PROVIDER_CONNECTIONS.md`. Chỉ Owner/Admin
+đã xác minh email được quản lý nguồn; Member/Viewer chỉ đọc trạng thái. Snapshot
+nguồn chưa tự trở thành báo cáo phát hành; không có scheduler định kỳ ở bước này.
+
+## Facebook Content Customer (05/11/2026)
+
+Sau khi cấp quyền Meta và **chọn Fanpage tại Vio**, worker đồng bộ kỳ khởi tạo.
+Trang `/workspace/channels/facebook-content` đọc các snapshot đã lưu đúng
+Workspace/khách hàng/tài sản/phiên bản kết nối. Có KPI nội dung, nhịp đăng bài,
+Page Insights khi nguồn đủ quyền, tìm kiếm và phân trang bài đăng; thiếu dữ liệu
+giữ `—`, số 0 thực có giữ nguyên. GET không gọi Meta hoặc phát hành báo cáo.
+
+Tổng quan và Dashboard có thẻ Facebook Content với kỳ snapshot riêng; không trộn
+organic vào chỉ số quảng cáo và xóa dữ liệu cũ khi chuyển khách hàng. Đây là dữ
+liệu vận hành riêng tư, chưa phải revision đã phát hành.
+
+Để chỉ cấu hình Content, dùng
+`scripts/configure_customer_providers.py meta --meta-source content`; Ads cần
+cấu hình và nghiệm thu riêng. Contract, quyền và giới hạn tại
+[Customer Meta Content](../VioAgencyAnalytics-Admin/docs/CUSTOMER_META_CONTENT.md).
+
+## Customer UX gọn hơn (05/11/2026)
+
+Menu chỉ mở danh sách kênh khi ở Phân tích kênh. Tổng quan gom quản lý khách hàng
+và thiết lập vào mục mở rộng; Cài đặt chia nhóm; Báo cáo ưu tiên danh sách đã lưu,
+mẫu báo cáo có thể mở riêng. Hướng dẫn và định nghĩa chỉ số vẫn truy cập được khi cần.
+Cỡ chữ và các kiểm tra quyền giữ nguyên; không thay dữ liệu thiếu bằng số 0.
+
+`clarity.css` chứa bố cục bổ sung. `shell.js` mở đúng nhóm khi đi theo liên kết
+hoặc gặp trường nhập không hợp lệ. Hướng dẫn 8 bước tự mở rồi khôi phục nhóm đã thu gọn.
+
+## Kết nối Fanpage theo từng bước (05/11/2026)
+
+Mở `/workspace/integrations?platform=facebook_content`. Luồng Facebook riêng gồm
+**Kết nối → Chọn Fanpage → Hoàn tất**. Sau consent từ chính nút kết nối, Web mở
+ngay danh sách Fanpage; khách hàng bấm **Kết nối Fanpage** để xác nhận. Có tìm kiếm
+không dấu, phân trang, trạng thái danh sách trống và thử lại. Nhiều Page không tự
+chọn; một Page có thể được điền sẵn nhưng vẫn cần khách hàng xác nhận.
+
+Email chưa xác minh có nút gửi thư và kiểm tra lại ngay tại đây; chỉ gửi khi
+khách hàng bấm, không tự xác minh tài khoản. Trạng thái hoàn tất phân biệt đã
+kết nối, đang đồng bộ, đã có dữ liệu và đồng bộ lỗi. Đổi Fanpage, đồng bộ theo
+khoảng ngày và ngắt kết nối nằm trong **Tùy chọn kết nối**.
+
+`facebook-connect.js` chỉ gọi BFF hiện có, không gọi Graph trực tiếp. Phản hồi
+khác người dùng/Workspace/khách hàng/phiên bản kết nối bị bỏ. Dấu nhớ điều hướng
+trong sessionStorage chỉ có phạm vi và thời hạn, không chứa token, state OAuth
+hoặc URL cấp quyền; query callback giả không tự tải danh sách Page. Backend vẫn
+kiểm tra quyền, email, grant, version và tài sản trước mọi thao tác. Không đổi DB,
+chỉ số hoặc đường phát hành báo cáo. Callback Meta phải khớp origin đang dùng;
+hostname Quick Tunnel mới không tự được đăng ký tại Meta.
+
+Nút **Kết nối Facebook** trên danh mục mở thẳng consent nếu người dùng đã đủ
+quyền/xác minh và chưa có grant hợp lệ, giảm một lần xác nhận trung gian. Mở URL
+có `platform=facebook_content` chỉ mở giao diện, không tự khởi tạo OAuth. Callback
+hủy cũng không tự chuyển lại Facebook. Email chưa xác minh hiển thị riêng là tài
+khoản Vio; khi quay lại tab sau khi xác minh, Web tự đọc lại trạng thái, vẫn có
+nút kiểm tra thủ công. Không tự gửi thư hoặc đổi cờ xác minh trong DB.
+
+Mọi khách hàng dùng Meta App do VIO cấu hình ở backend; Customer không tạo App,
+nhập App ID/Secret hoặc chỉnh callback. VIO cần chuẩn bị origin/callback ổn định
+và hoàn tất yêu cầu phát hành/quyền của Meta cho khách hàng ngoài nhóm thử nghiệm.
+Có credential ứng dụng không đồng nghĩa đã đủ điều kiện phục vụ khách hàng bất kỳ.
+
+## Connector và trình xem dữ liệu chung (06/11/2026)
+
+**Báo cáo → Dữ liệu đã đồng bộ** và các thẻ nguồn ở Tổng quan/Dashboard dùng
+chung hợp đồng dữ liệu với Customer backend. Mở
+`/workspace/reports/data?source=ga4`, đổi nền tảng/khách hàng và chọn snapshot
+đã lưu để xem KPI, biểu đồ, bảng tìm kiếm/phân trang và cách tính chỉ số.
+
+Kho có chín connector; mapping hiện đọc được bốn adapter đã có: Facebook
+Content, Facebook Ads, GA4 và GSC. Năm nền tảng khác vẫn `planned`, không tự
+bật OAuth chỉ vì có tên trong danh mục. Ứng dụng VIO được cấu hình chung ở
+backend; khách hàng không nhập token, secret hoặc URL API tùy ý.
+
+Trình xem chỉ đọc dữ liệu bất biến đúng Workspace/client/tài sản/phiên bản
+kết nối. Null khác 0; không cộng unique, tỷ lệ hoặc các nguồn khác kỳ/tiền tệ.
+Giá trị tiền decimal được định dạng chính xác. Mỗi thẻ nguồn ghi kỳ đã lưu
+riêng; không lấy kỳ của khung thử bố cục để giả định đã có dữ liệu trong kỳ đó.
+Trang Facebook Content chuyên sâu và luồng Published Bundle/ACL giữ nguyên.
+
+Đây là báo cáo vận hành riêng, chưa duyệt/phát hành. Các thao tác lưu Report
+Builder, xuất file, lịch gửi và chia sẻ vẫn cần luồng Dataset/Bundle riêng.
+Xem [hợp đồng connector và mở rộng adapter](../VioAgencyAnalytics-Admin/docs/CUSTOMER_CONNECTOR_DATA.md).
+
+Kiểm tra formatter tiền tệ bằng `node --test tests/customer_data_format.test.cjs`;
+kiểm tra BFF bằng `python -m pytest tests/test_customer_data.py`.
+
+Đã triển khai lên Docker Customer backend và Web ngày 06/11/2026, giữ nguyên
+schema 16 và dữ liệu cũ. **407 pytest Web PASS**, **3 test formatter PASS** và
+**27 nhóm browser PASS** trên provider/SMTP giả lập. Smoke bản Docker sau triển
+khai: đăng nhập, **14 trang và 6 API dữ liệu PASS**, kèm tenant/CSRF/cookie và hash
+asset. Kiểm tra loopback dùng Host/Origin đang cấu hình, không thay chế độ chia
+sẻ hiện tại; chưa nghiệm thu lại HTTPS public hoặc tài khoản provider thật.

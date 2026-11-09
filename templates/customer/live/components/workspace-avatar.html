@@ -1,0 +1,3 @@
+{% macro workspace_avatar(workspace) -%}
+<span class="ws-avatar" data-brand-name="{{ workspace.name }}" aria-hidden="true"><span class="ws-avatar-initials">{{ workspace.name[:1]|upper }}</span><img data-workspace-logo="{{ workspace.id }}" alt="" hidden></span>
+{%- endmacro %}

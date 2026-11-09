@@ -1,0 +1,62 @@
+{% macro kpis(view, fc_amount) -%}
+<section class="fc-kpis" aria-label="KPI nội dung Facebook">
+  {% for card in view.cards %}<article class="fc-kpi fc-tone-{{ card.tone }}" data-kpi="{{ card.key }}">
+    <div class="fc-kpi-top"><span>{{ card.label }}</span><span class="material-symbols-outlined fc-kpi-icon" aria-hidden="true">{{ card.icon }}</span></div>
+    <strong class="{{ 'fc-unavailable' if card.value is none else '' }}">{{ fc_amount(card.value) }}</strong>
+    <div class="fc-kpi-bottom"><span>{{ card.note }}</span>{% if card.help %}<details class="fc-tip"><summary aria-label="Cách tính {{ card.label }}"><span class="material-symbols-outlined" aria-hidden="true">info</span></summary><p>{{ card.help }}</p></details>{% endif %}</div>
+  </article>{% endfor %}
+</section>
+{%- endmacro %}
+
+{% macro chart(panel, report=false) -%}
+<div class="fc-chart-panel" id="fc-chart-{{ panel.key }}" data-fc-chart-panel="{{ panel.key }}" {% if report %}role="region" aria-label="{{ panel.title }}"{% else %}role="tabpanel" aria-labelledby="fc-tab-{{ panel.key }}"{% if panel.key != 'publishing' %} hidden{% endif %}{% endif %}>
+  {% if report %}<h3 class="fc-report-chart-title">{{ panel.title }}</h3>{% endif %}
+  <div class="fc-chart-caption"><p>{{ panel.note }}</p><span>{{ panel.coverage }}/{{ panel.expected }} mốc có số liệu</span></div>
+  {% if panel.has_data %}<div class="fc-chart-scroll" tabindex="0" role="region" aria-label="{{ panel.title }}">
+    <svg class="fc-chart" viewBox="0 0 880 250" role="img" aria-labelledby="fc-svg-title-{{ panel.key }} fc-svg-desc-{{ panel.key }}">
+      <title id="fc-svg-title-{{ panel.key }}">{{ panel.title }}</title><desc id="fc-svg-desc-{{ panel.key }}">{{ panel.note }} Số liệu từng mốc có trong bảng bên dưới.</desc>
+      {% for tick in panel.ticks %}<line x1="56" x2="848" y1="{{ tick.y }}" y2="{{ tick.y }}" class="fc-gridline"/><text x="45" y="{{ tick.y+4 }}" text-anchor="end" class="fc-axis-label">{{ tick.label }}</text>{% endfor %}
+      {% for point in panel.points %}<g class="fc-chart-point" tabindex="0" role="img" aria-label="{{ point.full_date }}: {{ point.display }}{{ ' · mốc kết thúc ngày Meta' if panel.meta else ' bài' }}" data-chart-date="{{ point.date }}" data-chart-value="{{ point.display }}">
+        <title>{{ point.full_date }}: {{ point.display }}{{ ' · mốc kết thúc ngày Meta' if panel.meta else ' bài' }}</title>
+        <rect x="{{ point.x }}" y="22" width="{{ point.width }}" height="186" class="fc-bar-hit"/>
+        {% if point.value is not none and point.value > 0 %}<rect x="{{ point.x }}" y="{{ point.y }}" width="{{ point.width }}" height="{{ point.height }}" rx="4" class="fc-column"/>{% elif point.value == 0 %}<circle cx="{{ point.center }}" cy="208" r="2" class="fc-zero"/>{% endif %}
+        {% if point.show_label %}<text x="{{ point.center }}" y="235" text-anchor="middle" class="fc-axis-label">{{ point.label }}</text>{% endif %}
+      </g>{% endfor %}
+    </svg>
+  </div><p class="fc-mobile-hint">Vuốt biểu đồ để xem toàn bộ kỳ</p><output class="fc-chart-readout" aria-live="polite">{{ 'Mốc kết thúc ngày Meta' if panel.meta else 'Ngày xuất bản UTC' }} · Di chuột hoặc dùng phím Tab để xem số liệu</output>
+  <details class="fc-chart-data"><summary>Xem bảng số liệu biểu đồ</summary><table><thead><tr><th>{{ 'Mốc kết thúc ngày Meta' if panel.meta else 'Ngày UTC' }}</th><th>{{ panel.title }}</th></tr></thead><tbody>{% for point in panel.points %}<tr><td>{{ point.date }}</td><td>{{ point.display }}</td></tr>{% endfor %}</tbody></table></details>
+  {% else %}<p class="fc-chart-no-data">Chưa có số đo phù hợp để vẽ biểu đồ này.</p>{% endif %}
+</div>
+{%- endmacro %}
+
+{% macro charts(view, report=false) -%}
+<section class="fc-card fc-trend-card" aria-labelledby="fc-trend-title">
+  <div class="fc-section-heading"><div><span class="fc-eyebrow">HOẠT ĐỘNG & HIỆU SUẤT</span><h2 id="fc-trend-title">Bức tranh nội dung</h2></div><span class="fc-live-label"><i></i>Dữ liệu đã đồng bộ</span></div>
+  {% if not report %}<div class="fc-chart-tabs" role="tablist" aria-label="Chọn biểu đồ">{% for panel in view.charts %}<button type="button" id="fc-tab-{{ panel.key }}" data-fc-chart="{{ panel.key }}" role="tab" aria-controls="fc-chart-{{ panel.key }}" aria-selected="{{ 'true' if loop.first else 'false' }}" tabindex="{{ '0' if loop.first else '-1' }}">{{ panel.title }}</button>{% endfor %}</div>{% endif %}
+  {% for panel in view.charts %}{{ chart(panel,report) }}{% endfor %}
+</section>
+{%- endmacro %}
+
+{% macro top_posts(view, fc_amount) -%}
+{% if view.top %}<section class="fc-top-section" aria-labelledby="fc-top-title"><div class="fc-section-heading"><div><h2 id="fc-top-title">Bài viết nổi bật</h2><p>Xếp theo {{ view.ranking_label }} tích lũy của các bài trong kỳ.</p></div><a class="fc-text-link" href="#fc-posts">Xem tất cả <span aria-hidden="true">↓</span></a></div>
+  <div class="fc-top-grid">{% for post in view.top %}<article class="fc-top-post"><div class="fc-top-meta"><span class="fc-rank">0{{ loop.index }}</span><span class="fc-format"><span class="material-symbols-outlined" aria-hidden="true">{{ post.format_icon }}</span>{{ post.format_label }}</span><time datetime="{{ post.date }}">{{ post.date_label }}</time></div>
+    <h3>{% if post.url %}<a href="{{ post.url }}" target="_blank" rel="noopener noreferrer">{{ post.heading }}</a>{% else %}{{ post.heading }}{% endif %}</h3>
+    <div class="fc-top-bottom"><div><strong>{{ fc_amount(post[view.ranking]) }}</strong><span>{{ view.ranking_label }} tích lũy</span></div>{% if post.url %}<a class="fc-post-link" href="{{ post.url }}" target="_blank" rel="noopener noreferrer" aria-label="Xem bài trên Facebook: {{ post.heading[:90] }}">Xem bài <span class="material-symbols-outlined" aria-hidden="true">arrow_outward</span></a>{% endif %}</div>
+  </article>{% endfor %}</div>
+</section>{% endif %}
+{%- endmacro %}
+
+{% macro posts(view, fc_amount) -%}
+<section class="fc-card fc-posts-card" id="fc-posts" aria-labelledby="fc-posts-title">
+  <div class="fc-section-heading"><div><h2 id="fc-posts-title">Hiệu suất từng bài viết <span class="fc-count">{{ view.posts|length }}</span></h2><p>Số đếm tích lũy tại lần đồng bộ. Bấm vào bài viết để mở trên Facebook.</p></div><label class="fc-search"><span class="material-symbols-outlined" aria-hidden="true">search</span><span class="fc-sr-only">Tìm bài đăng</span><input id="fc-post-search" type="search" maxlength="150" placeholder="Tìm trong bài viết…"></label></div>
+  <div class="fc-table-tools"><div class="fc-format-tabs" role="group" aria-label="Lọc định dạng bài viết"><button type="button" data-fc-format="all" aria-pressed="true">Tất cả <span>{{ view.posts|length }}</span></button>{% for item in view.formats %}<button type="button" data-fc-format="{{ item.key }}" aria-pressed="false">{{ item.label }} <span>{{ item.count }}</span></button>{% endfor %}</div><label class="fc-sort-label">Sắp xếp<select id="fc-post-sort"><option value="newest">Mới nhất</option><option value="views">Lượt xem cao nhất</option><option value="reactions">Cảm xúc cao nhất</option></select></label></div>
+  <div class="fc-table-scroll" role="region" tabindex="0" aria-label="Hiệu suất bài viết, có thể cuộn ngang"><table class="fc-post-table"><thead><tr><th scope="col">Bài viết</th><th scope="col">Ngày đăng<small>UTC</small></th><th scope="col">Lượt xem<small>Tích lũy / bài</small></th><th scope="col">Cảm xúc<small>Tích lũy</small></th><th scope="col">Bình luận<small>Tích lũy</small></th><th scope="col">Chia sẻ<small>Tích lũy</small></th><th scope="col"><span class="fc-sr-only">Liên kết bài viết</span></th></tr></thead><tbody id="fc-post-rows">
+    {% for post in view.posts %}<tr><td><span class="fc-format">{{ post.format_label }}</span><span class="fc-post-title">{{ post.heading }}</span></td><td>{{ post.date_label }}</td>{% for key in ['post_media_view_lifetime','reactions_lifetime','comments_lifetime','shares_lifetime'] %}<td>{{ fc_amount(post[key]) }}</td>{% endfor %}<td>{% if post.url %}<a class="fc-post-link" href="{{ post.url }}" target="_blank" rel="noopener noreferrer">Xem bài trên Facebook <span aria-hidden="true">↗</span></a>{% else %}<span>Chưa có liên kết</span>{% endif %}</td></tr>{% endfor %}
+  </tbody></table></div><p id="fc-post-empty" class="fc-table-empty" hidden>Không có bài viết phù hợp. Thử từ khóa hoặc định dạng khác.</p>
+  <div class="fc-pagination"><span id="fc-post-count" role="status"></span><div><button type="button" class="ov-button ov-secondary" id="fc-prev" aria-label="Trang bài viết trước">← Trước</button><button type="button" class="ov-button ov-secondary" id="fc-next" aria-label="Trang bài viết sau">Sau →</button></div></div>
+</section>
+{%- endmacro %}
+
+{% macro quality(view, expanded=false) -%}
+<details class="ui-disclosure fc-quality" id="fc-data-quality" {% if expanded %}open{% endif %}><summary><span class="material-symbols-outlined" aria-hidden="true">info</span><h2>Thông tin về số liệu</h2><span class="fc-count">{{ view.issues|length }} lưu ý</span><span class="material-symbols-outlined ui-chevron" aria-hidden="true">expand_more</span></summary><div class="ui-disclosure-body"><p class="fc-method-intro">Số 0 là số đếm đã nhận được. “Chưa có số liệu” là dữ liệu còn thiếu và không được thay bằng 0.</p><div class="fc-quality-grid">{% for item in view.issues %}<article><h3>{{ item.title }}</h3><p>{{ item.note }}</p></article>{% endfor %}</div><p class="fc-method-intro">Bài đăng theo ngày UTC. Cảm xúc, bình luận và lượt xem bài là số tích lũy của nhóm bài trong kỳ. Người xem duy nhất và tổng người theo dõi giữ từng mốc Meta, không cộng các ngày hoặc suy ra người theo dõi mới.</p></div></details>
+{%- endmacro %}

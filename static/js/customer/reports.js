@@ -8,6 +8,7 @@
   let tab = Object.hasOwn(states, params.get('tab')) ? params.get('tab') : 'all', deepLink = params.get('report'), currentPage = 1;
   const pagination = node('div', '', 'lb-pagination'); pagination.hidden = true; $('#reports-panel').append(pagination);
   $('#library-search').value = (params.get('q') || '').slice(0, 150);
+  if ($('#library-search').value || group !== 'all' || deepLink) $('#report-template-catalogue').open = true;
   function openTemplate(id) {
     const item = initial.templates.find((t) => t.id === id); if (!item || !W.ready) return;
     W.preview(item); W.url({report: id});
@@ -40,7 +41,7 @@
     $('#reports-panel').setAttribute('aria-labelledby', 'reports-tab-' + tab);
     $('#reports-empty').hidden = filtered.length > 0;
     $('#reports-empty-title').textContent = !loaded ? 'Chưa có báo cáo được tải' : rows.length ? 'Không có báo cáo khớp bộ lọc' : 'Chưa có báo cáo đã lưu';
-    $('#reports-empty-description').textContent = !loaded ? 'Báo cáo đã lưu sẽ xuất hiện khi chức năng lưu và phát hành được mở cho khách hàng. Trong lúc này, bạn có thể khám phá bố cục có sẵn hoặc thử thiết kế riêng.' : rows.length ? 'Thử từ khóa khác hoặc chuyển về Tất cả để xem lại các báo cáo.' : 'Báo cáo của khách hàng này sẽ được hiển thị tại đây sau khi được lưu hoặc phát hành.';
+    $('#reports-empty-description').textContent = !loaded ? 'Báo cáo chưa sẵn sàng. Bạn có thể thử mẫu có sẵn bên dưới.' : rows.length ? 'Thử từ khóa khác hoặc chuyển về Tất cả để xem lại các báo cáo.' : 'Chưa có báo cáo đã lưu cho khách hàng này.';
     pagination.replaceChildren(); pagination.hidden = pages <= 1;
     if (pages > 1) {
       pagination.append(node('span', `Trang ${currentPage} / ${pages} · ${filtered.length} báo cáo`));

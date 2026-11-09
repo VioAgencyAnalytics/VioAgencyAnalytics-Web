@@ -1,0 +1,130 @@
+/* Progressive disclosure keeps everyday tasks visible without reducing text size. */
+.ws-theme [hidden] { display: none !important; }
+.ws-theme .ui-disclosure {
+  min-width: 0;
+  padding: 0;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+.ui-disclosure > summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 64px;
+  padding: 16px 20px;
+  list-style: none;
+  cursor: pointer;
+  border-radius: 12px;
+  color: #172b4d;
+}
+.ui-disclosure > summary::-webkit-details-marker,
+.ui-tip > summary::-webkit-details-marker { display: none; }
+.ui-disclosure > summary:hover { background: #f8fafc; }
+.ui-disclosure > summary :is(h2, strong) {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+.ui-disclosure > summary > .material-symbols-outlined:first-child { color: #d9232e; }
+.ui-disclosure .ui-chevron { flex-shrink: 0; margin-left: auto; color: #64748b; transition: transform .15s; }
+.ui-disclosure[open] > summary .ui-chevron { transform: rotate(180deg); }
+.ui-disclosure[open] > summary { border-bottom: 1px solid #edf1f5; border-radius: 12px 12px 0 0; }
+.ui-disclosure-body { padding: 20px; min-width: 0; }
+.ui-summary-meta, .ui-helper { font-size: .875rem; line-height: 1.6; color: #64748b; }
+.ui-summary-meta { margin-left: auto; }
+.ui-helper { margin-bottom: 18px; }
+.ui-inline-help { font-size: .875rem; line-height: 1.7; color: #64748b; margin-top: 14px; }
+.ui-inline-help > summary { cursor: pointer; padding: 5px 0; width: fit-content; }
+.ui-inline-help > p { padding: 8px 0; }
+.wa-summary-grid p:empty { display: none; }
+.ui-disclosure :focus-visible, .ui-tip :focus-visible { outline: 2px solid #d9232e; outline-offset: 3px; }
+.ws-theme .ui-icon-action { width: 44px; min-width: 44px; min-height: 44px; padding: 8px; }
+.ui-id-row { display: flex; justify-content: flex-end; margin-bottom: 18px; }
+.ws-theme .ui-workspace-add { color: #64748b; }
+.ws-theme .ov-nav { padding-top: 8px; }
+@media (min-width: 701px) {
+  .ws-theme .ov-sidebar > .ov-nav { display: flex; flex-direction: column; justify-content: flex-start; }
+  .ws-theme .ov-sidebar > .ov-nav > * { flex: 0 0 auto; }
+}
+.ws-theme .od-side-account strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws-theme .ui-guide { display: flex; align-items: center; gap: 12px; justify-content: space-between; margin: 0 0 20px; padding: 0; border: 0; background: transparent; }
+.ui-guide p { font-size: .875rem; color: #64748b; }
+.ui-guide button { flex-shrink: 0; }
+.ws-theme .ui-channel-shortcut { flex-direction: row; align-items: center; gap: 10px; padding: 14px; }
+.ui-channel-shortcut > .od-provider { margin: 0; }
+.ui-channel-shortcut > strong { flex: 1; }
+.ui-channel-shortcut > span:last-child { color: #64748b; }
+.ws-theme .od-channel-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ws-theme .od-trend-card { min-height: 380px; }
+.ws-theme .od-chart-footer { margin-top: 18px !important; }
+.ws-theme .od-reports-empty { min-height: 160px; padding: 24px 12px; gap: 14px; }
+.ws-theme .od-reports-empty > .material-symbols-outlined { margin: 0; }
+.od-kpi-footer { align-items: center; gap: 10px; }
+.ws-theme .od-kpi-heading { flex-direction: column; align-items: flex-start; gap: 8px; min-height: 60px; }
+.ui-tip { min-width: 0; }
+.ui-tip > summary { display: inline-grid; place-items: center; cursor: pointer; width: 32px; height: 32px; list-style: none; border-radius: 6px; }
+.ui-tip > summary:hover { background: #f1f5f9; }
+.ui-tip .material-symbols-outlined { font-size: 19px; }
+.ui-tip[open] { flex: 1; }
+.ui-tip p { margin: 8px 0 0; font-size: .875rem; line-height: 1.6; color: #64748b; }
+.ws-theme .ig-context { padding: 18px 20px; }
+.ws-theme .ig-context-controls { display: flex; flex-wrap: wrap; margin: 0; align-items: center; gap: 20px; }
+.ws-theme .ig-context-controls > label { width: min(100%, 340px); }
+.ws-theme .ig-context-controls > div { flex: 1; }
+.ui-context-link { font-size: .875rem; color: #d9232e; text-decoration: none; white-space: nowrap; }
+.ig-context .ui-context-link { margin-left: auto; }
+.ig-context > .ui-inline-help { margin-top: 12px; }
+.ws-theme .ig-platform { min-height: 0; padding: 20px; gap: 0; }
+.ws-theme .ig-platform-subtitle { margin-bottom: 18px; }
+.ws-theme .ig-platform-footer { margin-top: auto; }
+.ws-theme .ig-empty-connected { padding: 18px 20px; }
+.ui-security-copy { display: grid; gap: 12px; font-size: .875rem; line-height: 1.7; color: #64748b; }
+.ws-theme .lb-card { min-height: 0; }
+.ws-theme .lb-card-metrics { margin-top: 16px; }
+.ws-theme .lb-card-footer { margin-top: 16px; }
+.ws-theme .ui-report-note { padding: 14px 18px; gap: 10px; align-items: center; font-size: .875rem; color: #64748b; }
+.ui-report-note > .material-symbols-outlined { font-size: 20px; flex-shrink: 0; }
+.ws-theme .wa-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ws-theme .wa-summary-grid article { padding: 18px 20px; }
+.ws-theme .wa-summary-grid strong { margin: 10px 0 0; }
+.ws-theme .wa-summary-grid article > span:not(.wa-summary-icon) { text-transform: none; letter-spacing: 0; font-size: .875rem; }
+.ws-theme .wa-summary-grid p { padding-top: 0; border: 0; margin-top: 6px; }
+.ws-theme .wa-period-options span { min-height: 58px; }
+.ws-theme .wa-settings-nav { flex-wrap: wrap; }
+.ws-theme .wa-settings-form > fieldset { gap: 16px; }
+.ws-theme .wa-heading h1, .ws-theme .mk-heading h1, .ws-theme .lb-heading h1 { margin-top: 0; }
+.ws-theme .meta-summary { padding: 16px 20px; }
+.ws-theme .meta-summary-text > span { letter-spacing: .02em; }
+.ws-theme .fc-kpi > details { margin-top: 10px; }
+.ws-theme .fc-kpi > details summary { color: #64748b; font-size: .8125rem; cursor: pointer; }
+@media (max-width: 1100px) {
+  .ws-theme .od-channel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .ui-disclosure > summary { padding: 14px 16px; gap: 9px; flex-wrap: wrap; }
+  .ui-disclosure > summary :is(h2, strong) { flex-basis: 50%; }
+  .ui-summary-meta { font-size: .8125rem; }
+  .ui-disclosure-body { padding: 16px; }
+  .ws-theme .ig-context { padding: 16px; }
+  .ws-theme .ig-context-controls { gap: 14px; }
+  .ws-theme .ig-context-controls > label { width: 100%; }
+  .ig-context .ui-context-link { margin-left: 0; }
+  .ui-context-link { white-space: normal; }
+  .ws-theme .ig-platform { padding: 18px; }
+  .ws-theme .ui-channel-shortcut { flex-wrap: wrap; }
+  .ws-theme .ui-channel-shortcut strong { min-width: 80px; }
+  .ws-theme .wa-summary-grid { gap: 12px; }
+  .ws-theme .wa-summary-grid article { padding: 16px; }
+  .ws-theme .wa-summary-icon { position: static; margin-bottom: 8px; }
+  .ws-theme .wa-summary-grid article > span:not(.wa-summary-icon) { max-width: none; }
+  .ws-theme .wa-period-options span { min-height: 58px; }
+  .ws-theme .od-kpi-footer { flex-direction: row; flex-wrap: wrap; }
+  .ui-id-row { justify-content: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-disclosure .ui-chevron { transition: none; }
+}

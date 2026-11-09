@@ -10,7 +10,10 @@
   <link rel="stylesheet" href="/static/customer/fonts.css">
   <link rel="stylesheet" href="/static/css/dist/customer.css">
   {% if customer_live %}
-  <link rel="stylesheet" href="/static/css/customer/identity.css">
+  <link rel="stylesheet" href="/static/css/customer/identity.css?v=20261109-branding-1">
+  <link rel="stylesheet" href="/static/css/customer/branding.css?v=20261109-1">
+  <script src="/static/js/customer/branding.js?v=20261109-1" defer></script>
+  <script src="/static/js/customer/data-format.js" defer></script>
   {% if customer_page in ['overview', 'integrations', 'dashboard', 'channels', 'reports', 'members', 'settings'] %}
   <link rel="stylesheet" href="/static/css/customer/overview.css">
   {% if customer_page == 'overview' %}
@@ -18,34 +21,55 @@
   <script src="/static/js/customer/overview.js" defer></script>
   <script src="/static/js/customer/overview-clients.js" defer></script>
   {% elif customer_page == 'integrations' %}
-  <link rel="stylesheet" href="/static/css/customer/integrations.css">
-  <script src="/static/js/customer/integrations.js" defer></script>
+  <link rel="stylesheet" href="/static/css/customer/integrations.css?v=20261109-business-1">
+  <link rel="stylesheet" href="/static/css/customer/facebook-connect.css">
+  <link rel="stylesheet" href="/static/css/customer/connector-connect.css?v=20261109-connectors-1">
+  <script src="/static/js/customer/facebook-connect.js?v=20261109-facebook-2" defer></script>
+  <script src="/static/js/customer/connector-connect.js?v=20261109-connectors-1" defer></script>
+  <script src="/static/js/customer/integrations.js?v=20261109-connectors-1" defer></script>
   {% elif customer_page == 'dashboard' %}
   <link rel="stylesheet" href="/static/css/customer/marketing.css">
   <script src="/static/js/customer/marketing.js" defer></script>
   {% elif customer_page in ['channels', 'reports'] %}
+  {% if customer_data_live %}
+  <link rel="stylesheet" href="/static/css/customer/data.css?v=20261109-ux-1">
+  <link rel="stylesheet" href="/static/css/customer/connector-report.css?v=20261109-connectors-1">
+  <script src="/static/js/customer/data-report.js?v=20261109-connectors-1" defer></script>
+  {% elif customer_meta_live %}
+  <link rel="stylesheet" href="/static/css/customer/facebook-content.css?v=20261109-ux-1">
+  <script src="/static/js/customer/facebook-content.js?v=20261109-ux-1" defer></script>
+  {% else %}
   <link rel="stylesheet" href="/static/css/customer/library.css">
   <script src="/static/js/customer/library.js" defer></script>
   <script src="/static/js/customer/{{ customer_page }}.js" defer></script>
+  {% endif %}
   {% else %}
   <link rel="stylesheet" href="/static/css/customer/workspace-admin.css">
   <script src="/static/js/customer/workspace-admin.js" defer></script>
-  <script src="/static/js/customer/{{ customer_page }}.js" defer></script>
+  <script src="/static/js/customer/{{ customer_page }}.js?v=20261109-branding-1" defer></script>
   {% endif %}
   <link rel="stylesheet" href="/static/css/customer/shell.css">
   <script src="/static/js/customer/shell.js" defer></script>
+  {% if customer_page in ['overview', 'dashboard'] %}
+  <link rel="stylesheet" href="/static/css/customer/data.css?v=20261109-ux-1">
+  <script src="/static/js/customer/data-sources.js?v=20261109-ux-1" defer></script>
+  {% endif %}
+  {% if customer_page == 'reports' and not customer_data_live and not customer_meta_live %}
+  <link rel="stylesheet" href="/static/css/customer/data.css?v=20261109-ux-1">
+  <script src="/static/js/customer/data-sources.js?v=20261109-ux-1" defer></script>
+  {% endif %}
   {% if customer_page == 'overview' %}
   <link rel="stylesheet" href="/static/css/customer/overview-dashboard.css">
   <script src="/static/js/customer/overview-dashboard.js" defer></script>
   {% endif %}
   <link rel="stylesheet" href="/static/css/customer/workspace-theme.css">
   {% else %}
-  <script src="/static/js/customer/identity.js" defer></script>
+  <script src="/static/js/customer/identity.js?v=20261109-branding-1" defer></script>
   {% endif %}
   {% else %}
   <link rel="stylesheet" href="/static/css/customer/workspace.css">
   <script src="/static/js/customer/workspace.js" defer></script>{% endif %}
-  {% if customer_live %}<link rel="stylesheet" href="/static/css/customer/typography.css">{% endif %}
+  {% if customer_live %}<link rel="stylesheet" href="/static/css/customer/typography.css"><link rel="stylesheet" href="/static/css/customer/clarity.css">{% endif %}
 </head>
 <body data-customer-page="{{ customer_page }}" class="bg-surface font-sans text-slate-800 antialiased">
   <a class="customer-skip" href="#customer-content">Đến nội dung chính</a>

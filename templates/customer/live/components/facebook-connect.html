@@ -1,0 +1,59 @@
+<dialog id="facebook-connect-dialog" class="fb-connect" aria-labelledby="facebook-connect-title" aria-describedby="facebook-scope">
+  <header class="fb-connect-header">
+    <span id="facebook-header-icon" class="fb-brand" aria-hidden="true">f</span>
+    <div><span id="facebook-header-label" class="fb-eyebrow">FACEBOOK</span><h2 id="facebook-connect-title" tabindex="-1">Kết nối Fanpage</h2></div>
+    <button type="button" id="facebook-close" class="wh-icon-button" aria-label="Đóng kết nối Fanpage"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
+  </header>
+  <p id="facebook-scope" class="fb-scope"></p>
+  <ol id="facebook-steps" class="fb-steps" aria-label="Tiến trình kết nối Fanpage">
+    <li data-facebook-step="0"><b>1</b><span>Kết nối</span></li>
+    <li data-facebook-step="1"><b>2</b><span>Chọn Fanpage</span></li>
+    <li data-facebook-step="2"><b>3</b><span>Hoàn tất</span></li>
+  </ol>
+  <div class="fb-connect-body">
+    <p id="facebook-feedback" class="fb-feedback" role="alert" hidden></p>
+    <section data-facebook-view="loading" hidden><p id="facebook-state-message" class="fb-loading" role="status">Đang kiểm tra kết nối…</p><button type="button" id="facebook-retry-state" class="ov-button ov-secondary" hidden>Thử tải lại</button></section>
+    <section data-facebook-view="client" hidden>
+      <h3 id="facebook-client-heading">Kết nối cho khách hàng nào?</h3>
+      <label class="fb-field" for="facebook-client"><span id="facebook-client-label">Khách hàng</span><select id="facebook-client"><option value="">Chọn khách hàng</option></select></label>
+      <a id="facebook-add-client" class="fb-text-link" href="/workspace#client-card" hidden>Thêm khách hàng tại Tổng quan <span aria-hidden="true">→</span></a>
+    </section>
+    <section data-facebook-view="viewer" hidden><h3>Bạn đang có quyền xem</h3><p>Chủ sở hữu hoặc quản trị viên Workspace có thể kết nối Fanpage.</p></section>
+    <section data-facebook-view="unavailable" hidden><h3>Kết nối Facebook chưa sẵn sàng</h3><p>Vui lòng liên hệ VIO để được hỗ trợ.</p></section>
+    <section data-facebook-view="connect" hidden>
+      <h3 id="facebook-connect-heading">Dùng Facebook có quyền quản lý Fanpage</h3>
+      <p>Bạn sẽ chuyển sang Facebook để cấp quyền, rồi quay lại chọn Fanpage.</p>
+      <div class="fb-permission-note"><span class="material-symbols-outlined" aria-hidden="true">lock</span><span>Vio không cần mật khẩu Facebook của bạn.</span></div>
+    </section>
+    <section data-facebook-view="pages" hidden>
+      <div class="fb-page-heading"><h3>Chọn Fanpage muốn theo dõi</h3><span id="facebook-page-total" class="fb-count"></span></div>
+      <div id="facebook-pages-loading" class="fb-loading" role="status" hidden><span class="material-symbols-outlined fb-spin" aria-hidden="true">progress_activity</span>Đang tìm Fanpage của bạn…</div>
+      <div id="facebook-pages-idle" class="fb-inline-state" hidden><p>Facebook đã cấp quyền. Tiếp tục để xem các Fanpage được phép truy cập.</p><button type="button" id="facebook-load-pages" class="ov-button ov-secondary">Chọn Fanpage</button></div>
+      <div id="facebook-pages-error" class="fb-inline-state" hidden><h4>Chưa tải được Fanpage</h4><p>Thử lại để tiếp tục chọn Fanpage.</p><button type="button" id="facebook-retry-pages" class="ov-button ov-secondary">Thử lại</button></div>
+      <div id="facebook-pages-empty" class="fb-inline-state" hidden>
+        <span class="material-symbols-outlined" aria-hidden="true">manage_accounts</span><h4>Chưa thấy Fanpage của bạn?</h4>
+        <p>Kiểm tra đúng tài khoản Facebook và quyền truy cập Fanpage.</p>
+        <button type="button" id="facebook-regrant" class="ov-button ov-secondary">Chọn lại quyền trên Facebook</button>
+        <button type="button" id="facebook-empty-retry" class="fb-text-link">Tải lại danh sách</button>
+        <details class="ui-inline-help"><summary>Vẫn chưa thấy Fanpage?</summary><p>Kiểm tra tài khoản Facebook có quyền truy cập trang. Khi cấp quyền, chọn Fanpage muốn theo dõi và giữ các quyền đọc cần thiết.</p></details>
+      </div>
+      <div id="facebook-pages-picker" hidden>
+        <label class="fb-page-search"><span class="material-symbols-outlined" aria-hidden="true">search</span><span class="wh-sr-only">Tìm Fanpage theo tên hoặc mã</span><input id="facebook-page-search" type="search" placeholder="Tìm Fanpage…" maxlength="150" autocomplete="off"></label>
+        <div id="facebook-pages" class="fb-pages" role="radiogroup" aria-label="Fanpage được Facebook cấp quyền"></div>
+        <div id="facebook-page-no-results" class="fb-inline-state" hidden><p>Không tìm thấy Fanpage phù hợp.</p><button type="button" id="facebook-clear-search" class="fb-text-link">Xóa từ khóa</button></div>
+        <div id="facebook-pages-pagination" class="fb-pagination" hidden><span id="facebook-page-count" role="status"></span><div><button type="button" id="facebook-page-prev" class="wh-icon-button" aria-label="Trang Fanpage trước">←</button><button type="button" id="facebook-page-next" class="wh-icon-button" aria-label="Trang Fanpage sau">→</button></div></div>
+        <p id="facebook-selected-page" class="fb-selected" role="status" hidden></p>
+        <p id="facebook-page-change-note" class="fb-helper" hidden>Dữ liệu hiển thị sẽ chuyển sang Fanpage bạn chọn.</p>
+      </div>
+    </section>
+    <section data-facebook-view="done" hidden>
+      <span id="facebook-result-icon" class="fb-stage-icon material-symbols-outlined" aria-hidden="true">check_circle</span>
+      <h3 id="facebook-result-title">Đã kết nối Fanpage</h3>
+      <p id="facebook-result-description" role="status"></p>
+      <div class="fb-selected-asset"><span class="fb-page-avatar" aria-hidden="true">f</span><div><strong id="facebook-result-page"></strong><small id="facebook-result-updated"></small></div></div>
+      <a id="facebook-existing-report" class="fb-text-link" href="/workspace/channels/facebook-content" hidden>Xem dữ liệu đã lưu <span aria-hidden="true">→</span></a>
+      <details id="facebook-options" class="fb-options"><summary>Tùy chọn kết nối</summary><div><button type="button" id="facebook-change-page" class="fb-text-link">Đổi Fanpage</button><button type="button" id="facebook-custom-sync" class="fb-text-link">Đồng bộ theo khoảng ngày</button><button type="button" id="facebook-disconnect" class="fb-text-link fb-danger">Ngắt kết nối</button></div></details>
+    </section>
+  </div>
+  <footer class="fb-connect-footer"><button type="button" id="facebook-later" class="ov-button ov-secondary">Để sau</button><button type="button" id="facebook-primary" class="ov-button">Tiếp tục với Facebook</button><a id="facebook-view-report" class="ov-button" href="/workspace/channels/facebook-content" hidden>Xem Fanpage <span aria-hidden="true">→</span></a></footer>
+</dialog>

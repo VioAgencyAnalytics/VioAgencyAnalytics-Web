@@ -1,5 +1,46 @@
 # Trang 01–02: tài khoản và Workspace
 
+**Facebook Content 09/11/2026:** kết nối không còn bước xác minh email Vio.
+Owner/Admin đăng nhập và có đúng phạm vi làm việc được bấm kết nối Facebook,
+cấp quyền trên Meta, chọn Fanpage và đồng bộ. Backend và worker áp dụng cùng
+chính sách theo nguồn đã lưu, không nhận cờ bỏ xác minh từ browser. Không tự
+đánh dấu tài khoản verified, gửi thư hoặc sửa điều kiện mời/tham gia Workspace.
+GA4/GSC/Facebook Ads giữ điều kiện email hiện tại. Modal Facebook không chứa
+form gửi thư hoặc nhánh verify; các lỗi callback cũ hướng dẫn kết nối lại.
+
+**Kết nối 09/11/2026:** loại Workspace quyết định cách chọn phạm vi ở trang Kết
+nối nền tảng. `business` có đúng một thương hiệu đang hoạt động ẩn picker và
+liên kết quản lý, chỉ hiện “Kết nối cho …”. Phiên mới chưa có selection sẽ gọi
+POST chọn thương hiệu hiện có qua BFF có CSRF, đọc lại catalogue và chỉ cho thao
+tác khi backend xác nhận đúng selection. Không tạo Client mới hoặc đổi dữ liệu
+đã lưu để đơn giản hóa giao diện. Refresh lỗi/selection bị từ chối vẫn chặn
+kết nối; không tự chọn thương hiệu đã lưu trữ hoặc thuộc Workspace khác.
+
+Doanh nghiệp nhiều thương hiệu giữ picker với nhãn “Thương hiệu”; Agency giữ
+nhãn “Khách hàng”, kể cả khi chỉ có một khách hàng. Modal Facebook/hướng dẫn
+dùng cùng thuật ngữ. Cách ly backend vẫn theo Workspace/client; thay đổi này
+không đổi quyền, schema, email verification hoặc provider consent. Các trang
+khác vẫn theo contract riêng, không coi đây là hoàn tất toàn bộ UX doanh nghiệp.
+
+**Onboarding 09/11/2026:** thẻ Workspace có logo/tên nổi bật, vai trò, trạng thái
+đang chọn và thẻ khách hàng. Nhập website sẽ tự xem trước logo; tên miền không
+kèm giao thức được thêm HTTPS khi rời ô. Logo theo website đã lưu, dùng lại ở
+sidebar/topbar/Cài đặt; không có ảnh thì dùng chữ viết tắt. Backend kiểm soát
+public DNS/IP, redirect, kích thước và cache; Web không tải website ngoài hoặc
+nhận SVG/HTML tùy ý. Không thêm migration hoặc mở upload/logo báo cáo. Contract
+ở [Workspace Branding](../../VioAgencyAnalytics-Admin/docs/CUSTOMER_WORKSPACE_BRANDING.md).
+
+**Google login 09/11/2026:** nút giữ logo khi đang xử lý/thử lại; khóa các cách đăng
+nhập cùng lúc để tránh gửi trùng. Có hướng dẫn Gmail cá nhân/Google Workspace;
+mobile ưu tiên form, ẩn phần giới thiệu lặp. BFF chỉ trả URL Google identity hợp
+lệ với scope `openid email profile`, callback chính xác và PKCE S256; từ chối URL
+lạ, callback trùng/thừa code+error. Callback thành công chỉ trả redirect/cookie,
+không trả JSON danh tính. Người có đúng một Workspace đang hoạt động vào Tổng
+quan; không có hoặc có nhiều Workspace đi tới thiết lập/chọn Workspace.
+Quyền luôn lấy từ membership hiện hành, không suy ra từ tên miền email. Email
+đã đăng ký bằng mật khẩu không tự gộp với Google; UI hướng dẫn đăng nhập/khôi
+phục tài khoản cũ. Không đổi schema hoặc mở quyền provider/legacy Admin.
+
 **Trang 03, 28/10/2026:** đã có quản lý khách hàng/thương hiệu, chọn khách hàng
 đang làm việc và checklist dựa trên DB; migration 11 bổ sung metadata/selection.
 Xem [Customer Overview](CUSTOMER_OVERVIEW.md) cho contract, quyền và kiểm thử.

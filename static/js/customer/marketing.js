@@ -100,7 +100,7 @@
     const points = (Array.isArray(trend.points) ? trend.points : []).filter((p) => p && validDate(p.date) && p.date >= period.start && p.date <= period.end).slice(0, 366).sort((a, b) => a.date.localeCompare(b.date));
     const hasValue = ['ready', 'partial'].includes(trend.status) && points.some((p) => finite(p.value));
     $('#marketing-chart-empty').hidden = hasValue; $('#marketing-chart-live').hidden = !hasValue; $('#marketing-trend-table').hidden = !hasValue;
-    $('#marketing-chart-description').textContent = trend.status === 'error' ? 'Chưa tải được dữ liệu xu hướng. Kiểm tra nguồn dữ liệu và thử lại.' : 'Xu hướng sẽ xuất hiện khi nguồn được kết nối và có dữ liệu trong kỳ đã chọn.';
+    $('#marketing-chart-description').textContent = trend.status === 'error' ? 'Chưa tải được dữ liệu xu hướng. Kiểm tra nguồn dữ liệu và thử lại.' : 'Kết nối nguồn để xem xu hướng trong kỳ.';
     $('#marketing-chart-panel').setAttribute('aria-labelledby', 'marketing-tab-' + metric);
     $('#marketing-trend-unit').textContent = metric === 'spend' ? initial.currency : 'Lượt';
     $('#marketing-chart-legend').textContent = initial.metrics[metric].label;
@@ -137,7 +137,7 @@
       row.append(icon(platform.icon, 'mk-provider mk-' + platform.color), text, link); return row;
     }));
     const updated = stamp(snapshot.last_updated_at);
-    $('#marketing-last-updated').textContent = updated ? 'Dữ liệu cập nhật: ' + updated : 'Chưa có lần cập nhật dữ liệu';
+    $('#marketing-last-updated').textContent = updated ? 'Dữ liệu cập nhật: ' + updated : 'Chưa đồng bộ dữ liệu';
   }
   function dataCell(value, key) { return node('td', format(value, key), finite(value) ? '' : 'mk-missing'); }
   function platformValues(platform) { const item = rows('platform_metrics').find((r) => r.platform_id === platform.id); return item && ['ready', 'partial'].includes(item.status) ? item.values || {} : {}; }
@@ -170,8 +170,8 @@
     }));
     $('#marketing-campaign-count').textContent = `${filteredCampaigns.length} chiến dịch`;
     $('#marketing-campaign-empty').hidden = filteredCampaigns.length > 0;
-    $('#marketing-campaign-empty-title').textContent = all.length ? 'Không có chiến dịch phù hợp' : 'Chưa có dữ liệu chiến dịch quảng cáo';
-    $('#marketing-campaign-description').textContent = all.length ? 'Thử tên khác hoặc xóa bộ lọc chiến dịch để xem dữ liệu trong phạm vi đang chọn.' : 'Khi tài khoản quảng cáo được kết nối và đồng bộ, các chiến dịch sẽ xuất hiện tại đây.';
+    $('#marketing-campaign-empty-title').textContent = all.length ? 'Không có chiến dịch phù hợp' : 'Chưa có chiến dịch';
+    $('#marketing-campaign-description').textContent = all.length ? 'Thử tên khác hoặc xóa bộ lọc chiến dịch để xem dữ liệu trong phạm vi đang chọn.' : 'Kết nối tài khoản quảng cáo để xem chiến dịch.';
     $('#marketing-campaign-connect').hidden = all.length > 0; $('#marketing-campaign-reset').hidden = !all.length;
     $('#marketing-pagination').hidden = filteredCampaigns.length === 0;
     $('#marketing-page-label').textContent = `Trang ${campaignPage}/${pages} · ${filteredCampaigns.length} chiến dịch`;
@@ -182,8 +182,8 @@
     const selected = details.selected_client;
     $('#marketing-client-label').textContent = selected ? `Khách hàng: ${selected.name}` : 'Chưa chọn khách hàng';
     $('#marketing-onboarding').hidden = selected && (rows('connections').length > 0 || metrics.some((key) => finite(snapshot.metrics[key].value) && ['ready', 'partial'].includes(snapshot.metrics[key].status)));
-    $('#marketing-onboarding-title').textContent = !ready ? failed ? 'Chưa tải được thông tin Workspace' : 'Đang cập nhật phạm vi dữ liệu…' : !selected ? 'Chọn khách hàng để bắt đầu theo dõi' : 'Bắt đầu từ nguồn dữ liệu của bạn';
-    $('#marketing-onboarding-description').textContent = failed ? 'Bấm Cập nhật để thử lại. Chỉ số được giữ trống khi chưa xác định được phạm vi dữ liệu.' : !selected ? 'Mỗi khách hàng có nguồn dữ liệu và báo cáo riêng. Chọn khách hàng phía trên hoặc thêm mới ở Tổng quan.' : 'Khám phá nền tảng và chuẩn bị cấp quyền cho khách hàng đang chọn. Tích hợp tự phục vụ được mở theo từng nguồn.';
+    $('#marketing-onboarding-title').textContent = !ready ? failed ? 'Chưa tải được thông tin Workspace' : 'Đang cập nhật phạm vi dữ liệu…' : !selected ? 'Chọn khách hàng để bắt đầu theo dõi' : 'Kết nối dữ liệu để bắt đầu';
+    $('#marketing-onboarding-description').textContent = failed ? 'Bấm Cập nhật để thử lại.' : !selected ? 'Chọn khách hàng phía trên hoặc thêm mới ở Tổng quan.' : 'Chọn nền tảng để kết nối cho khách hàng này.';
     $('#marketing-onboarding-link').href = !selected ? '/workspace#client-card' : '/workspace/integrations'; $('#marketing-onboarding-link').textContent = !selected ? 'Quản lý khách hàng →' : 'Kết nối nền tảng →';
   }
   function controls() { $('#marketing-client').disabled = busy || !ready || !details.clients.length; $('#marketing-workspace-select').disabled = busy || !ready; $('#marketing-refresh').disabled = busy; $('#marketing-logout').disabled = busy || !session?.user; $('#marketing-export').disabled = busy || !ready; $('#marketing-client').setAttribute('aria-busy', String(busy)); }

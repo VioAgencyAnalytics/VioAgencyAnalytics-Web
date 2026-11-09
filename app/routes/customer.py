@@ -55,13 +55,26 @@ def context(page, title, number):
 
 
 @router.get('/workspace/channels/{channel}')
-def channel_page(request: Request, channel: str):
+async def channel_page(request: Request, channel: str):
+    from app.customer_auth import enabled
+    if channel=='facebook-content' and enabled(request):
+        from app.customer_meta import page
+        return await page(request)
     check_preview(request)
     if channel not in CHANNELS:
         raise HTTPException(404, 'Không tìm thấy kênh')
     title, legacy_url = CHANNELS[channel]
     return templates.TemplateResponse(request=request, name='customer/channel.html',
         context={**context('channels', title, 6), 'channel': channel, 'legacy_url': legacy_url}, headers=HEADERS)
+
+
+@router.get('/workspace/reports/facebook-content')
+async def facebook_content_report(request: Request):
+    from app.customer_auth import enabled
+    if not enabled(request):
+        raise HTTPException(404, 'Không tìm thấy báo cáo')
+    from app.customer_meta import page
+    return await page(request, report=True)
 
 
 @router.get('/workspace')

@@ -12,11 +12,15 @@
   function preview() {
     const data = values(), title = data.report_name.trim() || data.company_name.trim() || data.name.trim() || 'Báo cáo Marketing';
     $('#preview-title').textContent = title; $('#preview-footer').textContent = data.report_footer.trim() || 'Thông tin chân trang';
-    $('#preview-logo').textContent = title.slice(0,1).toUpperCase(); $('#settings-logo-initial').textContent = (data.company_name.trim() || data.name.trim() || 'V').slice(0,1).toUpperCase();
+    $('#preview-logo').textContent = title.slice(0,1).toUpperCase();
+    const logo = $('#settings-logo-initial .ws-avatar');
+    if (logo) window.VioWorkspaceBranding.setName(logo, data.name.trim() || 'Workspace');
     if (/^#[a-fA-F0-9]{6}$/.test(data.accent_color)) { $('#settings-preview').style.setProperty('--preview-accent', data.accent_color); $('#settings-accent-picker').value = data.accent_color; }
   }
   function render() {
     const data = W.data, profile = data.profile;
+    window.VioWorkspaceBranding.refresh(data.workspace);
+    $('#settings-logo-initial').replaceChildren(window.VioWorkspaceBranding.avatar(data.workspace.name, data.workspace.id));
     for (const key of fields) {
       const value = Object.hasOwn(profile, key) ? profile[key] : data.workspace[key] || '';
       const field = form.elements.namedItem(key);
@@ -56,5 +60,5 @@
   $('#settings-save-bottom').addEventListener('click', () => form.requestSubmit());
   $('#settings-copy-id').addEventListener('click', () => W.copy(W.data.workspace.id));
   document.addEventListener('keydown', (event) => { if ((event.ctrlKey || event.metaKey) && !event.altKey && event.key.toLowerCase() === 's' && !document.querySelector('dialog[open]')) { event.preventDefault(); if (!$('#settings-save').disabled) form.requestSubmit(); } });
-  W.mount(render, controls, () => W.info('Cài đặt Workspace', 'Chủ sở hữu hoặc quản trị viên có thể cập nhật thông tin doanh nghiệp, khu vực và tùy chọn hiển thị.\n\nLưu thay đổi hoặc bấm Ctrl+S. Nếu có người khác vừa cập nhật, hệ thống sẽ yêu cầu tải bản mới để tránh ghi đè.\n\nThông tin thương hiệu được lưu để chuẩn bị cho phần Báo cáo; bản xem trước không phải báo cáo đã phát hành. Logo, chuyển chủ sở hữu và xóa Workspace chưa được mở.'));
+  W.mount(render, controls, () => W.info('Cài đặt Workspace', 'Chủ sở hữu hoặc quản trị viên có thể cập nhật thông tin doanh nghiệp, khu vực và tùy chọn hiển thị.\n\nLưu thay đổi hoặc bấm Ctrl+S. Nếu có người khác vừa cập nhật, hệ thống sẽ yêu cầu tải bản mới để tránh ghi đè.\n\nLogo Workspace tự lấy từ website đã lưu. Thông tin thương hiệu được lưu để chuẩn bị cho phần Báo cáo; bản xem trước không phải báo cáo đã phát hành. Tải logo thủ công, chuyển chủ sở hữu và xóa Workspace chưa được mở.'));
 })();

@@ -81,7 +81,7 @@
     const ready = ['ready', 'partial'].includes(trend.status) && points.some((point) => finite(point.value));
     $('#overview-chart-empty').hidden = ready; $('#overview-chart-live').hidden = !ready; $('#overview-trend-table').hidden = !ready;
     $('#overview-chart-description').textContent = trend.status === 'error' ? 'Chưa tải được dữ liệu xu hướng. Kiểm tra trạng thái nguồn và thử lại.'
-      : 'Xu hướng sẽ xuất hiện khi nguồn được kết nối và có dữ liệu trong kỳ đã chọn.';
+      : 'Kết nối nguồn để xem xu hướng trong kỳ.';
     $('#overview-trend-panel').setAttribute('aria-labelledby', 'trend-tab-' + metric);
     const svg = $('#overview-trend-svg'); svg.replaceChildren();
     $('#overview-trend-table tbody').replaceChildren();
@@ -126,7 +126,7 @@
     const stamp = snapshot.last_updated_at && new Date(snapshot.last_updated_at);
     $('#overview-freshness').textContent = stamp && !Number.isNaN(stamp.getTime())
       ? 'Cập nhật: ' + new Intl.DateTimeFormat('vi-VN', {dateStyle: 'short', timeStyle: 'short', timeZone: initial.timezone}).format(stamp)
-      : 'Dữ liệu sẽ hiển thị sau khi kết nối và đồng bộ.';
+      : 'Chưa đồng bộ dữ liệu.';
   }
   function reportHref(value) {
     return typeof value === 'string' && /^\/reports\/rpt_[a-f0-9]{32}\?revision=[1-9]\d*$/.test(value) ? value : '';

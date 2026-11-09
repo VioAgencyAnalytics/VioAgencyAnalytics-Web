@@ -24,6 +24,8 @@ services:
       context: ../VioAgencyAnalytics-Admin
     env_file:
       - ./.work/customer-dev/docker-admin.env
+      - path: ./.work/customer-dev/docker-operations.env
+        required: false
     environment:
       DATA_DIR: /app/instance
       APP_URL: http://127.0.0.1:8094
@@ -31,6 +33,10 @@ services:
       HOST: 0.0.0.0
       PORT: "8094"
     command: ["python", "-B", "-m", "kdh.customer_server"]
+    networks:
+      default: {}
+      directory:
+        aliases: [directory-customer]
     volumes:
       - ../VioAgencyAnalytics-Admin/instance/customer-dev:/app/instance
     depends_on:
@@ -80,3 +86,8 @@ volumes:
   customer-data:
     external: true
     name: vio-customer-pg-data
+networks:
+  default: {}
+  directory:
+    external: true
+    name: vio-operations-directory

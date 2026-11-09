@@ -134,14 +134,20 @@ def run(mode):
     if mode == 'admin':
         os.chdir(ADMIN)
         sys.path.insert(0, str(ADMIN))
-        from kdh.app import create_app
+        from kdh.customer_server import create_customer_app
+        from kdh.customer_provider_worker import CustomerProviderWorker
         from waitress import serve
-        app = create_app({'DATA_DIR':str(ADMIN / 'instance' / 'customer-dev'),
+        app = create_customer_app({'DATA_DIR':str(ADMIN / 'instance' / 'customer-dev'),
                           'APP_URL':'http://127.0.0.1:8094', 'COOKIE_SECURE':False,
                           'INITIAL_ADMIN_EMAIL':'', 'INITIAL_ADMIN_PASSWORD':'',
                           'GOOGLE_CLIENT_ID':'', 'GOOGLE_CLIENT_SECRET':'', 'JOB_MODE':'worker'})
         print('Customer Admin API: http://127.0.0.1:8094', flush=True)
-        serve(app, host='127.0.0.1', port=8094, threads=8)
+        worker = CustomerProviderWorker(app.extensions['customer_identity'])
+        worker.start()
+        try:
+            serve(app, host='127.0.0.1', port=8094, threads=8)
+        finally:
+            worker.stopped.set()
     elif mode == 'web':
         os.chdir(WEB)
         sys.path.insert(0, str(WEB))

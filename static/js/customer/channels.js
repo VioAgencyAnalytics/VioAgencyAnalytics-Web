@@ -6,6 +6,8 @@
   if ([...$('#channels-status').options].some((o) => o.value === params.get('status'))) $('#channels-status').value = params.get('status');
   function open(id) {
     const channel = W.channel(id); if (!channel || !W.ready) return;
+    if (id === 'facebook_content') { location.assign('/workspace/channels/facebook-content'); return; }
+    if (id !== 'seo') { location.assign('/workspace/reports/data?source=' + encodeURIComponent(id)); return; }
     W.preview(channel); W.url({channel: id});
     document.querySelectorAll('[data-channel-link]').forEach((a) => { if (a.dataset.channelLink === id) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current'); });
   }
@@ -19,15 +21,16 @@
       card.querySelector('[data-card-state]').textContent = W.labels[channel.state];
       for (const metric of channel.metrics) {
         const value = channel.state === 'ready' ? W.format(metric.value, metric.unit) : '—';
-        card.querySelector(`[data-value="${metric.key}"]`).textContent = value;
-        card.querySelector(`[data-value="${metric.key}"]`).nextElementSibling.textContent = value === '—' ? 'Chưa có dữ liệu' : 'Trong kỳ';
+        const cell = card.querySelector(`[data-value="${metric.key}"]`);
+        cell.textContent = value;
+        cell.setAttribute('aria-label', value === '—' ? 'Chưa có dữ liệu' : value);
       }
       const haystack = W.fold([channel.id.replaceAll('_', ' '), channel.name, channel.description, ...channel.topics].join(' '));
       const matches = (group === 'all' || channel.group === group) && (status === 'all' || channel.state === status) && words.every((q) => haystack.includes(q));
       card.hidden = !matches; if (matches) shown += 1;
     }
-    $('#channels-health-counts').replaceChildren(...Object.entries(counts).map(([state, count]) => { const item = node('span', `${W.labels[state]} (${count})`); item.dataset.state = state; return item; }));
-    $('#channels-health-description').textContent = counts.ready ? `${counts.ready}/9 kênh có số liệu trong kỳ. Kiểm tra phạm vi và cách ghi nhận của từng nguồn trước khi so sánh.` : 'Chưa có số liệu trong kỳ đang chọn. Bạn có thể xem cấu trúc phân tích của từng kênh trước khi kết nối dữ liệu.';
+    $('#channels-health-counts').replaceChildren(...Object.entries(counts).filter(([, count]) => count > 0).map(([state, count]) => { const item = node('span', `${W.labels[state]} (${count})`); item.dataset.state = state; return item; }));
+    $('#channels-health-description').textContent = `${counts.ready}/${channels.length} kênh có dữ liệu trong kỳ. “—” là chưa có số liệu, không phải 0.`;
     $('#library-no-results').hidden = shown > 0; $('#library-result-count').textContent = `Hiển thị ${shown} / ${channels.length} kênh`;
     document.querySelectorAll('[data-library-group]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.libraryGroup === group)));
     if (deepLink && W.ready) { const id = deepLink; deepLink = null; if (initial.channels.some((c) => c.id === id)) open(id); }

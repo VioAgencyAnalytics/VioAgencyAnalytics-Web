@@ -1,0 +1,32 @@
+{% extends 'customer/base.html' %}
+{% from 'customer/live/components/facebook-content-panels.html' import kpis, charts, top_posts, posts, quality %}
+{% from 'customer/live/components/workspace-avatar.html' import workspace_avatar %}
+{% block layout %}
+<div class="ov-shell ws-theme fc-report-shell" id="customer-content">
+  {% include 'customer/live/components/sidebar.html' %}
+  <div class="ov-body">{% include 'customer/live/components/topbar.html' %}
+    <main class="ov-main fc-main fc-report" data-fc-report>
+      <div class="fc-report-toolbar"><a class="fc-back" href="/workspace/reports">← Thư viện báo cáo</a><div class="fc-actions"><a class="ov-button ov-secondary" href="/workspace/channels/facebook-content{% if content.snapshot %}?snapshot={{ content.snapshot.id }}{% endif %}">Mở phân tích</a>{% if content.state == 'ready' %}<button type="button" class="ov-button" id="fc-print"><span class="material-symbols-outlined" aria-hidden="true">print</span>In báo cáo</button>{% endif %}</div></div>
+      <p id="fc-feedback" class="ov-status" role="alert" hidden></p>
+      {% if content.state == 'ready' %}
+      <article class="fc-report-document">
+        <header class="fc-report-cover"><div class="fc-report-masthead"><div class="fc-report-brand">{{ workspace_avatar(details.workspace) }}<div><strong>{{ details.workspace.name }}</strong><span>BÁO CÁO HIỆU SUẤT NỘI DUNG</span></div></div><span class="fc-report-private"><span class="material-symbols-outlined" aria-hidden="true">lock</span>Bản xem riêng tư</span></div>
+          <div class="fc-report-title"><span class="fc-report-index">FACEBOOK / CONTENT</span><h1>Báo cáo<br><em>Facebook Content.</em></h1><p>Hiệu suất nội dung của <strong>{{ content.asset.name }}</strong></p></div>
+          <dl class="fc-report-facts"><div><dt>Kỳ báo cáo</dt><dd>{{ view.period }}</dd></div><div><dt>Thương hiệu / khách hàng</dt><dd>{{ content.client.name }}</dd></div><div><dt>Cập nhật dữ liệu</dt><dd><time datetime="{{ content.snapshot.fetched_at }}">{{ content.snapshot.fetched_at }}</time></dd></div></dl>
+        </header>
+        <section class="fc-report-section"><div class="fc-report-section-heading"><span>01</span><div><h2>Kết quả tổng quan</h2><p>Những con số chính từ nội dung đã xuất bản trong kỳ.</p></div></div>{{ kpis(view,fc_amount) }}<div class="fc-report-summary"><span class="material-symbols-outlined" aria-hidden="true">insights</span><p><strong>{{ view.posts|length }} bài viết</strong> được xuất bản trong <strong>{{ view.active_days }}/{{ view.days }} ngày</strong> của kỳ báo cáo.{% if view.top %} Bài có {{ view.ranking_label }} cao nhất ghi nhận <strong>{{ fc_amount(view.top[0][view.ranking]) }}</strong> {{ view.ranking_label }} tích lũy.{% endif %}</p></div></section>
+        <section class="fc-report-section"><div class="fc-report-section-heading"><span>02</span><div><h2>Hoạt động & xu hướng</h2><p>Đọc nhịp xuất bản và chuỗi số đo thực tế của Fanpage.</p></div></div>{{ charts(view,true) }}<div class="fc-report-observations">{% for item in view.observations %}<article><span>{{ item.label }}</span><strong>{{ fc_amount(item.value) }}</strong><p>{{ item.note }}{% if item.date %} · {{ fc_day(item.date) }}{% endif %}</p></article>{% endfor %}<article><span>Định dạng nội dung</span><div class="fc-report-format-list">{% for item in view.formats %}<p><strong>{{ item.count }}</strong> {{ item.label|lower }}</p>{% endfor %}</div></article></div></section>
+        <section class="fc-report-section"><div class="fc-report-section-heading"><span>03</span><div><h2>Nội dung nổi bật</h2><p>Các bài có số đếm {{ view.ranking_label }} tích lũy cao nhất trong nhóm bài được báo cáo.</p></div></div>{{ top_posts(view,fc_amount) }}</section>
+        <section class="fc-report-section"><div class="fc-report-section-heading"><span>04</span><div><h2>Chi tiết bài viết</h2><p>Mỗi bài có liên kết riêng để kiểm tra trực tiếp trên Facebook.</p></div></div>{{ posts(view,fc_amount) }}</section>
+        <section class="fc-report-section fc-report-method"><div class="fc-report-section-heading"><span>05</span><div><h2>Nguồn dữ liệu & cách đọc</h2><p>Minh bạch về phạm vi đo và các số liệu còn thiếu.</p></div></div>{{ quality(view,true) }}<p class="fc-report-disclaimer">Nguồn: Facebook, dữ liệu đã đồng bộ của {{ content.asset.name }}. Ngày đăng bài được báo cáo theo UTC. Đây là bản xem riêng tư từ dữ liệu vận hành, chưa phải báo cáo đã duyệt/phát hành.</p></section>
+        <footer class="fc-report-footer"><span>{{ details.workspace.name }} · {{ view.period }}</span><span>VioAgencyAnalytics</span></footer>
+      </article>
+      {% else %}<section class="fc-empty"><span class="material-symbols-outlined fc-empty-icon" aria-hidden="true">description</span><h1>Báo cáo chưa có dữ liệu</h1><p>Kết nối Fanpage và hoàn tất đồng bộ để mở bản báo cáo của bạn.</p><a class="ov-button" href="/workspace/integrations?platform=facebook_content">Quản lý kết nối</a></section>{% endif %}
+      <select id="fc-client" hidden>{% for item in details.clients %}<option value="{{ item.id }}" {% if content.client and item.id == content.client.id %}selected{% endif %}>{{ item.name }}</option>{% endfor %}</select>
+      <select id="fc-snapshot" hidden>{% for item in content.periods %}<option value="{{ item.id }}" {% if content.snapshot and item.id == content.snapshot.id %}selected{% endif %}>{{ item.id }}</option>{% endfor %}</select>
+    </main>
+  </div>
+</div>
+<script id="library-data" type="application/json">{{ details|tojson }}</script>
+<script id="facebook-content-data" type="application/json">{{ content|tojson }}</script>
+{% endblock %}

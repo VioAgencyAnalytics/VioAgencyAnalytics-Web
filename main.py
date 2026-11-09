@@ -86,6 +86,9 @@ async def production_reports_only(request: Request, call_next):
 
     if customer_auth_enabled(request):
         public_paths.update({'/workspace', '/workspace/login', '/workspace/onboarding', '/workspace/', '/workspace/integrations', '/workspace/dashboard', '/workspace/channels', '/workspace/reports', '/workspace/members', '/workspace/settings'})
+        public_paths.add('/workspace/channels/facebook-content')
+        public_paths.add('/workspace/reports/data')  # The page enforces Customer session and tenant scope.
+        public_paths.add('/workspace/reports/facebook-content')  # Same private snapshot/session boundary.
         public_prefixes += ('/api/customer/', '/auth/customer/')
 
     if (

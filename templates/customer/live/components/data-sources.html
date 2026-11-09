@@ -1,0 +1,6 @@
+<section class="cd-sources" data-customer-sources data-mode="{{ 'all' if customer_page == 'reports' else 'connected' }}" {% if customer_page != 'reports' %}id="meta-summary" hidden{% endif %} aria-label="Dữ liệu đã đồng bộ" aria-busy="true">
+  <div class="cd-card-heading"><div><h2 {% if customer_page != 'reports' %}id="meta-summary-title"{% endif %}>{{ 'Báo cáo từ dữ liệu đã đồng bộ' if customer_page == 'reports' else 'Dữ liệu đã đồng bộ' }}</h2><p {% if customer_page != 'reports' %}id="meta-summary-note"{% endif %} data-sources-status role="status">Đang tải nguồn dữ liệu…</p></div><a class="cd-detail-link" href="/workspace/integrations">Quản lý kết nối →</a></div>
+  <div data-sources-grid class="cd-source-grid"></div>
+  {% if customer_page == 'reports' %}<details class="cd-source-catalogue" data-sources-catalogue hidden><summary>Các nguồn khác <span data-sources-other-count></span><span class="material-symbols-outlined" aria-hidden="true">expand_more</span></summary><div data-sources-other class="cd-source-grid"></div></details>{% endif %}
+  <button type="button" class="ov-button ov-secondary" data-sources-retry hidden>Thử tải lại</button>
+</section>

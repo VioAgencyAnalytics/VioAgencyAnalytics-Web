@@ -12,15 +12,16 @@
   let progress = details.tour;
   let busy = false;
   let returnFocus;
+  const revealedGroups = new Set();
   const steps = [
-    ['workspace-switch', 'Không gian làm việc của bạn', 'Đây là Workspace đang sử dụng. Bấm vào đây khi muốn chọn Workspace khác hoặc tạo thêm một không gian làm việc.'],
-    ['client-card', 'Khách hàng & thương hiệu', 'Các khách hàng đã tạo xuất hiện tại đây. Sau này, mỗi khách hàng sẽ có nguồn dữ liệu và báo cáo riêng trong Workspace.'],
-    ['integration-card', 'Kết nối nguồn dữ liệu', 'Mở danh mục 9 nền tảng để khám phá nguồn dữ liệu cho khách hàng. Luồng cấp quyền và đồng bộ sẽ được mở riêng theo từng nền tảng.'],
-    ['nav-dashboard', 'Dashboard Marketing', 'Mở Dashboard để xem khung KPI, xu hướng và bảng hiệu suất đa kênh. Số liệu sẽ xuất hiện khi nguồn dữ liệu của khách hàng được kết nối và đồng bộ.'],
-    ['nav-channels', 'Phân tích từng kênh', 'Khám phá 9 kênh Marketing, lọc theo nhóm và xem khung chỉ số chuyên sâu. Dữ liệu sẽ xuất hiện sau khi nguồn của khách hàng được kết nối và đồng bộ.'],
-    ['nav-reports', 'Chuẩn bị báo cáo của bạn', 'Khám phá 10 bố cục báo cáo, chọn kỳ và thử thiết kế bố cục tùy chỉnh. Lưu, xuất file và chia sẻ sẽ được mở khi báo cáo sẵn sàng.'],
-    ['nav-members', 'Cùng làm việc với đội ngũ', 'Xem đội ngũ, lời mời và quyền truy cập trong Workspace. Chủ sở hữu hoặc quản trị có email đã xác minh có thể tạo mã mời cho thành viên mới.'],
-    ['nav-settings', 'Thông tin & cài đặt Workspace', 'Quản lý tên, website, tiền tệ, múi giờ và mặc định hiển thị của Workspace theo quyền của bạn. Bạn đã biết các khu vực chính! Có thể mở lại hướng dẫn bất cứ lúc nào.'],
+    ['workspace-switch', 'Workspace của bạn', 'Chọn Workspace để chuyển không gian làm việc.'],
+    ['client-card', 'Khách hàng & thương hiệu', 'Thêm hoặc chọn khách hàng tại đây. Mỗi khách hàng có dữ liệu và báo cáo riêng.'],
+    ['integration-card', 'Kết nối dữ liệu', 'Chọn nền tảng, tự cấp quyền rồi chọn tài sản cần theo dõi.'],
+    ['nav-dashboard', 'Dashboard Marketing', 'Xem KPI, xu hướng và chiến dịch sau khi kết nối và đồng bộ dữ liệu.'],
+    ['nav-channels', 'Phân tích từng kênh', 'Chọn kênh để xem chỉ số và nội dung chuyên sâu.'],
+    ['nav-reports', 'Báo cáo', 'Thử mẫu báo cáo và bố cục tùy chỉnh. Lưu, xuất và chia sẻ chưa khả dụng.'],
+    ['nav-members', 'Mời đội ngũ', 'Quản lý thành viên và vai trò. Cần xác minh email trước khi tạo mã mời.'],
+    ['nav-settings', 'Cài đặt Workspace', 'Cập nhật thông tin, tiền tệ và tùy chọn hiển thị theo quyền của bạn. Có thể xem lại hướng dẫn từ nút trợ giúp.'],
   ];
   const features = {
     integrations: ['Kết nối nền tảng', 'Chức năng kết nối đang được triển khai. Khi sẵn sàng, bạn sẽ tự cấp quyền và chọn tài khoản nguồn cho từng khách hàng. Hiện chưa có nền tảng nào được kết nối qua Workspace.'],
@@ -48,8 +49,8 @@
   }
   function summary() {
     const completed = progress.status === 'completed';
-    $('#tour-summary').textContent = completed ? 'Đã xem xong 8 bước hướng dẫn' : progress.status === 'new' ? 'Hướng dẫn làm quen · 8 bước' : `Tiếp tục hướng dẫn từ bước ${progress.step + 1}/8`;
-    document.querySelector('.ov-welcome [data-start-tour]').textContent = completed ? 'Xem lại hướng dẫn' : progress.status === 'new' ? 'Bắt đầu hướng dẫn →' : 'Tiếp tục hướng dẫn →';
+    $('#tour-summary').textContent = completed ? 'Đã xem 8 bước' : progress.status === 'new' ? 'Hướng dẫn · 8 bước' : `Đã xem ${progress.step}/8 bước`;
+    document.querySelector('.ov-welcome [data-start-tour]').textContent = completed ? 'Xem lại hướng dẫn' : progress.status === 'new' ? 'Xem hướng dẫn →' : 'Tiếp tục hướng dẫn →';
   }
   function position() {
     if (!dialog.open) return;
@@ -82,6 +83,9 @@
     $('#tour-next').textContent = progress.step === 7 ? 'Hoàn tất' : 'Tiếp tục';
     $('#tour-error').hidden = true;
     const target = document.getElementById(id);
+    for (let parent = target.parentElement; parent; parent = parent.parentElement) {
+      if (parent.matches('details') && !parent.open) { revealedGroups.add(parent); parent.open = true; }
+    }
     target.scrollIntoView({block: innerWidth <= 700 ? 'start' : 'center', inline: 'center', behavior: 'instant'});
     position();
     $('#tour-next').focus({preventScroll: true});
@@ -110,6 +114,8 @@
   }
   function close() {
     dialog.close();
+    revealedGroups.forEach((group) => { group.open = false; });
+    revealedGroups.clear();
     returnFocus?.focus({preventScroll: true});
     summary();
   }

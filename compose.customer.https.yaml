@@ -1,0 +1,32 @@
+# Local HTTPS for Meta OAuth. Use together with compose.customer.yaml.
+# Prepare the ignored TLS files first; see docs/CUSTOMER_LOCAL_HTTPS.md.
+services:
+  customer-admin:
+    environment:
+      CUSTOMER_WEB_ORIGIN: https://localhost:8444
+  web:
+    ports:
+      - "127.0.0.1:8444:8443"
+    environment:
+      CUSTOMER_WEB_ORIGIN: https://localhost:8444
+      CUSTOMER_LOCAL_TLS_CERT: /run/vio-local-tls/certificate.pem
+      CUSTOMER_LOCAL_TLS_KEY: /run/vio-local-tls/private-key.pem
+    volumes:
+      - type: bind
+        source: ./.work/customer-dev/tls/certificate.pem
+        target: /run/vio-local-tls/certificate.pem
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./.work/customer-dev/tls/private-key.pem
+        target: /run/vio-local-tls/private-key.pem
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import ssl,urllib.request; c=ssl.create_default_context(cafile='/run/vio-local-tls/certificate.pem'); r=urllib.request.Request('https://localhost:8443/api/customer/session',headers={'Host':'localhost:8444'}); urllib.request.urlopen(r,context=c,timeout=6)"

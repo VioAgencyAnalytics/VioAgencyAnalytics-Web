@@ -1,10 +1,11 @@
 """Customer BFF: identity remains in Admin; the browser receives only an opaque cookie."""
 import hashlib
 import hmac
+import logging
 import re
 import secrets
 from functools import lru_cache
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 
 import httpx
 from fastapi import APIRouter, Request
@@ -15,6 +16,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from app.routes.pages import templates
 
 router = APIRouter(tags=['customer identity'])
+logger = logging.getLogger(__name__)
 SESSION = 'vio_customer_session'
 BINDING = 'vio_customer_browser'
 HEADERS = {'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow',
@@ -132,13 +134,17 @@ def error_response(exc):
     return JSONResponse({'error': exc.message, 'code': exc.code}, exc.status, headers=HEADERS)
 
 
-def login_response(request, payload):
+def login_response(request, payload, *, redirect=False):
     raw = payload.pop('session_token', None)
     age = payload.pop('session_max_age', None)
     if not isinstance(raw, str) or not re.fullmatch(r'[A-Za-z0-9_-]{43,128}', raw):
         raise CustomerError(502, 'Dịch vụ trả về phiên đăng nhập không hợp lệ.')
     settings = configuration(request)
-    response = JSONResponse({**payload, 'redirect': '/workspace/onboarding'}, headers=HEADERS)
+    destination = payload.pop('redirect', '/workspace/onboarding')
+    if destination not in ('/workspace', '/workspace/onboarding'):
+        raise CustomerError(502, 'Địa chỉ sau đăng nhập không hợp lệ.')
+    response = (RedirectResponse(destination, 303, headers=HEADERS) if redirect
+                else JSONResponse({**payload, 'redirect': destination}, headers=HEADERS))
     set_cookie(response, SESSION, raw, settings, age)
     # Rotate browser binding after login to invalidate the previous CSRF token.
     set_cookie(response, BINDING, secrets.token_urlsafe(48), settings)
@@ -166,8 +172,75 @@ async def session_info(request: Request):
         return error_response(exc)
 
 
-POST_PATHS = {'auth/register', 'auth/login', 'auth/logout', 'auth/google/start',
+POST_PATHS = {'auth/register', 'auth/login', 'auth/logout', 'auth/google/start', 'branding/preview',
               'auth/email/reset', 'auth/email/verify', 'auth/email/confirm', 'workspaces', 'workspaces/join'}
+
+
+def google_login_result(payload, settings):
+    """Only return a validated identity consent URL, never extra backend fields."""
+    address = payload.get('authorization_url')
+    try:
+        if not isinstance(address, str) or len(address) > 8192 or any(ord(c) < 33 for c in address):
+            raise ValueError()
+        url = urlsplit(address)
+        query = parse_qs(url.query, keep_blank_values=True)
+        expected = {'client_id', 'redirect_uri', 'response_type', 'scope', 'state', 'nonce',
+                    'code_challenge', 'code_challenge_method', 'prompt'}
+        if (url.scheme != 'https' or url.netloc != 'accounts.google.com' or url.fragment
+                or url.path != '/o/oauth2/v2/auth' or set(query) != expected
+                or any(len(value) != 1 for value in query.values())
+                or not query['client_id'][0]
+                or query['redirect_uri'] != [settings.customer_web_origin + '/auth/customer/google/callback']
+                or query['response_type'] != ['code'] or query['code_challenge_method'] != ['S256']
+                or query['prompt'] != ['select_account']
+                or sorted(query['scope'][0].split()) != ['email', 'openid', 'profile']
+                or any(not re.fullmatch(r'[A-Za-z0-9_-]{43,128}', query[key][0])
+                       for key in ('state', 'nonce', 'code_challenge'))):
+            raise ValueError()
+    except (ValueError, TypeError, KeyError):
+        raise CustomerError(502, 'Chưa mở được đăng nhập Google. Vui lòng thử lại.') from None
+    return {'authorization_url': address}
+
+
+def provider_result(path, payload, settings):
+    """Project only safe provider DTO fields; never forward credentials to JS."""
+    if '/providers/' in path:
+        source = path.split('/')[-2]
+        provider = 'google' if source in ('ga4','gsc','google_ads','youtube','business_profile') else 'tiktok' if source == 'tiktok_ads' else 'meta'
+        address = payload.get('authorization_url')
+        try:
+            url = urlsplit(address)
+            query = parse_qs(url.query, keep_blank_values=True)
+            allowed = {'client_id','redirect_uri','response_type','state','access_type','prompt','scope',
+                       'code_challenge','code_challenge_method','nonce'} if provider=='google' else {
+                       'app_id','redirect_uri','state'} if provider=='tiktok' else {
+                       'client_id','redirect_uri','response_type','state','config_id','override_default_response_type'}
+            host = {'google':'accounts.google.com','meta':'www.facebook.com','tiktok':'business-api.tiktok.com'}[provider]
+            valid_path = (url.path=='/o/oauth2/v2/auth' if provider=='google' else url.path in ('/portal/auth','/portal/auth/')
+                          if provider=='tiktok' else bool(re.fullmatch(r'/v\d+\.\d+/dialog/oauth',url.path)))
+            if (not isinstance(address,str) or len(address)>8192 or url.scheme!='https' or url.fragment
+                    or url.netloc!=host or not valid_path
+                    or set(query)-allowed or any(len(v)!=1 for v in query.values())
+                    or (provider!='tiktok' and query.get('response_type')!=['code']) or not query.get('state')
+                    or query.get('redirect_uri')!=[settings.customer_web_origin+'/auth/customer/providers/'+provider+'/callback']):
+                raise ValueError()
+        except (TypeError, ValueError, AttributeError):
+            raise CustomerError(502,'Địa chỉ cấp quyền không hợp lệ.') from None
+        return {'authorization_url': address}
+    action = path.rsplit('/',1)[-1]
+    if action=='discover':
+        assets = payload.get('assets')
+        if not isinstance(assets,list) or len(assets)>15000 or any(not isinstance(a,dict) for a in assets):
+            raise CustomerError(502,'Danh sách tài sản không hợp lệ.')
+        return {**{key:payload.get(key) for key in ('connection_id','workspace_id','client_id','version')},
+                'assets':[{key:asset.get(key) for key in ('id','name','currency','timezone')} for asset in assets]}
+    if action in ('select','sync'):
+        job = payload.get('sync')
+        if not isinstance(job,dict):
+            raise CustomerError(502,'Trạng thái đồng bộ không hợp lệ.')
+        return {**({key:payload.get(key) for key in ('connection_id','asset_id')} if action=='select' else {}),
+                'sync':{key:job.get(key) for key in ('id','status')}}
+    return {key:payload.get(key) for key in ('message','provider_revoked')}
 
 
 @router.post('/api/customer/{path:path}')
@@ -179,11 +252,24 @@ async def customer_mutation(request: Request, path: str):
                 and not re.fullmatch(r'workspaces/[a-f0-9]{32}/clients/[a-f0-9]{32}/(select|update|archive|restore)',path)
                 and not re.fullmatch(r'workspaces/[a-f0-9]{32}/settings', path)
                 and not re.fullmatch(r'workspaces/[a-f0-9]{32}/members/[a-f0-9]{32}/(role|remove)', path)
-                and not re.fullmatch(r'workspaces/[a-f0-9]{32}/invitations/[a-f0-9]{32}/revoke', path)):
+                and not re.fullmatch(r'workspaces/[a-f0-9]{32}/invitations/[a-f0-9]{32}/revoke', path)
+                and not re.fullmatch(r'workspaces/[a-f0-9]{32}/providers/(ga4|gsc|facebook_content|facebook_ads|google_ads|instagram|youtube|business_profile|tiktok_ads)/start', path)
+                and not re.fullmatch(r'workspaces/[a-f0-9]{32}/connections/[a-f0-9]{32}/(discover|select|sync|disconnect)', path)):
             raise CustomerError(404, 'Không tìm thấy chức năng.')
         if path == 'auth/google/start':
             data = {'remember': data.get('remember') is True, 'browser_binding': hashlib.sha256(browser_binding(request).encode()).hexdigest()}
+        if re.fullmatch(r'workspaces/[a-f0-9]{32}/providers/(ga4|gsc|facebook_content|facebook_ads|google_ads|instagram|youtube|business_profile|tiktok_ads)/start', path):
+            if set(data) != {'client_id'}:
+                raise CustomerError(422, 'Thông tin kết nối không hợp lệ.')
+            data = {**data, 'browser_binding': hashlib.sha256(browser_binding(request).encode()).hexdigest()}
         payload = await backend(request, 'POST', '/' + path, data)
+        if path == 'auth/google/start':
+            payload = google_login_result(payload, configuration(request))
+        if path == 'branding/preview':
+            from app.customer_branding import preview_result
+            payload = preview_result(payload)
+        if re.fullmatch(r'workspaces/[a-f0-9]{32}/(providers/[^/]+/start|connections/[a-f0-9]{32}/[^/]+)',path):
+            payload = provider_result(path,payload,configuration(request))
         if path in ('auth/register', 'auth/login'):
             return login_response(request, payload)
         response = JSONResponse(payload, headers=HEADERS)
@@ -193,6 +279,36 @@ async def customer_mutation(request: Request, path: str):
         return response
     except CustomerError as exc:
         return error_response(exc)
+
+
+@router.get('/auth/customer/providers/{provider}/callback')
+async def provider_callback(request: Request, provider: str):
+    if provider not in ('google', 'meta', 'tiktok'):
+        return error_response(CustomerError(404, 'Không tìm thấy chức năng.'))
+    try:
+        configuration(request)
+        binding = browser_binding(request)
+        if not binding or any(len(request.query_params.getlist(key)) > 1 for key in ('state', 'code', 'auth_code', 'error')):
+            raise CustomerError(400, 'Phiên cấp quyền không hợp lệ.', 'oauth_state')
+        data = {key: request.query_params.get(key, '') for key in ('state', 'code', 'error')}
+        if provider == 'tiktok':
+            # Marketing API returns auth_code and may also return a different
+            # code parameter. Only its documented auth_code is exchanged.
+            data['code'] = request.query_params.get('auth_code', '')
+        data['browser_binding'] = hashlib.sha256(binding.encode()).hexdigest()
+        payload = await backend(request, 'POST', '/providers/' + provider + '/finish', data)
+        if (not all(isinstance(payload.get(key),str) and re.fullmatch(r'[a-f0-9]{32}',payload[key])
+                    for key in ('workspace_id','client_id','connection_id'))
+                or payload.get('platform_id') not in ('ga4','gsc','facebook_content','facebook_ads','google_ads','instagram','youtube','business_profile','tiktok_ads')):
+            raise CustomerError(502, 'Kết quả cấp quyền không hợp lệ.', 'provider_failed')
+        return RedirectResponse('/workspace/integrations?oauth=connected&connection=' + payload['connection_id'] + '&platform=' + payload['platform_id'],303,headers=HEADERS)
+    except CustomerError as exc:
+        if exc.status == 404:
+            return error_response(exc)
+        allowed = {'provider_cancelled','oauth_state','provider_scopes','workspace_changed','client_changed',
+                   'email_verification_required','connector_not_configured','provider_reauth'}
+        code = exc.code if exc.code in allowed else 'provider_failed'
+        return RedirectResponse('/workspace/integrations?oauth=' + code,303,headers=HEADERS)
 
 
 @router.get('/api/customer/workspaces/{workspace_id}')
@@ -205,6 +321,12 @@ async def workspace_detail(request: Request, workspace_id: str):
         return error_response(exc)
 
 
+@router.get('/api/customer/workspaces/{workspace_id}/logo')
+async def workspace_logo(request: Request, workspace_id: str):
+    from app.customer_branding import read
+    return await read(request, workspace_id)
+
+
 @router.get('/api/customer/workspaces/{workspace_id}/integrations')
 async def workspace_integrations(request: Request, workspace_id: str):
     try:
@@ -213,6 +335,30 @@ async def workspace_integrations(request: Request, workspace_id: str):
         return JSONResponse(await backend(request, 'GET', '/workspaces/' + workspace_id + '/integrations'), headers=HEADERS)
     except CustomerError as exc:
         return error_response(exc)
+
+
+@router.get('/api/customer/workspaces/{workspace_id}/channels/facebook-content')
+async def customer_facebook_content(request: Request,workspace_id: str):
+    from app.customer_meta import read
+    return await read(request,workspace_id)
+
+
+@router.get('/api/customer/workspaces/{workspace_id}/data')
+async def customer_data_index(request: Request, workspace_id: str):
+    from app.customer_data import read
+    return await read(request, workspace_id)
+
+
+@router.get('/api/customer/workspaces/{workspace_id}/data/{source}')
+async def customer_source_data(request: Request, workspace_id: str, source: str):
+    from app.customer_data import read
+    return await read(request, workspace_id, source)
+
+
+@router.get('/workspace/reports/data')
+async def customer_data_page(request: Request):
+    from app.customer_data import page
+    return await page(request)
 
 
 @router.get('/api/customer/workspaces/{workspace_id}/members')
@@ -239,20 +385,21 @@ async def google_callback(request: Request):
     try:
         configuration(request)
         binding = browser_binding(request)
-        if not binding:
+        if (not binding or any(len(request.query_params.getlist(key)) > 1 for key in ('state', 'code', 'error'))
+                or not request.query_params.get('state')
+                or bool(request.query_params.get('code')) == bool(request.query_params.get('error'))):
             raise CustomerError(400, 'Phiên đăng nhập đã hết hạn.', 'oauth_state')
         data = {key: request.query_params.get(key, '') for key in ('state', 'code', 'error')}
         data['browser_binding'] = hashlib.sha256(binding.encode()).hexdigest()
         payload = await backend(request, 'POST', '/auth/google/finish', data)
-        response = login_response(request, payload)
-        response.status_code = 303
-        response.headers['location'] = '/workspace/onboarding'
-        return response
+        return login_response(request, payload, redirect=True)
     except CustomerError as exc:
         if exc.status == 404:
             return error_response(exc)
-        allowed = {'google_cancelled', 'oauth_state', 'account_link_required'}
+        allowed = {'google_cancelled', 'oauth_state', 'account_link_required', 'google_configuration',
+                   'google_unavailable', 'google_clock', 'google_identity'}
         code = exc.code if exc.code in allowed else 'google_failed'
+        logger.warning('Customer Google callback failed: code=%s status=%s', code, exc.status)
         return RedirectResponse('/workspace/login?error=' + code, 303, headers=HEADERS)
 
 
