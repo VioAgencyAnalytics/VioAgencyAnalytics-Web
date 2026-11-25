@@ -3,6 +3,23 @@
   'use strict';
   const providers = {ga4:'Google',gsc:'Google',google_ads:'Google',youtube:'Google',business_profile:'Google',facebook_ads:'Facebook',instagram:'Facebook',tiktok_ads:'TikTok'};
   const assetNames = {ga4:'property GA4',gsc:'website',google_ads:'tài khoản quảng cáo',youtube:'kênh YouTube',business_profile:'địa điểm',facebook_ads:'tài khoản quảng cáo',instagram:'tài khoản Instagram',tiktok_ads:'tài khoản quảng cáo'};
+  const accountHints = {
+    ga4:'Dùng tài khoản có quyền xem property trong Google Analytics 4.',
+    gsc:'Dùng tài khoản được cấp quyền website trong Search Console. Không cần có GA4.',
+    google_ads:'Dùng tài khoản có quyền đọc tài khoản Google Ads hoặc tài khoản quản lý MCC.',
+    youtube:'Dùng tài khoản quản lý kênh YouTube bạn muốn theo dõi.',
+    business_profile:'Dùng tài khoản chủ sở hữu hoặc quản lý địa điểm trên Google Business Profile.',
+    facebook_ads:'Dùng Facebook có quyền xem hiệu quả tài khoản quảng cáo.',
+    instagram:'Dùng Facebook quản lý Page đã liên kết tài khoản Instagram chuyên nghiệp.',
+    tiktok_ads:'Dùng TikTok for Business có quyền đọc tài khoản quảng cáo.'
+  };
+  const syncErrors = {
+    provider_setup_required:'Vio cần hoàn tất cấu hình API cho nền tảng này. Liên hệ hỗ trợ; bạn không cần đăng nhập lại.',
+    provider_account_required:'Tài khoản đã chọn chưa có nguồn dữ liệu phù hợp. Hãy đăng nhập bằng tài khoản quản lý nguồn.',
+    provider_scopes:'Tài khoản chưa có đủ quyền đọc. Kiểm tra quyền trên nền tảng hoặc chọn tài khoản khác.',
+    provider_rate_limit:'Nền tảng đang giới hạn lượt đọc. Hãy thử lại sau; kết nối được giữ nguyên.',
+    provider_reauth:'Quyền truy cập đã hết hiệu lực. Hãy kết nối lại bằng tài khoản quản lý.'
+  };
   const fold = (value) => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[đĐ]/g,'d').toLowerCase();
   const el = (tag, value, cls) => { const item = document.createElement(tag); item.textContent = value; if (cls) item.className = cls; return item; };
   function create(options) {
@@ -21,6 +38,7 @@
     function controls() {
       $('#connector-primary').disabled = busy || state === 'assets' && !selected;
       $('#connector-close').disabled = $('#connector-later').disabled = busy && state !== 'discover';
+      $('#connector-reconnect').disabled = busy && state !== 'discover';
       dialog.querySelector('.cc-body').setAttribute('aria-busy',String(busy));
       dialog.querySelectorAll('input,select,[data-cc-action]').forEach((item) => { item.disabled = busy; });
       if (busy) $('#connector-primary').textContent = state === 'discover' ? 'Đang tải tài khoản…' : 'Đang xử lý…';
@@ -46,6 +64,8 @@
       $('#connector-title').textContent = 'Kết nối '+value.platform.name;
       $('#connector-icon').textContent = value.platform.icon;
       $('#connector-icon').className = 'material-symbols-outlined ig-provider ig-'+value.platform.color;
+      window.VioPlatformBrand?.setLogo($('#connector-icon'), source);
+      window.VioPlatformBrand?.setTheme($('#connector-connect-dialog'), source);
       $('#connector-context').textContent = value.workspaceName+(value.clientName ? ' / '+value.clientName : '');
       $('#connector-report').hidden = true; $('#connector-primary').hidden = false;
       $('#connector-description').textContent = '';
@@ -58,6 +78,8 @@
       else if (choosing || !connection.asset_id) state = assets.length ? 'assets' : state === 'discover' ? 'discover' : 'choose';
       else state = 'done';
       const step = ['assets','choose','discover'].includes(state) ? 2 : state === 'done' ? 3 : 1;
+      $('#connector-reconnect').hidden = !value.ready || !value.canManage || !value.clientId || !value.platform.can_connect
+        || !connection || state === 'connect';
       dialog.querySelectorAll('[data-connector-step]').forEach((item) => { item.dataset.active = String(Number(item.dataset.connectorStep) === step); item.setAttribute('aria-current',Number(item.dataset.connectorStep) === step ? 'step' : 'false'); });
       box.replaceChildren();
       let title = '', description = '', label = 'Đóng';
@@ -72,12 +94,13 @@
       if (state === 'viewer') { title = 'Bạn đang có quyền xem'; description = 'Chủ sở hữu hoặc quản trị viên có thể quản lý kết nối này.'; }
       if (state === 'unavailable') { title = 'Kết nối đang được chuẩn bị'; description = 'Vio đang hoàn tất thiết lập cho nền tảng này. Bạn có thể sử dụng các kết nối đã sẵn sàng.'; }
       if (state === 'connect') {
-        title = 'Đăng nhập bằng tài khoản quản lý'; label = 'Tiếp tục với '+providers[source];
+        title = forceConnect ? 'Kết nối lại '+value.platform.name : 'Đăng nhập bằng tài khoản quản lý'; label = 'Tiếp tục với '+providers[source];
         description = 'Bạn sẽ chuyển đến '+providers[source]+' để đăng nhập và chọn quyền truy cập.';
-        if (source === 'instagram') box.append(el('p','Sử dụng Facebook quản lý Page đã liên kết tài khoản Instagram chuyên nghiệp.','cc-tip'));
+        if (forceConnect) description += ' Dữ liệu đã đồng bộ trước đó vẫn được giữ.';
+        box.append(el('p',accountHints[source],'cc-tip'));
         box.append(el('p','Vio không nhận hoặc lưu mật khẩu '+providers[source]+'.','cc-trust'));
       }
-      if (state === 'choose' || state === 'discover') { title = 'Chọn '+assetNames[source]+' của bạn'; label = 'Tải danh sách tài khoản'; description = 'Chỉ hiển thị các tài khoản bạn vừa cấp quyền.'; }
+      if (state === 'choose' || state === 'discover') { title = 'Chọn '+assetNames[source]+' của bạn'; label = 'Tải danh sách tài khoản'; description = accountHints[source]; }
       if (state === 'assets') {
         title = 'Chọn '+assetNames[source]; label = 'Kết nối & đồng bộ';
         const search = el('input',''); search.type = 'search'; search.placeholder = 'Tìm theo tên hoặc mã…'; search.setAttribute('aria-label','Tìm tài khoản');
@@ -97,17 +120,22 @@
       }
       if (state === 'done') {
         const failed = connection.state === 'error', syncing = connection.state === 'syncing';
-        title = failed ? 'Cần thử đồng bộ lại' : syncing ? 'Đang đồng bộ dữ liệu' : 'Kết nối đã sẵn sàng';
+        const errorCode = connection.latest_sync?.error_code, needsSetup = failed && errorCode === 'provider_setup_required';
+        title = needsSetup ? 'Nền tảng cần được thiết lập' : failed ? 'Lần đồng bộ cần kiểm tra' : syncing ? 'Đang đồng bộ dữ liệu' : 'Kết nối đã sẵn sàng';
         box.append(el('span',failed ? 'info' : syncing ? 'sync' : 'check_circle','material-symbols-outlined cc-result-icon'));
         box.append(el('strong',connection.asset_name || value.platform.name,'cc-result-name'));
-        description = failed ? 'Kết nối được giữ nguyên. Hãy thử lại sau ít phút.' : syncing ? 'Bạn có thể đóng cửa sổ này và tiếp tục làm việc.' : 'Dữ liệu đã lưu được dùng để tạo KPI, biểu đồ và báo cáo.';
+        description = failed ? syncErrors[errorCode] || 'Kết nối được giữ nguyên. Hãy thử lại sau ít phút.' : syncing ? 'Bạn có thể đóng cửa sổ này và tiếp tục làm việc.' : 'Dữ liệu đã lưu được dùng để tạo KPI, biểu đồ và báo cáo.';
         label = syncing ? 'Đóng' : 'Đồng bộ lại';
+        if (needsSetup) $('#connector-primary').hidden = true;
         if (connection.synced_at) { $('#connector-report').hidden = false; $('#connector-report').href = '/workspace/reports/data?source='+encodeURIComponent(source); $('#connector-primary').hidden = true; }
         const actions = el('div','','cc-management');
         actions.append(action('Đổi tài khoản',() => { choosing = true; assets = []; selected = ''; render(); discover(); }),
           action('Tùy chọn đồng bộ',() => { close(); options.manage('sync',connection); }),
           action('Ngắt kết nối',() => { close(); options.manage('disconnect',connection); }));
         box.append(actions); $('#connector-later').textContent = 'Đóng';
+        if (failed && ['provider_scopes','provider_account_required'].includes(errorCode)) box.append(action('Đăng nhập tài khoản khác',() => {
+          ticket += 1; assets = []; selected = ''; forceConnect = true; feedback(); render();
+        }));
       }
       if (['choose','assets'].includes(state)) {
         box.append(action('Đăng nhập tài khoản khác',() => {
@@ -127,7 +155,7 @@
         if (!Array.isArray(result.assets) || result.assets.some((item) => typeof item.id !== 'string' || typeof item.name !== 'string')) throw new Error('Danh sách tài khoản chưa hợp lệ. Hãy thử lại.');
         assets = result.assets; selected = assets.some((item) => item.id === connection.asset_external_id) ? connection.asset_external_id : assets.length === 1 ? assets[0].id : '';
         busy = false; state = assets.length ? 'assets' : 'choose'; render();
-        if (!assets.length) feedback('Chưa tìm thấy '+assetNames[source]+'. Kiểm tra đúng tài khoản đăng nhập và quyền quản lý trên '+providers[source]+'.');
+        if (!assets.length) feedback('Chưa tìm thấy '+assetNames[source]+'. '+accountHints[source]);
       });
     }
     $('#connector-primary').addEventListener('click',() => {
@@ -157,10 +185,16 @@
       close();
     });
     $('#connector-close').addEventListener('click',close); $('#connector-later').addEventListener('click',close);
+    function reconnect() {
+      const value=ctx();
+      if (busy && state !== 'discover' || !value.ready || !value.canManage || !value.platform.can_connect || !value.clientId) return;
+      ticket += 1; busy=false; assets=[]; selected=''; choosing=false; forceConnect=true; feedback(); render();
+    }
+    $('#connector-reconnect').addEventListener('click',reconnect);
     dialog.addEventListener('cancel',(event) => { event.preventDefault(); close(); });
-    return {update:render, open(id, error) {
+    return {update:render, open(id, error, settings = {}) {
       if (!Object.hasOwn(providers,id)) return false;
-      source = id; ticket += 1; busy = false; choosing = false; forceConnect = false; assets = []; selected = ''; scopeKey = ''; connectionKey = ''; state = 'connect';
+      source = id; ticket += 1; busy = false; choosing = false; forceConnect = settings.reconnect === true; assets = []; selected = ''; scopeKey = ''; connectionKey = ''; state = 'connect';
       returnFocus = document.activeElement; feedback(error || ''); if (!dialog.open) dialog.showModal(); render();
       if (state === 'choose') discover(); return true;
     }};

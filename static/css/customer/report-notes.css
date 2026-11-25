@@ -1,0 +1,70 @@
+.report-note {
+  box-sizing: border-box;
+  min-width: 0;
+  grid-column: 1 / -1;
+  margin: 10px 0 0;
+  padding: 10px 13px;
+  border: 1px solid #dce6f0;
+  border-inline-start: 3px solid var(--platform-accent, #3e6c96);
+  border-radius: 8px;
+  background: #f3f7fa;
+  color: #233950;
+  font: 400 .86rem/1.55 Inter, system-ui, sans-serif;
+  break-inside: avoid;
+}
+
+.report-note > strong { display: block; margin-bottom: 2px; }
+.report-note > p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.report-note-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 12px 0;
+  padding: 10px 14px;
+  border: 1px solid #dce6f0;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.report-note-controls > p { margin: 0; color: #395169; font-size: .85rem; }
+#report-export-status { flex-basis: 100%; color: #096651; }
+#report-export-status[data-error=true] { color: #a33539; }
+.report-note-dialog .rp-dialog-body { display: grid; gap: 13px; }
+.report-note-dialog form { display: flex; flex-direction: column; max-height: 85dvh; }
+.report-note-dialog header > h2 { margin: 0; }
+.report-note-field { display: grid; gap: 5px; font-size: .86rem; font-weight: 650; color: #233950; }
+.report-note-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 70px;
+  padding: 9px 11px;
+  border: 1px solid #aebfd0;
+  border-radius: 7px;
+  background: #fff;
+  color: inherit;
+  font: 400 .86rem/1.55 Inter, system-ui, sans-serif;
+  resize: vertical;
+}
+.report-note-field textarea:focus-visible { outline: 2px solid #406eaa; outline-offset: 1px; }
+
+@media print {
+  @page vioSeoPortrait { margin: 11mm 12mm 12mm; }
+  .report-note-controls, .report-note-dialog, .report-note[data-note-final=false] { display: none !important; }
+  .sr-compact .sc-performance:has(.report-note[data-note-final=true]) :is(.sc-charts, .sc-distributions) {
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .sr-compact .sc-performance:has(.report-note[data-note-final=true]) .sc-charts .viz-series .viz-plot > svg { max-height: 82px; }
+  .report-note {
+    margin-top: 7px;
+    padding: 6px 9px;
+    font-size: 8pt;
+    line-height: 1.4;
+    print-color-adjust: exact;
+  }
+  .report-note > strong { display: inline; margin-right: .4em; }
+  .report-note > p { display: inline; }
+}

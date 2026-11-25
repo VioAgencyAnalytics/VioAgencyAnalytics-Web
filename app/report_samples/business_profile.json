@@ -1,0 +1,1261 @@
+{
+  "asset": {
+    "external_id": "properties/123",
+    "id": "cccccccccccccccccccccccccccccccc",
+    "name": "Tài khoản minh họa"
+  },
+  "availability": "available",
+  "calendar": {
+    "latest_closed_date": "2026-11-10",
+    "max_days": 90,
+    "timezone": "Asia/Ho_Chi_Minh",
+    "today": "2026-11-11"
+  },
+  "client": {
+    "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "name": "Thương hiệu minh họa"
+  },
+  "comparison": {
+    "comparison_days": 30,
+    "current_days": 30,
+    "current_period": {
+      "end": "2026-10-30",
+      "start": "2026-10-01"
+    },
+    "daily": [
+      {
+        "date": "2026-09-01",
+        "values": {
+          "call_clicks": 6,
+          "directions": 5,
+          "maps_mobile": 179,
+          "search_mobile": 362,
+          "website_clicks": 10
+        }
+      },
+      {
+        "date": "2026-09-02",
+        "values": {
+          "call_clicks": 8,
+          "directions": 5,
+          "maps_mobile": 207,
+          "search_mobile": 420,
+          "website_clicks": 11
+        }
+      },
+      {
+        "date": "2026-09-03",
+        "values": {
+          "call_clicks": 7,
+          "directions": 6,
+          "maps_mobile": 207,
+          "search_mobile": 479,
+          "website_clicks": 12
+        }
+      },
+      {
+        "date": "2026-09-04",
+        "values": {
+          "call_clicks": 9,
+          "directions": 7,
+          "maps_mobile": 234,
+          "search_mobile": 479,
+          "website_clicks": 13
+        }
+      },
+      {
+        "date": "2026-09-05",
+        "values": {
+          "call_clicks": 9,
+          "directions": 7,
+          "maps_mobile": 262,
+          "search_mobile": 538,
+          "website_clicks": 14
+        }
+      },
+      {
+        "date": "2026-09-06",
+        "values": {
+          "call_clicks": 10,
+          "directions": 7,
+          "maps_mobile": 261,
+          "search_mobile": 596,
+          "website_clicks": 16
+        }
+      },
+      {
+        "date": "2026-09-07",
+        "values": {
+          "call_clicks": 10,
+          "directions": 8,
+          "maps_mobile": 290,
+          "search_mobile": 596,
+          "website_clicks": 15
+        }
+      },
+      {
+        "date": "2026-09-08",
+        "values": {
+          "call_clicks": 7,
+          "directions": 5,
+          "maps_mobile": 188,
+          "search_mobile": 381,
+          "website_clicks": 11
+        }
+      },
+      {
+        "date": "2026-09-09",
+        "values": {
+          "call_clicks": 7,
+          "directions": 5,
+          "maps_mobile": 188,
+          "search_mobile": 440,
+          "website_clicks": 11
+        }
+      },
+      {
+        "date": "2026-09-10",
+        "values": {
+          "call_clicks": 7,
+          "directions": 6,
+          "maps_mobile": 216,
+          "search_mobile": 440,
+          "website_clicks": 12
+        }
+      },
+      {
+        "date": "2026-09-11",
+        "values": {
+          "call_clicks": 9,
+          "directions": 7,
+          "maps_mobile": 244,
+          "search_mobile": 499,
+          "website_clicks": 13
+        }
+      },
+      {
+        "date": "2026-09-12",
+        "values": {
+          "call_clicks": 9,
+          "directions": 6,
+          "maps_mobile": 243,
+          "search_mobile": 557,
+          "website_clicks": 15
+        }
+      },
+      {
+        "date": "2026-09-13",
+        "values": {
+          "call_clicks": 10,
+          "directions": 8,
+          "maps_mobile": 271,
+          "search_mobile": 557,
+          "website_clicks": 14
+        }
+      },
+      {
+        "date": "2026-09-14",
+        "values": {
+          "call_clicks": 11,
+          "directions": 8,
+          "maps_mobile": 299,
+          "search_mobile": 616,
+          "website_clicks": 16
+        }
+      },
+      {
+        "date": "2026-09-15",
+        "values": {
+          "call_clicks": 6,
+          "directions": 5,
+          "maps_mobile": 170,
+          "search_mobile": 400,
+          "website_clicks": 11
+        }
+      },
+      {
+        "date": "2026-09-16",
+        "values": {
+          "call_clicks": 7,
+          "directions": 5,
+          "maps_mobile": 197,
+          "search_mobile": 401,
+          "website_clicks": 11
+        }
+      },
+      {
+        "date": "2026-09-17",
+        "values": {
+          "call_clicks": 8,
+          "directions": 6,
+          "maps_mobile": 225,
+          "search_mobile": 460,
+          "website_clicks": 12
+        }
+      },
+      {
+        "date": "2026-09-18",
+        "values": {
+          "call_clicks": 8,
+          "directions": 6,
+          "maps_mobile": 225,
+          "search_mobile": 518,
+          "website_clicks": 13
+        }
+      },
+      {
+        "date": "2026-09-19",
+        "values": {
+          "call_clicks": 9,
+          "directions": 8,
+          "maps_mobile": 253,
+          "search_mobile": 518,
+          "website_clicks": 14
+        }
+      },
+      {
+        "date": "2026-09-20",
+        "values": {
+          "call_clicks": 10,
+          "directions": 7,
+          "maps_mobile": 280,
+          "search_mobile": 576,
+          "website_clicks": 15
+        }
+      },
+      {
+        "date": "2026-09-21",
+        "values": {
+          "call_clicks": 10,
+          "directions": 8,
+          "maps_mobile": 281,
+          "search_mobile": 636,
+          "website_clicks": 17
+        }
+      },
+      {
+        "date": "2026-09-22",
+        "values": {
+          "call_clicks": 7,
+          "directions": 5,
+          "maps_mobile": 179,
+          "search_mobile": 362,
+          "website_clicks": 9
+        }
+      },
+      {
+        "date": "2026-09-23",
+        "values": {
+          "call_clicks": 7,
+          "directions": 5,
+          "maps_mobile": 206,
+          "search_mobile": 420,
+          "website_clicks": 12
+        }
+      },
+      {
+        "date": "2026-09-24",
+        "values": {
+          "call_clicks": 8,
+          "directions": 6,
+          "maps_mobile": 207,
+          "search_mobile": 479,
+          "website_clicks": 12
+        }
+      },
+      {
+        "date": "2026-09-25",
+        "values": {
+          "call_clicks": 8,
+          "directions": 7,
+          "maps_mobile": 234,
+          "search_mobile": 479,
+          "website_clicks": 13
+        }
+      },
+      {
+        "date": "2026-09-26",
+        "values": {
+          "call_clicks": 10,
+          "directions": 6,
+          "maps_mobile": 262,
+          "search_mobile": 537,
+          "website_clicks": 14
+        }
+      },
+      {
+        "date": "2026-09-27",
+        "values": {
+          "call_clicks": 9,
+          "directions": 8,
+          "maps_mobile": 262,
+          "search_mobile": 597,
+          "website_clicks": 16
+        }
+      },
+      {
+        "date": "2026-09-28",
+        "values": {
+          "call_clicks": 10,
+          "directions": 8,
+          "maps_mobile": 289,
+          "search_mobile": 596,
+          "website_clicks": 15
+        }
+      },
+      {
+        "date": "2026-09-29",
+        "values": {
+          "call_clicks": 7,
+          "directions": 5,
+          "maps_mobile": 189,
+          "search_mobile": 381,
+          "website_clicks": 10
+        }
+      },
+      {
+        "date": "2026-09-30",
+        "values": {
+          "call_clicks": 7,
+          "directions": 5,
+          "maps_mobile": 188,
+          "search_mobile": 440,
+          "website_clicks": 12
+        }
+      }
+    ],
+    "items": [
+      {
+        "actual": 486,
+        "chart": {
+          "actual": 100.0,
+          "previous": 80.04115226337449
+        },
+        "currency": null,
+        "difference": "97",
+        "difference_label": "97",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "day",
+        "key": "website_clicks",
+        "label": "Nhấp vào website",
+        "previous": 389,
+        "relation": "above",
+        "relative": "0.2493573264781491002570694087403598971722365038560411311053984575835475578406169665809768637532133676",
+        "status": "ready",
+        "summary": "+24,94%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 312,
+        "chart": {
+          "actual": 100.0,
+          "previous": 80.12820512820512
+        },
+        "currency": null,
+        "difference": "62",
+        "difference_label": "62",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "day",
+        "key": "call_clicks",
+        "label": "Nhấp nút gọi",
+        "previous": 250,
+        "relation": "above",
+        "relative": "0.248",
+        "status": "ready",
+        "summary": "+24,8%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 238,
+        "chart": {
+          "actual": 100.0,
+          "previous": 79.83193277310924
+        },
+        "currency": null,
+        "difference": "48",
+        "difference_label": "48",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "day",
+        "key": "directions",
+        "label": "Yêu cầu chỉ đường",
+        "previous": 190,
+        "relation": "above",
+        "relative": "0.2526315789473684210526315789473684210526315789473684210526315789473684210526315789473684210526315789",
+        "status": "ready",
+        "summary": "+25,26%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 18450,
+        "chart": {
+          "actual": 100.0,
+          "previous": 80.0
+        },
+        "currency": null,
+        "difference": "3690",
+        "difference_label": "3.690",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "day",
+        "key": "search_mobile",
+        "label": "Hiển thị Search · di động",
+        "previous": 14760,
+        "relation": "above",
+        "relative": "0.25",
+        "status": "ready",
+        "summary": "+25%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 8670,
+        "chart": {
+          "actual": 100.0,
+          "previous": 80.0
+        },
+        "currency": null,
+        "difference": "1734",
+        "difference_label": "1.734",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "day",
+        "key": "maps_mobile",
+        "label": "Hiển thị Maps · di động",
+        "previous": 6936,
+        "relation": "above",
+        "relative": "0.25",
+        "status": "ready",
+        "summary": "+25%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      }
+    ],
+    "label": "Kỳ liền trước",
+    "matched_elapsed": false,
+    "message": "",
+    "mode": "previous",
+    "period": {
+      "end": "2026-09-30",
+      "start": "2026-09-01"
+    },
+    "status": "ready"
+  },
+  "connection": {
+    "id": "dddddddddddddddddddddddddddddddd",
+    "status": "connected",
+    "version": 1
+  },
+  "connector": {
+    "adapter_ready": true,
+    "application_owner": "vio",
+    "asset_label": "Tài khoản",
+    "capabilities": {
+      "export": false,
+      "live_provider_reads": false,
+      "publish": false,
+      "saved_data": true
+    },
+    "color": "amber",
+    "icon": "monitoring",
+    "id": "business_profile",
+    "mapping_status": "available",
+    "mapping_version": 1,
+    "metrics": [
+      {
+        "aggregation": "sum_complete_days",
+        "field": "totals.website_clicks",
+        "grain": "day",
+        "key": "website_clicks",
+        "label": "Nhấp vào website",
+        "unit": "count"
+      },
+      {
+        "aggregation": "sum_complete_days",
+        "field": "totals.call_clicks",
+        "grain": "day",
+        "key": "call_clicks",
+        "label": "Nhấp nút gọi",
+        "unit": "count"
+      },
+      {
+        "aggregation": "sum_complete_days",
+        "field": "totals.directions",
+        "grain": "day",
+        "key": "directions",
+        "label": "Yêu cầu chỉ đường",
+        "unit": "count"
+      },
+      {
+        "aggregation": "sum_complete_days",
+        "field": "totals.search_mobile",
+        "grain": "day",
+        "key": "search_mobile",
+        "label": "Hiển thị Search · di động",
+        "unit": "count"
+      },
+      {
+        "aggregation": "sum_complete_days",
+        "field": "totals.maps_mobile",
+        "grain": "day",
+        "key": "maps_mobile",
+        "label": "Hiển thị Maps · di động",
+        "unit": "count"
+      }
+    ],
+    "name": "Google Business Profile",
+    "provider": "google"
+  },
+  "daily": [
+    {
+      "date": "2026-10-01",
+      "values": {
+        "call_clicks": 8,
+        "directions": 6,
+        "maps_mobile": 224,
+        "search_mobile": 452,
+        "website_clicks": 12
+      }
+    },
+    {
+      "date": "2026-10-02",
+      "values": {
+        "call_clicks": 9,
+        "directions": 7,
+        "maps_mobile": 258,
+        "search_mobile": 525,
+        "website_clicks": 14
+      }
+    },
+    {
+      "date": "2026-10-03",
+      "values": {
+        "call_clicks": 10,
+        "directions": 7,
+        "maps_mobile": 259,
+        "search_mobile": 599,
+        "website_clicks": 16
+      }
+    },
+    {
+      "date": "2026-10-04",
+      "values": {
+        "call_clicks": 10,
+        "directions": 9,
+        "maps_mobile": 293,
+        "search_mobile": 599,
+        "website_clicks": 15
+      }
+    },
+    {
+      "date": "2026-10-05",
+      "values": {
+        "call_clicks": 12,
+        "directions": 8,
+        "maps_mobile": 327,
+        "search_mobile": 672,
+        "website_clicks": 18
+      }
+    },
+    {
+      "date": "2026-10-06",
+      "values": {
+        "call_clicks": 12,
+        "directions": 9,
+        "maps_mobile": 327,
+        "search_mobile": 745,
+        "website_clicks": 20
+      }
+    },
+    {
+      "date": "2026-10-07",
+      "values": {
+        "call_clicks": 13,
+        "directions": 11,
+        "maps_mobile": 362,
+        "search_mobile": 746,
+        "website_clicks": 19
+      }
+    },
+    {
+      "date": "2026-10-08",
+      "values": {
+        "call_clicks": 8,
+        "directions": 5,
+        "maps_mobile": 235,
+        "search_mobile": 476,
+        "website_clicks": 13
+      }
+    },
+    {
+      "date": "2026-10-09",
+      "values": {
+        "call_clicks": 9,
+        "directions": 7,
+        "maps_mobile": 236,
+        "search_mobile": 550,
+        "website_clicks": 14
+      }
+    },
+    {
+      "date": "2026-10-10",
+      "values": {
+        "call_clicks": 9,
+        "directions": 8,
+        "maps_mobile": 269,
+        "search_mobile": 550,
+        "website_clicks": 15
+      }
+    },
+    {
+      "date": "2026-10-11",
+      "values": {
+        "call_clicks": 11,
+        "directions": 8,
+        "maps_mobile": 305,
+        "search_mobile": 623,
+        "website_clicks": 16
+      }
+    },
+    {
+      "date": "2026-10-12",
+      "values": {
+        "call_clicks": 11,
+        "directions": 8,
+        "maps_mobile": 304,
+        "search_mobile": 696,
+        "website_clicks": 19
+      }
+    },
+    {
+      "date": "2026-10-13",
+      "values": {
+        "call_clicks": 13,
+        "directions": 10,
+        "maps_mobile": 339,
+        "search_mobile": 697,
+        "website_clicks": 18
+      }
+    },
+    {
+      "date": "2026-10-14",
+      "values": {
+        "call_clicks": 13,
+        "directions": 10,
+        "maps_mobile": 373,
+        "search_mobile": 770,
+        "website_clicks": 20
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "values": {
+        "call_clicks": 8,
+        "directions": 6,
+        "maps_mobile": 213,
+        "search_mobile": 501,
+        "website_clicks": 13
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "values": {
+        "call_clicks": 8,
+        "directions": 7,
+        "maps_mobile": 246,
+        "search_mobile": 501,
+        "website_clicks": 14
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "values": {
+        "call_clicks": 11,
+        "directions": 7,
+        "maps_mobile": 282,
+        "search_mobile": 574,
+        "website_clicks": 15
+      }
+    },
+    {
+      "date": "2026-10-18",
+      "values": {
+        "call_clicks": 10,
+        "directions": 8,
+        "maps_mobile": 281,
+        "search_mobile": 647,
+        "website_clicks": 17
+      }
+    },
+    {
+      "date": "2026-10-19",
+      "values": {
+        "call_clicks": 11,
+        "directions": 9,
+        "maps_mobile": 316,
+        "search_mobile": 648,
+        "website_clicks": 17
+      }
+    },
+    {
+      "date": "2026-10-20",
+      "values": {
+        "call_clicks": 13,
+        "directions": 9,
+        "maps_mobile": 350,
+        "search_mobile": 721,
+        "website_clicks": 19
+      }
+    },
+    {
+      "date": "2026-10-21",
+      "values": {
+        "call_clicks": 12,
+        "directions": 10,
+        "maps_mobile": 350,
+        "search_mobile": 794,
+        "website_clicks": 21
+      }
+    },
+    {
+      "date": "2026-10-22",
+      "values": {
+        "call_clicks": 8,
+        "directions": 6,
+        "maps_mobile": 224,
+        "search_mobile": 452,
+        "website_clicks": 12
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "values": {
+        "call_clicks": 10,
+        "directions": 7,
+        "maps_mobile": 259,
+        "search_mobile": 526,
+        "website_clicks": 13
+      }
+    },
+    {
+      "date": "2026-10-24",
+      "values": {
+        "call_clicks": 9,
+        "directions": 7,
+        "maps_mobile": 258,
+        "search_mobile": 598,
+        "website_clicks": 16
+      }
+    },
+    {
+      "date": "2026-10-25",
+      "values": {
+        "call_clicks": 10,
+        "directions": 8,
+        "maps_mobile": 293,
+        "search_mobile": 599,
+        "website_clicks": 16
+      }
+    },
+    {
+      "date": "2026-10-26",
+      "values": {
+        "call_clicks": 12,
+        "directions": 9,
+        "maps_mobile": 327,
+        "search_mobile": 672,
+        "website_clicks": 18
+      }
+    },
+    {
+      "date": "2026-10-27",
+      "values": {
+        "call_clicks": 12,
+        "directions": 9,
+        "maps_mobile": 327,
+        "search_mobile": 745,
+        "website_clicks": 19
+      }
+    },
+    {
+      "date": "2026-10-28",
+      "values": {
+        "call_clicks": 13,
+        "directions": 10,
+        "maps_mobile": 362,
+        "search_mobile": 746,
+        "website_clicks": 20
+      }
+    },
+    {
+      "date": "2026-10-29",
+      "values": {
+        "call_clicks": 9,
+        "directions": 6,
+        "maps_mobile": 236,
+        "search_mobile": 476,
+        "website_clicks": 13
+      }
+    },
+    {
+      "date": "2026-10-30",
+      "values": {
+        "call_clicks": 8,
+        "directions": 7,
+        "maps_mobile": 235,
+        "search_mobile": 550,
+        "website_clicks": 14
+      }
+    }
+  ],
+  "latest_sync": null,
+  "mapping_version": 1,
+  "metrics": [
+    {
+      "aggregation": "sum_complete_days",
+      "currency": null,
+      "grain": "day",
+      "key": "website_clicks",
+      "label": "Nhấp vào website",
+      "status": "available",
+      "unit": "count",
+      "value": 486
+    },
+    {
+      "aggregation": "sum_complete_days",
+      "currency": null,
+      "grain": "day",
+      "key": "call_clicks",
+      "label": "Nhấp nút gọi",
+      "status": "available",
+      "unit": "count",
+      "value": 312
+    },
+    {
+      "aggregation": "sum_complete_days",
+      "currency": null,
+      "grain": "day",
+      "key": "directions",
+      "label": "Yêu cầu chỉ đường",
+      "status": "available",
+      "unit": "count",
+      "value": 238
+    },
+    {
+      "aggregation": "sum_complete_days",
+      "currency": null,
+      "grain": "day",
+      "key": "search_mobile",
+      "label": "Hiển thị Search · di động",
+      "status": "available",
+      "unit": "count",
+      "value": 18450
+    },
+    {
+      "aggregation": "sum_complete_days",
+      "currency": null,
+      "grain": "day",
+      "key": "maps_mobile",
+      "label": "Hiển thị Maps · di động",
+      "status": "available",
+      "unit": "count",
+      "value": 8670
+    }
+  ],
+  "notes": [],
+  "period": {
+    "data_end": "2026-10-30",
+    "data_start": "2026-10-01",
+    "end": "2026-10-30",
+    "is_open": false,
+    "mode": "custom",
+    "start": "2026-10-01"
+  },
+  "periods": [
+    {
+      "created_at": "2026-10-03T00:00:00+00:00",
+      "end_date": "2026-10-02",
+      "id": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "start_date": "2026-10-01"
+    }
+  ],
+  "published": false,
+  "schema_version": 1,
+  "scope": {
+    "client_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "workspace_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "snapshot": {
+    "created_at": "2026-10-31T00:00:00Z",
+    "currency": null,
+    "end_date": "2026-10-30",
+    "fetched_at": "2026-10-31T00:00:00Z",
+    "id": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "start_date": "2026-10-01",
+    "timezone": "Asia/Ho_Chi_Minh"
+  },
+  "source": "business_profile",
+  "state": "ready",
+  "tables": [
+    {
+      "columns": [
+        {
+          "key": "date",
+          "label": "Ngày",
+          "unit": "text"
+        },
+        {
+          "key": "website_clicks",
+          "label": "Nhấp vào website",
+          "unit": "count"
+        },
+        {
+          "key": "call_clicks",
+          "label": "Nhấp nút gọi",
+          "unit": "count"
+        },
+        {
+          "key": "directions",
+          "label": "Yêu cầu chỉ đường",
+          "unit": "count"
+        },
+        {
+          "key": "search_mobile",
+          "label": "Hiển thị Search · di động",
+          "unit": "count"
+        },
+        {
+          "key": "maps_mobile",
+          "label": "Hiển thị Maps · di động",
+          "unit": "count"
+        }
+      ],
+      "id": "daily",
+      "rows": [
+        {
+          "call_clicks": 8,
+          "date": "2026-10-01",
+          "directions": 6,
+          "maps_mobile": 224,
+          "search_mobile": 452,
+          "website_clicks": 12
+        },
+        {
+          "call_clicks": 9,
+          "date": "2026-10-02",
+          "directions": 7,
+          "maps_mobile": 258,
+          "search_mobile": 525,
+          "website_clicks": 14
+        },
+        {
+          "call_clicks": 10,
+          "date": "2026-10-03",
+          "directions": 7,
+          "maps_mobile": 259,
+          "search_mobile": 599,
+          "website_clicks": 16
+        },
+        {
+          "call_clicks": 10,
+          "date": "2026-10-04",
+          "directions": 9,
+          "maps_mobile": 293,
+          "search_mobile": 599,
+          "website_clicks": 15
+        },
+        {
+          "call_clicks": 12,
+          "date": "2026-10-05",
+          "directions": 8,
+          "maps_mobile": 327,
+          "search_mobile": 672,
+          "website_clicks": 18
+        },
+        {
+          "call_clicks": 12,
+          "date": "2026-10-06",
+          "directions": 9,
+          "maps_mobile": 327,
+          "search_mobile": 745,
+          "website_clicks": 20
+        },
+        {
+          "call_clicks": 13,
+          "date": "2026-10-07",
+          "directions": 11,
+          "maps_mobile": 362,
+          "search_mobile": 746,
+          "website_clicks": 19
+        },
+        {
+          "call_clicks": 8,
+          "date": "2026-10-08",
+          "directions": 5,
+          "maps_mobile": 235,
+          "search_mobile": 476,
+          "website_clicks": 13
+        },
+        {
+          "call_clicks": 9,
+          "date": "2026-10-09",
+          "directions": 7,
+          "maps_mobile": 236,
+          "search_mobile": 550,
+          "website_clicks": 14
+        },
+        {
+          "call_clicks": 9,
+          "date": "2026-10-10",
+          "directions": 8,
+          "maps_mobile": 269,
+          "search_mobile": 550,
+          "website_clicks": 15
+        },
+        {
+          "call_clicks": 11,
+          "date": "2026-10-11",
+          "directions": 8,
+          "maps_mobile": 305,
+          "search_mobile": 623,
+          "website_clicks": 16
+        },
+        {
+          "call_clicks": 11,
+          "date": "2026-10-12",
+          "directions": 8,
+          "maps_mobile": 304,
+          "search_mobile": 696,
+          "website_clicks": 19
+        },
+        {
+          "call_clicks": 13,
+          "date": "2026-10-13",
+          "directions": 10,
+          "maps_mobile": 339,
+          "search_mobile": 697,
+          "website_clicks": 18
+        },
+        {
+          "call_clicks": 13,
+          "date": "2026-10-14",
+          "directions": 10,
+          "maps_mobile": 373,
+          "search_mobile": 770,
+          "website_clicks": 20
+        },
+        {
+          "call_clicks": 8,
+          "date": "2026-10-15",
+          "directions": 6,
+          "maps_mobile": 213,
+          "search_mobile": 501,
+          "website_clicks": 13
+        },
+        {
+          "call_clicks": 8,
+          "date": "2026-10-16",
+          "directions": 7,
+          "maps_mobile": 246,
+          "search_mobile": 501,
+          "website_clicks": 14
+        },
+        {
+          "call_clicks": 11,
+          "date": "2026-10-17",
+          "directions": 7,
+          "maps_mobile": 282,
+          "search_mobile": 574,
+          "website_clicks": 15
+        },
+        {
+          "call_clicks": 10,
+          "date": "2026-10-18",
+          "directions": 8,
+          "maps_mobile": 281,
+          "search_mobile": 647,
+          "website_clicks": 17
+        },
+        {
+          "call_clicks": 11,
+          "date": "2026-10-19",
+          "directions": 9,
+          "maps_mobile": 316,
+          "search_mobile": 648,
+          "website_clicks": 17
+        },
+        {
+          "call_clicks": 13,
+          "date": "2026-10-20",
+          "directions": 9,
+          "maps_mobile": 350,
+          "search_mobile": 721,
+          "website_clicks": 19
+        },
+        {
+          "call_clicks": 12,
+          "date": "2026-10-21",
+          "directions": 10,
+          "maps_mobile": 350,
+          "search_mobile": 794,
+          "website_clicks": 21
+        },
+        {
+          "call_clicks": 8,
+          "date": "2026-10-22",
+          "directions": 6,
+          "maps_mobile": 224,
+          "search_mobile": 452,
+          "website_clicks": 12
+        },
+        {
+          "call_clicks": 10,
+          "date": "2026-10-23",
+          "directions": 7,
+          "maps_mobile": 259,
+          "search_mobile": 526,
+          "website_clicks": 13
+        },
+        {
+          "call_clicks": 9,
+          "date": "2026-10-24",
+          "directions": 7,
+          "maps_mobile": 258,
+          "search_mobile": 598,
+          "website_clicks": 16
+        },
+        {
+          "call_clicks": 10,
+          "date": "2026-10-25",
+          "directions": 8,
+          "maps_mobile": 293,
+          "search_mobile": 599,
+          "website_clicks": 16
+        },
+        {
+          "call_clicks": 12,
+          "date": "2026-10-26",
+          "directions": 9,
+          "maps_mobile": 327,
+          "search_mobile": 672,
+          "website_clicks": 18
+        },
+        {
+          "call_clicks": 12,
+          "date": "2026-10-27",
+          "directions": 9,
+          "maps_mobile": 327,
+          "search_mobile": 745,
+          "website_clicks": 19
+        },
+        {
+          "call_clicks": 13,
+          "date": "2026-10-28",
+          "directions": 10,
+          "maps_mobile": 362,
+          "search_mobile": 746,
+          "website_clicks": 20
+        },
+        {
+          "call_clicks": 9,
+          "date": "2026-10-29",
+          "directions": 6,
+          "maps_mobile": 236,
+          "search_mobile": 476,
+          "website_clicks": 13
+        },
+        {
+          "call_clicks": 8,
+          "date": "2026-10-30",
+          "directions": 7,
+          "maps_mobile": 235,
+          "search_mobile": 550,
+          "website_clicks": 14
+        }
+      ],
+      "title": "Chi tiết theo ngày",
+      "total_rows": 30,
+      "truncated": false
+    }
+  ],
+  "targets": {
+    "asset_id": "cccccccccccccccccccccccccccccccc",
+    "can_manage": false,
+    "end": "2026-10-30",
+    "items": [
+      {
+        "actual": 486,
+        "aggregation": "sum_complete_days",
+        "currency": null,
+        "difference": "73",
+        "direction": "at_least",
+        "grain": "day",
+        "input_value": "413",
+        "key": "website_clicks",
+        "label": "Nhấp vào website",
+        "ratio": "1.176755447941888619854721550",
+        "relation": "above",
+        "status": "met",
+        "unit": "count",
+        "value": "413",
+        "version": 1
+      },
+      {
+        "actual": 312,
+        "aggregation": "sum_complete_days",
+        "currency": null,
+        "difference": "47",
+        "direction": "at_least",
+        "grain": "day",
+        "input_value": "359",
+        "key": "call_clicks",
+        "label": "Nhấp nút gọi",
+        "ratio": "0.8690807799442896935933147632",
+        "relation": "below",
+        "status": "below_target",
+        "unit": "count",
+        "value": "359",
+        "version": 1
+      },
+      {
+        "actual": 238,
+        "aggregation": "sum_complete_days",
+        "currency": null,
+        "difference": "36",
+        "direction": "at_least",
+        "grain": "day",
+        "input_value": "274",
+        "key": "directions",
+        "label": "Yêu cầu chỉ đường",
+        "ratio": "0.8686131386861313868613138686",
+        "relation": "below",
+        "status": "below_target",
+        "unit": "count",
+        "value": "274",
+        "version": 1
+      }
+    ],
+    "start": "2026-10-01",
+    "updated_at": null
+  }
+}

@@ -1,0 +1,19 @@
+{% from 'customer/live/components/report-notes.html' import note %}
+
+{% macro detail_table(table, display, currency, review, note_key) -%}
+<section class="cd-card cd-data-table" data-table="{{ table.id }}">
+  <div class="cd-card-heading">
+    <div><h2>{{ table.title }}</h2><p>{{ table.total_rows }} hàng{% if table.truncated %} · Hiển thị tối đa {{ table.rows|length }} hàng đầu từ snapshot{% endif %}</p></div>
+    <label class="cd-search"><span class="material-symbols-outlined" aria-hidden="true">search</span><span class="cd-sr">Tìm trong {{ table.title }}</span><input type="search" maxlength="150" placeholder="Tìm trong bảng…" data-table-search></label>
+  </div>
+  <div class="cd-table-scroll" tabindex="0" role="region" aria-label="{{ table.title }}, có thể cuộn ngang">
+    <table>
+      <thead><tr>{% for col in table.columns %}<th scope="col">{{ col.label }}</th>{% endfor %}</tr></thead>
+      <tbody data-table-rows>{% for row in table.rows[:20] %}<tr>{% for col in table.columns %}<td>{{ (row[col.key] if row[col.key] is not none else '—') if col.unit == 'text' else display(row[col.key], col.unit, currency) }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+    </table>
+  </div>
+  <p data-table-empty {% if table.rows %}hidden{% endif %} class="cd-table-empty">Chưa có hàng dữ liệu phù hợp.</p>
+  <div class="cd-pagination"><span data-table-count role="status"></span><div><button type="button" class="ov-button ov-secondary" data-table-prev>← Trước</button><button type="button" class="ov-button ov-secondary" data-table-next>Sau →</button></div></div>
+  {{ note(review, note_key) }}
+</section>
+{%- endmacro %}

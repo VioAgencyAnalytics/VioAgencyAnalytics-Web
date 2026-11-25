@@ -1,0 +1,4 @@
+{% macro platform_mark(source, class_name='') -%}
+{% set brand = customer_platform_brands.get(source) %}
+{% if brand %}<span class="platform-logo {{ class_name }}" data-platform-logo="{{ source }}" aria-hidden="true"><img src="/static/customer/platforms/{{ brand.file }}" width="32" height="32" alt="" decoding="async"><span class="platform-logo-fallback" hidden>{{ brand.short }}</span></span>{% else %}<span class="platform-logo platform-logo-generic {{ class_name }}" aria-hidden="true"><span class="material-symbols-outlined">query_stats</span></span>{% endif %}
+{%- endmacro %}

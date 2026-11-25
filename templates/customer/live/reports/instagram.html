@@ -1,0 +1,17 @@
+<div class="pr-composition pr-instagram" data-order-container>
+<div class="vt-order-block" data-order-key="summary" data-order-label="Chỉ số chính">
+{{ p.metrics(view.layout,report,display) }}
+{{ note(report_review, 'summary') }}
+</div>
+<div class="vt-order-block" data-order-key="highlights" data-order-label="Nội dung nổi bật">
+{% set posts = view.layout.rankings.posts %}
+<section class="pr-post-gallery"><div class="pr-panel-title"><h2>Nội dung nổi bật</h2><span>THEO LƯỢT THÍCH TÍCH LŨY</span></div><div class="pr-post-grid">{% for post in posts.rows[:3] %}<article class="pr-post-card"><header><span>{{ {'IMAGE':'Ảnh','VIDEO':'Video','CAROUSEL_ALBUM':'Album'}.get(post.row.format,'Bài đăng') }}</span><time>{{ post.row.date }}</time></header><span class="pr-post-index" aria-hidden="true">{{ '%02d'|format(loop.index) }}</span><h3>{{ post.label }}</h3><footer><span><span class="material-symbols-outlined" aria-hidden="true">favorite</span>{{ display(post.value,'count') }} thích</span><span>{{ display(post.row.comments_lifetime,'count') }} bình luận</span></footer></article>{% else %}<p class="pr-empty">Chưa có nội dung bài đăng trong bản lưu.</p>{% endfor %}</div><p class="pr-caption">Bộ đếm tích lũy tại lúc đồng bộ của các bài trong kỳ. Xếp trong {{ posts.loaded }} bài đã tải.</p></section>
+{{ note(report_review, 'rank_posts') }}
+</div>
+<div class="vt-order-block" data-order-key="trend" data-order-label="{{ view.layout.trend }}">
+{{ p.trend(report,view.layout) }}
+{{ note(report_review, 'trend') }}
+</div>
+{{ target_comparison(report,display,report_review) }}
+
+</div>

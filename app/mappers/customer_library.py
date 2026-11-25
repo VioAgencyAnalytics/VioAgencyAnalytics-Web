@@ -28,7 +28,7 @@ CHANNELS = (
      'Khám phá nội dung Fanpage, bài đăng, mức tiếp cận và tương tác được ghi nhận.',
      ('Hiệu quả bài đăng', 'Tương tác & chia sẻ', 'Tăng trưởng theo dõi'),
      (('posts', 'Bài viết', 'number'), ('interactions', 'Tương tác', 'number'), ('reach', 'Tiếp cận', 'number'))),
-    ('seo', 'SEO & Keywords', 'search', 'troubleshoot', 'orange', ('ga4', 'gsc'),
+    ('seo', 'SEO & Từ khóa', 'search', 'troubleshoot', 'orange', ('ga4', 'gsc'),
      'Theo dõi thứ hạng từ khóa, trang đích và hiệu quả tìm kiếm trong cùng một góc nhìn.',
      ('Thứ hạng từ khóa', 'Biến động vị trí', 'Hiệu suất trang đích'),
      (('top10', 'Top 10', 'number'), ('visibility', 'Hiển thị SEO', 'percent'), ('tracked_keywords', 'Từ khóa', 'number'))),

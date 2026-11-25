@@ -1,10 +1,12 @@
 {% set workspace_roles = {'owner':'Chủ sở hữu','admin':'Quản trị viên','member':'Thành viên','viewer':'Người xem'} %}
 {% from 'customer/live/components/workspace-avatar.html' import workspace_avatar %}
 <header class="ov-topbar workspace-topbar">
+  <button type="button" id="workspace-nav-toggle" class="wh-icon-button workspace-nav-toggle" aria-label="Thu gọn thanh điều hướng" title="Thu gọn thanh điều hướng" aria-controls="workspace-sidebar" aria-pressed="false" aria-expanded="true"><span class="material-symbols-outlined" aria-hidden="true">menu_open</span></button>
   <nav class="wh-breadcrumb" aria-label="Đường dẫn"><a href="/workspace">Workspace</a><span aria-hidden="true">/</span><strong>{{ {'overview':'Tổng quan','integrations':'Kết nối nền tảng','dashboard':'Dashboard Marketing','channels':'Phân tích kênh','reports':'Báo cáo','members':'Thành viên','settings':'Cài đặt'}[customer_page] }}</strong></nav>
   <button type="button" id="workspace-search-open" class="wh-search-button" aria-label="Tìm trang, khách hàng hoặc nền tảng" aria-haspopup="dialog" aria-controls="workspace-search-dialog"><span class="material-symbols-outlined" aria-hidden="true">search</span><span>Tìm kiếm…</span><kbd>Ctrl K</kbd></button>
   <div class="wh-tools">
     <a href="/workspace" class="wh-workspace" title="{{ details.workspace.name }}">{{ workspace_avatar(details.workspace) }}<span>{{ details.workspace.name }}</span></a>
+    {% include 'customer/live/components/notifications.html' %}
     <button type="button" id="workspace-help" class="wh-icon-button" aria-label="Hướng dẫn sử dụng" title="Hướng dẫn sử dụng"><span class="material-symbols-outlined" aria-hidden="true">help</span></button>
     <div class="wh-account" title="{{ account.user.name }} · {{ workspace_roles.get(details.workspace.role, 'Thành viên') }}"><span class="wh-avatar" aria-hidden="true">{{ account.user.name[:1]|upper }}</span><span class="wh-sr-only">{{ account.user.name }} · {{ workspace_roles.get(details.workspace.role, 'Thành viên') }}</span></div>
     <button type="button" id="{{ {'overview':'overview-logout','integrations':'integrations-logout','dashboard':'marketing-logout','channels':'library-logout','reports':'library-logout','members':'workspace-page-logout','settings':'workspace-page-logout'}[customer_page] }}" class="wh-icon-button wh-logout" aria-label="Đăng xuất" title="Đăng xuất" disabled><span class="material-symbols-outlined" aria-hidden="true">logout</span></button>

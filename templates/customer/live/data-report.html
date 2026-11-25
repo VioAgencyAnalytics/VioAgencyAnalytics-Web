@@ -1,42 +1,86 @@
 {% extends 'customer/base.html' %}
+{% from 'customer/live/components/platform-mark.html' import platform_mark %}
+{% from 'customer/live/components/report-controls.html' import period_picker, target_comparison %}
+{% from 'customer/live/components/report-notes.html' import note, review_controls, pdf_button %}
+{% from 'customer/live/components/report-detail-table.html' import detail_table %}
+{% from 'customer/live/components/report-style.html' import cover, style_picker %}
 {% block layout %}
 <div class="ov-shell ws-theme" id="customer-content">
-  {% include 'customer/live/components/sidebar.html' %}
+  {% if report_example %}{% include 'customer/live/components/report-example-toolbar.html' %}{% else %}{% include 'customer/live/components/sidebar.html' %}{% endif %}
   <div class="ov-body">
-    {% include 'customer/live/components/topbar.html' %}
-    <main class="ov-main cd-main cd-report">
-      <header class="cd-heading"><div><a class="cd-back" href="/workspace/reports">← Báo cáo</a><h1>{{ report.connector.name }}</h1><p>{{ view.description }}</p></div><div class="cd-actions"><button type="button" id="data-refresh" class="ov-button ov-secondary" aria-label="Tải lại báo cáo"><span class="material-symbols-outlined" aria-hidden="true">refresh</span></button>{% if report.state == 'ready' %}<button type="button" id="data-print" class="ov-button ov-secondary"><span class="material-symbols-outlined" aria-hidden="true">print</span>In / PDF</button>{% endif %}<a class="ov-button" href="/workspace/integrations?platform={{ report.source }}">Quản lý kết nối</a></div></header>
+    {% if not report_example %}{% include 'customer/live/components/topbar.html' %}{% endif %}
+    <main class="ov-main cd-main cd-report pr-report" data-report-layout="{{ view.layout.id }}" data-report-template="platform" data-platform-brand="{{ report.source }}"{% if report_style %} data-report-style="{{ report_style.key }}" data-report-palette="{{ report_palette }}"{% if report.state == 'ready' %} data-report-order="{{ report_order|join(',') }}" data-report-hidden="{{ report_hidden|join(',') }}"{% endif %}{% endif %} id="customer-main" tabindex="-1">
+      {% if not report_example %}
+      <header class="cd-heading"><div class="platform-heading">{{ platform_mark(report.source) }}<div><a class="cd-back" href="/workspace/reports">← Báo cáo</a><h1>{{ report.connector.name }}</h1><p>{{ view.description }}</p></div></div><div class="cd-actions"><button type="button" id="data-refresh" class="ov-button ov-secondary" aria-label="Tải lại báo cáo"><span class="material-symbols-outlined" aria-hidden="true">refresh</span></button><a class="ov-button ov-secondary" href="/workspace/integrations?platform={{ report.source }}">Quản lý kết nối</a>{% if report.state == 'ready' %}<button type="button" id="data-print" class="ov-button ov-secondary"><span class="material-symbols-outlined" aria-hidden="true">print</span>In</button>{{ pdf_button(report_review) }}{% endif %}</div></header>
       <section class="cd-context" aria-label="Phạm vi dữ liệu">
         <label {% if details.workspace.kind|default('agency') == 'business' and details.clients|length == 1 %}hidden{% endif %}>{{ 'Thương hiệu' if details.workspace.kind|default('agency') == 'business' else 'Khách hàng' }}<select id="data-client" {% if not details.clients %}disabled{% endif %}><option value="" disabled {% if not report.client %}selected{% endif %}>Chọn khách hàng</option>{% for client in details.clients %}<option value="{{ client.id }}" {% if report.client and client.id == report.client.id %}selected{% endif %}>{{ client.name }}</option>{% endfor %}</select></label>
         <label>Nền tảng<select id="data-source">{% for source in connectors %}<option value="{{ source.id }}" {% if source.id == report.source %}selected{% endif %}>{{ source.name }}</option>{% endfor %}</select></label>
-        <label>Kỳ đã đồng bộ<select id="data-period" {% if not report.periods %}disabled{% endif %}>{% if not report.periods %}<option>Chưa có lần đồng bộ</option>{% endif %}{% for period in report.periods %}<option value="{{ period.id }}" {% if report.snapshot and period.id == report.snapshot.id %}selected{% endif %}>{{ period.start_date[8:] }}/{{ period.start_date[5:7] }} → {{ period.end_date[8:] }}/{{ period.end_date[5:7] }} · {{ period.created_at[8:10] }}/{{ period.created_at[5:7] }} {{ period.created_at[11:16] }} UTC</option>{% endfor %}</select></label>
+        <label>Kỳ đã đồng bộ<select id="data-period" {% if not report.periods %}disabled{% endif %}>{% if not report.snapshot %}<option value="" selected disabled>{{ "Chọn bản lưu để xem" if report.periods else "Chưa có lần đồng bộ" }}</option>{% endif %}{% for period in report.periods %}<option value="{{ period.id }}" {% if report.snapshot and period.id == report.snapshot.id %}selected{% endif %}>{{ period.start_date[8:] }}/{{ period.start_date[5:7] }} → {{ period.end_date[8:] }}/{{ period.end_date[5:7] }} · {{ period.created_at | vietnam_time }}</option>{% endfor %}</select></label>
       </section>
       <p class="cd-feedback" id="data-feedback" role="alert" hidden></p>
-      {% if report.state != 'ready' %}
-      <section class="cd-empty"><span class="material-symbols-outlined" aria-hidden="true">{{ 'sync' if report.state == 'syncing' else report.connector.icon }}</span><h2>{{ {'no_client':'Chọn khách hàng để bắt đầu','planned':'Nền tảng sẽ được bổ sung','not_connected':'Kết nối tài khoản đầu tiên','select_asset':'Chọn tài khoản được cấp quyền','syncing':'Đang đồng bộ dữ liệu','sync_error':'Lần đồng bộ cần kiểm tra','empty':'Chưa có dữ liệu đã đồng bộ'}.get(report.state,'Chưa có dữ liệu') }}</h2><p>{% if report.state == 'planned' %}Nền tảng đã có trong kho connector. Kết nối và mapping sẽ mở khi adapter sẵn sàng.{% elif report.state == 'syncing' %}Trang sẽ cập nhật khi lần đồng bộ hoàn tất.{% elif report.availability == 'not_configured' %}VIO cần hoàn tất cấu hình ứng dụng cho nền tảng này.{% else %}Cấp quyền và chọn tài khoản tại Kết nối nền tảng.{% endif %}</p><a class="ov-button ov-secondary" href="{{ '/workspace#client-card' if report.state == 'no_client' else '/workspace/integrations?platform=' ~ report.source }}">{{ 'Chọn khách hàng' if report.state == 'no_client' else 'Xem kết nối' }} →</a></section>
-      {% else %}
-      <section class="cr-cover" id="report-summary"><div class="cr-cover-top"><span class="cr-eyebrow">BÁO CÁO HIỆU SUẤT</span><span class="cr-private"><span class="material-symbols-outlined" aria-hidden="true">lock</span>Riêng tư</span></div><div class="cr-cover-title"><span class="material-symbols-outlined cr-provider" aria-hidden="true">{{ report.connector.icon }}</span><div><h2>{{ report.client.name }}</h2><p>{{ report.connector.name }} <span aria-hidden="true">/</span> {{ report.asset.name }}</p></div></div><div class="cr-cover-bottom"><span><span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>{{ view.period }}</span><span>{{ report.snapshot.timezone }}{% if report.snapshot.currency %} · {{ report.snapshot.currency }}{% endif %}</span><strong>{{ details.workspace.name }}</strong></div></section>
-      <nav class="cr-section-nav" aria-label="Nội dung báo cáo"><a href="#report-kpis">Tổng quan chỉ số</a><a href="#report-trends">Xu hướng</a><a href="#report-detail">Dữ liệu chi tiết</a><a href="#report-method">Cách đọc số liệu</a></nav>
-      {% if report.latest_sync and report.latest_sync.status in ['queued','running','failed'] %}<p class="cd-notice">{{ 'Đang đồng bộ lần mới. Bạn đang xem dữ liệu đã lưu trước đó.' if report.latest_sync.status in ['queued','running'] else 'Lần đồng bộ mới chưa thành công. Dữ liệu đang xem thuộc lần đã lưu trước đó.' }}</p>{% endif %}
-      {% if report.connection and report.connection.status == 'reauth_required' %}<p class="cd-notice">Kết nối cần được cấp quyền lại. Dữ liệu đã lưu vẫn được giữ nguyên.</p>{% endif %}
-      <section class="cd-kpis" id="report-kpis" data-count="{{ report.metrics|length }}" aria-label="Chỉ số đã đồng bộ">{% for metric in report.metrics %}<article data-observed="{{ 'true' if metric.value is not none else 'false' }}"><span class="cr-kpi-label"><i aria-hidden="true" class="material-symbols-outlined">{{ {'currency':'payments','count':'bar_chart','percent':'percent','number':'monitoring'}.get(metric.unit,'monitoring') }}</i>{{ metric.label }}</span><strong>{{ display(metric.value, metric.unit, metric.currency) }}</strong><small>{{ 'Chưa đủ dữ liệu' if metric.value is none else 'Tại lúc đồng bộ' if metric.aggregation == 'latest_observation' else 'Tích lũy của các bài trong kỳ' if metric.grain == 'snapshot' else 'Theo kỳ đang chọn' }}</small></article>{% endfor %}</section>
-      <div class="cr-analysis-grid" id="report-trends"><section class="cd-card cr-trend"><div class="cd-card-heading"><div><span class="cr-section-number">01 / XU HƯỚNG</span><h2>Hiệu suất theo thời gian</h2><p>Chọn chỉ số để xem diễn biến từng ngày.</p></div><label class="cd-metric-choice"><span class="cd-sr">Chỉ số biểu đồ</span><select id="data-chart-metric">{% for metric in report.metrics if metric.grain != 'snapshot' %}<option value="{{ metric.key }}">{{ metric.label }}</option>{% endfor %}</select></label></div><div id="data-chart" class="cd-chart cr-chart" role="region" tabindex="0" aria-label="Biểu đồ theo ngày, có thể cuộn ngang"></div><p class="cr-chart-readout" id="data-chart-readout" aria-live="polite">Di chuyển hoặc chọn một cột để xem số liệu.</p><p class="cd-muted">“—” là chưa có dữ liệu. Giá trị 0 được giữ nguyên.</p></section><aside class="cd-card cr-reading"><span class="cr-section-number">THÔNG TIN BÁO CÁO</span><h2>Dữ liệu đang xem</h2><dl><div><dt>Chỉ số có số liệu</dt><dd>{{ view.available }} <small>/ {{ view.total }}</small></dd></div><div><dt>Ngày có quan sát</dt><dd>{{ view.observed_days }} <small>/ {{ view.days }}</small></dd></div><div><dt>Cập nhật snapshot</dt><dd class="cr-time">{{ (report.snapshot.fetched_at or report.snapshot.created_at)[:10] }}<small>{{ (report.snapshot.fetched_at or report.snapshot.created_at)[11:16] }} UTC</small></dd></div></dl>{% if view.missing %}<p class="cr-quality-note"><span class="material-symbols-outlined" aria-hidden="true">info</span>Một số chỉ số chưa đủ dữ liệu. Xem ghi chú nguồn ở cuối báo cáo.</p>{% else %}<p class="cr-quality-note cr-quality-good"><span class="material-symbols-outlined" aria-hidden="true">verified</span>Các KPI đang hiển thị đều có quan sát từ nguồn.</p>{% endif %}<a href="#report-method">Cách đọc số liệu <span aria-hidden="true">↗</span></a></aside></div>
-      <div class="cr-secondary-charts" id="data-secondary-charts"></div>
-      <div class="cr-detail-heading" id="report-detail"><span class="cr-section-number">02 / DỮ LIỆU CHI TIẾT</span><h2>Khám phá kết quả</h2></div>
-      {% for table in report.tables %}
-      <section class="cd-card cd-data-table" data-table="{{ table.id }}"><div class="cd-card-heading"><div><h2>{{ table.title }}</h2><p>{{ table.total_rows }} hàng{% if table.truncated %} · Hiển thị tối đa {{ table.rows|length }} hàng đầu từ snapshot{% endif %}</p></div><label class="cd-search"><span class="material-symbols-outlined" aria-hidden="true">search</span><span class="cd-sr">Tìm trong {{ table.title }}</span><input type="search" maxlength="150" placeholder="Tìm trong bảng…" data-table-search></label></div><div class="cd-table-scroll" tabindex="0" role="region" aria-label="{{ table.title }}, có thể cuộn ngang"><table><thead><tr>{% for col in table.columns %}<th scope="col">{{ col.label }}</th>{% endfor %}</tr></thead><tbody data-table-rows>{% for row in table.rows[:20] %}<tr>{% for col in table.columns %}<td>{{ (row[col.key] if row[col.key] is not none else '—') if col.unit == 'text' else display(row[col.key], col.unit, report.snapshot.currency) }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div><p data-table-empty {% if table.rows %}hidden{% endif %} class="cd-table-empty">Chưa có hàng dữ liệu phù hợp.</p><div class="cd-pagination"><span data-table-count role="status"></span><div><button type="button" class="ov-button ov-secondary" data-table-prev>← Trước</button><button type="button" class="ov-button ov-secondary" data-table-next>Sau →</button></div></div></section>
-      {% endfor %}
-      {% if report.source == 'facebook_content' %}<a class="cd-detail-link" href="/workspace/channels/facebook-content{% if report.snapshot %}?snapshot={{ report.snapshot.id }}{% endif %}">Xem bài đăng và Page Insights đầy đủ →</a>{% endif %}
+      {% set preset_source = report.source %}{% include 'customer/live/components/report-preset-selection.html' %}
+      {{ period_picker(report) }}
+      {% if report_style %}{{ style_picker(report_style, report_styles, request, report_palette, report_palettes) }}{% endif %}
+      {{ review_controls(report_review) }}
       {% endif %}
-      <details class="ui-disclosure cd-method" id="report-method"><summary><span class="material-symbols-outlined" aria-hidden="true">info</span><h2>Cách đọc số liệu</h2><span class="material-symbols-outlined ui-chevron" aria-hidden="true">expand_more</span></summary><div class="ui-disclosure-body">
+      {% if report.state != 'ready' %}
+      {{ target_comparison(report,display,report_review) }}
+      <section class="cd-empty">
+        <span class="material-symbols-outlined" aria-hidden="true">{{ 'sync' if report.state == 'syncing' else report.connector.icon }}</span>
+        <h2>{{ {'no_client':'Chọn khách hàng để bắt đầu','planned':'Nền tảng sẽ được bổ sung','not_connected':'Kết nối tài khoản đầu tiên','select_asset':'Chọn tài khoản được cấp quyền','syncing':'Đang đồng bộ dữ liệu','sync_error':'Lần đồng bộ cần kiểm tra','empty':'Chưa có dữ liệu cho kỳ đã chọn','future_period':'Kỳ báo cáo chưa có ngày dữ liệu đã kết thúc'}.get(report.state,'Chưa có dữ liệu') }}</h2>
+        <p>{% if report.state == 'future_period' %}Bạn có thể đặt KPI trước. Dữ liệu sẽ có sau khi ngày báo cáo kết thúc và được đồng bộ.{% elif report.state == 'empty' and report.asset %}Chọn “Đồng bộ kỳ này” để lấy đúng khoảng ngày. Các kỳ đã lưu khác được giữ nguyên.{% elif report.state == 'planned' %}Nền tảng đã có trong kho connector. Kết nối và mapping sẽ mở khi adapter sẵn sàng.{% elif report.state == 'syncing' %}Trang sẽ cập nhật khi lần đồng bộ hoàn tất.{% elif view.sync_message %}{{ view.sync_message }}{% elif report.availability == 'not_configured' %}VIO cần hoàn tất cấu hình ứng dụng cho nền tảng này.{% else %}Cấp quyền và chọn tài khoản tại Kết nối nền tảng.{% endif %}</p>
+        <a class="ov-button ov-secondary" href="{{ '/workspace#client-card' if report.state == 'no_client' else '/workspace/integrations?platform=' ~ report.source }}">{{ 'Chọn khách hàng' if report.state == 'no_client' else 'Xem kết nối' }} →</a>
+      </section>
+      {{ note(report_review, 'summary') }}
+      {% else %}
+      {% if report_preset %}
+      {% if report.latest_sync and report.latest_sync.status in ['queued','running','failed'] %}<p class="cd-notice">{{ 'Đang đồng bộ lần mới. Bạn đang xem dữ liệu đã lưu trước đó.' if report.latest_sync.status in ['queued','running'] else view.sync_message }}</p>{% endif %}
+      {% include 'customer/live/components/focused-report.html' %}
+      {% else %}
+      {% import 'customer/live/reports/parts.html' as p %}
+      {% set cover_heading = 'h1' if report_example else 'h2' %}
+      {% if report_style and report_style.key != 'standard' %}
+      {{ cover(report.source, 'VIO Agency' if report_example else details.workspace.name, report.connector.name, view.layout.title,
+          [('Khách hàng', report.client.name), ('Nguồn dữ liệu', report.asset.name), ('Kỳ báo cáo', view.period),
+           ('Múi giờ', report.snapshot.timezone), ('Tiền tệ', report.snapshot.currency),
+           ('Cập nhật', (report.snapshot.fetched_at or report.snapshot.created_at)|vietnam_time)], cover_heading, 'report-summary') }}
+      {% else %}
+      <header class="pr-cover" id="report-summary">
+        <div class="pr-cover-masthead"><span>{{ 'VIO Agency' if report_example else details.workspace.name }}</span><span class="pr-private"><span class="material-symbols-outlined" aria-hidden="true">{{ 'description' if report_example else 'lock' }}</span>{{ 'Bản mẫu' if report_example else 'Riêng tư' }}</span></div>
+        <div class="pr-cover-content"><div class="pr-cover-copy"><span class="pr-overline">{{ view.layout.eyebrow }}</span><{{ cover_heading }}>{{ report.connector.name }}</{{ cover_heading }}><p class="pr-cover-statement">{{ view.layout.title }}</p><div class="pr-cover-client"><strong>{{ report.client.name }}</strong><span>{{ report.asset.name }}</span></div></div>
+        <div class="pr-cover-art" aria-hidden="true"><div class="pr-art-back"></div><div class="pr-art-mid"></div><div class="pr-art-front">{{ platform_mark(report.source,'pr-cover-logo') }}<svg viewBox="0 0 180 100"><circle cx="90" cy="50" r="38" class="pr-art-orbit"/><circle cx="90" cy="50" r="22" class="pr-art-orbit"/><path d="M20 72 57 40 88 62 120 23 159 40" class="pr-art-route"/><circle cx="120" cy="23" r="5" class="pr-art-dot"/></svg></div></div></div>
+        <div class="pr-cover-facts"><span><span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>{{ view.period }}</span><span>{{ report.snapshot.timezone }}{% if report.snapshot.currency %} · {{ report.snapshot.currency }}{% endif %}</span><span>Cập nhật {{ (report.snapshot.fetched_at or report.snapshot.created_at) | vietnam_time }}</span></div>
+      </header>
+      {% endif %}
+      <nav class="cr-section-nav" aria-label="Nội dung báo cáo"><a href="#report-kpis">Kết quả chính</a><a href="#report-trends">{{ view.layout.trend }}</a><a href="#report-detail">{{ view.layout.detail }}</a><a href="#report-method">Cách đọc số liệu</a></nav>
+      {% if report.latest_sync and report.latest_sync.status in ['queued','running','failed'] %}<p class="cd-notice">{{ 'Đang đồng bộ lần mới. Bạn đang xem dữ liệu đã lưu trước đó.' if report.latest_sync.status in ['queued','running'] else view.sync_message ~ ' Bạn đang xem dữ liệu đã lưu trước đó.' }}</p>{% endif %}
+      {% if report.connection and report.connection.status == 'reauth_required' %}<p class="cd-notice">Kết nối cần được cấp quyền lại. Dữ liệu đã lưu vẫn được giữ nguyên.</p>{% endif %}
+      {% include 'customer/live/reports/' ~ view.layout.template ~ '.html' %}
+      {% from 'customer/live/components/visuals.html' import donut %}
+      {% if view.layout.distribution %}<div class="vt-order-block" data-order-key="distribution" data-order-label="Phân bổ dữ liệu">
+      {{ donut(view.layout.distribution, report.snapshot.currency) }}
+      {{ note(report_review, 'distribution') }}
+      </div>{% endif %}
+      <div class="vt-order-block" data-order-key="details" data-order-label="Bảng chi tiết">
+      <div class="pr-detail-title" id="report-detail"><span class="pr-overline">DỮ LIỆU CHI TIẾT</span><h2>{{ view.layout.detail }}</h2></div>
+      {% for table in report.tables %}{{ detail_table(table, display, report.snapshot.currency, report_review, 'detail_' ~ loop.index0) }}{% endfor %}
+      {{ note(report_review, 'details_empty') }}
+      </div>
+      {% endif %}
+      <div class="cr-report-stamp" data-order-tail><span>{{ view.available }}/{{ view.total }} chỉ số có số liệu · {{ view.observed_days }}/{{ view.days }} ngày có quan sát</span><span>Bản lưu <code>#{{ report.snapshot.id[:8] }}</code></span></div>
+      {% endif %}
+      <details class="ui-disclosure cd-method" id="report-method" data-order-key="method" data-order-label="Cách đọc số liệu"><summary><span class="material-symbols-outlined" aria-hidden="true">info</span><h2>Cách đọc số liệu</h2><span class="material-symbols-outlined ui-chevron" aria-hidden="true">expand_more</span></summary><div class="ui-disclosure-body">
         <p>Báo cáo dùng dữ liệu của lần đồng bộ đang chọn. Kỳ báo cáo, múi giờ và tiền tệ được giữ theo nguồn; không cộng các tài khoản khác tiền tệ.</p>
+        {% if view.definitions %}<dl class="cr-definitions" aria-label="Định nghĩa KPI">{% for metric in view.definitions %}<div><dt>{{ metric.label }}{% if not metric.available %}<span>Chưa có số liệu</span>{% endif %}</dt><dd>{{ metric.description }}<small class="kpi-definition-meta">{{ metric.unit }} · {{ metric.trend.guidance }}</small></dd></div>{% endfor %}</dl>{% endif %}
+        <p>“—” là chưa có số liệu; 0 là nguồn đã ghi nhận giá trị bằng 0. Ký hiệu “&lt;0,01” hoặc “&lt;1” biểu thị giá trị dương nhỏ hơn độ chính xác đang hiển thị, không phải 0.</p>
+        {% if view.loaded_rows < view.table_rows %}<p data-order-extra="details">Bảng chi tiết đang hiển thị {{ view.loaded_rows }} / {{ view.table_rows }} hàng từ snapshot. Bản In/PDF gồm toàn bộ hàng đã tải, không chỉ trang bảng đang xem.</p>{% endif %}
         {% for note in report.notes %}<p>{{ note }}</p>{% endfor %}
-        <p class="cd-muted">Báo cáo riêng tư trong Workspace · Chưa phát hành hoặc chia sẻ công khai.</p>
+        <p class="cd-muted">{{ 'Bản mẫu trình bày số liệu minh họa của Vio.' if report_example else 'Báo cáo riêng tư trong Workspace · Chưa phát hành hoặc chia sẻ công khai.' }}</p>
       </div></details>
-      <footer class="cd-footer"><span>© VIO Agency · VioAgencyAnalytics</span><a href="/workspace/reports">Tất cả nguồn dữ liệu →</a></footer>
+      <footer class="cd-footer"><span>© VIO Agency · VioAgencyAnalytics</span><a href="{{ report_library_url if report_example else '/workspace/reports' }}">{{ 'Tất cả mẫu báo cáo' if report_example else 'Tất cả nguồn dữ liệu' }} →</a></footer>
     </main>
   </div>
 </div>
-<script id="library-data" type="application/json">{{ details|tojson }}</script>
+{% if not report_example %}<script id="library-data" type="application/json">{{ details|tojson }}</script>{% endif %}
 <script id="connector-report-data" type="application/json">{{ report|tojson }}</script>
 {% endblock %}

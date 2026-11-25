@@ -32,6 +32,7 @@
     $('#settings-member-count').textContent = `${data.member_count} thành viên hoạt động`;
     $('#settings-email-status').textContent = W.session?.user.email_verified ? 'Email đã xác minh' : 'Email chưa xác minh';
     $('#settings-saved-at').textContent = profile.updated_at ? 'Lưu gần nhất: ' + W.date(profile.updated_at, true) : 'Chưa có thay đổi cài đặt';
+    $('#settings-default-period-note').hidden = Boolean(profile.updated_at);
     baseline = JSON.stringify(values()); W.setDirty(false); preview();
   }
   function controls() {
@@ -47,6 +48,9 @@
   }
   function changed() { preview(); W.setDirty(JSON.stringify(values()) !== baseline); }
   form.addEventListener('input', changed); form.addEventListener('change', changed);
+  form.querySelectorAll('[name=default_period]').forEach((input)=>input.addEventListener('click',()=>{
+    if (W.ready && !W.busy && W.data.permissions.manage_settings && !W.data.profile.updated_at) W.setDirty(true);
+  }));
   $('#settings-accent-picker').addEventListener('input', () => { $('#settings-accent').value = $('#settings-accent-picker').value.toUpperCase(); changed(); });
   form.addEventListener('submit', async (event) => {
     event.preventDefault();

@@ -1,8 +1,15 @@
 # Local customer stack. Generate private env files with scripts/customer_docker.py.
 # Reuses the existing customer database volume; never use `down --volumes`.
 name: vioagencyanalytics-web
+x-vio-logging: &vio-logging
+  driver: local
+  options:
+    max-size: "10m"
+    max-file: "3"
+    compress: "true"
 services:
   customer-postgres:
+    logging: *vio-logging
     container_name: vio-customer-postgres-dev
     image: postgres:16
     env_file:
@@ -18,6 +25,7 @@ services:
       retries: 15
     restart: unless-stopped
   customer-admin:
+    logging: *vio-logging
     container_name: VioAgencyAnalytics-Customer-Admin
     image: vioagencyanalytics-customer-admin:local
     build:
@@ -53,6 +61,7 @@ services:
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
   web:
+    logging: *vio-logging
     container_name: VioAgencyAnalytics-Web
     image: vioagencyanalytics-web:local
     build: .

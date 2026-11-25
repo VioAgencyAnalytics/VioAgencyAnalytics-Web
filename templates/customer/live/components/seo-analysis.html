@@ -1,0 +1,15 @@
+{% macro seo_analysis(report, with_comparison=true) -%}
+{% if report.analysis %}
+{% set movement=report.analysis.movement %}
+{% if report.comparison.mode != 'none' and with_comparison %}
+<section aria-label="Biến động từ khóa"><div class="seo-card-head"><h3>Biến động từ khóa</h3><span class="seo-help">{{ movement.comparable }}/{{ movement.total }} từ đủ dữ liệu hai kỳ</span></div>
+<div class="seo-movement-grid">{% for key,label in [('up','Lên hạng'),('down','Xuống hạng'),('stable','Giữ hạng'),('entered_top10','Vào Top 10'),('left_top10','Rời Top 10'),('unavailable','Thiếu dữ liệu đối chiếu')] %}<article class="seo-movement-card" data-movement="{{ key }}"><strong>{{ movement[key] }}</strong><span>{{ label }}</span></article>{% endfor %}</div>
+<p class="seo-help">Chỉ so cùng từ khóa và điều kiện đo; dữ liệu thiếu được tách riêng.</p></section>
+{% if report.previous_distribution %}
+{% set values=(report.distribution|map(attribute='count')|list)+(report.previous_distribution|map(attribute='count')|list) %}{% set maximum=values|max or 1 %}
+<section aria-label="Phân bố thứ hạng hai kỳ"><div class="seo-card-head"><h3>Phân bố thứ hạng · hai kỳ</h3></div><div class="seo-rank-legend"><span>Kỳ đang xem</span><span>Kỳ đối chiếu</span></div><div class="seo-rank-bars">{% for row in report.distribution %}{% set before=report.previous_distribution[loop.index0].count %}<div class="seo-rank-bar-row"><div>{{ row.label }}<small class="seo-date">{{ row.count }} hiện tại / {{ before }} trước</small></div><svg viewBox="0 0 340 46" role="img" aria-label="{{ row.label }}: {{ row.count }} kỳ này, {{ before }} kỳ trước"><rect x="0" y="4" width="{{ (row.count/maximum*320)|round(2) }}" height="14" rx="4" class="current"/><rect x="0" y="26" width="{{ (before/maximum*320)|round(2) }}" height="14" rx="4" class="previous"/></svg></div>{% endfor %}</div></section>
+{% endif %}
+{% endif %}
+<section aria-label="Phân loại từ khóa"><h3>Từ khóa chính &amp; từ khóa phụ</h3><div class="seo-role-grid">{% for role in report.analysis.roles %}<article class="seo-role-card"><h3>{{ role.label }}</h3><strong>{{ role.top10 }}/{{ role.total }} từ Top 10</strong><small>{{ role.measured }}/{{ role.total }} có phép đo · {{ role.committed }} đánh dấu cam kết</small></article>{% endfor %}</div></section>
+{% endif %}
+{%- endmacro %}

@@ -1,0 +1,43 @@
+.seo-main { grid-template-columns: minmax(0, 1fr); }
+.seo-comparison-data {
+  background: linear-gradient(135deg, #f3fbf9, #f8faff 75%);
+  border-color: #c9e4df;
+}
+.seo-comparison-preview { margin: -10px 0 0; }
+.seo-comparison-preview[data-pending="true"] { color: #9b650b; }
+.seo-comparison-sources {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+.seo-compare-source { min-width: 0; padding: 18px; border: 1px solid #dce7ec; border-radius: 14px; background: #fff; }
+.seo-compare-source h3 { display: flex; align-items: center; gap: 9px; margin: 0 0 14px; }
+.seo-compare-source h3 img { width: 24px; height: 24px; object-fit: contain; }
+.seo-compare-period { display: grid; gap: 6px; padding: 12px 0; border-top: 1px solid #edf1f5; }
+.seo-compare-period > div { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.seo-compare-period strong { font-size: .85rem; }
+.seo-compare-period small { display: block; font-size: .78rem; line-height: 1.5; color: #647d91; overflow-wrap: anywhere; }
+.seo-compare-status { font-size: .73rem; font-weight: 650; border-radius: 6px; padding: 4px 7px; background: #f0f4f8; color: #687b8e; }
+.seo-compare-status[data-state="ready"] { background: #e5f7ef; color: #087f61; }
+.seo-compare-status[data-state="syncing"] { background: #eaf1ff; color: #3066c5; }
+.seo-compare-status[data-state="failed"] { background: #fff0ed; color: #b94b36; }
+.seo-compare-status[data-state="partial"] { background: #fff6e7; color: #996612; }
+.seo-compare-source .ov-button { min-width: 0; max-width: 100%; min-height: 38px; padding: 8px 11px; font-size: .79rem; white-space: normal; overflow-wrap: anywhere; }
+.seo-compare-metrics { width: 100%; table-layout: fixed; margin-top: 12px; border-collapse: collapse; font-size: .8rem; overflow-wrap: anywhere; }
+.seo-compare-metrics th { color: #70859a; font-size: .7rem; font-weight: 600; }
+.seo-compare-metrics th, .seo-compare-metrics td { padding: 8px 3px; text-align: right; vertical-align: top; }
+.seo-compare-metrics th:first-child, .seo-compare-metrics td:first-child { text-align: left; }
+.seo-compare-metrics th:first-child { width: 46%; }
+.seo-compare-metrics td { border-top: 1px solid #edf1f5; font-variant-numeric: tabular-nums; }
+.seo-compare-metrics td small { display: block; font-size: .72rem; line-height: 1.4; }
+.seo-compare-metrics [data-effect="improved"] { color: #087f61; }
+.seo-compare-metrics [data-effect="declined"] { color: #be4d45; }
+.seo-comparison-guide { margin-top: 15px; color: #62798d; font-size: .83rem; }
+.seo-comparison-guide summary { display: inline-flex; cursor: pointer; padding: 9px 12px; border: 1px solid #d6e3e9; border-radius: 8px; background: #fff; color: #31586c; }
+.seo-comparison-guide li { margin: 8px 0; line-height: 1.6; }
+.seo-comparison-feedback { margin: 0 0 14px; padding: 11px 14px; background: #edf5ff; border-radius: 9px; color: #315d8f; font-size: .85rem; }
+.seo-comparison-feedback[data-error="true"] { background: #fff0ed; color: #b64b36; }
+.seo-comparison-data[data-pending="true"] .seo-comparison-sources { opacity: .65; }
+@media (max-width: 1180px) { .seo-comparison-sources { grid-template-columns: 1fr; } }
+@media print { .seo-comparison-data .ov-button, .seo-comparison-guide { display: none; } }

@@ -10,70 +10,131 @@
   <link rel="stylesheet" href="/static/customer/fonts.css">
   <link rel="stylesheet" href="/static/css/dist/customer.css">
   {% if customer_live %}
+  <script id="platform-brands-data" type="application/json">{{ customer_platform_brands|tojson }}</script>
+  <script src="/static/js/customer/platform-brands.js?v=20261111-1" defer></script>
   <link rel="stylesheet" href="/static/css/customer/identity.css?v=20261109-branding-1">
   <link rel="stylesheet" href="/static/css/customer/branding.css?v=20261109-1">
   <script src="/static/js/customer/branding.js?v=20261109-1" defer></script>
-  <script src="/static/js/customer/data-format.js" defer></script>
+  <script src="/static/js/customer/data-format.js?v=20261112-kpi-2" defer></script>
+  <script src="/static/js/customer/report-charts.js?v=20261124-position" defer></script>
+  {% if customer_page in ['overview','dashboard','integrations'] %}<link rel="stylesheet" href="/static/css/customer/saved-analytics.css?v=20261110-audit-1">{% endif %}
+  <link rel="stylesheet" href="/static/css/customer/comparisons.css?v=20261111-1">
+  {% if customer_page in ['overview','dashboard'] %}<script src="/static/js/customer/saved-analytics.js?v=20261112-kpi-2" defer></script>{% endif %}
   {% if customer_page in ['overview', 'integrations', 'dashboard', 'channels', 'reports', 'members', 'settings'] %}
   <link rel="stylesheet" href="/static/css/customer/overview.css">
   {% if customer_page == 'overview' %}
   <link rel="stylesheet" href="/static/css/customer/overview-clients.css">
-  <script src="/static/js/customer/overview.js" defer></script>
+  <script src="/static/js/customer/overview.js?v=20261110-audit-1" defer></script>
   <script src="/static/js/customer/overview-clients.js" defer></script>
   {% elif customer_page == 'integrations' %}
   <link rel="stylesheet" href="/static/css/customer/integrations.css?v=20261109-business-1">
   <link rel="stylesheet" href="/static/css/customer/facebook-connect.css">
   <link rel="stylesheet" href="/static/css/customer/connector-connect.css?v=20261109-connectors-1">
-  <script src="/static/js/customer/facebook-connect.js?v=20261109-facebook-2" defer></script>
-  <script src="/static/js/customer/connector-connect.js?v=20261109-connectors-1" defer></script>
-  <script src="/static/js/customer/integrations.js?v=20261109-connectors-1" defer></script>
+  <script src="/static/js/customer/facebook-connect.js?v=20261111-brand-1" defer></script>
+  <script src="/static/js/customer/connector-connect.js?v=20261111-brand-1" defer></script>
+  <script src="/static/js/customer/integrations.js?v=20261125-notices-1" defer></script>
   {% elif customer_page == 'dashboard' %}
   <link rel="stylesheet" href="/static/css/customer/marketing.css">
-  <script src="/static/js/customer/marketing.js" defer></script>
+  <script src="/static/js/customer/marketing.js?v=20261112-kpi-2" defer></script>
   {% elif customer_page in ['channels', 'reports'] %}
+  {% if report_library %}
+  <script src="/static/js/customer/seo-common.js?v=20261116-flow-1" defer></script>
+  <script src="/static/js/customer/report-template-library.js?v=20261125-design-1" defer></script>
+  {% elif customer_seo_live or customer_compiled_live %}
+  <link rel="stylesheet" href="/static/css/customer/library.css">
+  <link rel="stylesheet" href="/static/css/customer/seo.css?v=20261116-flow-1">
+  <link rel="stylesheet" href="/static/css/customer/seo-delivery.css?v=20261117-kpi-1">
+  <link rel="stylesheet" href="/static/css/customer/seo-flow.css?v=20261119-prep-1">
+  {% if customer_compiled_live %}<link rel="stylesheet" href="/static/css/customer/seo-compact.css?v=20261119-1">{% endif %}
+  {% if not report_example %}
+  <script src="/static/js/customer/seo-common.js?v=20261116-flow-1" defer></script>
+  <script src="/static/js/customer/{{ 'seo' if customer_seo_live else 'compiled-reports' }}.js?v=20261125-design-2" defer></script>
+  {% endif %}
+  {% if customer_seo_live %}
+  <link rel="stylesheet" href="/static/css/customer/seo-comparison.css?v=20261116-2">
+  <script src="/static/js/customer/seo-delivery.js?v=20261119-prep-1" defer></script>
+  <script src="/static/js/customer/seo-comparison.js?v=20261119-prep-1" defer></script>
+  <link rel="stylesheet" href="/static/css/customer/seo-automation.css?v=20261116-1">
+  <script src="/static/js/customer/seo-automation.js?v=20261116-1" defer></script>
+  <script src="/static/js/customer/seo-flow.js?v=20261119-prep-1" defer></script>
+  {% endif %}
+  {% else %}
+  {% if customer_data_live or customer_meta_live %}
+  <link rel="stylesheet" href="/static/css/customer/report-controls.css?v=20261110-period-goals-1">
+  {% if not report_example %}<script src="/static/js/customer/report-controls.js?v=20261125-design-2" defer></script>{% endif %}
+  {% endif %}
   {% if customer_data_live %}
   <link rel="stylesheet" href="/static/css/customer/data.css?v=20261109-ux-1">
-  <link rel="stylesheet" href="/static/css/customer/connector-report.css?v=20261109-connectors-1">
-  <script src="/static/js/customer/data-report.js?v=20261109-connectors-1" defer></script>
+  <link rel="stylesheet" href="/static/css/customer/connector-report.css?v=20261110-report-3">
+  <script src="/static/js/customer/data-report.js?v=20261125-design-2" defer></script>
   {% elif customer_meta_live %}
   <link rel="stylesheet" href="/static/css/customer/facebook-content.css?v=20261109-ux-1">
-  <script src="/static/js/customer/facebook-content.js?v=20261109-ux-1" defer></script>
+  <script src="/static/js/customer/facebook-content.js?v=20261125-design-2" defer></script>
   {% else %}
   <link rel="stylesheet" href="/static/css/customer/library.css">
-  <script src="/static/js/customer/library.js" defer></script>
-  <script src="/static/js/customer/{{ customer_page }}.js" defer></script>
+  <script src="/static/js/customer/library.js?v=20261125-pdf-1" defer></script>
+  <script src="/static/js/customer/{{ customer_page }}.js?v=20261125-library-1" defer></script>
+  {% endif %}
   {% endif %}
   {% else %}
   <link rel="stylesheet" href="/static/css/customer/workspace-admin.css">
   <script src="/static/js/customer/workspace-admin.js" defer></script>
-  <script src="/static/js/customer/{{ customer_page }}.js?v=20261109-branding-1" defer></script>
+  <script src="/static/js/customer/{{ customer_page }}.js?v=20261112-seo-1" defer></script>
   {% endif %}
   <link rel="stylesheet" href="/static/css/customer/shell.css">
-  <script src="/static/js/customer/shell.js" defer></script>
+  {% if not report_example %}<script src="/static/js/customer/shell.js?v=20261125-library-1" defer></script>{% endif %}
   {% if customer_page in ['overview', 'dashboard'] %}
   <link rel="stylesheet" href="/static/css/customer/data.css?v=20261109-ux-1">
-  <script src="/static/js/customer/data-sources.js?v=20261109-ux-1" defer></script>
+  <script src="/static/js/customer/data-sources.js?v=20261111-brand-1" defer></script>
   {% endif %}
-  {% if customer_page == 'reports' and not customer_data_live and not customer_meta_live %}
+  {% if customer_page == 'reports' and not (customer_data_live or customer_meta_live or customer_compiled_live or report_library) %}
   <link rel="stylesheet" href="/static/css/customer/data.css?v=20261109-ux-1">
-  <script src="/static/js/customer/data-sources.js?v=20261109-ux-1" defer></script>
+  <script src="/static/js/customer/data-sources.js?v=20261111-brand-1" defer></script>
   {% endif %}
   {% if customer_page == 'overview' %}
   <link rel="stylesheet" href="/static/css/customer/overview-dashboard.css">
-  <script src="/static/js/customer/overview-dashboard.js" defer></script>
+  <script src="/static/js/customer/overview-dashboard.js?v=20261112-kpi-2" defer></script>
   {% endif %}
   <link rel="stylesheet" href="/static/css/customer/workspace-theme.css">
   {% else %}
-  <script src="/static/js/customer/identity.js?v=20261109-branding-1" defer></script>
+  <script src="/static/js/customer/identity.js?v=20261113-entry-1" defer></script>
   {% endif %}
   {% else %}
   <link rel="stylesheet" href="/static/css/customer/workspace.css">
   <script src="/static/js/customer/workspace.js" defer></script>{% endif %}
-  {% if customer_live %}<link rel="stylesheet" href="/static/css/customer/typography.css"><link rel="stylesheet" href="/static/css/customer/clarity.css">{% endif %}
+  {% if customer_live %}<link rel="stylesheet" href="/static/css/customer/clarity.css"><link rel="stylesheet" href="/static/css/customer/actions.css?v=20261110-audit-1"><script src="/static/js/customer/interactions.js?v=20261110-audit-1" defer></script>
+  {% if customer_page == 'reports' and not customer_compiled_live %}<link rel="stylesheet" href="/static/css/customer/seo.css?v=20261113-delivery-1">{% endif %}
+  <link rel="stylesheet" href="/static/css/customer/premium.css?v=20261111-1">
+  <link rel="stylesheet" href="/static/css/customer/platform-brands.css?v=20261111-1">
+  <script src="/static/js/customer/premium.js?v=20261111-1" defer></script>{% endif %}
+  {% if customer_data_live or customer_meta_live %}<link rel="stylesheet" href="/static/css/customer/report-publication.css?v=20261125-library-1">{% endif %}
+  {% if customer_live %}<link rel="stylesheet" href="/static/css/customer/typography.css?v=20261112-compact-1">{% endif %}
+  {% if customer_live %}<link rel="stylesheet" href="/static/css/customer/visualizations.css?v=20261124-position">
+  <link rel="stylesheet" href="/static/css/customer/kpi-quality.css?v=20261112-kpi-2">{% endif %}
+  {% if customer_compiled_live or customer_data_live or customer_meta_live or report_library %}<link rel="stylesheet" href="/static/css/customer/report-palettes.css?v=20261125">{% endif %}
+  {% if report_review %}
+  {% if customer_compiled_live and report_review.editor %}<link rel="stylesheet" href="/static/css/customer/report-controls.css?v=20261110-period-goals-1">{% endif %}
+  <link rel="stylesheet" href="/static/css/customer/report-notes.css?v=20261125-pdf-1">
+  {% if report_review.reader %}<script src="/static/js/customer/report-notes.js?v=20261125-pdf-1" defer></script>{% endif %}
+  {% if report_review.reader and report_review.reader.pdf %}<script src="/static/js/customer/report-export.js?v=1" defer></script>{% endif %}{% endif %}
+  {% if customer_live and details and not report_example and customer_page in ['overview','integrations','dashboard','channels','reports','members','settings'] %}
+  <link rel="stylesheet" href="/static/css/customer/notifications.css?v=1">
+  <script src="/static/js/customer/notifications.js?v=20261125-pdf-1" defer></script>
+  {% endif %}
+  {% if customer_live and customer_page in ['login','onboarding'] %}<link rel="stylesheet" href="/static/css/customer/identity-refresh.css?v=20261113-entry-1">{% endif %}
+  {% if customer_live %}
+  <link rel="stylesheet" href="/static/css/customer/workspace-motion.css?v=1">
+  <script src="/static/js/customer/workspace-motion.js?v=1" defer></script>
+  {% endif %}
+  {% if customer_page == 'reports' %}<link rel="stylesheet" href="/static/css/customer/report-template-library.css?v=2">{% endif %}
+  {% if report_preset %}<link rel="stylesheet" href="/static/css/customer/report-focus.css?v=1">{% endif %}
+  {% if report_style or report_library %}<link rel="stylesheet" href="/static/css/customer/report-styles.css?v=4">{% endif %}
+  {% if report_style %}<script src="/static/js/customer/report-order.js?v=2" defer></script>{% endif %}
 </head>
-<body data-customer-page="{{ customer_page }}" class="bg-surface font-sans text-slate-800 antialiased">
-  <a class="customer-skip" href="#customer-content">Đến nội dung chính</a>
+<body data-customer-page="{{ customer_page }}"{% if request is defined and request.state.pdf_render %} data-pdf-render="true"{% endif %}{% if report_example %} data-report-example="{{ report_example.key }}"{% endif %}{% if customer_meta_live %} data-platform-page="facebook_content"{% elif customer_data_live %} data-platform-page="{{ report.source }}"{% endif %} class="bg-surface font-sans text-slate-800 antialiased">
+  <a class="customer-skip" href="{{ '#customer-main' if customer_live and customer_page in ['overview','integrations','dashboard','channels','reports','members','settings'] else '#customer-content' }}">Đến nội dung chính</a>
   {% block layout %}{% endblock %}
+  {% if report_style %}{% include 'customer/live/components/report-order-dialog.html' %}{% endif %}
   <dialog id="customer-dialog" aria-labelledby="customer-dialog-title">
     <form method="dialog"><button class="customer-dialog-close" aria-label="Đóng">×</button></form>
     <span class="material-symbols-outlined customer-dialog-icon">info</span>
@@ -82,5 +143,12 @@
     <form method="dialog"><button class="customer-primary">Đã hiểu</button></form>
   </dialog>
   <div id="customer-toast" role="status" aria-live="polite" hidden></div>
+  {% if customer_live and details and not report_example and customer_page in ['overview','integrations','dashboard','channels','reports','members','settings'] %}
+  <div class="wn-toast" id="workspace-notice-toast" popover="manual" hidden>
+    <span class="material-symbols-outlined wn-toast-icon" aria-hidden="true">check_circle</span>
+    <div role="status" aria-live="polite" aria-atomic="true"><strong></strong><p></p></div>
+    <button type="button" class="wn-toast-close" aria-label="Đóng thông báo nổi"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
+  </div>
+  {% endif %}
 </body>
 </html>

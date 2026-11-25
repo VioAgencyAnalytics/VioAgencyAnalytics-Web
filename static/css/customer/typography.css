@@ -4,6 +4,7 @@
   --customer-text-caption: .8125rem;
   --customer-text-sm: .875rem;
   --customer-text-base: 1rem;
+  --customer-text-input: 1rem;
   --customer-text-lg: 1.125rem;
 }
 
@@ -18,7 +19,8 @@ body[data-customer-page] {
 
 /* Form values stay comfortably readable, including on mobile devices. */
 body[data-customer-page] :is(.ov-main, .identity-card, .wh-search-dialog, .wa-dialog, .ov-client-dialog) :is(input:not([type=checkbox]):not([type=radio]):not([type=color]), select, textarea) {
-  font-size: var(--customer-text-base);
+  font-size: var(--customer-text-input);
+  font-weight: 400;
   line-height: 1.5;
   min-height: 44px;
 }
@@ -175,7 +177,7 @@ body[data-customer-page] :is(.ov-main, .identity-card, .wh-search-dialog, .wa-di
 }
 
 .ws-theme .wa-color-field input[name=accent_color] {
-  font-size: var(--customer-text-base) !important;
+  font-size: var(--customer-text-input) !important;
 }
 
 .ws-theme .wa-heading-actions {
@@ -234,5 +236,119 @@ body[data-customer-page] :is(.ov-main, .identity-card, .wh-search-dialog, .wa-di
 
   .ws-theme .od-onboarding > div:nth-child(2) {
     flex-basis: calc(100% - 55px);
+  }
+}
+
+/* Screen typography shares one hierarchy across the Customer workspace. */
+@media screen {
+  .ws-theme {
+    --customer-text-base: .9375rem;
+    --customer-text-input: .875rem;
+    --customer-text-lg: 1.0625rem;
+    font-size: var(--customer-text-base);
+    line-height: 1.55;
+  }
+
+  .ws-theme :is(.ov-heading, .mk-heading, .lb-heading, .ig-hero, .wa-heading,
+    .cd-heading, .fc-hero, .seo-hero) h1 {
+    font-size: clamp(1.5rem, 2vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -.035em;
+  }
+
+  .ws-theme :is(.ov-heading, .mk-heading, .lb-heading, .ig-hero, .wa-heading,
+    .cd-heading, .fc-hero, .seo-hero) p {
+    font-size: var(--customer-text-sm);
+    line-height: 1.6;
+  }
+
+  .ws-theme :is(.seo-card h2, .seo-card h3, .cd-card-heading h2,
+    .fc-section-heading h2, .wa-card h2, .ig-section-heading h2) {
+    font-weight: 650;
+    line-height: 1.45;
+  }
+
+  .ws-theme .seo-card h2 {
+    font-size: 1.0625rem;
+  }
+
+  .ws-theme .seo-field {
+    font-size: var(--customer-text-caption);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .ws-theme .sr-choice small {
+    font-size: var(--customer-text-xs);
+    line-height: 1.5;
+  }
+
+  .ws-theme .od-metric-tabs {
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+
+  .ws-theme :is(.ov-button, .od-button, .mk-button, .wa-button, .lb-button) {
+    font-size: var(--customer-text-sm);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .ws-theme .seo-hero {
+    padding: 24px;
+    gap: 20px;
+  }
+
+  .ws-theme .seo-identity {
+    gap: 16px;
+  }
+
+  .ws-theme .seo-mark {
+    width: 54px;
+    height: 54px;
+    border-radius: 15px;
+  }
+
+  .ws-theme .seo-mark .material-symbols-outlined {
+    font-size: 28px;
+  }
+
+  .ws-theme .seo-eyebrow {
+    font-size: var(--customer-text-xs);
+    font-weight: 600;
+    letter-spacing: .06em;
+  }
+}
+
+@media screen and (min-width: 701px) {
+  .ws-theme .workspace-topbar {
+    min-height: 64px;
+    padding-block: 10px;
+  }
+
+  .ws-theme .ov-brand {
+    min-height: 64px;
+  }
+
+  .ws-theme .ov-nav > a,
+  .ws-theme .od-channel-nav > summary {
+    min-height: 44px;
+    padding-block: 9px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .ws-theme {
+    --customer-text-input: 1rem;
+  }
+
+  .ws-theme .seo-hero {
+    padding: 20px;
+  }
+
+  .ws-theme .seo-context .seo-field {
+    flex-basis: 100%;
+    max-width: none;
   }
 }

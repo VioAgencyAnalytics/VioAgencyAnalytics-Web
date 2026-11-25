@@ -3,7 +3,7 @@
 <div class="ov-shell ws-theme wa-page" id="customer-content">
   {% include 'customer/live/components/sidebar.html' %}
   <div class="ov-body">{% include 'customer/live/components/topbar.html' %}
-    <main class="ov-main wa-main wa-settings-main">
+    <main class="ov-main wa-main wa-settings-main" id="customer-main" tabindex="-1">
       <section class="wa-heading">
         <div><h1>Cài đặt</h1></div>
         <div class="wa-heading-actions">
@@ -44,6 +44,7 @@
           <summary><span class="wa-section-icon wa-orange material-symbols-outlined" aria-hidden="true">bar_chart</span><h2 id="reporting-title">Tùy chọn hiển thị</h2><span class="material-symbols-outlined ui-chevron" aria-hidden="true">expand_more</span></summary>
           <div class="ui-disclosure-body">
             <fieldset class="wa-period-options"><legend>Khoảng thời gian mặc định</legend>{% for key, label in [('last7','7 ngày'),('last30','30 ngày'),('last90','90 ngày'),('this_month','Tháng này'),('previous_month','Tháng trước')] %}<label><input type="radio" name="default_period" value="{{ key }}"><span><strong>{{ label }}</strong></span></label>{% endfor %}</fieldset>
+            <p id="settings-default-period-note" class="ui-helper" hidden>Hiện đang ưu tiên báo cáo mới nhất. Chọn khoảng thời gian rồi lưu để áp dụng mặc định.</p>
             <div class="wa-form-grid wa-preference-grid">
               <label class="wa-toggle-row"><span><strong>So sánh kỳ trước</strong><small>Cùng độ dài với kỳ đang xem.</small></span><input name="compare_previous" id="settings-compare" type="checkbox" role="switch"></label>
               <label>Ngày bắt đầu tuần<select name="week_start"><option value="monday">Thứ Hai</option><option value="sunday">Chủ Nhật</option></select><small>Áp dụng khi báo cáo hỗ trợ chia tuần.</small></label>

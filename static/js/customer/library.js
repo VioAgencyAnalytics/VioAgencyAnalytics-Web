@@ -48,7 +48,7 @@
     renderer();
   }
   function updatePeriod() {
-    $('#library-period-label').textContent = displayDate(period.start) + ' – ' + displayDate(period.end);
+    $('#library-period-label').textContent = $('#library-period').value === 'latest' ? 'Kỳ đã lưu của từng nguồn' : displayDate(period.start) + ' – ' + displayDate(period.end);
     $('#library-start').value = period.start; $('#library-end').value = period.end;
     $('#library-start').max = today; $('#library-end').max = today;
   }
@@ -104,7 +104,7 @@
     busy = true; controls(); notify('');
     try { await action(); }
     catch (error) { ready = false; snapshot = null; renderer(); notify(error.message || 'Chưa thể hoàn tất yêu cầu.', 'error'); }
-    finally { busy = false; controls(); renderer(); }
+    finally { busy = false; controls(); renderer(); if (ready) document.dispatchEvent(new CustomEvent('customer:library-ready', {detail:context()})); }
   }
   function info(title, text) { $('#library-info-title').textContent = title; $('#library-info-description').textContent = text; $('#library-info').showModal(); }
   function preview(item, options = {}) {
@@ -123,7 +123,7 @@
     $('#library-preview .lb-preview-chart p').textContent = options.blank ? 'Chọn các phần nội dung để hoàn thiện bố cục khi trình chỉnh sửa sẵn sàng.' : 'Không suy ra số liệu từ các nguồn chưa sẵn sàng.';
     const ids = options.sources || item.source_ids;
     $('#library-preview-sources').replaceChildren(...initial.sources.filter((s) => ids.includes(s.id)).map((s) => node('span', s.name)));
-    $('#library-preview-note').textContent = options.builder ? 'Bản thử bố cục chưa được lưu. Đóng trang sẽ không tạo báo cáo, lịch gửi hoặc liên kết chia sẻ.' : 'Đây là khung xem trước. Biểu đồ, bảng chi tiết và chức năng xuất file sẽ được mở khi dữ liệu và báo cáo đã sẵn sàng.';
+    $('#library-preview-note').textContent = 'Bản thử bố cục chưa được lưu và không có số liệu thực. Để xem biểu đồ, KPI và in báo cáo, mở “Báo cáo từ dữ liệu đã đồng bộ”.';
     $('#library-preview-edit').hidden = !options.builder;
     $('#library-preview-connect').href = item.id === 'seo' ? '/workspace/integrations?category=seo' : item.id === 'overview' ? '/workspace/integrations' : '/workspace/integrations?platform=' + encodeURIComponent(item.id);
     $('#library-preview').showModal();
@@ -153,17 +153,17 @@
   });
   $('#library-custom-period').addEventListener('submit', (event) => {
     event.preventDefault(); const start = $('#library-start').value, end = $('#library-end').value;
-    if (!validDate(start) || !validDate(end) || start > end || end > today || (date(end) - date(start)) / dayMs > 365) { notify('Chọn khoảng ngày hợp lệ, tối đa 366 ngày và không vượt quá hôm nay.', 'error'); return; }
+    if (!validDate(start) || !validDate(end) || start > end || end > today || (date(end) - date(start)) / dayMs > 89) { notify('Chọn khoảng ngày hợp lệ, tối đa 90 ngày và không vượt quá hôm nay.', 'error'); return; }
     period = {start, end}; updatePeriod(); invalidate(); url({period: 'custom', start, end}); notify('');
   });
   $('#library-guide').addEventListener('click', () => info(page === 'channels' ? 'Khám phá Phân tích kênh' : 'Làm quen với Trung tâm Báo cáo', page === 'channels'
-    ? '1. Chọn khách hàng và khoảng ngày.\n2. Tìm kênh hoặc lọc theo nhóm và trạng thái.\n3. Mở “Xem phân tích” để xem các chỉ số và cấu trúc chi tiết.\n\nDấu “—” nghĩa là chưa có dữ liệu; không phải giá trị bằng 0. Số liệu giữa các nền tảng có thể có cách ghi nhận khác nhau.'
-    : '1. Chọn khách hàng và kỳ báo cáo.\n2. Khám phá bố cục tổng hợp hoặc theo từng nền tảng.\n3. Thử thiết kế để xem trước tên, bố cục và nguồn dữ liệu.\n\nBản thử bố cục chưa được lưu. Danh sách báo cáo, lịch sử xuất file và chia sẻ sẽ hoạt động khi báo cáo sẵn sàng.'));
+    ? '1. Xem kỳ đã lưu gần nhất hoặc chọn khoảng ngày.\n2. Bấm “Xem phân tích” ở kênh có dữ liệu. Kênh chưa kết nối có nút “Kết nối”.\n3. Trong báo cáo, chọn kỳ, đặt KPI hoặc chọn “Xuất PDF”.\n\nDấu “—” là nguồn chưa cung cấp số liệu. Đổi ngày để đọc dữ liệu đã lưu của kỳ đó.'
+    : '1. Mở “Xem báo cáo” trong mục dữ liệu đã đồng bộ.\n2. Chọn kỳ, so sánh KPI và chốt nhận xét.\n3. Bấm “Xuất PDF” để tạo tệp. Chuông cập nhật khi Vio xác nhận đã lưu thành công.\n\nMuốn thêm dữ liệu, mở Quản lý kết nối.'));
   window.addEventListener('pageshow', (event) => { if (event.persisted) location.reload(); });
-  const preferred = params.get('period') || details.preferences?.default_period || 'last30';
+  const preferred = params.get('period') || (page === 'channels' ? 'latest' : details.preferences?.default_period) || 'last30';
   $('#library-period').value = [...$('#library-period').options].some((o) => o.value === preferred) ? preferred : 'last30';
   const start = params.get('start'), end = params.get('end');
-  if ($('#library-period').value === 'custom' && validDate(start) && validDate(end) && start <= end && end <= today && (date(end) - date(start)) / dayMs <= 365) period = {start, end};
+  if ($('#library-period').value === 'custom' && validDate(start) && validDate(end) && start <= end && end <= today && (date(end) - date(start)) / dayMs <= 89) period = {start, end};
   else { if ($('#library-period').value === 'custom') $('#library-period').value = 'last30'; period = range($('#library-period').value); }
   $('#library-custom-period').hidden = $('#library-period').value !== 'custom'; updatePeriod();
   window.VioLibrary = Object.freeze({$, node, fold, format, stamp, displayDate, labels, range, url, info, preview, context, accept, owned, channel,

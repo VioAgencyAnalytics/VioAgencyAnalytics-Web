@@ -3,7 +3,7 @@
 Only formatting and row selection happen here. No totals/rates/claims are derived.
 """
 from dataclasses import asdict
-from datetime import datetime
+from app.display_time import vietnam_time
 import re
 from urllib.parse import urlencode
 
@@ -97,12 +97,7 @@ def content_presentation(bundle, section, view):
     view['report_display_name'] = name.removeprefix('KDH – ').removeprefix('KDH — ')
     view['snapshot_time'] = section.fetched_at or 'Chưa có thời điểm chốt'
     if section.fetched_at:
-        try:
-            stamp = datetime.fromisoformat(section.fetched_at.replace('Z', '+00:00'))
-            if stamp.utcoffset() is not None and stamp.utcoffset().total_seconds() == 0:
-                view['snapshot_time'] = stamp.strftime('%d/%m/%Y %H:%M:%S UTC')
-        except ValueError:
-            pass
+        view['snapshot_time'] = vietnam_time(section.fetched_at)
     view['content_charts'] = [dict(c, title='Bài đăng theo ngày', unit='bài', integer_axis=True, kind='bar',
                                     timezone=section.timezone) if c['title'] == 'posts_published theo ngày' else c
                               for c in view['charts']]

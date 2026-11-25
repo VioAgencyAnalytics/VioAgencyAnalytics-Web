@@ -3,11 +3,20 @@
   'use strict';
   const $ = (selector) => document.querySelector(selector);
   const initial = $('#facebook-content-data'), library = $('#library-data');
-  if (!initial || !library) return;
-  const details = JSON.parse(library.textContent), data = JSON.parse(initial.textContent);
-  const workspaceId = details.workspace.id, clientId = details.selected_client?.id || null;
+  const example = document.body.hasAttribute('data-report-example');
+  if (!initial || (!library && !example)) return;
+  const details = example ? null : JSON.parse(library.textContent), data = JSON.parse(initial.textContent);
+  const workspaceId = details?.workspace.id, clientId = details?.selected_client?.id || null;
   const report = Boolean(document.querySelector('[data-fc-report]'));
   const path = report ? '/workspace/reports/facebook-content' : '/workspace/channels/facebook-content';
+  const reportFilters = () => {
+    const current = new URLSearchParams(location.search), params = new URLSearchParams();
+    for (const key of ['style', 'palette', 'order', 'hidden', 'template', 'comparison', 'comparison_start', 'comparison_end']) {
+      if (current.has(key)) params.set(key, current.get(key));
+    }
+    return params;
+  };
+  const reportPath = () => { const params = reportFilters(); return params.size ? path + '?' + params : path; };
   let session, busy = false, page = 1, timer, selectedFormat = 'all';
   const pageSize = 10, number = (value) => typeof value === 'number' && Number.isFinite(value) && value >= 0;
   const format = (value) => number(value) ? new Intl.NumberFormat('vi-VN').format(value) : 'Chưa có';
@@ -57,6 +66,7 @@
   }
   function renderPosts(printing = false) {
     if (!$('#fc-post-rows')) return;
+    if (!$('#fc-post-search')) return;
     const q = printing ? '' : fold($('#fc-post-search').value.trim()), filter = printing ? 'all' : selectedFormat;
     const sort = printing ? 'newest' : $('#fc-post-sort')?.value || 'newest';
     const metric = sort === 'views' ? 'post_media_view_lifetime' : sort === 'reactions' ? 'reactions_lifetime' : null;
@@ -114,22 +124,29 @@
     point.addEventListener('pointerenter',read); point.addEventListener('focus',read);
   });
   async function checkStatus() {
-    const next = await api('workspaces/' + workspaceId + '/channels/facebook-content');
+    const params = new URLSearchParams(location.search), periodQuery = new URLSearchParams();
+    for (const key of ['start','end']) if (params.has(key)) periodQuery.set(key,params.get(key));
+    const next = await api('workspaces/' + workspaceId + '/channels/facebook-content'+(periodQuery.size ? '?'+periodQuery : ''));
     if (next.scope?.workspace_id !== workspaceId || next.scope?.client_id !== clientId) { location.replace(path); return; }
     if (next.snapshot?.id !== data.snapshot?.id || next.latest_sync?.status !== data.latest_sync?.status || next.connection?.status !== data.connection?.status) location.reload();
     else if (['queued','running'].includes(next.latest_sync?.status)) schedule();
   }
-  function schedule() { clearTimeout(timer); if (!document.hidden && !report) timer = setTimeout(() => operation(checkStatus),5000); }
+  function schedule() { clearTimeout(timer); if (!document.hidden && !new URLSearchParams(location.search).has('snapshot')) timer = setTimeout(() => operation(checkStatus),5000); }
   $('#fc-refresh')?.addEventListener('click',() => location.reload());
-  $('#fc-snapshot')?.addEventListener('change',() => { const value = $('#fc-snapshot').value; if (data.periods.some((row) => row.id === value)) location.assign(path + '?snapshot=' + encodeURIComponent(value)); });
+  $('#fc-snapshot')?.addEventListener('change',() => {
+    const value = $('#fc-snapshot').value;
+    if (!data.periods.some((row) => row.id === value)) return;
+    const params = reportFilters(); params.set('snapshot', value);
+    location.assign(path + '?' + params);
+  });
   $('#fc-client')?.addEventListener('change',() => operation(async () => {
     const value = $('#fc-client').value; if (!details.clients.some((client) => client.id === value)) return;
-    await api('workspaces/' + workspaceId + '/clients/' + value + '/select',{}); location.assign(path);
+    await api('workspaces/' + workspaceId + '/clients/' + value + '/select',{}); location.assign(reportPath());
   }));
   $('#library-logout')?.addEventListener('click',() => operation(async () => { await api('auth/logout',{}); location.assign('/workspace/login'); }));
   $('#library-workspace-select')?.addEventListener('change',() => operation(async () => {
     const id = $('#library-workspace-select').value; if (!session?.workspaces.some((workspace) => workspace.id === id)) return;
-    await api('workspaces/' + id + '/select',{}); location.assign(path);
+    await api('workspaces/' + id + '/select',{}); location.assign(reportPath());
   }));
   $('#fc-post-search')?.addEventListener('input',() => { page = 1; renderPosts(); });
   $('#fc-post-sort')?.addEventListener('change',() => { page = 1; renderPosts(); });
@@ -139,17 +156,18 @@
   }));
   $('#fc-prev')?.addEventListener('click',() => { page -= 1; renderPosts(); });
   $('#fc-next')?.addEventListener('click',() => { page += 1; renderPosts(); });
-  $('#fc-print')?.addEventListener('click',() => window.print());
+  if (document.body.dataset.pdfRender === 'true') { renderPosts(true); return; }
+  $('#fc-print')?.addEventListener('click',event => window.VioReportNotes ? window.VioReportNotes.print(event.currentTarget) : window.print());
   window.addEventListener('beforeprint',() => renderPosts(true));
   window.addEventListener('afterprint',() => renderPosts());
+  if (example) { renderPosts(); return; }
   renderPosts(); controls(); operation(async () => {
     session = await api('session');
     if (!session.user) { location.replace('/workspace/login'); return; }
     if (session.workspace?.id !== workspaceId) { location.replace('/workspace'); return; }
     if (['queued','running'].includes(data.latest_sync?.status)) schedule();
   });
-  document.querySelectorAll('.fc-main time[datetime]').forEach((item) => { if (item.dateTime.includes('T')) item.textContent = date(item.dateTime,true) + ' UTC'; });
-  document.addEventListener('visibilitychange',() => { clearTimeout(timer); if (!report && !document.hidden && ['queued','running'].includes(data.latest_sync?.status)) operation(checkStatus); });
+  document.addEventListener('visibilitychange',() => { clearTimeout(timer); if (!document.hidden && !new URLSearchParams(location.search).has('snapshot') && ['queued','running'].includes(data.latest_sync?.status)) operation(checkStatus); });
   window.addEventListener('pagehide',() => clearTimeout(timer));
   window.addEventListener('pageshow',(event) => { if (event.persisted) location.reload(); });
 })();

@@ -1,0 +1,51 @@
+/* Consistent interpretation of changes, targets and keyword evidence. */
+.kpi-definition-meta { display: block; margin-top: 7px; color: #61778d; font-size: .75rem; line-height: 1.6; }
+.kpi-effect { display: table; margin-top: 6px; padding: 3px 7px; border-radius: 5px; background: #edf3fa; color: #536c86; font-size: .6875rem; }
+[data-effect=improved] .kpi-effect { background: #eaf6f1; color: #247458; }
+[data-effect=declined] .kpi-effect { background: #fff4e8; color: #96651c; }
+body[data-customer-page] :is([data-metric-change], [data-kpi-change])[data-effect=improved] { color: #257555; }
+body[data-customer-page] :is([data-metric-change], [data-kpi-change])[data-effect=declined] { color: #96651c; }
+body[data-customer-page] :is([data-metric-change], [data-kpi-change])[data-effect=context] { color: #61738c; }
+.rp-status-in_progress { color: #3b6b9b; background: #ecf3fb; }
+.rp-goal-card[data-target-status=in_progress] .rp-bullet-actual { fill: #6496bd; }
+.seo-movement-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+.seo-movement-card { padding: 17px 13px; border: 1px solid #dfe9ee; background: #f6f9fb; border-radius: 12px; min-width: 0; }
+.seo-movement-card strong { display: block; font-size: 1.625rem; line-height: 1.3; color: #24485a; font-variant-numeric: tabular-nums; }
+.seo-movement-card span { display: block; font-size: .75rem; color: #597481; margin-top: 7px; line-height: 1.5; }
+.seo-movement-card[data-movement=up], .seo-movement-card[data-movement=entered_top10] { background: linear-gradient(145deg, #f5fbf9, #eaf7f1); border-color: #cee6dc; }
+.seo-movement-card[data-movement=down], .seo-movement-card[data-movement=left_top10] { background: linear-gradient(145deg, #fffaf5, #fff4e8); border-color: #f0e0c9; }
+.seo-role-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.seo-role-card { border: 1px solid #d9e9e7; border-radius: 13px; background: linear-gradient(130deg, #f0f9f7, #fff); padding: 19px; min-width: 0; }
+.seo-role-card h3 { color: #41626a; font-size: .875rem; margin: 0 0 12px; font-weight: 550; }
+.seo-role-card > strong { font-size: 1.1875rem; line-height: 1.6; color: #204d53; }
+.seo-role-card small { display: block; color: #65818a; line-height: 1.6; font-size: .75rem; }
+.seo-role-bar, .seo-plan-progress { height: 8px; border-radius: 8px; background: #e4eeee; overflow: hidden; margin: 15px 0 10px; }
+.seo-role-bar::before { content: ''; display: block; width: var(--seo-role-share); height: 100%; border-radius: inherit; background: linear-gradient(90deg, #13867e, #62b69f); }
+.seo-plan-progress { width: 100%; max-width: 600px; height: 10px; }
+.seo-plan-progress > span { display: block; height: 100%; background: linear-gradient(90deg, #13867e, #62b69f); border-radius: inherit; }
+.seo-plan-result > small { color: #4f737b; font-size: .8125rem; line-height: 1.6; }
+.seo-toolbar { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 10px; }
+.seo-toolbar :is(input, select, button) { min-width: 0; width: 100%; }
+.seo-source { flex-wrap: wrap; }
+.seo-source > div { flex: 1; min-width: 180px; }
+.seo-source .ov-button { min-width: 100px; }
+.sr-compare-item[data-effect=improved] > p { color: #257555; }
+.sr-compare-item[data-effect=declined] > p { color: #96651c; }
+@media (max-width: 1200px) { .seo-movement-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 700px) {
+  .seo-movement-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .seo-role-grid { grid-template-columns: minmax(0, 1fr); }
+  .seo-toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .seo-toolbar .seo-search { grid-column: 1 / -1; }
+  .seo-source > div { min-width: 150px; }
+}
+@media print {
+  .kpi-definition-meta { font-size: 8pt; line-height: 1.5; margin-top: 4px; }
+  .pr-report .cr-definitions { margin: 10px 0; }
+  .pr-report .cr-definitions > div { padding: 8px 0; }
+  .pr-report .cd-method p:last-child { margin-bottom: 0; break-before: avoid; }
+  .kpi-effect { font-size: 8pt; }
+  .seo-movement-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .seo-role-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .seo-movement-card, .seo-role-card { break-inside: avoid; padding: 10px; }
+}

@@ -1,0 +1,103 @@
+{% extends 'customer/base.html' %}
+{% from 'customer/live/components/visuals.html' import donut %}
+{% from 'customer/live/components/report-notes.html' import note, review_controls, pdf_button %}
+{% from 'customer/live/components/report-controls.html' import target_outcome %}
+{% from 'customer/live/components/seo-analysis.html' import seo_analysis %}
+{% from 'customer/live/components/seo-report-expansion.html' import coverage,keyword_groups,project_timeline,article_effectiveness with context %}
+{% macro trend(chart) -%}
+<section aria-label="Biểu đồ {{ chart.label }}">
+  <h3>{{ chart.label }}</h3>
+  <div data-viz-series>
+    <script type="application/json">{{ chart|tojson }}</script>
+    {% if chart.reverse_y %}<p class="viz-rank-guide">Hạng 1 ở trên cùng. Đường đi lên là cải thiện vị trí.</p>{% endif %}
+    <svg class="sr-trend" viewBox="0 0 610 190" role="img" aria-label="{{ chart.label }}: {{ chart.observed }} ngày có dữ liệu trong {{ chart.days }} ngày">
+      <title>{{ chart.label }} theo ngày có dữ liệu</title>
+      <path class="sr-grid" d="M62 22H580M62 88H580M62 154H580"/>
+      <text x="58" y="20" text-anchor="end">{{ '1' if chart.reverse_y else chart.maximum }}</text>
+      <text x="58" y="158" text-anchor="end">{{ chart.maximum if chart.reverse_y else '0' }}</text>
+      {% for bar in chart.bars %}
+        {% if chart.reverse_y %}
+          <circle class="sr-dot" cx="{{ bar.x }}" cy="{{ 22+bar.height }}" r="3"><title>{{ bar.title }}</title></circle>
+        {% else %}
+          <rect class="sr-dot" x="{{ bar.x }}" y="{{ bar.y }}" width="{{ bar.width }}" height="{{ bar.height }}"><title>{{ bar.title }}</title></rect>
+        {% endif %}
+      {% endfor %}
+      <text x="66" y="179">{{ chart.first }}</text>
+      <text x="575" y="179" text-anchor="end">{{ chart.last }}</text>
+    </svg>
+  </div>
+  <p class="seo-help">{{ chart.observed }}/{{ chart.days }} ngày có quan sát · Ngày thiếu được để trống.</p>
+</section>
+{%- endmacro %}
+{% block layout %}
+{% from 'customer/live/components/report-style.html' import cover, style_picker %}
+<div class="ov-shell ws-theme seo-page sr-page sr-report{% if compiled.compact_seo %} sr-compact{% endif %}" data-report-template="platform"{% if compiled.compact_seo %} data-platform-brand="seo"{% endif %}{% if report_preset %} data-report-preset="{{ report_preset.key }}" data-focus-style="{{ report_preset.style }}"{% endif %}{% if report_style %} data-report-style="{{ report_style.key }}" data-report-palette="{{ report_palette }}"{% endif %} id="customer-content">
+{% if report_example %}{% include 'customer/live/components/report-example-toolbar.html' %}{% else %}{% include 'customer/live/components/sidebar.html' %}{% endif %}
+<div class="ov-body">{% if not report_example %}{% include 'customer/live/components/topbar.html' %}{% endif %}<main class="ov-main seo-main" id="customer-main" tabindex="-1"{% if report_style %} data-report-order="{{ report_order|join(',') }}" data-report-hidden="{{ report_hidden|join(',') }}"{% endif %}>
+{% if not report_example %}
+{% set has_presentation = compiled.style or request.query_params.get('style') or report_palette != 'brand' or report_order or report_hidden %}
+<div class="seo-actions sr-no-print"><a class="ov-button ov-secondary" href="/workspace/reports/combined">← Báo cáo đã lưu</a><a class="ov-button ov-secondary" href="/workspace/reports/combined?sources={{ compiled.sources|map(attribute='id')|join(',') }}&amp;start={{ compiled.period.start }}&amp;end={{ compiled.period.end }}{% if presentation %}&amp;template={{ presentation }}{% elif report_style and has_presentation %}&amp;style={{ report_style.key }}{% if report_palette != "brand" %}&amp;palette={{ report_palette }}{% endif %}{% if report_order %}&amp;order={{ report_order|join(',') }}{% endif %}{% if report_hidden %}&amp;hidden={{ report_hidden|join(',') }}{% endif %}{% endif %}">Tạo bản mới</a><button class="ov-button ov-secondary" type="button" id="compiled-print"><span class="material-symbols-outlined" aria-hidden="true">print</span>In</button>{{ pdf_button(report_review) }}</div>
+{% include 'customer/live/components/report-preset-selection.html' %}
+{% if report_style %}{{ style_picker(report_style, report_styles, request, report_palette, report_palettes) }}{% endif %}
+{{ review_controls(report_review) }}
+{% endif %}
+{% if report_style and report_style.key != 'standard' %}
+{{ cover('seo' if compiled.compact_seo else 'combined', compiled.workspace.name, compiled.name, '',
+    [('Khách hàng', compiled.client.name), ('Website', compiled.client.website if compiled.client.website else ''),
+     ('Kỳ báo cáo', compiled.period.start|replace('-','/') ~ ' → ' ~ compiled.period.end|replace('-','/')),
+     ('Nguồn dữ liệu', compiled.sources|length ~ ' nguồn'), ('Tạo lúc', compiled.created_at|vietnam_time),
+     ('Mã báo cáo', compiled.id[:8]|upper)]) }}
+{% else %}
+<header class="sr-cover">
+{% if compiled.compact_seo %}
+  <div class="sc-cover-title">
+    <div class="sc-cover-brand"><img src="/static/customer/vio-logo.png" alt="VIO Agency"></div>
+    <div><span>{{ compiled.workspace.name }}</span><h1>{{ compiled.name }}</h1>
+      <div class="sc-cover-client"><h2>{{ compiled.client.name }}</h2>{% if compiled.client.website %}<p>{{ compiled.client.website }}</p>{% endif %}</div>
+    </div>
+  </div>
+{% else %}
+  <span class="seo-eyebrow">{{ compiled.workspace.name }} · {{ 'Bản mẫu' if report_example else 'Báo cáo riêng tư' }}</span>
+  <h1>{{ compiled.name }}</h1><h2>{{ compiled.client.name }}</h2>{% if compiled.client.website %}<p>{{ compiled.client.website }}</p>{% endif %}
+{% endif %}
+  {% if report_preset %}<p class="rf-compiled-purpose">{{ report_preset.description }}</p>{% endif %}
+  <div class="sr-cover-foot"><span>{{ compiled.period.start|replace('-','/') }} → {{ compiled.period.end|replace('-','/') }}</span><span>{{ compiled.sources|length }} nguồn</span><span>Tạo {{ compiled.created_at|vietnam_time }}</span><span>Mã {{ compiled.id[:8]|upper }}</span></div>
+</header>
+{% endif %}
+{% if 'summary' in compiled.sections and not compiled.compact_seo %}<section class="seo-card" data-order-key="summary" data-order-label="Nội dung báo cáo"><div class="seo-card-head"><h2>Nội dung báo cáo</h2><span class="seo-badge">Bản dữ liệu đã chốt</span></div><div class="sr-summary-list">{% for item in compiled.sources %}<a href="#chapter-{{ item.id }}"><strong>{{ item.name }}</strong><small>{% if item.id == 'seo' %}{{ item.data.stats.total }} từ theo dõi · {{ item.data.stats.top10 }} Top 10 trong kỳ{% elif item.data.state == 'ready' %}{{ item.data.asset.name }} · {{ item.data.snapshot.timezone }}{% else %}Chưa có bản dữ liệu trong kỳ{% endif %}</small></a>{% endfor %}</div><p class="seo-help">Số liệu giữ nguyên tại lúc tạo. Mỗi nguồn có cách đo, ngày chốt và đơn vị riêng; không gộp các chỉ số không tương đương.</p>{{ note(report_review, 'overview') }}</section>{% endif %}
+<nav class="sr-nav sr-no-print" aria-label="Chương báo cáo">{% for item in compiled.chapters %}<a href="#chapter-{{ item.id }}">{{ item.name }}</a>{% endfor %}</nav>
+{% if compiled.compact_seo %}{% include 'customer/live/components/seo-compact-report.html' %}{% endif %}
+{% for item in compiled.sources if not (compiled.compact_seo and item.id in ['seo','ga4','gsc']) %}{% set report=item.data %}{% if item.chapter_heading %}<h2 class="sr-chapter-title" id="chapter-seo-website">{{ item.chapter_heading }}</h2>{% endif %}<section class="seo-card sr-section" id="chapter-{{ item.id }}" data-platform-brand="{{ item.id }}" data-order-key="{{ item.id }}" data-order-label="{{ item.name }}"><header class="sr-section-hero">{% if item.id == 'seo' %}<span class="material-symbols-outlined" aria-hidden="true">travel_explore</span>{% else %}<img src="/static/customer/platforms/{{ {'ga4':'ga4.svg','gsc':'gsc.png','facebook_content':'facebook.png','facebook_ads':'meta.svg','google_ads':'google_ads.png','instagram':'instagram.svg','youtube':'youtube.png','business_profile':'business_profile.png','tiktok_ads':'tiktok.png'}[item.id] }}" alt="">{% endif %}<div><span class="seo-eyebrow">{{ 'SEO & Website' if item.id in ['seo','ga4','gsc'] else 'Hiệu suất nền tảng' }}</span><h2>{{ item.name }}</h2></div></header>
+{% if item.id == 'seo' %}
+{% if 'summary' in compiled.sections %}{{ coverage(item) }}{% endif %}
+<p class="seo-help">{{ report.website }} · {{ report.period.start }} → {{ report.period.end }} · Điều kiện đo: {% for profile in report.profiles if profile.id == report.profile %}{{ {'desktop':'Máy tính','mobile':'Điện thoại','unspecified':'Chưa xác nhận thiết bị'}[profile.device] }}{% if profile.location %} · {{ profile.location }}{% endif %}{% endfor %}</p>
+<dl class="sr-metrics">{% for key,label in [('total','Từ khóa theo dõi'),('top10','Top 10 trong kỳ'),('ranked','Có vị trí trong kỳ'),('unknown','Chưa có vị trí')] %}<div class="sr-metric"><dt>{{ label }}</dt><dd>{{ display(report.stats[key],'count') }}</dd></div>{% endfor %}</dl>
+{% set delivery_part='project' %}{% include 'customer/live/components/seo-delivery-report.html' %}
+{% if 'charts' in compiled.sections %}{{ donut(item.distribution) }}{% endif %}{% if 'summary' in compiled.sections or 'comparison' in compiled.sections %}{{ seo_analysis(report, 'comparison' in compiled.sections) }}{% endif %}
+{% if 'kpi' in compiled.sections and not (report.project and report.project.plan) %}<section class="seo-plan-result"><h3>Cam kết Top 10 · {{ report.plan.month }}</h3>{% if report.plan.keyword_count %}<strong>{{ display(report.plan.top10,'count') }}/{{ report.plan.required }} từ cần đạt</strong><p>Mục tiêu {{ report.plan.top10_percent }}% trên {{ report.plan.keyword_count }} từ đã chốt · Có phép đo xác định {{ display(report.plan.measured,'count') }}/{{ report.plan.keyword_count }} · Phiên bản {{ report.plan.version }}</p><p>{{ {'met':'Đã đủ số từ đạt mục tiêu','below_target':'Chưa đạt mục tiêu','in_progress':'Đang thực hiện','partial_period':'Chọn trọn tháng để nghiệm thu','insufficient_data':'Chưa đủ dữ liệu nghiệm thu','period_mismatch':'Kỳ đang xem không khớp kỳ tháng đã chốt','profile_mismatch':'Điều kiện đo không khớp KPI'}.get(report.plan.status,'Chưa thiết lập') }}</p>{% else %}<p>Chưa chốt bộ từ khóa và mục tiêu cho tháng này.</p>{% endif %}</section>{% endif %}
+{% if 'details' in compiled.sections %}{{ keyword_groups(item,'comparison' in compiled.sections) }}{% endif %}
+{% set delivery_part='content' %}{% include 'customer/live/components/seo-delivery-report.html' %}
+{% if 'details' in compiled.sections %}{{ article_effectiveness(report,'comparison' in compiled.sections) }}{% endif %}
+{% if 'kpi' in compiled.sections %}{{ project_timeline(report) }}{% endif %}
+{% if 'seo_work' in compiled.sections %}<section><h3>Kế hoạch &amp; công việc SEO</h3><div class="seo-table-wrap"><table class="seo-table"><thead><tr><th>Hạng mục</th><th>Tháng</th><th>Kế hoạch</th><th>Đã làm</th><th>Bằng chứng</th></tr></thead><tbody>{% for row in report.work %}<tr><td>{{ row.title }}</td><td>{{ row.month }}</td><td>{{ row.target }}</td><td>{{ row.actual }}</td><td>{% if row.evidence %}<a href="{{ row.evidence }}" target="_blank" rel="noopener noreferrer">Xem ↗</a>{% else %}Chưa gắn{% endif %}</td></tr>{% else %}<tr><td colspan="5">Chưa có công việc trong kỳ.</td></tr>{% endfor %}</tbody></table></div></section>{% endif %}
+<ul class="sr-notes">{% for note in report.notes %}<li>{{ note }}</li>{% endfor %}</ul>
+{% elif report.state != 'ready' %}<div class="seo-empty"><span class="material-symbols-outlined" aria-hidden="true">cloud_off</span><h3>Chưa có dữ liệu đã lưu trong kỳ này</h3><p>Vào Kết nối nền tảng để kiểm tra tài khoản và đồng bộ đúng kỳ. Số liệu sẽ xuất hiện trong bản báo cáo mới sau khi đồng bộ thành công.</p></div>{{ note(report_review, item.id ~ '_summary') }}
+{% else %}
+<p class="seo-help">{{ report.asset.name }} · {{ report.snapshot.start_date }} → {{ report.snapshot.end_date }} · {{ report.snapshot.timezone }}{% if report.snapshot.currency %} · {{ report.snapshot.currency }}{% endif %} · Đồng bộ {{ (report.snapshot.fetched_at or report.snapshot.created_at)|vietnam_time }}</p>
+<dl class="sr-metrics">{% for metric in report.metrics %}<div class="sr-metric"><dt>{{ metric.label }}</dt><dd>{{ display(metric.value,metric.unit,metric.currency) }}</dd><small>{{ 'Chưa có dữ liệu' if metric.value is none else 'Tích lũy / tại lần đồng bộ' if metric.grain == 'snapshot' else 'Theo kỳ nguồn' }}</small></div>{% endfor %}</dl>
+{{ note(report_review, item.id ~ '_summary') }}
+{% if 'comparison' in compiled.sections %}<section><h3>{{ item.comparison_label }}</h3><p class="seo-help">{{ item.current_period.start }} → {{ item.current_period.end }} so với {{ item.previous_period.start }} → {{ item.previous_period.end }}</p><p class="seo-help">{{ item.comparison_note }}</p>{% if item.comparisons %}<div class="sr-compare">{% for row in item.comparisons %}<article class="sr-compare-item" data-effect="{{ row.effect }}"><h3>{{ row.label }}</h3><dl><div><dt>Kỳ đang xem</dt><dd>{{ row.actual }}</dd></div><div><dt>Kỳ trước</dt><dd>{{ row.previous }}</dd></div></dl><p>{{ row.delta }}</p><small>{{ row.effect_label }}</small>{% if row.lifetime %}<small class="seo-help">So sánh số tích lũy của các bài thuộc mỗi kỳ; không phải tăng trưởng phát sinh trong kỳ.</small>{% endif %}</article>{% endfor %}</div>{% else %}<p class="sr-notes">Chưa có bản đối chiếu tương thích. Đồng bộ kỳ trước trước khi tạo bản báo cáo mới.</p>{% endif %}{{ note(report_review, item.id ~ '_comparison') }}</section>{% endif %}
+{% if 'kpi' in compiled.sections %}<section><h3>Đối chiếu mục tiêu KPI</h3><div class="seo-table-wrap"><table class="seo-table"><thead><tr><th>Chỉ tiêu</th><th>Mục tiêu</th><th>Thực tế</th><th>Kết quả</th></tr></thead><tbody>{% for goal in report.targets['items'] if goal.status != 'not_set' %}<tr><td>{{ goal.label }}{% if goal.grain == 'snapshot' %}<br><small>Tích lũy / tại thời điểm đồng bộ</small>{% endif %}</td><td>{{ '≤' if goal.direction=='at_most' else '≥' }} {{ display(goal.value,goal.unit,goal.currency) }}</td><td>{{ display(goal.actual,goal.unit,goal.actual_currency|default(report.snapshot.currency)) }}</td><td>{{ target_outcome(goal, display) }}</td></tr>{% else %}<tr><td colspan="4">Chưa đặt mục tiêu cho tài khoản và kỳ này.</td></tr>{% endfor %}</tbody></table></div>{{ note(report_review, item.id ~ '_kpi') }}</section>{% endif %}
+{% if 'charts' in compiled.sections %}
+  {{ donut(item.view.layout.distribution,report.snapshot.currency) }}{{ note(report_review, item.id ~ '_distribution') }}
+  {% if item.device_distribution %}{{ donut(item.device_distribution) }}{{ note(report_review, item.id ~ '_devices') }}{% endif %}
+  <div class="seo-report-trends">{% if item.chart %}{{ trend(item.chart) }}{% endif %}{% for chart in item.extra_charts %}{{ trend(chart) }}{% endfor %}</div>
+  {{ note(report_review, item.id ~ '_trend') }}
+{% endif %}
+{% if 'details' in compiled.sections %}{% for table in report.tables %}<section><div class="seo-card-head"><h3>{{ table.title }}</h3><span class="seo-help">{{ table.rows|length }}/{{ table.total_rows }} dòng được nguồn trả về</span></div><div class="seo-table-wrap"><table class="seo-table"><thead><tr>{% for col in table.columns %}<th>{{ col.label }}</th>{% endfor %}</tr></thead><tbody>{% for row in table.rows %}<tr>{% for col in table.columns %}<td>{{ display(row[col.key],col.unit,report.snapshot.currency) if col.unit in ['count','number','percent','currency'] else row[col.key] if row[col.key] is not none else '—' }}</td>{% endfor %}</tr>{% else %}<tr><td colspan="{{ table.columns|length }}">Không có dòng chi tiết trong bản lưu.</td></tr>{% endfor %}</tbody></table></div>{{ note(report_review, item.id ~ '_detail_' ~ loop.index0) }}</section>{% endfor %}{{ note(report_review, item.id ~ '_details_empty') }}{% endif %}
+<ul class="sr-notes">{% for definition in item.view.definitions if definition.available %}<li>{{ definition.label }}: {{ definition.description }}</li>{% endfor %}{% for note in report.notes %}<li>{{ note }}</li>{% endfor %}</ul>
+{% endif %}</section>{% endfor %}
+<footer class="sr-report-footer"><span>{{ compiled.workspace.name }} · {{ compiled.client.name }}</span><span>VioAgencyAnalytics · {{ 'Dữ liệu minh họa' if report_example else 'Bản riêng tư · ' ~ (compiled.id[:8]|upper) }}</span></footer>
+</main></div></div>
+{% if not report_example %}<script type="application/json" id="seo-context-data">{{ {'workspace_id':details.workspace.id,'client_id':details.selected_client.id if details.selected_client else none,'timezone':details.workspace.timezone}|tojson }}</script>{% endif %}
+{% endblock %}

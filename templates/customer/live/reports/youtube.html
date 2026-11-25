@@ -1,0 +1,17 @@
+<div class="pr-composition pr-video" data-order-container>
+<div class="vt-order-block" data-order-key="summary" data-order-label="Chỉ số chính">
+{{ p.metrics(view.layout,report,display) }}
+{{ note(report_review, 'summary') }}
+</div>
+<div class="vt-order-block" data-order-key="highlights" data-order-label="Video nổi bật">
+{% set videos = view.layout.rankings.videos %}
+<section class="pr-video-gallery"><div class="pr-panel-title"><h2>Video nổi bật</h2><span>THEO LƯỢT XEM</span></div><div class="pr-video-grid">{% for video in videos.rows[:3] %}<article class="pr-video-card"><div class="pr-video-art" aria-hidden="true"><span class="material-symbols-outlined">play_arrow</span><b>{{ '%02d'|format(loop.index) }}</b></div><div class="pr-video-body"><h3>{% if video.url and not report_example %}<a href="{{ video.url }}" target="_blank" rel="noopener noreferrer">Video {{ video.label }} ↗</a>{% else %}Video {{ video.label }}{% endif %}</h3><dl><div><dt>Lượt xem</dt><dd>{{ display(video.value,'count') }}</dd></div><div><dt>Phút xem</dt><dd>{{ display(video.row.watch_minutes,'number') }}</dd></div></dl></div></article>{% else %}<p class="pr-empty">Chưa có bảng video trong bản lưu.</p>{% endfor %}</div>{% if videos.rows %}<p class="pr-caption">Xếp trong {{ videos.loaded }} video đã tải{% if videos.total > videos.loaded %} / {{ videos.total }} hàng nguồn{% endif %}. Mã video và số liệu theo bản lưu.</p>{% endif %}</section>
+{{ note(report_review, 'rank_videos') }}
+</div>
+<div class="vt-order-block" data-order-key="trend" data-order-label="{{ view.layout.trend }}">
+{{ p.trend(report,view.layout) }}
+{{ note(report_review, 'trend') }}
+</div>
+{{ target_comparison(report,display,report_review) }}
+
+</div>

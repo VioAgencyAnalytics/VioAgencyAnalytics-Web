@@ -1,0 +1,37 @@
+{% from 'customer/live/components/platform-mark.html' import platform_mark %}
+
+{% macro palette_picker(palette, palettes, identity) -%}
+<label for="{{ identity }}">Màu báo cáo</label>
+<select id="{{ identity }}" name="palette">
+  {% for key, name in palettes.items() %}<option value="{{ key }}"{% if key == palette %} selected{% endif %}>{{ name }}</option>{% endfor %}
+</select>
+{%- endmacro %}
+
+{% macro style_picker(style, styles, request, palette, palettes) -%}
+<form class="vt-picker" method="get" action="{{ request.url.path }}" aria-label="Đổi mẫu trình bày báo cáo">
+  {% for key, value in request.query_params.items() if key not in ('style', 'palette') %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endfor %}
+  <label for="vt-style">Mẫu trình bày</label>
+  <select id="vt-style" name="style">
+    {% for option in styles %}<option value="{{ option.key }}"{% if option.key == style.key %} selected{% endif %}>{{ option.name }}</option>{% endfor %}
+  </select>
+  {{ palette_picker(palette, palettes, 'vt-palette') }}
+  <button type="submit" class="ov-button ov-secondary">Áp dụng mẫu</button>
+  <button type="button" class="ov-button ov-secondary" data-report-order-open hidden>Sắp xếp nội dung</button>
+</form>
+{%- endmacro %}
+
+{% macro cover(source, brand, title, description, facts, heading='h1', identity=none) -%}
+<header class="vt-cover"{% if identity %} id="{{ identity }}"{% endif %}>
+  <div class="vt-cover-brand">
+    {% if source in ['seo','combined'] %}<span class="vt-vio-mark"><img src="/static/customer/vio-logo.png" width="32" height="32" alt=""></span>{% else %}{{ platform_mark(source) }}{% endif %}
+    <span>{{ brand }}</span>
+  </div>
+  <div class="vt-cover-title">
+    <{{ heading }}>{{ title }}</{{ heading }}>
+    {% if description %}<p>{{ description }}</p>{% endif %}
+  </div>
+  <dl class="vt-cover-facts">
+    {% for label, value in facts if value %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}
+  </dl>
+</header>
+{%- endmacro %}

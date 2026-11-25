@@ -1,0 +1,86 @@
+{% from 'customer/live/components/seo-kpi-matrix.html' import heading, labels %}
+<section class="seo-card seo-project-card" aria-labelledby="seo-project-heading">
+  <div class="seo-card-head">
+    <div>
+      <h2 id="seo-project-heading">KPI dự án</h2>
+      <p id="seo-project-caption" class="seo-help">Cam kết và thực tế theo từng tháng của hợp đồng.</p>
+    </div>
+    <button id="seo-project-edit" class="ov-button seo-primary seo-edit" type="button">Thiết lập cam kết</button>
+  </div>
+  <div id="seo-project-overview"></div>
+  <div id="seo-project-timeline" data-kpi-heading="{{ heading }}" data-kpi-labels='{{ labels|tojson }}'></div>
+  <div id="seo-project-months" class="seo-project-months" aria-label="Xem kết quả theo tháng"></div>
+  <div id="seo-project-results" class="seo-kpi-grid"></div>
+  <p class="seo-help" id="seo-project-note"></p>
+</section>
+
+<dialog class="seo-dialog seo-project-dialog" id="seo-project-dialog" aria-labelledby="seo-project-title">
+  <div class="seo-card-head">
+    <h2 id="seo-project-title">Cam kết dự án SEO</h2>
+    <button type="button" class="ov-button ov-secondary" data-seo-close aria-label="Đóng cam kết">×</button>
+  </div>
+  <form id="seo-project-form">
+    <div class="seo-form-grid">
+      <label class="seo-field seo-wide">Tên dự án
+        <input id="seo-project-name" maxlength="160" required placeholder="SEO Website · Tên khách hàng">
+      </label>
+      <label class="seo-field">Tháng bắt đầu
+        <input id="seo-project-start" type="month" required>
+      </label>
+      <label class="seo-field">Thời hạn hợp đồng
+        <select id="seo-project-duration">
+          {% for n in [1,3,6,9,12,18,24] %}<option value="{{ n }}" {% if n==12 %}selected{% endif %}>{{ n }} tháng</option>{% endfor %}
+        </select>
+      </label>
+      <label class="seo-field">Chỉ số lưu lượng
+        <select id="seo-project-traffic">
+          <option value="ga4_views">Lượt xem trang / màn hình (GA4)</option>
+          <option value="gsc_clicks">Lượt nhấp tìm kiếm Google (GSC)</option>
+          <option value="ga4_organic_sessions">Phiên Organic Search (GA4)</option>
+          <option value="ga4_sessions">Tổng phiên website (GA4)</option>
+        </select>
+      </label>
+      <label class="seo-field">Cách tính lưu lượng
+        <select id="seo-project-traffic-basis">
+          <option value="total">Tổng trong kỳ đo</option>
+          <option value="increase">Chênh lệch so với tháng gốc</option>
+        </select>
+      </label>
+      <label class="seo-field" id="seo-project-baseline-field" hidden>Tháng gốc
+        <input type="month" id="seo-project-baseline-month">
+        <small>Dùng một tháng đầy đủ trước thời điểm bắt đầu hợp đồng.</small>
+      </label>
+      <label class="seo-field" id="seo-project-share-pages-field">Số trang chia sẻ mỗi bài
+        <input id="seo-project-share-pages" type="number" min="1" max="1000" step="1" placeholder="Ví dụ 13">
+        <small>Dùng để tính mục tiêu chia sẻ từ số bài mới kế hoạch.</small>
+      </label>
+    </div>
+    <div class="seo-project-editor">
+      <div class="seo-card-head">
+        <label class="seo-field">Cam kết tháng<select id="seo-project-month"></select></label>
+        <button type="button" id="seo-project-copy" class="ov-button ov-secondary">Áp dụng mục tiêu cho các tháng sau</button>
+      </div>
+      <div id="seo-project-targets" class="seo-project-targets"></div>
+      <p class="seo-help">Để trống mục tiêu không áp dụng. Mục tiêu 0 là một cam kết.</p>
+      <details class="seo-project-measurements">
+        <summary>Kỳ đo riêng của tháng</summary>
+        <p class="seo-help">Mặc định dùng tháng lịch. Điền kỳ đồng bộ Google và ngày đo Spineditor nếu hợp đồng chốt theo mốc khác.</p>
+        <div class="seo-form-grid">
+          <label class="seo-field">Lưu lượng từ ngày<input id="seo-project-traffic-start" type="date"></label>
+          <label class="seo-field">Lưu lượng đến ngày<input id="seo-project-traffic-end" type="date"></label>
+          <label class="seo-field">Ngày đo Spineditor<input id="seo-project-rank-date" type="date"></label>
+        </div>
+      </details>
+    </div>
+    <p class="seo-help" id="seo-project-scope"></p>
+    <label class="seo-check">
+      <input id="seo-project-attest" type="checkbox" required>
+      <span>Tôi xác nhận mục tiêu và cách đo theo hợp đồng.</span>
+    </label>
+    <p class="seo-message" id="seo-project-error" role="alert" hidden></p>
+    <div class="seo-dialog-actions">
+      <button type="button" class="ov-button ov-secondary" data-seo-close>Hủy</button>
+      <button type="submit" class="ov-button seo-primary">Chốt phiên bản cam kết</button>
+    </div>
+  </form>
+</dialog>

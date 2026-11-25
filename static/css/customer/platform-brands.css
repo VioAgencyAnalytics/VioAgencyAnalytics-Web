@@ -1,0 +1,76 @@
+/* Brand identity is local to a source. Status, warnings and KPI meaning keep their colors. */
+:is([data-platform-page],[data-platform-brand]) {
+  --platform-accent:#3565c8;
+  --platform-action:#2453b4;
+  --platform-soft:#edf3ff;
+  --platform-line:#cdddfa;
+  --platform-deep:#152e58;
+}
+:is([data-platform-page=facebook_content],[data-platform-brand=facebook_content]){--platform-accent:#0866ff;--platform-action:#0758d7;--platform-soft:#eaf2ff;--platform-line:#c5dafe;--platform-deep:#122b53}
+:is([data-platform-page=facebook_ads],[data-platform-brand=facebook_ads]){--platform-accent:#0866ff;--platform-action:#0758d7;--platform-soft:#edf3ff;--platform-line:#cbddff;--platform-deep:#12325b}
+:is([data-platform-page=google_ads],[data-platform-brand=google_ads]){--platform-accent:#4285f4;--platform-action:#225cbd;--platform-soft:#edf5ff;--platform-line:#c8dcfa;--platform-deep:#183a64}
+:is([data-platform-page=ga4],[data-platform-brand=ga4]){--platform-accent:#e37400;--platform-action:#a34e00;--platform-soft:#fff3e3;--platform-line:#f6d7b1;--platform-deep:#63380f}
+:is([data-platform-page=gsc],[data-platform-brand=gsc]){--platform-accent:#4285f4;--platform-action:#235bbb;--platform-soft:#eaf5fb;--platform-line:#c5deef;--platform-deep:#133c55}
+:is([data-platform-page=youtube],[data-platform-brand=youtube]){--platform-accent:#ff0033;--platform-action:#cf0029;--platform-soft:#fff0f2;--platform-line:#facbd3;--platform-deep:#591b2b}
+:is([data-platform-page=instagram],[data-platform-brand=instagram]){--platform-accent:#c13584;--platform-action:#a62975;--platform-soft:#fbecf7;--platform-line:#edc8e5;--platform-deep:#53264f}
+:is([data-platform-page=business_profile],[data-platform-brand=business_profile]){--platform-accent:#1a73e8;--platform-action:#155fc1;--platform-soft:#edf4ff;--platform-line:#c8dafa;--platform-deep:#17395f}
+:is([data-platform-page=tiktok_ads],[data-platform-brand=tiktok_ads]){--platform-accent:#111827;--platform-action:#111827;--platform-soft:#e9f8f7;--platform-line:#bee7e5;--platform-deep:#142d35}
+.platform-logo{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:44px;height:44px;border:1px solid #e2e8f0;border-radius:13px;background:#fff;line-height:1;vertical-align:middle;overflow:hidden;padding:9px;box-sizing:border-box}
+.platform-logo img{display:block;width:100%;height:100%;object-fit:contain;max-width:100%;filter:none;transform:none}
+.platform-logo img[hidden],.platform-logo-fallback[hidden]{display:none}
+.platform-logo-fallback{font:700 .75rem/1 Inter,sans-serif;color:#334155;letter-spacing:0}
+.platform-logo[data-platform-logo=facebook_content]{padding:6px}
+.platform-logo[data-platform-logo=facebook_ads]{padding:5px;width:54px}
+.platform-logo[data-platform-logo=tiktok_ads]{padding:0;background:#000;border-color:#111827}
+.platform-logo-generic{background:#f3f5fa;color:#6555b5}
+.platform-heading{display:flex;align-items:center;gap:18px;min-width:0}
+.platform-heading>div{min-width:0}
+.platform-heading>.platform-logo,.fc-identity>.platform-logo{width:64px;height:64px;border-radius:18px;padding:13px;box-shadow:0 7px 18px #1f37600c}
+.fc-identity>.platform-logo[data-platform-logo=facebook_content]{padding:9px}
+body[data-platform-page] :is(.cd-heading,.fc-hero){background:linear-gradient(115deg,var(--platform-soft),#ffffffd9 80%);border:1px solid var(--platform-line);border-radius:22px;padding:25px 28px;box-shadow:0 8px 28px #1a355205}
+body[data-platform-page] :is(.cd-heading,.fc-hero) h1{color:var(--platform-deep)}
+body[data-platform-page=instagram] .cd-heading{background:linear-gradient(115deg,#fff1df,#fce8f2 55%,#efe9ff)}
+body[data-platform-page=tiktok_ads] .cd-heading{background:linear-gradient(115deg,#e2f7f5,#edf0f8 60%,#fceaf1)}
+body[data-platform-page=google_ads] .cd-heading{background:linear-gradient(115deg,#ecf3ff,#f4f9ed 62%,#fff8e9)}
+body[data-platform-page] :is(.cd-heading,.fc-actions) .ov-button:not(.ov-secondary){background:var(--platform-action);border-color:var(--platform-action)}
+body[data-platform-page] :is(.cd-heading,.fc-actions) .ov-button:not(.ov-secondary):hover{filter:brightness(.93)}
+body[data-platform-page] :is(.cd-back,.fc-back){color:var(--platform-action)}
+body[data-platform-page] .cr-cover{background:linear-gradient(115deg,var(--platform-deep),var(--platform-action));box-shadow:0 14px 34px #14284318}
+body[data-platform-page] .cr-cover-title p,body[data-platform-page] .cr-cover-bottom,body[data-platform-page] .cr-cover-bottom>strong{color:#ffffffd9}
+body[data-platform-page] .cr-cover-title p>span{color:#ffffff80}
+body[data-platform-page] .cr-provider.platform-logo{width:60px;height:60px;border-radius:16px;padding:11px;background:#fff;color:#0f172a}
+body[data-platform-page] .cr-provider.platform-logo[data-platform-logo=tiktok_ads]{background:#000;padding:0}
+body[data-platform-page] .fc-report-cover{background:linear-gradient(115deg,var(--platform-soft),#fff 85%)}
+body[data-platform-page] .fc-report-cover::before{background:var(--platform-accent)}
+.fc-report-source{display:inline-flex;align-items:center;gap:10px;margin-bottom:15px;color:var(--platform-action);font-size:.875rem;font-weight:650}
+.fc-report-source .platform-logo{width:36px;height:36px;border-radius:50%;padding:4px}
+body[data-platform-page] .cd-kpis>article[data-observed=true]{border-top:3px solid var(--platform-accent)}
+body[data-platform-page] .cr-kpi-label>.material-symbols-outlined{color:var(--platform-action);background:var(--platform-soft)}
+body[data-platform-page] :is(.cd-bar,.cd-chart-column){fill:var(--platform-accent)}
+body[data-platform-page] .cr-bar{fill:var(--platform-accent)}
+body[data-platform-page] .cr-chart-point:hover .cr-bar,body[data-platform-page] .cr-chart-point:focus .cr-bar{fill:var(--platform-action)}
+body[data-platform-page] .cd-chart rect[data-bar]{fill:var(--platform-accent)}
+body[data-platform-page] .cd-chart button[aria-pressed=true]{color:var(--platform-action)}
+body[data-platform-page] :is(.cr-section-number,.fc-eyebrow){color:var(--platform-action)}
+body[data-platform-page] .fc-report-section-heading>span{background:var(--platform-soft);color:var(--platform-action)}
+body[data-platform-page] .fc-format-row i{background:var(--platform-accent)}
+dialog[data-platform-brand=facebook_content] .fb-connect-header{background:linear-gradient(115deg,#eaf2ff,#fff)}
+dialog[data-platform-brand=facebook_content] .platform-logo.fb-brand{background:#fff;padding:7px;border-radius:50%;box-shadow:none}
+:is(.ig-platform,.lb-card,.cd-source)[data-platform-brand]{border-color:var(--platform-line);background:linear-gradient(145deg,var(--platform-soft),#fff 44%)}
+:is(.ig-platform,.lb-card,.cd-source)[data-platform-brand] .platform-logo{border-color:var(--platform-line);box-shadow:0 4px 10px #1f2e4906}
+:is(.ig-platform,.lb-card,.cd-source)[data-platform-brand] :is(h3,.cd-source-heading h3){color:var(--platform-deep)}
+:is(.ig-platform,.lb-card,.cd-source)[data-platform-brand] :is(.ig-platform-footer button,.lb-card-footer button,.cd-detail-link){border-color:var(--platform-line);color:var(--platform-action);background:var(--platform-soft)}
+.ig-connection-card[data-platform-brand]{border-top:3px solid var(--platform-accent);background:linear-gradient(140deg,var(--platform-soft),#fff 50%)}
+dialog[data-platform-brand]{border-color:var(--platform-line)}
+dialog[data-platform-brand] :is(.cc-dialog-heading,.cc-header,.fc-connect-header,.ig-dialog-top){background:linear-gradient(115deg,var(--platform-soft),#fff)}
+dialog[data-platform-brand] :is(#connector-primary,#connector-reconnect){background:var(--platform-action);border-color:var(--platform-action);color:#fff}
+.od-channel[data-platform-brand]{background:linear-gradient(135deg,var(--platform-soft),#fff);border-color:var(--platform-line)}
+.ov-nav [data-channel-link]>.platform-logo{width:20px;height:20px;padding:2px;border:0;border-radius:5px;box-shadow:none;margin-right:9px}
+.ov-nav [data-channel-link]>.platform-logo[data-platform-logo=tiktok_ads]{padding:0}
+.ov-nav [data-channel-link]{display:flex;align-items:center}
+.ov-nav [data-channel-link][aria-current=location]{color:var(--platform-action);background:var(--platform-soft);border-right:3px solid var(--platform-accent)}
+.wh-result>.platform-logo{width:34px;height:34px;padding:6px;border-radius:9px}
+.mk-platform-name>.platform-logo,.mk-platform-name>span>.platform-logo{width:30px;height:30px;padding:5px;border-radius:8px}
+.od-source-list .platform-logo,.mk-source-list .platform-logo{width:34px;height:34px;padding:6px;border-radius:9px}
+@media(max-width:700px){body[data-platform-page] :is(.cd-heading,.fc-hero){padding:20px 18px;border-radius:18px}.platform-heading{gap:12px}.platform-heading>.platform-logo,.fc-identity>.platform-logo{width:48px;height:48px;border-radius:14px;padding:8px}.platform-heading h1{font-size:1.5rem!important}}
+@media print{body[data-platform-page] :is(.cd-heading,.fc-hero){box-shadow:none}body[data-platform-page] .cr-cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}.platform-logo{box-shadow:none}.platform-logo img{-webkit-print-color-adjust:exact;print-color-adjust:exact}}

@@ -1,0 +1,10 @@
+{% macro donut(data, currency=none) -%}
+{% if data %}
+<section class="viz-composition" aria-label="{{ data.title }}">
+  <header class="viz-section-heading"><div><h2>{{ data.title }}</h2><p>{{ data.note }}</p></div><span class="material-symbols-outlined" aria-hidden="true">donut_large</span></header>
+  <div data-viz-donut="{{ data.rows|tojson|forceescape }}" data-viz-label="{{ data.label }}" data-viz-unit="{{ data.unit }}" data-viz-max-slices="{{ data.max_slices|default(5) }}"{% if currency %} data-viz-currency="{{ currency }}"{% endif %}>
+    <ul class="viz-fallback">{% for item in data.rows %}<li>{{ item.label }} <strong>{{ item.value if item.value is not none else 'Chưa có số liệu' }}</strong></li>{% else %}<li>Chưa có dữ liệu phân bổ.</li>{% endfor %}</ul>
+  </div>
+</section>
+{% endif %}
+{%- endmacro %}

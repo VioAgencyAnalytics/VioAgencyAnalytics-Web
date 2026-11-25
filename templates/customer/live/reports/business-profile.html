@@ -1,0 +1,13 @@
+<div class="pr-composition pr-local" data-order-container>
+<div class="vt-order-block" data-order-key="summary" data-order-label="Chỉ số chính">
+<section class="pr-local-actions"><div class="pr-panel-title"><h2>Khách hàng đã hành động thế nào?</h2><span>TRÊN HỒ SƠ</span></div>{{ p.metrics(view.layout,report,display,['call_clicks','website_clicks','directions']) }}<p class="pr-caption">Nhấp gọi là thao tác trên hồ sơ, không phải cuộc gọi đã hoàn tất.</p></section>
+{{ p.metrics(view.layout,report,display,['search_mobile','maps_mobile'],'report-visibility-kpis') }}
+{{ note(report_review, 'summary') }}
+</div>
+<div class="vt-order-block" data-order-key="trend" data-order-label="{{ view.layout.trend }}">
+{{ p.trend(report,view.layout) }}
+{{ note(report_review, 'trend') }}
+</div>
+{{ target_comparison(report,display,report_review) }}
+
+</div>

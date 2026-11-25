@@ -48,6 +48,16 @@ def health_check():
 # APPLICATION ROUTES
 # ==========================================
 app.include_router(viewer_router)
+from app.customer_seo import router as customer_seo_router
+app.include_router(customer_seo_router)
+from app.customer_report_templates import LIBRARY as report_library_path, router as report_templates_router
+app.include_router(report_templates_router)
+from app.customer_report_notes import router as report_notes_router
+app.include_router(report_notes_router)
+from app.customer_notifications import router as customer_notifications_router
+app.include_router(customer_notifications_router)
+from app.customer_pdf import router as customer_pdf_router
+app.include_router(customer_pdf_router)
 app.include_router(customer_router)
 app.include_router(customer_auth_router)
 app.include_router(handoff_router)
@@ -89,7 +99,9 @@ async def production_reports_only(request: Request, call_next):
         public_paths.add('/workspace/channels/facebook-content')
         public_paths.add('/workspace/reports/data')  # The page enforces Customer session and tenant scope.
         public_paths.add('/workspace/reports/facebook-content')  # Same private snapshot/session boundary.
-        public_prefixes += ('/api/customer/', '/auth/customer/')
+        public_paths.update({'/workspace/seo', '/workspace/reports/combined'})  # Each page enforces Customer scope.
+        public_paths.add(report_library_path)
+        public_prefixes += ('/api/customer/', '/auth/customer/', report_library_path + '/')
 
     if (
         request.state.runtime_env == "production"

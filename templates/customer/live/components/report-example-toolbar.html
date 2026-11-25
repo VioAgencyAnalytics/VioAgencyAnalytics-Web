@@ -1,0 +1,16 @@
+{% from 'customer/live/components/report-style.html' import palette_picker %}
+<header class="rt-preview-bar">
+  <div class="rt-preview-actions">
+    <a class="rt-button rt-button-secondary" href="{{ report_library_url }}"><span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>Kho mẫu báo cáo</a>
+    <span class="rt-preview-label"><span class="material-symbols-outlined" aria-hidden="true">science</span>Dữ liệu minh họa</span>
+    <a class="rt-button rt-button-primary" href="{{ example_use_url|default(report_example.use_url) }}">Dùng mẫu<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+  </div>
+  {% if report_style and request is defined %}
+  <form class="vt-preview-picker" method="get" action="{{ request.url.path }}">
+    {% for key, value in request.query_params.items() if key in ('category','platform','q','order','hidden') %}<input type="hidden" name="{{ key }}" value="{{ value }}">{% endfor %}
+    {{ palette_picker(report_palette, report_palettes, 'vt-preview-palette') }}
+    <button type="submit" class="rt-button rt-button-secondary">Xem màu</button>
+    <button type="button" class="rt-button rt-button-secondary" data-report-order-open hidden>Sắp xếp nội dung</button>
+  </form>
+  {% endif %}
+</header>

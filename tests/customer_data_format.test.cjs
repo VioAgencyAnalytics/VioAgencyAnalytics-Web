@@ -26,3 +26,19 @@ test('Missing and malformed values never become zero; fractional rates stay perc
   assert.equal(format(.25, 'percent'), '25%');
   assert.equal(format('NaN', 'currency', 'USD'), '—');
 });
+
+test('Account currency never rounds fractional conversions or minutes to an integer', () => {
+  assert.equal(format(.25,'number','VND'),'0,25');
+  assert.equal(format(6.5,'number','VND'),'6,5');
+  assert.equal(format(.125,'number','VND'),'0,12');
+  assert.equal(format(.00125,'percent','VND'),'0,12%');
+});
+
+test('Positive subprecision values remain distinct from an observed zero', () => {
+  assert.equal(format('0.000001','currency','USD'),'<0,01 USD');
+  assert.equal(format('0.4','currency','VND'),'<1 VND');
+  assert.equal(format(.000001,'number'),'<0,01');
+  assert.equal(format(.0000001,'percent'),'<0,01%');
+  assert.equal(format(0,'percent'),'0%');
+  assert.equal(format(0,'currency','USD'),'0,00 USD');
+});

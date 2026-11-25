@@ -1,0 +1,29 @@
+.seo-auto-card { background: linear-gradient(135deg, #f0faf6, #f8fbff); border-color: #c7e6db; }
+.seo-auto-site { padding: 15px; background: #edf7f4; color: #155e55; border-radius: 12px; overflow-wrap: anywhere; }
+.seo-auto-status { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 12px 0; }
+.seo-auto-status strong { color: #155d55; }
+.seo-auto-status[data-state="failed"] strong { color: #b4463c; }
+.seo-auto-status small { color: #627c89; }
+.seo-auto-status .ov-button { margin-left: auto; }
+.seo-auto-origin { display: inline-flex; border-radius: 6px; background: #e6f5f0; color: #087e69; padding: 4px 7px; font-size: .75rem; }
+.seo-auto-kpis { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0; }
+.seo-auto-kpis > span { display: inline-flex; gap: 5px; align-items: baseline; border: 1px solid #dce8e6; border-radius: 9px; padding: 9px 12px; background: #fff; color: #5b7282; font-size: .8rem; }
+.seo-auto-kpis strong { color: #145f56; font-size: 1rem; }
+.seo-auto-query-title { min-width: 180px; display: grid; gap: 6px; }
+.seo-auto-query-title a { font-size: .75rem; overflow-wrap: anywhere; }
+.seo-auto-query-role { display: grid; gap: 6px; min-width: 145px; }
+.seo-auto-query-role small { color: #728394; font-size: .75rem; }
+.seo-auto-discovery .seo-toolbar { margin: 16px 0; }
+.seo-auto-discovery .seo-toolbar input { flex: 1; min-width: 120px; }
+.seo-auto-query-details > summary { cursor: pointer; color: #087e69; font-weight: 650; padding: 10px 0; }
+.seo-auto-query-details > summary:focus-visible { outline: 2px solid #087e69; outline-offset: 3px; }
+.seo-table .seo-keyword { display: grid; gap: 7px; }
+.seo-auto-discovery [aria-live] { overflow-wrap: anywhere; }
+.seo-auto-review-list { margin-top: 16px; border-top: 1px solid #dce7e5; padding-top: 12px; }
+.seo-auto-review-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid #e5edee; }
+.seo-auto-review-item > div { min-width: 0; display: grid; gap: 5px; overflow-wrap: anywhere; }
+.seo-auto-review-item .ov-button { flex-shrink: 0; }
+@media (max-width: 700px) {
+  .seo-auto-review-item { flex-direction: column; align-items: stretch; }
+  .seo-auto-status .ov-button { margin-left: 0; }
+}

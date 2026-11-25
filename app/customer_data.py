@@ -1,6 +1,6 @@
 """BFF and presentation for the common, private connector data contract."""
 from datetime import date
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, InvalidOperation, ROUND_HALF_EVEN, localcontext
 import math
 import re
 import secrets
@@ -11,11 +11,11 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from app.customer_auth import (BINDING, HEADERS, CustomerError, backend, browser_binding,
     configuration, error_response, set_cookie)
 from app.routes.pages import templates
+from app.customer_transport import PROVIDERS
 
 
-SOURCES = frozenset(('facebook_content', 'facebook_ads', 'ga4', 'gsc', 'google_ads',
-    'tiktok_ads', 'instagram', 'youtube', 'business_profile'))
-STATES = frozenset(('no_client', 'not_connected', 'planned', 'select_asset', 'syncing', 'sync_error', 'empty', 'ready', 'invalid'))
+SOURCES = frozenset(PROVIDERS)
+STATES = frozenset(('no_client', 'not_connected', 'planned', 'select_asset', 'syncing', 'sync_error', 'empty', 'ready', 'invalid', 'future_period'))
 UNITS = frozenset(('count', 'number', 'percent', 'currency'))
 
 
@@ -29,7 +29,7 @@ def string(value, limit=500):
     return value
 
 
-def numeric(value, unit):
+def numeric(value, unit, *, bounded_rate=True):
     if value is None:
         return None
     if unit == 'currency' and isinstance(value, str):
@@ -44,7 +44,7 @@ def numeric(value, unit):
         finite = type(value) in (int, float) and math.isfinite(value)
     except OverflowError:
         finite = False
-    if (not finite or value < 0 or (unit == 'percent' and value > 1)):
+    if (not finite or value < 0 or (unit == 'percent' and bounded_rate and value > 1)):
         invalid()
     return value
 
@@ -97,17 +97,26 @@ def project(payload, workspace_id, *, summary=False):
         'snapshot': ('id', 'created_at', 'start_date', 'end_date', 'fetched_at', 'timezone', 'currency'),
         'latest_sync': ('id', 'status', 'start_date', 'end_date', 'created_at', 'finished_at', 'error_code')}.items():
         result[key] = scalar_record(payload.get(key), fields)
+    if result['latest_sync'] and result['latest_sync'].get('error_code') is not None:
+        safe_errors = {'provider_reauth', 'provider_rate_limit', 'provider_scopes', 'provider_page_limit',
+                       'provider_bad_response', 'provider_timeout', 'provider_unavailable',
+                       'provider_setup_required', 'provider_account_required', 'sync_cancelled', 'worker_interrupted'}
+        if result['latest_sync']['error_code'] not in safe_errors:
+            result['latest_sync']['error_code'] = 'provider_unavailable'
     specs = {r['key']: r for r in result['connector']['metrics']}
+    ads = result['source'] in ('facebook_ads', 'google_ads', 'tiktok_ads')
     result['metrics'] = []
     for metric in rows(payload.get('metrics'), 20):
         key, unit = metric.get('key'), metric.get('unit')
         if key not in specs or unit != specs[key]['unit'] or metric.get('status') not in ('available', 'no_data', 'partial'):
             invalid()
         result['metrics'].append({**{k: specs[key][k] for k in ('key', 'label', 'unit', 'aggregation', 'grain')},
-            'value': numeric(metric.get('value'), unit), 'status': metric['status'],
+            'value': numeric(metric.get('value'), unit, bounded_rate=not (ads and key == 'ctr')), 'status': metric['status'],
             'currency': string(metric['currency'], 3) if metric.get('currency') is not None else None})
     if result['state'] == 'ready' and (not scope['client_id'] or not result['asset'] or not result['snapshot']):
         invalid()
+    from app.customer_report_controls import project as controls
+    result.update(controls(payload,result['connector']['metrics'],result['metrics'],result['asset'],result['snapshot']))
     if summary:
         return result
     if payload.get('schema_version') != 1 or payload.get('mapping_version') != 1:
@@ -127,7 +136,8 @@ def project(payload, workspace_id, *, summary=False):
             invalid()
         if not isinstance(row.get('values'), dict) or set(row['values']) - set(specs):
             invalid()
-        result['daily'].append({'date': stamp, 'values': {key: numeric(v, specs[key]['unit']) for key, v in row['values'].items()}})
+        result['daily'].append({'date': stamp, 'values': {
+            key: numeric(v, specs[key]['unit'], bounded_rate=not (ads and key == 'ctr')) for key, v in row['values'].items()}})
     result['tables'] = []
     for table in rows(payload.get('tables'), 5):
         columns = []
@@ -159,13 +169,8 @@ def project_index(payload, workspace_id):
 
 
 def query(request, *, page=False):
-    allowed = {'source', 'snapshot'} if page else {'snapshot'}
-    if set(request.query_params) - allowed or any(len(request.query_params.getlist(k)) != 1 for k in request.query_params):
-        raise CustomerError(422, 'Bộ lọc dữ liệu không hợp lệ.', 'snapshot_input')
-    value = request.query_params.get('snapshot')
-    if value is not None and not re.fullmatch(r'[a-f0-9]{32}', value):
-        raise CustomerError(422, 'Mã snapshot không hợp lệ.', 'snapshot_input')
-    return '?'+urlencode({'snapshot': value}) if value else ''
+    from app.customer_report_controls import query as report_query
+    return report_query(request,include_source=page,include_template=page)
 
 
 async def read(request, workspace_id, source=None):
@@ -178,20 +183,42 @@ async def read(request, workspace_id, source=None):
         payload = await backend(request, 'GET', '/workspaces/'+workspace_id+'/data'+suffix)
         if source and payload.get('source') != source:
             raise CustomerError(502, 'Connector trả về không đúng nguồn.', 'snapshot_scope')
-        return JSONResponse(project(payload, workspace_id) if source else project_index(payload, workspace_id), headers=HEADERS)
+        result = project(payload, workspace_id) if source else project_index(payload, workspace_id)
+        if source:
+            from app.customer_comparisons import assert_period, attach
+            wanted = {key: request.query_params[key] for key in ('start', 'end') if key in request.query_params}
+            assert_period(result, wanted)
+            await attach(request, result, '/workspaces/'+workspace_id+'/data/'+source, project)
+        return JSONResponse(result, headers=HEADERS)
     except CustomerError as error:
         return error_response(error)
 
 
 def display(value, unit='number', currency=None):
-    if value is None:
+    if value is None or isinstance(value, bool):
         return '—'
-    number = Decimal(str(value))
-    if unit == 'percent':
-        number *= 100
-    digits = 0 if currency == 'VND' or (unit == 'count' and number == number.to_integral_value()) else 2
-    formatted = f'{number:,.{digits}f}'.replace(',', '_').replace('.', ',').replace('_', '.')
-    return formatted + ('%' if unit == 'percent' else ' '+currency if unit == 'currency' and currency else '')
+    try:
+        with localcontext() as context:
+            context.prec = 100
+            number = Decimal(str(value))
+            if not number.is_finite() or number < 0:
+                return '—'
+            if unit == 'percent':
+                number *= 100
+            # Currency precision never changes fractional conversions, minutes,
+            # position or rates in a VND account's detail table.
+            digits = 0 if unit == 'currency' and currency == 'VND' or unit == 'count' and number == number.to_integral_value() else 2
+            quantum = Decimal(1).scaleb(-digits)
+            rounded = number.quantize(quantum, rounding=ROUND_HALF_EVEN)
+            suffix = '%' if unit == 'percent' else ' '+currency if unit == 'currency' and currency else ''
+            if 0 < number < quantum:
+                return ('<1' if digits == 0 else '<0,01') + suffix
+            formatted = f'{rounded:,.{digits}f}'.replace(',', '_').replace('.', ',').replace('_', '.')
+            if unit != 'currency' and ',' in formatted:
+                formatted = formatted.rstrip('0').rstrip(',')
+            return formatted + suffix
+    except (InvalidOperation, ValueError):
+        return '—'
 
 
 async def page(request, source=None):
@@ -201,6 +228,11 @@ async def page(request, source=None):
         source = source or request.query_params.get('source', 'ga4')
         if source not in SOURCES:
             raise CustomerError(404, 'Không tìm thấy connector.')
+        from app.customer_report_presets import get_preset
+        from app.customer_report_styles import style_context
+        preset = get_preset(source, request.query_params.get('template'))
+        styling = style_context(request.query_params.get('style'), request.query_params.get('palette'), preset,
+                                request.query_params.get('order'), request.query_params.get('hidden'))
         try:
             account = await backend(request, 'GET', '/session')
         except CustomerError as error:
@@ -220,11 +252,26 @@ async def page(request, source=None):
             raise CustomerError(409, 'Khách hàng đã thay đổi. Vui lòng tải lại.', 'client_changed')
         if catalogue.get('workspace', {}).get('id') != workspace_id or (catalogue['selected_client']['id'] if catalogue.get('selected_client') else None) != report['scope']['client_id']:
             raise CustomerError(409, 'Khách hàng đã thay đổi. Vui lòng tải lại.', 'client_changed')
+        from app.customer_comparisons import assert_period, attach
+        assert_period(report, {key: request.query_params[key] for key in ('start', 'end') if key in request.query_params})
+        await attach(request, report, '/workspaces/'+workspace_id+'/data/'+source, project)
         connectors = [{'id': p['id'], 'name': string(p['name'], 150)} for p in catalogue.get('platforms', []) if p.get('id') in SOURCES]
         from app.customer_report_view import build as report_view
+        from app.customer_report_notes import attach as attach_notes, platform_reference
+        from app.report_commentary import platform
+        view = report_view(report)
+        focus = None
+        if preset:
+            from app.customer_report_focus import focus_report
+            focus, sections = focus_report(preset, report, view['layout'])
+        else:
+            sections = platform(report, view['layout'])
+        review = await attach_notes(request, settings, report['scope'], platform_reference(report, 'platform', preset), sections)
         response = templates.TemplateResponse(request=request, name='customer/live/data-report.html',
             context={'title': report['connector']['name'], 'customer_page': 'reports', 'customer_live': True,
-                'customer_data_live': True, 'account': account, 'details': details, 'report': report, 'view': report_view(report), 'display': display, 'connectors': connectors}, headers=HEADERS)
+                'customer_data_live': True, 'account': account, 'details': details, 'report': report, 'view': view,
+                'display': display, 'connectors': connectors, 'report_review': review, 'report_preset': preset,
+                'report_focus': focus, **styling}, headers=HEADERS)
         if not browser_binding(request):
             set_cookie(response, BINDING, secrets.token_urlsafe(48), settings)
         return response

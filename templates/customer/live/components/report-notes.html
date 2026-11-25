@@ -1,0 +1,52 @@
+{% macro note(review, key) -%}
+{% set item = review['sections'].get(key) if review else none %}
+{% if item %}
+<aside class="report-note" aria-label="Nhận xét mục {{ item.title }}" data-report-note="{{ key }}" data-note-final="{{ 'true' if item.finalized else 'false' }}">
+  <strong>Nhận xét</strong>
+  <p data-report-note-text>{{ item.text }}</p>
+</aside>
+{% endif %}
+{%- endmacro %}
+
+{% macro pdf_button(review) -%}
+{% if review and review.reader and review.reader.pdf %}
+<button type="button" class="ov-button" data-report-pdf><span class="material-symbols-outlined" aria-hidden="true">picture_as_pdf</span><span data-pdf-label>Xuất PDF</span></button>
+{% endif %}
+{%- endmacro %}
+
+{% macro review_controls(review) -%}
+{% if review and review.reader %}
+<div class="report-note-controls">
+  <p id="report-note-status" role="status">
+    {% if review.load_error %}Chưa tải được phần nhận xét đã lưu. Hãy tải lại báo cáo.
+    {% elif review.status == 'finalized' %}Nhận xét đã chốt · {{ review.updated_at | vietnam_time }}
+    {% elif review.status == 'draft' %}Đã lưu nháp nhận xét. Chốt để đưa vào PDF.
+    {% else %}Nhận xét gợi ý theo số liệu. Chốt để đưa vào PDF.{% endif %}
+  </p>
+  {% if review.editor %}<button class="ov-button ov-secondary" type="button" id="report-note-edit">Chỉnh nhận xét</button>{% endif %}
+  {% if review.reader.pdf %}<p id="report-export-status" role="status" hidden></p>{% endif %}
+</div>
+<script type="application/json" id="report-note-reader">{{ review.reader | tojson }}</script>
+{% endif %}
+{% if review and review.editor %}
+<dialog class="rp-dialog report-note-dialog" id="report-note-dialog" aria-labelledby="report-note-title">
+  <form id="report-note-form">
+    <header><h2 id="report-note-title">Chỉnh nhận xét báo cáo</h2><button type="button" class="rp-dialog-close" id="report-note-close" aria-label="Đóng">×</button></header>
+    <div class="rp-dialog-body">
+      <p class="rp-input-help">Lưu nháp để chỉnh tiếp. Khi chốt, các nhận xét được giữ cùng bản dữ liệu này và xuất hiện trong PDF.</p>
+      {% for key, item in review['sections'].items() %}
+      <label class="report-note-field"><span>{{ item.title }}</span>
+        <textarea data-report-note-field="{{ key }}" required maxlength="{{ review.editor.max_length }}" rows="3">{{ item.text }}</textarea>
+      </label>
+      {% endfor %}
+      <p class="rp-feedback" id="report-note-feedback" role="alert" hidden></p>
+    </div>
+    <footer>
+      <button class="ov-button ov-secondary" type="submit" value="save">Lưu nháp</button>
+      <button class="ov-button" type="submit" value="finalize">Chốt nhận xét</button>
+    </footer>
+  </form>
+</dialog>
+<script type="application/json" id="report-note-editor">{{ review.editor | tojson }}</script>
+{% endif %}
+{%- endmacro %}

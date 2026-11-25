@@ -1,6 +1,8 @@
 """Prepare separate private environments for the local customer Docker stack."""
 import json
+import ipaddress
 from pathlib import Path
+import re
 from urllib.parse import urlsplit, urlunsplit
 
 
@@ -16,11 +18,32 @@ def write_env(path, values):
     path.write_text(''.join(lines), encoding='utf-8')
 
 
-def prepare(private=None):
+def public_origin(value):
+    try:
+        if not isinstance(value, str) or any(ord(char) < 33 for char in value) or '\\' in value:
+            raise ValueError()
+        parsed = urlsplit(value)
+        host = parsed.hostname or ''
+        if (parsed.scheme != 'https' or parsed.netloc != host or parsed.path or parsed.query or parsed.fragment
+                or not host.isascii() or len(host) > 253 or '.' not in host or host.endswith('.localhost')
+                or any(not re.fullmatch(r'[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?', part) for part in host.split('.'))):
+            raise ValueError()
+        try:
+            ipaddress.ip_address(host)
+        except ValueError:
+            return 'https://'+host
+        raise ValueError()
+    except (TypeError, ValueError):
+        raise SystemExit('Expected a public HTTPS origin with a DNS hostname and no path, port or credentials.') from None
+
+
+def prepare(private=None, *, allow_public=False):
     private = private or Path(__file__).resolve().parents[1] / '.work' / 'customer-dev'
     values = json.loads((private / 'config.json').read_text(encoding='utf-8'))
     if values.get('CUSTOMER_WEB_ORIGIN') not in ('http://127.0.0.1:8084', 'https://localhost:8444'):
-        raise SystemExit('Expected the configured local Customer Web origin (8084 HTTP or 8444 HTTPS).')
+        if not allow_public:
+            raise SystemExit('Expected the configured local Customer Web origin (8084 HTTP or 8444 HTTPS).')
+        public_origin(values.get('CUSTOMER_WEB_ORIGIN'))
     token = values.get('CUSTOMER_SERVICE_TOKEN', '')
     if not isinstance(token, str) or len(token) < 32 or any(c in token for c in '\r\n\x00\''):
         raise SystemExit('Invalid Customer service credential; no environment file written.')

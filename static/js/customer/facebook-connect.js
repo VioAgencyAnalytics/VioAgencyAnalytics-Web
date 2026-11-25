@@ -22,7 +22,7 @@
       connection_permission: 'Quyền của bạn vừa thay đổi. Chủ sở hữu hoặc quản trị viên có thể quản lý kết nối.',
     };
     let scope, connectionKey, accessKey, generation = 0, busy = '', pagesState = 'idle', totalPages = 1;
-    let assets = [], selected = '', page = 0, forcePages = false, message = '', messageKind = 'info', returnFocus;
+    let assets = [], selected = '', page = 0, forcePages = false, forceConnect = false, message = '', messageKind = 'info', returnFocus;
     const ctx = () => options.context();
     const key = (value) => value.connection ? value.connection.id + ':' + value.connection.version : '';
     const access = (value) => [value.canManage, value.platform?.can_connect].join(':');
@@ -39,7 +39,7 @@
       if (!value.clientId) return 'client';
       if (!value.canManage) return 'viewer';
       if (!value.platform?.can_connect) return 'unavailable';
-      if (!value.connection || ['expired', 'disconnected', 'pending'].includes(value.connection.state)) return 'connect';
+      if (forceConnect || !value.connection || ['expired', 'disconnected', 'pending'].includes(value.connection.state)) return 'connect';
       if (forcePages || !value.connection.asset_id) return 'pages';
       return 'done';
     }
@@ -85,6 +85,9 @@
       $('#facebook-page-next').disabled = Boolean(busy) || page + 1 >= totalPages;
       $('#facebook-retry-state').disabled = Boolean(busy);
       $('#facebook-custom-sync').disabled ||= value.connection?.state === 'syncing';
+      $('#facebook-reconnect').hidden = !value.ready || !value.canManage || !value.platform?.can_connect || !value.connection
+        || view === 'connect';
+      $('#facebook-reconnect').disabled = Boolean(busy && busy !== 'discover');
     }
     function renderDone(value) {
       const connection = value.connection, syncing = connection.state === 'syncing', failed = connection.state === 'error';
@@ -109,6 +112,7 @@
       dialog.dataset.view = view;
       dialog.setAttribute('aria-describedby', 'facebook-scope');
       headerIcon.className = 'fb-brand'; headerIcon.textContent = 'f';
+      window.VioPlatformBrand?.setLogo(headerIcon, 'facebook_content');
       $('#facebook-header-label').textContent = 'FACEBOOK';
       $('#facebook-connect-title').textContent = 'Kết nối Fanpage';
       $('#facebook-close').setAttribute('aria-label', 'Đóng kết nối Fanpage');
@@ -122,7 +126,7 @@
         item.dataset.complete = String(index < step); item.querySelector('b').textContent = index < step ? '✓' : String(index + 1);
         if (index === step) item.setAttribute('aria-current','step'); else item.removeAttribute('aria-current');
       });
-      $('#facebook-connect-heading').textContent = value.connection?.state === 'expired' ? 'Kết nối lại Facebook để tiếp tục' : 'Dùng Facebook có quyền quản lý Fanpage';
+      $('#facebook-connect-heading').textContent = forceConnect || value.connection?.state === 'expired' ? 'Kết nối lại Facebook để tiếp tục' : 'Dùng Facebook có quyền quản lý Fanpage';
       $('#facebook-pages-loading').hidden = pagesState !== 'loading';
       $('#facebook-pages-idle').hidden = pagesState !== 'idle';
       $('#facebook-pages-error').hidden = pagesState !== 'error';
@@ -251,7 +255,7 @@
     function open(settings = {}) {
       if (dialog.open || !ctx().ready || document.querySelector('dialog[open]')) return;
       const value = ctx(); generation += 1; scope = binding(value); connectionKey = key(value); accessKey = access(value);
-      busy = ''; forcePages = false; clearPages(); feedback(); returnFocus = document.activeElement;
+      busy = ''; forcePages = false; forceConnect = settings.reconnect === true; clearPages(); feedback(); returnFocus = document.activeElement;
       $('#facebook-options').open = false;
       const label = value.scopeLabel || 'Khách hàng', word = label.toLocaleLowerCase('vi-VN');
       $('#facebook-client-heading').textContent = `Kết nối cho ${word} nào?`;
@@ -305,6 +309,11 @@
     $('#facebook-retry-state').addEventListener('click', () => run('check', () => options.refresh()));
     for (const selector of ['#facebook-load-pages','#facebook-retry-pages','#facebook-empty-retry']) $(selector).addEventListener('click', loadPages);
     $('#facebook-regrant').addEventListener('click', authorize);
+    $('#facebook-reconnect').addEventListener('click',() => {
+      const value=ctx();
+      if (busy && busy !== 'discover' || !value.ready || !value.canManage || !value.platform?.can_connect || !value.clientId) return;
+      generation += 1; busy=''; forcePages=false; forceConnect=true; clearPages(); feedback(); render();
+    });
     $('#facebook-page-search').addEventListener('input', () => { page = 0; drawPages(); });
     $('#facebook-clear-search').addEventListener('click', () => { $('#facebook-page-search').value = ''; page = 0; drawPages(); $('#facebook-page-search').focus(); });
     $('#facebook-page-prev').addEventListener('click', () => { if (page > 0) { page -= 1; drawPages(); } });

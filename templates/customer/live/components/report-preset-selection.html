@@ -1,0 +1,6 @@
+{% if report_preset and not report_example %}
+<div class="rf-selection">
+  <div><small>Mẫu báo cáo đang dùng</small><strong>{{ report_preset.name }}</strong></div>
+  <a class="rt-button rt-button-secondary" href="/workspace/reports/templates?platform={{ preset_source|replace('_', '-') }}">Đổi mẫu</a>
+</div>
+{% endif %}

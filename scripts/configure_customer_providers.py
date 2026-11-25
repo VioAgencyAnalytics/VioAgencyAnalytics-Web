@@ -37,7 +37,7 @@ def save_configuration(private, values):
             (staged/name).replace(private/name)
 
 
-def configure(provider, private=None, meta_source='both', reuse_primary=False, reuse_signin=False):
+def configure(provider, private=None, meta_source='both', reuse_primary=False, reuse_signin=False, meta_config_id=None):
     private = private or Path(__file__).resolve().parents[1]/'.work'/'customer-dev'
     path = private/'config.json'
     if not path.exists():
@@ -45,7 +45,8 @@ def configure(provider, private=None, meta_source='both', reuse_primary=False, r
     values = json.loads(path.read_text(encoding='utf-8'))
     updates = {}
     if (provider not in ('google','google-ads','meta','tiktok') or meta_source not in ('content','ads','instagram','both')
-            or (reuse_primary and (provider!='meta' or meta_source=='instagram')) or (reuse_signin and provider!='google')):
+            or (reuse_primary and (provider!='meta' or meta_source=='instagram')) or (reuse_signin and provider!='google')
+            or (meta_config_id is not None and (provider!='meta' or meta_source not in ('ads','instagram') or reuse_primary))):
         raise SystemExit('Invalid provider source. No configuration changed.')
     def ask(key, label, secret=False):
         full = 'CUSTOMER_DATA_'+key
@@ -84,7 +85,13 @@ def configure(provider, private=None, meta_source='both', reuse_primary=False, r
             raise SystemExit('Invalid app-generated TikTok advertiser URL or callback. No configuration changed.')
     else:
         sources=('content','ads') if meta_source=='both' else (meta_source,)
-        if reuse_primary:
+        if meta_config_id is not None:
+            # Adding a source to the existing Customer app must not require the
+            # operator to type/copy its secret or rebind the Content grant.
+            app,secret,graph=(values.get('CUSTOMER_DATA_META_'+key,'') for key in ('APP_ID','APP_SECRET','GRAPH_VERSION'))
+            config_ids=[meta_config_id]
+            updates={'CUSTOMER_DATA_META_'+meta_source.upper()+'_CONFIG_ID':meta_config_id}
+        elif reuse_primary:
             existing=primary_meta_application()
             app,secret,graph=existing['APP_ID'],existing['APP_SECRET'],existing['GRAPH_VERSION']
             updates={'CUSTOMER_DATA_META_APP_ID':app,'CUSTOMER_DATA_META_APP_SECRET':secret,'CUSTOMER_DATA_META_GRAPH_VERSION':graph,
@@ -120,5 +127,6 @@ if __name__=='__main__':
     parser.add_argument('--meta-source',choices=('content','ads','instagram','both'),default='both')
     parser.add_argument('--reuse-primary-meta-app',action='store_true',help='Copy only existing Primary APP settings; no customer tokens or data.')
     parser.add_argument('--reuse-signin-google-app',action='store_true',help='Use the same Vio Google APP, with separate data consent and grants. Never copies a sign-in token.')
+    parser.add_argument('--meta-config-id',help='For ads or instagram only: bind a verified configuration ID using the existing Customer Meta application; never prompts for its secret.')
     args=parser.parse_args()
-    configure(args.provider,meta_source=args.meta_source,reuse_primary=args.reuse_primary_meta_app,reuse_signin=args.reuse_signin_google_app)
+    configure(args.provider,meta_source=args.meta_source,reuse_primary=args.reuse_primary_meta_app,reuse_signin=args.reuse_signin_google_app,meta_config_id=args.meta_config_id)

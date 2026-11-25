@@ -71,6 +71,22 @@ def test_projection_preserves_zero_null_ratio_and_strips_nested_credentials(stac
     assert client.get('/api/customer/workspaces/'+'a'*32+'/data/ga4').status_code==502
 
 
+@pytest.mark.parametrize('source,expected', [('google_ads',200),('facebook_ads',200),('tiktok_ads',200),('gsc',502)])
+def test_click_ratio_over_one_hundred_percent_is_allowed_only_for_ads(stack,source,expected):
+    client,_,state,_=stack
+    prepare(state)
+    data=state['source_data']=report(source)
+    data['connector']['metrics'][-1]['key']='ctr'
+    data['metrics'][-1].update(key='ctr',value=1.5)
+    data['daily'][0]['values'].pop('rate')
+    data['daily'][0]['values']['ctr']=1.5
+    response=client.get('/api/customer/workspaces/'+'a'*32+'/data/'+source)
+    assert response.status_code==expected,response.text
+    if expected==200:
+        assert response.json()['metrics'][-1]['value']==1.5
+        assert response.json()['daily'][0]['values']['ctr']==1.5
+
+
 def test_source_scope_duplicate_and_foreign_filters_fail_before_transport(stack):
     client,calls,state,_=stack;prepare(state)
     base='/api/customer/workspaces/'+'a'*32+'/data'
@@ -93,7 +109,7 @@ def test_report_renders_readable_metrics_inert_text_and_common_controls(stack):
     assert 'data-report.js' in result.text and 'library.js' not in result.text
     for element in ('data-source','data-client','data-period','data-chart','connector-report-data'):
         assert 'id="'+element+'"' in result.text
-    assert '25,00%' in result.text and '>0<' in result.text and '—' in result.text
+    assert '25%' in result.text and '>0<' in result.text and '—' in result.text
     assert '&lt;script&gt;inert&lt;/script&gt;' in result.text
     assert '<script>inert</script>' not in result.text and '<img src=x>' not in result.text
     assert 'NEVER_FORWARD' not in result.text

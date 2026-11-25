@@ -1,0 +1,218 @@
+{% set compact=compiled.compact_seo %}
+{% set seo=compact.seo.data %}
+{% from 'customer/live/components/seo-kpi-matrix.html' import render as render_kpi_matrix with context %}
+{% from 'customer/live/components/seo-rank-overview.html' import render as render_rank_overview with context %}
+{% from 'customer/live/components/report-notes.html' import note %}
+{% from 'customer/live/components/report-controls.html' import target_outcome %}
+{% set compare='comparison' in compiled.sections %}
+{% set statuses={'met':'Đạt','below_target':'Chưa đạt','in_progress_met':'Tạm đạt','in_progress':'Đang thực hiện','not_started':'Chưa tới kỳ','no_data':'Thiếu dữ liệu','period_mismatch':'Chưa trọn kỳ','not_set':'Chưa đặt mốc'} %}
+{% macro kpi_value(value,unit) -%}
+  {%- set value=value|default(none) -%}
+  {{ '−' if value is not none and value < 0 else '' }}{{ display(value|abs if value is not none else none,'number') }}{{ '%' if value is not none and unit=='percent' else '' }}
+{%- endmacro %}
+{% macro source_mark(source) %}<span class="sc-source-mark" data-source="{{ source|lower }}"><img src="/static/customer/platforms/{{ 'ga4.svg' if source=='GA4' else 'gsc.png' }}" alt="">{{ source }}</span>{% endmacro %}
+{% macro keyword_tables(blocks) %}
+    {% for block in blocks %}
+    <section class="sc-keyword-block">
+      <h3>{{ block.title }} · {{ block.count }} từ{% if block.continued %} · tiếp theo{% endif %}</h3>
+      {% if block.search %}<p class="sc-caption">Quan sát GSC trong kỳ nguồn. Vị trí TB của truy vấn được ghi riêng với thứ hạng Spineditor.</p>
+      {% elif block.dates %}<p class="sc-caption">Spineditor · {{ block.dates[0] }}{% if block.dates|length>1 %} → {{ block.dates[-1] }}{% endif %}</p>{% endif %}
+      <div class="sc-keyword-pair{% if block.tables|length==1 %} sc-single{% endif %}">
+        {% for rows in block.tables %}
+        <div class="seo-table-wrap"><table class="sc-table sc-keyword-table">
+          <colgroup><col class="sc-index"><col class="sc-word"><col><col>{% if compare or block.search %}<col>{% endif %}</colgroup>
+          <thead><tr><th>STT</th><th>Từ khóa</th>{% if block.search %}<th>Nhấp</th><th>Hiển thị</th><th>VT TB</th>{% else %}<th>Vị trí</th>{% if compare %}<th>Trước</th><th>± bậc</th>{% else %}<th>Vai trò</th>{% endif %}{% endif %}</tr></thead>
+          <tbody>{% for row in rows %}
+            <tr><td>{{ row.number }}</td><td>{% if row.url and not report_example %}<a href="{{ row.url }}" target="_blank" rel="noopener noreferrer">{{ row.keyword }}</a>{% else %}{{ row.keyword }}{% endif %}{% if block.dates|length>1 and row.observed_date %}<small>{{ row.observed_date }}</small>{% endif %}</td>
+            {% if block.search %}<td>{{ display(row.search_values.get('clicks'),'count') }}</td><td>{{ display(row.search_values.get('impressions'),'count') }}</td><td>{{ display(row.search_values.get('position'),'number') }}</td>
+            {% else %}<td class="{% if row.rank is not none and row.rank<=10 %}sc-top10{% endif %}">{{ row.rank if row.rank is not none else '>100' if row.state=='outside_top100' else '—' }}</td>
+              {% if compare %}<td>{{ row.previous_period_rank if row.previous_period_rank is not none else '>100' if row.previous_period_state=='outside_top100' else '—' }}</td><td class="{{ 'sc-up' if row.change is not none and row.change>0 else 'sc-down' if row.change is not none and row.change<0 else '' }}">{{ '+' if row.change is not none and row.change>0 else '' }}{{ row.change if row.change is not none else '—' }}</td>
+              {% else %}<td>{{ 'Chính' if row.role=='primary' else 'Phụ' if row.role=='secondary' else '—' }}</td>{% endif %}
+            {% endif %}</tr>
+          {% endfor %}</tbody>
+        </table></div>
+        {% endfor %}
+      </div>
+    </section>
+    {% else %}<p>Chưa có bộ từ khóa trong bản báo cáo.</p>{% endfor %}
+{% endmacro %}
+
+<div class="sc-report" id="chapter-seo-website" data-order-container>
+  {% if (seo_modules is not defined or seo_modules is none or 'performance' in seo_modules) and ('summary' in compiled.sections or 'charts' in compiled.sections or compare) %}
+  <section class="sc-page sc-performance" data-order-key="performance" data-order-label="Hiệu quả SEO & Website" aria-label="Hiệu quả SEO và website">
+    <header class="sc-heading"><h2>Hiệu quả SEO &amp; Website</h2><span>Bản dữ liệu đã chốt · {{ seo.period.start }} → {{ seo.period.end }}</span></header>
+    {% if compact.featured_metrics %}
+    <dl class="sc-signal-grid" aria-label="Chỉ số nổi bật trong kỳ">
+      {% for metric in compact.featured_metrics %}
+      <div class="sc-signal" data-platform-brand="{{ metric.source|lower }}">
+        <dt>{{ metric.label }}{{ source_mark(metric.source) }}</dt>
+        <dd><strong>{{ metric.actual }}</strong>
+          {% if compare and metric.previous!='—' %}
+          <small><span>Kỳ đối chiếu {{ metric.previous }}</span>{% if metric.delta!='—' %}<b data-effect="{{ metric.effect }}">{{ metric.delta }}</b>{% endif %}</small>
+          {% endif %}
+        </dd>
+      </div>
+      {% endfor %}
+    </dl>
+    {% elif seo_modules %}<p class="rf-empty">Chưa có số liệu GA4 hoặc Search Console cho kỳ đang xem.</p>
+    {% else %}
+    <div class="sc-results">
+      {% for key,label in [('total','Từ khóa theo dõi'),('top10','Từ Top 10'),('ranked','Có vị trí'),('unknown','Chưa có phép đo')] %}
+      <div><span>{{ label }}</span><strong>{{ display(seo.stats[key],'count') }}</strong></div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if compact.detail_metrics %}
+    <div class="seo-table-wrap"><table class="sc-table sc-metrics">
+      <thead><tr><th>Chỉ số</th><th>Nguồn</th><th>Kỳ đang xem</th>{% if compare %}<th>Kỳ đối chiếu</th><th>Thay đổi</th>{% endif %}</tr></thead>
+      <tbody>{% for row in compact.detail_metrics %}<tr><td>{{ row.label }}</td><td>{{ row.source }}</td><td><strong>{{ row.actual }}</strong></td>{% if compare %}<td>{{ row.previous }}</td><td data-effect="{{ row.effect }}">{{ row.delta }}</td>{% endif %}</tr>{% endfor %}</tbody>
+    </table></div>
+    {% endif %}
+    <div class="sc-source-dates">
+      {% for item in compact.google %}{% set source=item.data %}
+      <p><strong>{{ item.name }}</strong> {% if source.snapshot %}{{ source.asset.name }} · {{ source.snapshot.start_date }} → {{ source.snapshot.end_date }} · {{ source.snapshot.timezone }}{% if compare and item.previous_period %} · Đối chiếu {{ item.previous_period.start }} → {{ item.previous_period.end }}{% endif %}{% if compare and item.comparison_note %} · {{ item.comparison_note }}{% endif %}{% else %}Chưa có dữ liệu đúng kỳ{% endif %}</p>
+      {% endfor %}
+      {% if compare and seo.comparison.start and seo.comparison.end %}<p>Đối chiếu thứ hạng {{ seo.comparison.start }} → {{ seo.comparison.end }}. Biểu đồ so theo thứ tự ngày trong từng kỳ.</p>{% endif %}
+    </div>
+    {% if 'charts' in compiled.sections %}
+    <div class="sc-charts">{% for item in compact.charts %}<div data-platform-brand="{{ item.source }}">{{ trend(item.chart) }}</div>{% endfor %}</div>
+    <div class="sc-distributions" data-platform-brand="ga4">{% for chart in compact.distributions %}{{ donut(chart) }}{% endfor %}</div>
+    {% endif %}
+    {% if compact.countries %}<div class="sc-country-summary"><strong>Tìm kiếm theo quốc gia · GSC</strong><span>{% for row in compact.countries[:5] %}{{ {'vnm':'Việt Nam','usa':'Hoa Kỳ','sgp':'Singapore'}.get(row.country,row.country|upper) }} {{ display(row.clicks,'count') }} nhấp{% if not loop.last %} · {% endif %}{% endfor %}</span></div>{% endif %}
+    {{ note(report_review, 'seo_performance') }}
+  </section>
+  {% endif %}
+
+  {% if (not seo_modules or 'keywords' in seo_modules) and 'details' in compiled.sections %}
+  <section class="sc-page sc-keywords" data-order-key="keywords" data-order-label="Thứ hạng từ khóa" aria-label="Thứ hạng và từ khóa mở rộng">
+    <header class="sc-heading"><h2>Thứ hạng từ khóa</h2><span>Spineditor</span></header>
+    {% set show_rank_chart = 'charts' in compiled.sections and compact.rank_bands %}
+    {{ render_rank_overview(seo.rank_overview, '#seo-report-rank-chart' if show_rank_chart else none) }}
+    {% if compare and seo.analysis and compact.rank_bands and compact.rank_bands[0].prior is not none %}
+    <p class="sc-caption">Tăng hạng <strong>{{ display(seo.analysis.movement.up,'count') }}</strong> · Giảm hạng <strong>{{ display(seo.analysis.movement.down,'count') }}</strong></p>
+    {% endif %}
+    {% if show_rank_chart %}
+    {% set ranks_have_prior=compact.rank_bands[0].prior is not none %}
+    <figure class="sc-rank-chart" id="seo-report-rank-chart" tabindex="-1">
+      <figcaption><strong>Phân bố thứ hạng của bộ theo dõi</strong><span>Đơn vị từ khóa</span></figcaption>
+      <div class="sc-rank-legend"><span>Kỳ đang xem</span>{% if ranks_have_prior %}<span>Kỳ đối chiếu</span>{% endif %}</div>
+      <div class="sc-rank-chart-grid">
+        {% for row in compact.rank_bands %}
+        <div class="sc-rank-band">
+          <span>{{ row.label }}</span>
+          <div class="sc-rank-tracks" aria-hidden="true">
+            <div><i style="width:{{ row.width|round(2) }}%"></i></div>
+            {% if ranks_have_prior %}<div><i style="width:{{ row.prior_width|round(2) }}%"></i></div>{% endif %}
+          </div>
+          <strong>{{ row.count }}{% if ranks_have_prior %}<small> / {{ row.prior }}</small>{% endif %}</strong>
+        </div>
+        {% endfor %}
+      </div>
+    </figure>
+    {% endif %}
+    <p class="sc-caption">Top 10 được tô xanh. Dấu — là chưa có phép đo. Bậc tăng khi vị trí tìm kiếm cải thiện.</p>
+    {{ keyword_tables(compact.keywords) }}
+    {{ note(report_review, 'seo_keywords') }}
+  </section>
+  {% endif %}
+
+  {% if (not seo_modules or 'articles' in seo_modules) and ('details' in compiled.sections or 'seo_work' in compiled.sections) %}
+  <section class="sc-page sc-content" data-order-key="articles" data-order-label="Bài viết & hiệu quả" aria-label="Bài viết và hiệu quả">
+    <header class="sc-heading"><h2>Bài viết &amp; hiệu quả</h2></header>
+    {% if compact.articles %}
+    <dl class="sc-count-strip" aria-label="Tiến độ nội dung">
+      {% for key,label in [('published_new','Bài mới đã đăng'),('accepted_new','Bài mới nghiệm thu'),('accepted_updates','Cập nhật nghiệm thu'),('awaiting_acceptance','Chờ nghiệm thu')] %}
+      <div><dt>{{ label }}</dt><dd>{{ display(seo.content.summary[key],'count') }}{% if compare and seo.content.previous_summary %}<small>Kỳ đối chiếu {{ display(seo.content.previous_summary[key],'count') }}</small>{% endif %}</dd></div>
+      {% endfor %}
+    </dl>
+    {% endif %}
+    {% if 'charts' in compiled.sections and compact.article_highlights %}
+    <figure class="sc-article-chart" data-platform-brand="{{ compact.article_highlights.source|lower }}">
+      <figcaption><strong>{{ compact.article_highlights.label }}</strong>{{ source_mark(compact.article_highlights.source) }}</figcaption>
+      <ol>{% for row in compact.article_highlights['items'] %}
+        <li><span>{{ row.title }}</span><span class="sc-article-track" aria-hidden="true"><i style="width:{{ row.width|round(2) }}%"></i></span><strong>{{ row.value }}</strong></li>
+      {% endfor %}</ol>
+    </figure>
+    {% endif %}
+    <p class="sc-caption">Mỗi URL có một dòng hiệu quả. Số bài nghiệm thu tính theo ngày xác nhận. Lượt xem GA4 và lượt nhấp GSC giữ cách đo của từng nguồn.</p>
+    <div class="seo-table-wrap"><table class="sc-table sc-content-table">
+      <colgroup><col style="width:5%"><col style="width:35%"><col style="width:14%"><col style="width:22%"><col style="width:12%"><col style="width:12%"></colgroup>
+      <thead><tr><th>STT</th><th>Bài viết</th><th>Ngày đăng</th><th>Duyệt / nghiệm thu</th><th>Xem GA4</th><th>Nhấp GSC</th></tr></thead>
+      <tbody>{% for row in compact.articles %}<tr><td>{{ loop.index }}</td><td>{% if row.url and not report_example %}<a href="{{ row.url }}" target="_blank" rel="noopener noreferrer">{{ row.title }}</a>{% else %}{{ row.title }}{% if row.draft_url and not report_example %}<small><a href="{{ row.draft_url }}" target="_blank" rel="noopener noreferrer">Bản thảo ↗</a></small>{% endif %}{% endif %}</td>
+        <td>{% set published=namespace(date=none) %}{% for task in row.tasks %}{% if task.kind=='new' or published.date is none %}{% set published.date=task.published_date %}{% endif %}{% endfor %}{{ published.date or 'Bản thảo' }}</td>
+        <td>{% for task in row.tasks %}<span>{{ 'Mới' if task.kind=='new' else 'Cập nhật' }} · {{ 'Nghiệm thu ' ~ task.accepted_date if task.accepted_date else {'approved':'Đã duyệt','pending':'Chờ duyệt','rejected':'Cần chỉnh sửa'}.get(task.review_status,'—') }}</span>{% endfor %}</td>
+        <td>{{ display(row['values'].get('views'),'count') }}</td><td>{{ display(row['values'].get('clicks'),'count') }}</td></tr>{% else %}<tr><td colspan="6">Chưa có bài viết trong kỳ.</td></tr>{% endfor %}</tbody>
+    </table></div>
+    {{ note(report_review, 'seo_articles') }}
+  </section>
+  {% endif %}
+
+  {% if 'details' in compiled.sections and (compact.extended_keywords and not seo_modules or seo_modules and 'extended' in seo_modules) %}
+  <section class="sc-page sc-keywords sc-extended" data-order-key="extended" data-order-label="Từ khóa phụ & ngách" aria-label="Từ khóa phụ và ngách">
+    <header class="sc-heading"><h2>Từ khóa phụ &amp; ngách</h2></header>
+    <dl class="sc-count-strip" aria-label="Mức độ bao phủ từ khóa mở rộng">
+      {% for row in compact.extended_summary %}<div><dt>{{ row.label }}</dt><dd>{{ display(row.value,'count') }}</dd></div>{% endfor %}
+    </dl>
+    <p class="sc-caption">Từ khóa phụ có thể thuộc nhóm ngách. Bảng dưới đây liệt kê mỗi từ một lần.</p>
+    {% if compact.extended_keywords %}{{ keyword_tables(compact.extended_keywords) }}{% else %}<p class="rf-empty">Chưa có từ khóa phụ hoặc từ khóa ngách trong bản lưu.</p>{% endif %}
+    {{ note(report_review, 'seo_extended') }}
+  </section>
+  {% endif %}
+
+  {% set timeline=seo.project.timeline if seo.project else none %}
+  {% set has_kpi_matrix=(not seo_modules or 'matrix' in seo_modules) and 'kpi' in compiled.sections and timeline and timeline.months and timeline.metrics %}
+  {% if has_kpi_matrix %}{{ render_kpi_matrix(timeline, seo.project.plan, report_review) }}{% endif %}
+
+  {% if (not seo_modules or 'kpi' in seo_modules) and ('kpi' in compiled.sections or 'seo_work' in compiled.sections) %}
+  <section class="sc-page sc-kpi" data-order-key="kpi" data-order-label="KPI dự án" aria-label="KPI dự án và tiến độ">
+    <header class="sc-heading"><h2>{{ 'Đối chiếu cam kết' if has_kpi_matrix else 'KPI dự án' }}</h2>{% if seo.project and seo.project.plan %}<span>{% if seo.project.month_number %}Tháng {{ seo.project.month_number }}/{{ seo.project.plan.duration }} · {% endif %}{{ seo.project.plan.name }} · Phiên bản {{ seo.project.plan.version }}</span>{% endif %}</header>
+    {% if 'kpi' in compiled.sections %}
+    {% if seo.project and seo.project.plan %}
+    {% if compact.goal_statuses %}
+    <dl class="sc-count-strip" aria-label="Tình trạng các chỉ tiêu đã đặt">
+      {% for item in compact.goal_statuses if item.count %}<div data-tone="{{ item.tone }}"><dt>{{ item.label }}</dt><dd>{{ display(item.count,'count') }}</dd></div>{% endfor %}
+    </dl>
+    {% endif %}
+    <div class="seo-table-wrap"><table class="sc-table sc-goals">
+      <thead><tr><th>Chỉ tiêu</th><th>Cam kết</th><th>Thực tế</th><th>Chênh lệch</th><th>Hoàn thành</th><th>Đánh giá</th></tr></thead>
+      <tbody>{% for goal in seo.project['items'] if goal.target is not none or goal.actual is not none %}
+        <tr><td><strong>{{ goal.label }}</strong>{% if goal.note %}<small>{{ goal.note }}</small>{% endif %}</td>
+        <td>{{ kpi_value(goal.target,goal.unit) }}</td><td>{{ kpi_value(goal.actual,goal.unit) }}</td>
+        <td>{% if goal.difference is not none %}{{ '+' if goal.difference>0 else '−' if goal.difference<0 else '' }}{{ display(goal.difference|abs,'number') }}{{ ' đpt' if goal.unit=='percent' else '' }}{% else %}—{% endif %}</td>
+        <td>{{ kpi_value(goal.achievement,'percent') }}</td><td data-state="{{ goal.status }}">{{ statuses.get(goal.status,'Chưa đánh giá') }}</td></tr>
+      {% else %}<tr><td colspan="6">Kỳ đang xem chưa có chỉ tiêu áp dụng.</td></tr>{% endfor %}</tbody>
+    </table></div>
+    <p class="sc-caption">Hoàn thành = thực tế / cam kết × 100%. Đpt = điểm phần trăm. Kết quả kỳ đang mở là tạm tính.</p>
+    {% else %}
+    <h3>Cam kết Top 10</h3>
+    {% if seo.plan.keyword_count %}<p>{{ seo.plan.top10 }}/{{ seo.plan.required }} từ cần đạt · Mục tiêu {{ seo.plan.top10_percent }}% trên {{ seo.plan.keyword_count }} từ đã chốt.</p>{% endif %}
+    <p>{{ statuses.get(seo.plan.status, 'Chưa đủ dữ liệu nghiệm thu') }}</p>
+    {% endif %}
+    {{ note(report_review, 'seo_kpi') }}
+    {% endif %}
+    {% if 'kpi' in compiled.sections and compact.targets %}
+    <h3>Mục tiêu hiệu quả từ nguồn Google</h3>
+    <div class="seo-table-wrap"><table class="sc-table sc-goals"><thead><tr><th>Chỉ tiêu / nguồn</th><th>Mục tiêu</th><th>Thực tế</th><th>Đánh giá</th></tr></thead><tbody>{% for goal in compact.targets %}<tr><td>{{ goal.label }} · {{ goal.source }}</td><td>{{ '≤' if goal.direction=='at_most' else '≥' }} {{ display(goal.value,goal.unit,goal.currency) }}</td><td>{{ display(goal.actual,goal.unit,goal.actual_currency|default(goal.currency)) }}</td><td>{{ target_outcome(goal, display) }}</td></tr>{% endfor %}</tbody></table></div>
+    {{ note(report_review, 'seo_google_kpi') }}
+    {% endif %}
+    {% if 'seo_work' in compiled.sections and seo.work %}
+    <section class="sc-work-evidence">
+    <h3>Công việc &amp; bằng chứng</h3>
+    <div class="seo-table-wrap"><table class="sc-table"><thead><tr><th>Hạng mục</th><th>Tháng</th><th>Thực tế / kế hoạch</th><th>Nghiệm thu</th><th>Bằng chứng</th></tr></thead><tbody>{% for row in seo.work %}<tr><td>{{ row.title }}</td><td>{{ row.month }}</td><td>{{ row.actual }} / {{ row.target }}</td><td>{{ row.accepted_date if row.verified else 'Chờ xác nhận' }}</td><td>{% if row.evidence %}{% if report_example %}Minh họa{% else %}<a href="{{ row.evidence }}" target="_blank" rel="noopener noreferrer">Mở liên kết ↗</a>{% endif %}{% else %}—{% endif %}</td></tr>{% endfor %}</tbody></table></div>
+    </section>
+    {% endif %}
+    {{ note(report_review, 'seo_work') }}
+  </section>
+  {% endif %}
+
+  {% if 'details' in compiled.sections %}
+  <details class="sc-full-data sr-no-print" data-order-tail data-order-extra="performance,keywords,articles,extended"><summary>Xem dữ liệu nguồn đầy đủ</summary>
+    {% from 'customer/live/components/seo-report-expansion.html' import article_effectiveness with context %}
+    {{ article_effectiveness(seo,compare,report_example) }}
+    <h3>Phân loại từ khóa</h3><div class="seo-table-wrap"><table class="sc-table"><thead><tr><th>Từ khóa</th><th>Vai trò</th><th>Nhóm</th><th>Ngày đo</th></tr></thead><tbody>{% for row in seo.keywords %}<tr><td>{{ row.keyword }}</td><td>{{ 'Chính' if row.role=='primary' else 'Phụ' if row.role=='secondary' else 'Chưa phân loại' }}{% if row.role_origin=='gsc' and not row.role_reviewed %} · Gợi ý GSC · chờ duyệt{% endif %}</td><td>{{ row.topic or '—' }}{% if row.segment=='niche' %} · Ngách{% endif %}</td><td>{{ row.observed_date or '—' }}</td></tr>{% endfor %}</tbody></table></div>
+    {% for item in compact.google %}
+      {% for table in item.data.tables %}<h3>{{ item.name }} · {{ table.title }}</h3><div class="seo-table-wrap"><table class="sc-table"><thead><tr>{% for col in table.columns %}<th>{{ col.label }}</th>{% endfor %}</tr></thead><tbody>{% for row in table.rows %}<tr>{% for col in table.columns %}<td>{{ display(row[col.key],col.unit,item.data.snapshot.currency) if col.unit in ['count','number','percent','currency'] else row[col.key] if row[col.key] is not none else '—' }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>{% endfor %}
+    {% endfor %}
+  </details>
+  {% endif %}
+</div>

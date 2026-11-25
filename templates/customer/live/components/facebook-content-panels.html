@@ -12,7 +12,8 @@
 <div class="fc-chart-panel" id="fc-chart-{{ panel.key }}" data-fc-chart-panel="{{ panel.key }}" {% if report %}role="region" aria-label="{{ panel.title }}"{% else %}role="tabpanel" aria-labelledby="fc-tab-{{ panel.key }}"{% if panel.key != 'publishing' %} hidden{% endif %}{% endif %}>
   {% if report %}<h3 class="fc-report-chart-title">{{ panel.title }}</h3>{% endif %}
   <div class="fc-chart-caption"><p>{{ panel.note }}</p><span>{{ panel.coverage }}/{{ panel.expected }} mốc có số liệu</span></div>
-  {% if panel.has_data %}<div class="fc-chart-scroll" tabindex="0" role="region" aria-label="{{ panel.title }}">
+  {% if panel.has_data %}<div class="fc-chart-scroll" data-fc-plot="{{ panel.title }}" tabindex="0" role="region" aria-label="{{ panel.title }}">
+    <script type="application/json">{{ panel.points|tojson }}</script>
     <svg class="fc-chart" viewBox="0 0 880 250" role="img" aria-labelledby="fc-svg-title-{{ panel.key }} fc-svg-desc-{{ panel.key }}">
       <title id="fc-svg-title-{{ panel.key }}">{{ panel.title }}</title><desc id="fc-svg-desc-{{ panel.key }}">{{ panel.note }} Số liệu từng mốc có trong bảng bên dưới.</desc>
       {% for tick in panel.ticks %}<line x1="56" x2="848" y1="{{ tick.y }}" y2="{{ tick.y }}" class="fc-gridline"/><text x="45" y="{{ tick.y+4 }}" text-anchor="end" class="fc-axis-label">{{ tick.label }}</text>{% endfor %}

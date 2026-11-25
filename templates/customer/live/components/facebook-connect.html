@@ -1,6 +1,7 @@
-<dialog id="facebook-connect-dialog" class="fb-connect" aria-labelledby="facebook-connect-title" aria-describedby="facebook-scope">
+{% from 'customer/live/components/platform-mark.html' import platform_mark %}
+<dialog data-platform-brand="facebook_content" id="facebook-connect-dialog" class="fb-connect" aria-labelledby="facebook-connect-title" aria-describedby="facebook-scope">
   <header class="fb-connect-header">
-    <span id="facebook-header-icon" class="fb-brand" aria-hidden="true">f</span>
+    <span id="facebook-header-icon" class="fb-brand-wrapper">{{ platform_mark('facebook_content', 'fb-brand') }}</span>
     <div><span id="facebook-header-label" class="fb-eyebrow">FACEBOOK</span><h2 id="facebook-connect-title" tabindex="-1">Kết nối Fanpage</h2></div>
     <button type="button" id="facebook-close" class="wh-icon-button" aria-label="Đóng kết nối Fanpage"><span class="material-symbols-outlined" aria-hidden="true">close</span></button>
   </header>
@@ -55,5 +56,5 @@
       <details id="facebook-options" class="fb-options"><summary>Tùy chọn kết nối</summary><div><button type="button" id="facebook-change-page" class="fb-text-link">Đổi Fanpage</button><button type="button" id="facebook-custom-sync" class="fb-text-link">Đồng bộ theo khoảng ngày</button><button type="button" id="facebook-disconnect" class="fb-text-link fb-danger">Ngắt kết nối</button></div></details>
     </section>
   </div>
-  <footer class="fb-connect-footer"><button type="button" id="facebook-later" class="ov-button ov-secondary">Để sau</button><button type="button" id="facebook-primary" class="ov-button">Tiếp tục với Facebook</button><a id="facebook-view-report" class="ov-button" href="/workspace/channels/facebook-content" hidden>Xem Fanpage <span aria-hidden="true">→</span></a></footer>
+  <footer class="fb-connect-footer"><button type="button" id="facebook-later" class="ov-button ov-secondary">Để sau</button><button type="button" id="facebook-reconnect" class="ov-button ov-secondary" hidden>Kết nối lại</button><button type="button" id="facebook-primary" class="ov-button">Tiếp tục với Facebook</button><a id="facebook-view-report" class="ov-button" href="/workspace/channels/facebook-content" hidden>Xem Fanpage <span aria-hidden="true">→</span></a></footer>
 </dialog>

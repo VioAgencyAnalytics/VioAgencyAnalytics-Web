@@ -1,0 +1,923 @@
+{
+  "asset": {
+    "external_id": "properties/123",
+    "id": "cccccccccccccccccccccccccccccccc",
+    "name": "Tài khoản minh họa"
+  },
+  "availability": "available",
+  "calendar": {
+    "latest_closed_date": "2026-11-10",
+    "max_days": 90,
+    "timezone": "Asia/Ho_Chi_Minh",
+    "today": "2026-11-11"
+  },
+  "client": {
+    "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "name": "Thương hiệu minh họa"
+  },
+  "comparison": {
+    "comparison_days": 30,
+    "current_days": 30,
+    "current_period": {
+      "end": "2026-10-30",
+      "start": "2026-10-01"
+    },
+    "daily": [
+      {
+        "date": "2026-09-01",
+        "values": {
+          "average_view_seconds": 189.673555,
+          "subscribers_gained": 5,
+          "views": 1142,
+          "watch_minutes": 3610.12
+        }
+      },
+      {
+        "date": "2026-09-02",
+        "values": {
+          "average_view_seconds": 188.485068,
+          "subscribers_gained": 6,
+          "views": 1326,
+          "watch_minutes": 4165.52
+        }
+      },
+      {
+        "date": "2026-09-03",
+        "values": {
+          "average_view_seconds": 165.298413,
+          "subscribers_gained": 6,
+          "views": 1512,
+          "watch_minutes": 4165.52
+        }
+      },
+      {
+        "date": "2026-09-04",
+        "values": {
+          "average_view_seconds": 187.338492,
+          "subscribers_gained": 7,
+          "views": 1512,
+          "watch_minutes": 4720.93
+        }
+      },
+      {
+        "date": "2026-09-05",
+        "values": {
+          "average_view_seconds": 186.552622,
+          "subscribers_gained": 7,
+          "views": 1697,
+          "watch_minutes": 5276.33
+        }
+      },
+      {
+        "date": "2026-09-06",
+        "values": {
+          "average_view_seconds": 168.124907,
+          "subscribers_gained": 7,
+          "views": 1883,
+          "watch_minutes": 5276.32
+        }
+      },
+      {
+        "date": "2026-09-07",
+        "values": {
+          "average_view_seconds": 185.921254,
+          "subscribers_gained": 9,
+          "views": 1882,
+          "watch_minutes": 5831.73
+        }
+      },
+      {
+        "date": "2026-09-08",
+        "values": {
+          "average_view_seconds": 189.289776,
+          "subscribers_gained": 5,
+          "views": 1203,
+          "watch_minutes": 3795.26
+        }
+      },
+      {
+        "date": "2026-09-09",
+        "values": {
+          "average_view_seconds": 163.941685,
+          "subscribers_gained": 5,
+          "views": 1389,
+          "watch_minutes": 3795.25
+        }
+      },
+      {
+        "date": "2026-09-10",
+        "values": {
+          "average_view_seconds": 188.068876,
+          "subscribers_gained": 7,
+          "views": 1388,
+          "watch_minutes": 4350.66
+        }
+      },
+      {
+        "date": "2026-09-11",
+        "values": {
+          "average_view_seconds": 187.016264,
+          "subscribers_gained": 6,
+          "views": 1574,
+          "watch_minutes": 4906.06
+        }
+      },
+      {
+        "date": "2026-09-12",
+        "values": {
+          "average_view_seconds": 167.346788,
+          "subscribers_gained": 7,
+          "views": 1759,
+          "watch_minutes": 4906.05
+        }
+      },
+      {
+        "date": "2026-09-13",
+        "values": {
+          "average_view_seconds": 186.398294,
+          "subscribers_gained": 8,
+          "views": 1758,
+          "watch_minutes": 5461.47
+        }
+      },
+      {
+        "date": "2026-09-14",
+        "values": {
+          "average_view_seconds": 185.705556,
+          "subscribers_gained": 8,
+          "views": 1944,
+          "watch_minutes": 6016.86
+        }
+      },
+      {
+        "date": "2026-09-15",
+        "values": {
+          "average_view_seconds": 162.450119,
+          "subscribers_gained": 5,
+          "views": 1265,
+          "watch_minutes": 3424.99
+        }
+      },
+      {
+        "date": "2026-09-16",
+        "values": {
+          "average_view_seconds": 188.792727,
+          "subscribers_gained": 6,
+          "views": 1265,
+          "watch_minutes": 3980.38
+        }
+      },
+      {
+        "date": "2026-09-17",
+        "values": {
+          "average_view_seconds": 187.558511,
+          "subscribers_gained": 6,
+          "views": 1451,
+          "watch_minutes": 4535.79
+        }
+      },
+      {
+        "date": "2026-09-18",
+        "values": {
+          "average_view_seconds": 166.451009,
+          "subscribers_gained": 7,
+          "views": 1635,
+          "watch_minutes": 4535.79
+        }
+      },
+      {
+        "date": "2026-09-19",
+        "values": {
+          "average_view_seconds": 186.833028,
+          "subscribers_gained": 7,
+          "views": 1635,
+          "watch_minutes": 5091.2
+        }
+      },
+      {
+        "date": "2026-09-20",
+        "values": {
+          "average_view_seconds": 186.049094,
+          "subscribers_gained": 8,
+          "views": 1821,
+          "watch_minutes": 5646.59
+        }
+      },
+      {
+        "date": "2026-09-21",
+        "values": {
+          "average_view_seconds": 168.975561,
+          "subscribers_gained": 8,
+          "views": 2005,
+          "watch_minutes": 5646.6
+        }
+      },
+      {
+        "date": "2026-09-22",
+        "values": {
+          "average_view_seconds": 189.673555,
+          "subscribers_gained": 5,
+          "views": 1142,
+          "watch_minutes": 3610.12
+        }
+      },
+      {
+        "date": "2026-09-23",
+        "values": {
+          "average_view_seconds": 188.343029,
+          "subscribers_gained": 5,
+          "views": 1327,
+          "watch_minutes": 4165.52
+        }
+      },
+      {
+        "date": "2026-09-24",
+        "values": {
+          "average_view_seconds": 165.298413,
+          "subscribers_gained": 7,
+          "views": 1512,
+          "watch_minutes": 4165.52
+        }
+      },
+      {
+        "date": "2026-09-25",
+        "values": {
+          "average_view_seconds": 187.338492,
+          "subscribers_gained": 6,
+          "views": 1512,
+          "watch_minutes": 4720.93
+        }
+      },
+      {
+        "date": "2026-09-26",
+        "values": {
+          "average_view_seconds": 186.552622,
+          "subscribers_gained": 7,
+          "views": 1697,
+          "watch_minutes": 5276.33
+        }
+      },
+      {
+        "date": "2026-09-27",
+        "values": {
+          "average_view_seconds": 168.21424,
+          "subscribers_gained": 8,
+          "views": 1882,
+          "watch_minutes": 5276.32
+        }
+      },
+      {
+        "date": "2026-09-28",
+        "values": {
+          "average_view_seconds": 185.921254,
+          "subscribers_gained": 9,
+          "views": 1882,
+          "watch_minutes": 5831.73
+        }
+      },
+      {
+        "date": "2026-09-29",
+        "values": {
+          "average_view_seconds": 189.289776,
+          "subscribers_gained": 4,
+          "views": 1203,
+          "watch_minutes": 3795.26
+        }
+      },
+      {
+        "date": "2026-09-30",
+        "values": {
+          "average_view_seconds": 163.941685,
+          "subscribers_gained": 6,
+          "views": 1389,
+          "watch_minutes": 3795.25
+        }
+      }
+    ],
+    "items": [
+      {
+        "actual": 58240,
+        "chart": {
+          "actual": 100.0,
+          "previous": 80.0
+        },
+        "currency": null,
+        "difference": "11648",
+        "difference_label": "11.648",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "period",
+        "key": "views",
+        "label": "Lượt xem",
+        "previous": 46592,
+        "relation": "above",
+        "relative": "0.25",
+        "status": "ready",
+        "summary": "+25%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 174720.5,
+        "chart": {
+          "actual": 100.0,
+          "previous": 80.0
+        },
+        "currency": null,
+        "difference": "34944.1",
+        "difference_label": "34.944,1",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "period",
+        "key": "watch_minutes",
+        "label": "Thời gian xem (phút)",
+        "previous": 139776.4,
+        "relation": "above",
+        "relative": "0.25",
+        "status": "ready",
+        "summary": "+25%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "number"
+      },
+      {
+        "actual": 246,
+        "chart": {
+          "actual": 100.0,
+          "previous": 80.08130081300813
+        },
+        "currency": null,
+        "difference": "49",
+        "difference_label": "49",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "period",
+        "key": "subscribers_gained",
+        "label": "Lượt đăng ký mới",
+        "previous": 197,
+        "relation": "above",
+        "relative": "0.2487309644670050761421319796954314720812182741116751269035532994923857868020304568527918781725888325",
+        "status": "ready",
+        "summary": "+24,87%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 180.000515,
+        "chart": {
+          "actual": 100.0,
+          "previous": 100.0
+        },
+        "currency": null,
+        "difference": "0.000000",
+        "difference_label": "0",
+        "effect": "unchanged",
+        "effect_label": "Không thay đổi",
+        "grain": "period",
+        "key": "average_view_seconds",
+        "label": "Thời lượng xem TB (giây)",
+        "previous": 180.000515,
+        "relation": "equal",
+        "relative": "0",
+        "status": "ready",
+        "summary": "Không thay đổi",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "number"
+      }
+    ],
+    "label": "Kỳ liền trước",
+    "matched_elapsed": false,
+    "message": "",
+    "mode": "previous",
+    "period": {
+      "end": "2026-09-30",
+      "start": "2026-09-01"
+    },
+    "status": "ready"
+  },
+  "connection": {
+    "id": "dddddddddddddddddddddddddddddddd",
+    "status": "connected",
+    "version": 1
+  },
+  "connector": {
+    "adapter_ready": true,
+    "application_owner": "vio",
+    "asset_label": "Tài khoản",
+    "capabilities": {
+      "export": false,
+      "live_provider_reads": false,
+      "publish": false,
+      "saved_data": true
+    },
+    "color": "amber",
+    "icon": "monitoring",
+    "id": "youtube",
+    "mapping_status": "available",
+    "mapping_version": 1,
+    "metrics": [
+      {
+        "aggregation": "provider_period",
+        "field": "totals.views",
+        "grain": "period",
+        "key": "views",
+        "label": "Lượt xem",
+        "unit": "count"
+      },
+      {
+        "aggregation": "provider_period",
+        "field": "totals.watch_minutes",
+        "grain": "period",
+        "key": "watch_minutes",
+        "label": "Thời gian xem (phút)",
+        "unit": "number"
+      },
+      {
+        "aggregation": "provider_period",
+        "field": "totals.subscribers_gained",
+        "grain": "period",
+        "key": "subscribers_gained",
+        "label": "Lượt đăng ký mới",
+        "unit": "count"
+      },
+      {
+        "aggregation": "provider_period",
+        "field": "totals.average_view_seconds",
+        "grain": "period",
+        "key": "average_view_seconds",
+        "label": "Thời lượng xem TB (giây)",
+        "unit": "number"
+      }
+    ],
+    "name": "YouTube",
+    "provider": "google"
+  },
+  "daily": [
+    {
+      "date": "2026-10-01",
+      "values": {
+        "average_view_seconds": 189.740014,
+        "subscribers_gained": 7,
+        "views": 1427,
+        "watch_minutes": 4512.65
+      }
+    },
+    {
+      "date": "2026-10-02",
+      "values": {
+        "average_view_seconds": 188.314647,
+        "subscribers_gained": 6,
+        "views": 1659,
+        "watch_minutes": 5206.9
+      }
+    },
+    {
+      "date": "2026-10-03",
+      "values": {
+        "average_view_seconds": 165.385918,
+        "subscribers_gained": 8,
+        "views": 1889,
+        "watch_minutes": 5206.9
+      }
+    },
+    {
+      "date": "2026-10-04",
+      "values": {
+        "average_view_seconds": 187.338413,
+        "subscribers_gained": 9,
+        "views": 1890,
+        "watch_minutes": 5901.16
+      }
+    },
+    {
+      "date": "2026-10-05",
+      "values": {
+        "average_view_seconds": 186.486616,
+        "subscribers_gained": 8,
+        "views": 2122,
+        "watch_minutes": 6595.41
+      }
+    },
+    {
+      "date": "2026-10-06",
+      "values": {
+        "average_view_seconds": 168.250255,
+        "subscribers_gained": 10,
+        "views": 2352,
+        "watch_minutes": 6595.41
+      }
+    },
+    {
+      "date": "2026-10-07",
+      "values": {
+        "average_view_seconds": 185.881683,
+        "subscribers_gained": 10,
+        "views": 2353,
+        "watch_minutes": 7289.66
+      }
+    },
+    {
+      "date": "2026-10-08",
+      "values": {
+        "average_view_seconds": 189.258112,
+        "subscribers_gained": 7,
+        "views": 1504,
+        "watch_minutes": 4744.07
+      }
+    },
+    {
+      "date": "2026-10-09",
+      "values": {
+        "average_view_seconds": 163.965207,
+        "subscribers_gained": 7,
+        "views": 1736,
+        "watch_minutes": 4744.06
+      }
+    },
+    {
+      "date": "2026-10-10",
+      "values": {
+        "average_view_seconds": 187.960714,
+        "subscribers_gained": 8,
+        "views": 1736,
+        "watch_minutes": 5438.33
+      }
+    },
+    {
+      "date": "2026-10-11",
+      "values": {
+        "average_view_seconds": 187.06365,
+        "subscribers_gained": 7,
+        "views": 1967,
+        "watch_minutes": 6132.57
+      }
+    },
+    {
+      "date": "2026-10-12",
+      "values": {
+        "average_view_seconds": 167.404095,
+        "subscribers_gained": 9,
+        "views": 2198,
+        "watch_minutes": 6132.57
+      }
+    },
+    {
+      "date": "2026-10-13",
+      "values": {
+        "average_view_seconds": 186.270941,
+        "subscribers_gained": 10,
+        "views": 2199,
+        "watch_minutes": 6826.83
+      }
+    },
+    {
+      "date": "2026-10-14",
+      "values": {
+        "average_view_seconds": 185.705679,
+        "subscribers_gained": 10,
+        "views": 2430,
+        "watch_minutes": 7521.08
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "values": {
+        "average_view_seconds": 162.475522,
+        "subscribers_gained": 7,
+        "views": 1581,
+        "watch_minutes": 4281.23
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "values": {
+        "average_view_seconds": 188.82315,
+        "subscribers_gained": 7,
+        "views": 1581,
+        "watch_minutes": 4975.49
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "values": {
+        "average_view_seconds": 187.635852,
+        "subscribers_gained": 7,
+        "views": 1813,
+        "watch_minutes": 5669.73
+      }
+    },
+    {
+      "date": "2026-10-18",
+      "values": {
+        "average_view_seconds": 166.430724,
+        "subscribers_gained": 9,
+        "views": 2044,
+        "watch_minutes": 5669.74
+      }
+    },
+    {
+      "date": "2026-10-19",
+      "values": {
+        "average_view_seconds": 186.809883,
+        "subscribers_gained": 9,
+        "views": 2044,
+        "watch_minutes": 6363.99
+      }
+    },
+    {
+      "date": "2026-10-20",
+      "values": {
+        "average_view_seconds": 186.069859,
+        "subscribers_gained": 9,
+        "views": 2276,
+        "watch_minutes": 7058.25
+      }
+    },
+    {
+      "date": "2026-10-21",
+      "values": {
+        "average_view_seconds": 168.92501,
+        "subscribers_gained": 10,
+        "views": 2507,
+        "watch_minutes": 7058.25
+      }
+    },
+    {
+      "date": "2026-10-22",
+      "values": {
+        "average_view_seconds": 189.739594,
+        "subscribers_gained": 7,
+        "views": 1427,
+        "watch_minutes": 4512.64
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "values": {
+        "average_view_seconds": 188.315009,
+        "subscribers_gained": 7,
+        "views": 1659,
+        "watch_minutes": 5206.91
+      }
+    },
+    {
+      "date": "2026-10-24",
+      "values": {
+        "average_view_seconds": 165.385918,
+        "subscribers_gained": 7,
+        "views": 1889,
+        "watch_minutes": 5206.9
+      }
+    },
+    {
+      "date": "2026-10-25",
+      "values": {
+        "average_view_seconds": 187.338095,
+        "subscribers_gained": 9,
+        "views": 1890,
+        "watch_minutes": 5901.15
+      }
+    },
+    {
+      "date": "2026-10-26",
+      "values": {
+        "average_view_seconds": 186.486616,
+        "subscribers_gained": 9,
+        "views": 2122,
+        "watch_minutes": 6595.41
+      }
+    },
+    {
+      "date": "2026-10-27",
+      "values": {
+        "average_view_seconds": 168.250255,
+        "subscribers_gained": 9,
+        "views": 2352,
+        "watch_minutes": 6595.41
+      }
+    },
+    {
+      "date": "2026-10-28",
+      "values": {
+        "average_view_seconds": 185.881938,
+        "subscribers_gained": 11,
+        "views": 2353,
+        "watch_minutes": 7289.67
+      }
+    },
+    {
+      "date": "2026-10-29",
+      "values": {
+        "average_view_seconds": 189.257713,
+        "subscribers_gained": 6,
+        "views": 1504,
+        "watch_minutes": 4744.06
+      }
+    },
+    {
+      "date": "2026-10-30",
+      "values": {
+        "average_view_seconds": 163.965553,
+        "subscribers_gained": 7,
+        "views": 1736,
+        "watch_minutes": 4744.07
+      }
+    }
+  ],
+  "latest_sync": null,
+  "mapping_version": 1,
+  "metrics": [
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "views",
+      "label": "Lượt xem",
+      "status": "available",
+      "unit": "count",
+      "value": 58240
+    },
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "watch_minutes",
+      "label": "Thời gian xem (phút)",
+      "status": "available",
+      "unit": "number",
+      "value": 174720.5
+    },
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "subscribers_gained",
+      "label": "Lượt đăng ký mới",
+      "status": "available",
+      "unit": "count",
+      "value": 246
+    },
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "average_view_seconds",
+      "label": "Thời lượng xem TB (giây)",
+      "status": "available",
+      "unit": "number",
+      "value": 180.000515
+    }
+  ],
+  "notes": [],
+  "period": {
+    "data_end": "2026-10-30",
+    "data_start": "2026-10-01",
+    "end": "2026-10-30",
+    "is_open": false,
+    "mode": "custom",
+    "start": "2026-10-01"
+  },
+  "periods": [
+    {
+      "created_at": "2026-10-03T00:00:00+00:00",
+      "end_date": "2026-10-02",
+      "id": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "start_date": "2026-10-01"
+    }
+  ],
+  "published": false,
+  "schema_version": 1,
+  "scope": {
+    "client_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "workspace_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "snapshot": {
+    "created_at": "2026-10-31T00:00:00Z",
+    "currency": null,
+    "end_date": "2026-10-30",
+    "fetched_at": "2026-10-31T00:00:00Z",
+    "id": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "start_date": "2026-10-01",
+    "timezone": "Asia/Ho_Chi_Minh"
+  },
+  "source": "youtube",
+  "state": "ready",
+  "tables": [
+    {
+      "columns": [
+        {
+          "key": "video",
+          "label": "Video ID",
+          "unit": "text"
+        },
+        {
+          "key": "views",
+          "label": "Lượt xem",
+          "unit": "count"
+        },
+        {
+          "key": "watch_minutes",
+          "label": "Phút xem",
+          "unit": "number"
+        }
+      ],
+      "id": "videos",
+      "rows": [
+        {
+          "video": "QADEMO00001",
+          "views": 24640,
+          "watch_minutes": 73920.21
+        },
+        {
+          "video": "QADEMO00002",
+          "views": 16780,
+          "watch_minutes": 50340.15
+        },
+        {
+          "video": "QADEMO00003",
+          "views": 9820,
+          "watch_minutes": 29460.08
+        },
+        {
+          "video": "QADEMO00004",
+          "views": 7000,
+          "watch_minutes": 21000.06
+        }
+      ],
+      "title": "Video trong kỳ",
+      "total_rows": 4,
+      "truncated": false
+    }
+  ],
+  "targets": {
+    "asset_id": "cccccccccccccccccccccccccccccccc",
+    "can_manage": false,
+    "end": "2026-10-30",
+    "items": [
+      {
+        "actual": 58240,
+        "aggregation": "provider_period",
+        "currency": null,
+        "difference": "8736",
+        "direction": "at_least",
+        "grain": "period",
+        "input_value": "49504",
+        "key": "views",
+        "label": "Lượt xem",
+        "ratio": "1.176470588235294117647058824",
+        "relation": "above",
+        "status": "met",
+        "unit": "count",
+        "value": "49504",
+        "version": 1
+      },
+      {
+        "actual": 174720.5,
+        "aggregation": "provider_period",
+        "currency": null,
+        "difference": "26208.075",
+        "direction": "at_least",
+        "grain": "period",
+        "input_value": "200928.575",
+        "key": "watch_minutes",
+        "label": "Thời gian xem (phút)",
+        "ratio": "0.8695652173913043478260869565",
+        "relation": "below",
+        "status": "below_target",
+        "unit": "number",
+        "value": "200928.575",
+        "version": 1
+      },
+      {
+        "actual": 246,
+        "aggregation": "provider_period",
+        "currency": null,
+        "difference": "37",
+        "direction": "at_least",
+        "grain": "period",
+        "input_value": "283",
+        "key": "subscribers_gained",
+        "label": "Lượt đăng ký mới",
+        "ratio": "0.8692579505300353356890459364",
+        "relation": "below",
+        "status": "below_target",
+        "unit": "count",
+        "value": "283",
+        "version": 1
+      }
+    ],
+    "start": "2026-10-01",
+    "updated_at": null
+  }
+}

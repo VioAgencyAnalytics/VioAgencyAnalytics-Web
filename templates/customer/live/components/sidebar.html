@@ -1,18 +1,36 @@
 {% set is_overview = customer_page == 'overview' %}
 {% from 'customer/live/components/workspace-avatar.html' import workspace_avatar %}
+{% from 'customer/live/components/platform-mark.html' import platform_mark %}
 {% set switch_id = {'overview':'overview-workspace-select','integrations':'integration-workspace-select','dashboard':'marketing-workspace-select','channels':'library-workspace-select','reports':'library-workspace-select','members':'workspace-page-select','settings':'workspace-page-select'}[customer_page] %}
-<aside class="ov-sidebar" aria-label="Điều hướng Workspace">
+<aside class="ov-sidebar" id="workspace-sidebar" aria-label="Điều hướng Workspace">
   <a class="ov-brand" href="/workspace"><img src="/static/customer/vio-logo.png" alt="VIO Agency"><strong>VioAgencyAnalytics</strong></a>
   <div id="workspace-switch" class="ov-workspace">{{ workspace_avatar(details.workspace) }}<label for="{{ switch_id }}"><small>KHÔNG GIAN LÀM VIỆC</small><select id="{{ switch_id }}" {% if is_overview %}data-client-control{% endif %} disabled>{% for workspace in account.workspaces %}<option value="{{ workspace.id }}" {% if workspace.id == details.workspace.id %}selected{% endif %}>{{ workspace.name }}</option>{% else %}<option value="{{ details.workspace.id }}">{{ details.workspace.name }}</option>{% endfor %}</select></label></div>
   <a class="ov-text-button ui-workspace-add" href="/workspace/onboarding"><span aria-hidden="true">＋</span> Tạo / tham gia</a>
   <nav class="ov-nav">
-    <a href="/workspace" {% if is_overview %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">space_dashboard</span>Tổng quan</a>
-    <a href="/workspace/integrations" data-integration-link {% if customer_page == 'integrations' %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">hub</span>Kết nối nền tảng</a>
-    <a href="/workspace/dashboard" id="nav-dashboard" {% if customer_page == 'dashboard' %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">monitoring</span>Dashboard Marketing</a>
-    <details class="od-channel-nav" data-active="{{ 'true' if customer_page == 'channels' else 'false' }}" {% if customer_page == 'channels' %}open{% endif %}><summary id="nav-channels"><span class="material-symbols-outlined" aria-hidden="true">query_stats</span><a href="/workspace/channels" {% if customer_page == 'channels' %}aria-current="page"{% endif %}>Phân tích kênh</a><span class="od-nav-count">9</span><span class="material-symbols-outlined od-chevron" aria-hidden="true">expand_more</span></summary><div>{% for key, label in [('facebook_content','Facebook Content'),('facebook_ads','Facebook Ads'),('tiktok_ads','TikTok Ads'),('google_ads','Google Ads'),('seo','SEO & Keywords'),('ga4','Google Analytics 4'),('gsc','Google Search Console'),('youtube','YouTube'),('business_profile','Google Business Profile')] %}<a href="{{ '/workspace/channels/facebook-content' if key == 'facebook_content' else '/workspace/channels?channel=' ~ key }}" data-channel-link="{{ key }}" {% if customer_meta_live and key == 'facebook_content' %}aria-current="location"{% endif %}>{{ label }}</a>{% endfor %}</div></details>
-    <a href="/workspace/reports" id="nav-reports" {% if customer_page == 'reports' %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">description</span>Báo cáo</a>
-    <a id="nav-members" href="/workspace/members" {% if customer_page == 'members' %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">group</span>Thành viên</a>
-    <a id="nav-settings" href="/workspace/settings" {% if customer_page == 'settings' %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">settings</span>Cài đặt</a>
+    <a title="Tổng quan" aria-label="Tổng quan" href="/workspace" {% if is_overview %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">space_dashboard</span><span class="nav-label">Tổng quan</span></a>
+    <a title="Kết nối nền tảng" aria-label="Kết nối nền tảng" href="/workspace/integrations" data-integration-link {% if customer_page == 'integrations' %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">hub</span><span class="nav-label">Kết nối nền tảng</span></a>
+    <a title="Dashboard Marketing" aria-label="Dashboard Marketing" href="/workspace/dashboard" id="nav-dashboard" {% if customer_page == 'dashboard' %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">monitoring</span><span class="nav-label">Dashboard Marketing</span></a>
+    <details class="od-channel-nav" data-active="{{ 'true' if customer_page == 'channels' else 'false' }}" {% if customer_page == 'channels' %}open{% endif %}>
+      <summary id="nav-channels"><span class="material-symbols-outlined" aria-hidden="true">query_stats</span><a href="/workspace/channels" {% if customer_page == 'channels' %}aria-current="page"{% endif %} aria-label="Phân tích kênh" title="Phân tích kênh"><span class="nav-label">Phân tích kênh</span></a><span class="od-nav-count">9</span><span class="material-symbols-outlined od-chevron" aria-hidden="true">expand_more</span></summary>
+      <div>
+        {% for key, label in [
+          ('seo','SEO & Từ khóa'),
+          ('gsc','Google Search Console'),
+          ('ga4','Google Analytics 4'),
+          ('google_ads','Google Ads'),
+          ('youtube','YouTube'),
+          ('business_profile','Google Business Profile'),
+          ('facebook_content','Facebook Content'),
+          ('facebook_ads','Facebook Ads'),
+          ('tiktok_ads','TikTok Ads')
+        ] %}
+        <a href="{{ '/workspace/channels/facebook-content' if key == 'facebook_content' else '/workspace/seo' if key == 'seo' else '/workspace/channels?channel=' ~ key }}" data-channel-link="{{ key }}" data-platform-brand="{{ key }}" {% if (customer_seo_live and key == 'seo') or (customer_meta_live and key == 'facebook_content') or (customer_data_live and report.source == key) %}aria-current="location"{% endif %}>{{ platform_mark(key) }}<span>{{ label }}</span></a>
+        {% endfor %}
+      </div>
+    </details>
+    <a title="Báo cáo" aria-label="Báo cáo" href="/workspace/reports" id="nav-reports" {% if customer_page == 'reports' %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">description</span><span class="nav-label">Báo cáo</span></a>
+    <a title="Thành viên" aria-label="Thành viên" id="nav-members" href="/workspace/members" {% if customer_page == 'members' %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">group</span><span class="nav-label">Thành viên</span></a>
+    <a title="Cài đặt" aria-label="Cài đặt" id="nav-settings" href="/workspace/settings" {% if customer_page == 'settings' %}aria-current="page"{% endif %}><span class="material-symbols-outlined" aria-hidden="true">settings</span><span class="nav-label">Cài đặt</span></a>
   </nav>
   <div class="ov-side-bottom od-side-account"><span class="od-side-avatar" aria-hidden="true">{{ account.user.name[:1]|upper }}</span><div><strong>{{ account.user.name }}</strong><small title="{{ account.user.email }}">{{ account.user.email }}</small></div></div>
 </aside>

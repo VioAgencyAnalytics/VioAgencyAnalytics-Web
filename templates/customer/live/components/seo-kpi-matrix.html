@@ -1,0 +1,80 @@
+{% from 'customer/live/components/report-notes.html' import note %}
+{% set heading = 'HOẠCH ĐỊNH KẾ HOẠCH CHIẾN LƯỢC SEO TỔNG THỂ WEBSITE' %}
+{% set labels = {
+  'technical_percent': 'Tối ưu nền tảng website',
+  'traffic': 'Số lượng lưu lượng truy cập',
+  'top10_percent': 'Bộ từ khóa đạt Top 10 Google',
+  'optimization': 'Tối ưu nội dung có sẵn/link',
+  'new_articles': 'Viết nội dung mới đăng lên Website',
+  'entity': 'Hệ thống entity',
+  'social_profile': 'Xây dựng hệ thống trang MXH',
+  'social_share': 'Chia sẻ lên các trang MXH'
+} %}
+
+{% macro label(metric, plan, totals) -%}
+  {%- if plan.template != 'monthly_seo' -%}
+    {{ metric.label }}
+  {%- elif metric.key == 'traffic' -%}
+    {{ labels.traffic }}{{ ' tăng thêm' if plan.traffic_basis == 'increase' else '' }} {{ 'phiên/tháng' if plan.traffic_metric in ['ga4_sessions','ga4_organic_sessions'] else 'lượt/tháng' }}
+  {%- elif metric.key == 'social_profile' and totals.get('social_profile', {}).get('target') -%}
+    Xây dựng hệ thống {{ totals['social_profile']['target'] }} trang MXH
+  {%- elif metric.key == 'social_share' and plan.share_pages -%}
+    Chia sẻ {{ plan.share_pages }} trang MXH
+  {%- else -%}
+    {{ labels.get(metric.key, metric.label) }}
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro value(amount, unit, actual=false, target=none) -%}
+  {%- if amount is not none -%}
+    {%- set magnitude = amount|abs -%}
+    {%- if actual and unit == 'percent' -%}
+      {%- set rounded = (magnitude + 0.5)|int -%}
+      {%- if target is none or (rounded >= target) == (amount >= target) -%}
+        {%- set magnitude = rounded -%}
+      {%- elif amount < target and display(magnitude,'number') == display(target,'number') -%}
+        &lt;&nbsp;
+      {%- endif -%}
+    {%- endif -%}
+    {{ '−' if amount < 0 else '' }}{{ display(magnitude,'number') }}{{ '%' if unit == 'percent' else '' }}
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro render(timeline, plan, review=none) %}
+  {% set totals = timeline.totals or {} %}
+  {% for months in timeline.months|batch(12) %}
+    {% set offset = loop.index0 * 12 %}
+    {% set show_total = loop.last %}
+    <section class="sc-page sc-kpi-matrix-page" data-order-key="kpi" data-order-label="KPI dự án" aria-label="KPI dự án theo tháng">
+      <h2 class="sc-kpi-matrix-heading">KPI dự án</h2>
+      <p class="sc-caption">Tháng {{ offset + 1 }} là {{ months[0].month[5:] }}/{{ months[0].month[:4] }}. Ô trống là mục chưa có kế hoạch hoặc số liệu.</p>
+      <div class="seo-table-wrap seo-matrix-wrap" tabindex="0" role="region" aria-label="Bảng KPI từ tháng {{ offset + 1 }} đến tháng {{ offset + months|length }}">
+        <table class="seo-kpi-matrix">
+          <colgroup><col class="seo-matrix-order"><col class="seo-matrix-topic">{% for month in months %}<col>{% endfor %}{% if show_total %}<col>{% endif %}</colgroup>
+          <thead>
+            <tr class="seo-matrix-banner"><th colspan="{{ months|length + 2 + (1 if show_total else 0) }}">{{ heading }}</th></tr>
+            <tr><th scope="col">STT</th><th scope="col">Tháng</th>{% for month in months %}<th scope="col" title="{{ month.month }}">{{ offset + loop.index }}</th>{% endfor %}{% if show_total %}<th scope="col">Tổng</th>{% endif %}</tr>
+          </thead>
+          {% for metric in timeline.metrics %}
+          {% set readings = [] %}
+          {% for month in months %}{% set _ = readings.append(month['items']|selectattr('key','equalto',metric.key)|first|default({})) %}{% endfor %}
+          {% set total = totals.get(metric.key, {}) %}
+          <tbody>
+            <tr class="seo-matrix-plan">
+              <td rowspan="2">{{ loop.index }}</td><th scope="row">{{ label(metric, plan, totals) }}</th>
+              {% for item in readings %}<td>{{ value(item.target|default(none), metric.unit) }}</td>{% endfor %}
+              {% if show_total %}<td class="seo-matrix-total">{{ value(total.target|default(none), metric.unit) }}</td>{% endif %}
+            </tr>
+            <tr class="seo-matrix-actual">
+              <th scope="row">Đã thực hiện</th>
+              {% for item in readings %}<td{% if item.note %} title="{{ item.note }}"{% endif %}>{{ value(item.actual|default(none), metric.unit, true, item.target|default(none)) }}</td>{% endfor %}
+              {% if show_total %}<td></td>{% endif %}
+            </tr>
+          </tbody>
+          {% endfor %}
+        </table>
+      </div>
+      {% if loop.last %}{{ note(review, 'seo_matrix') }}{% endif %}
+    </section>
+  {% endfor %}
+{% endmacro %}

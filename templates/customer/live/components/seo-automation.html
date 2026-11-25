@@ -1,0 +1,20 @@
+<section class="seo-card seo-auto-card" id="seo-auto-website" aria-labelledby="seo-auto-title">
+  <div class="seo-card-head">
+    <div><span class="seo-eyebrow">Nguồn website</span><h2 id="seo-auto-title">Tự lấy bài viết đã đăng</h2><p class="seo-help">Lấy tên bài, URL và ngày đăng từ website khách hàng.</p></div>
+    <button type="button" class="ov-button seo-primary seo-edit" id="seo-website-sync-open"><span class="material-symbols-outlined" aria-hidden="true">sync</span>Đồng bộ từ website</button>
+  </div>
+  <div id="seo-website-sync-status" aria-live="polite"></div>
+  <div id="seo-website-review"></div>
+  <p class="seo-help">Bài đồng bộ ở trạng thái chờ duyệt. Trong Danh sách nội dung, chọn Cập nhật để xác nhận duyệt hoặc nghiệm thu.</p>
+</section>
+<dialog class="seo-dialog" id="seo-website-sync-dialog" aria-labelledby="seo-website-sync-title">
+  <div class="seo-card-head"><h2 id="seo-website-sync-title">Đồng bộ bài viết</h2><button type="button" class="ov-button ov-secondary" data-seo-close aria-label="Đóng đồng bộ website">×</button></div>
+  <form id="seo-website-sync-form" class="seo-form-grid">
+    <div class="seo-wide seo-auto-site" id="seo-website-sync-site"></div>
+    <label class="seo-field seo-wide">Nguồn đọc<select id="seo-website-sync-mode"><option value="auto">Tự nhận diện website</option><option value="wordpress">WordPress</option><option value="sitemap">Sitemap & thông tin bài viết</option><option value="feed">RSS / Atom · bài gần đây</option></select></label>
+    <p class="seo-help seo-wide" id="seo-website-sync-period"></p>
+    <p class="seo-help seo-wide">Vio đọc danh sách bài đã công khai. Những bài thiếu ngày đăng sẽ được đưa vào mục cần kiểm tra.</p>
+    <p class="seo-message seo-wide" id="seo-website-sync-error" role="status" hidden></p>
+    <div class="seo-wide seo-dialog-actions"><button type="button" class="ov-button ov-secondary" data-seo-close>Để sau</button><button type="submit" class="ov-button seo-primary">Bắt đầu đồng bộ</button></div>
+  </form>
+</dialog>

@@ -1,0 +1,19 @@
+# Explicit public preview behind an HTTPS Cloudflare tunnel to loopback 8084.
+# Use with compose.customer.yaml after registering callbacks and reviewing the
+# existing grant bindings. Local TLS files/profile remain available for rollback.
+services:
+  customer-admin:
+    env_file:
+      - ./.work/customer-dev/public-preview/docker-admin.env
+  web:
+    env_file:
+      - ./.work/customer-dev/public-preview/docker-web.env
+    environment:
+      CUSTOMER_LOCAL_TLS_CERT: ""
+      CUSTOMER_LOCAL_TLS_KEY: ""
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import os,urllib.request,urllib.parse; h=urllib.parse.urlsplit(os.environ['CUSTOMER_WEB_ORIGIN']).netloc; r=urllib.request.Request('http://127.0.0.1:8000/api/customer/session',headers={'Host':h}); urllib.request.urlopen(r,timeout=6)"

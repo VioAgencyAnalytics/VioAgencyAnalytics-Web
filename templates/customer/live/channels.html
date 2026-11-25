@@ -1,9 +1,10 @@
 {% extends 'customer/base.html' %}
+{% from 'customer/live/components/platform-mark.html' import platform_mark %}
 {% block layout %}
 <div class="ov-shell ws-theme lb-page" id="customer-content">
   {% include 'customer/live/components/sidebar.html' %}
   <div class="ov-body">{% include 'customer/live/components/topbar.html' %}
-    <main class="ov-main lb-main">
+    <main class="ov-main lb-main" id="customer-main" tabindex="-1">
       <section class="lb-heading"><div><h1>Phân tích kênh</h1><p>Chọn kênh để xem phân tích.</p></div><div class="lb-heading-actions"><button type="button" id="library-refresh" class="lb-button lb-secondary"><span class="material-symbols-outlined" aria-hidden="true">refresh</span>Tải lại</button><a href="/workspace/integrations" class="lb-button"><span class="material-symbols-outlined" aria-hidden="true">hub</span>Quản lý kết nối</a></div></section>
       {% include 'customer/live/components/library-filters.html' %}
       <section class="lb-health"><span class="lb-provider lb-orange material-symbols-outlined" aria-hidden="true">sync</span><div><h2>Dữ liệu các kênh</h2><p id="channels-health-description">Chưa có dữ liệu trong kỳ. Kết nối nguồn để bắt đầu.</p></div><div id="channels-health-counts" class="lb-health-counts" aria-label="Thống kê trạng thái kênh"></div></section>
@@ -12,14 +13,15 @@
         <div class="lb-filter-row"><div id="library-groups" class="lb-segments" role="group" aria-label="Nhóm kênh">{% for group in library.groups %}<button type="button" data-library-group="{{ group.id }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ group.label }} <span data-group-count="{{ group.id }}">{{ library.channels|length if loop.first else library.channels|selectattr('group','equalto',group.id)|list|length }}</span></button>{% endfor %}</div><label class="lb-status-filter"><span class="lb-sr-only">Trạng thái dữ liệu</span><select id="channels-status"><option value="all">Tất cả trạng thái</option><option value="not_connected">Chưa kết nối</option><option value="empty">Chờ dữ liệu</option><option value="syncing">Đang đồng bộ</option><option value="ready">Có dữ liệu</option><option value="attention">Cần kiểm tra</option></select></label></div>
         <p id="library-result-count" class="lb-result-count" role="status" aria-live="polite"></p>
         <div id="channels-grid" class="lb-grid">
-          {% for channel in library.channels %}<article class="lb-card" data-channel-card="{{ channel.id }}" data-state="{{ channel.state }}"><div class="lb-card-top"><span class="lb-provider lb-{{ channel.color }} material-symbols-outlined" aria-hidden="true">{{ channel.icon }}</span><span class="lb-state" data-card-state></span></div><h3>{{ channel.name }}</h3><p class="lb-card-description">{{ channel.description }}</p><dl class="lb-card-metrics">{% for metric in channel.metrics %}<div><dt>{{ metric.label }}</dt><dd data-value="{{ metric.key }}">—</dd></div>{% endfor %}</dl><div class="lb-card-footer"><button type="button" class="lb-button lb-secondary" data-open-channel="{{ channel.id }}">Xem phân tích <span aria-hidden="true">→</span></button></div></article>{% endfor %}
+          {% for channel in library.channels %}<article class="lb-card" data-channel-card="{{ channel.id }}" data-platform-brand="{{ channel.id }}" data-state="{{ channel.state }}"><div class="lb-card-top">{{ platform_mark(channel.id, 'lb-provider') }}<span class="lb-state" data-card-state></span></div><h3>{{ channel.name }}</h3><p class="lb-card-description">{{ channel.description }}</p><dl class="lb-card-metrics">{% for metric in channel.metrics %}<div><dt>{{ metric.label }}</dt><dd data-value="{{ metric.key }}">—</dd></div>{% endfor %}</dl><p class="lb-card-period" data-card-period></p><div class="lb-card-footer"><button type="button" class="lb-button lb-secondary" data-open-channel="{{ channel.id }}" disabled>Đang tải…</button></div></article>{% endfor %}
         </div>
         <div id="library-no-results" class="lb-empty" hidden><span class="material-symbols-outlined" aria-hidden="true">search_off</span><h3>Chưa tìm thấy kênh phù hợp</h3><p>Thử tên nền tảng khác hoặc xóa bộ lọc để xem lại tất cả kênh.</p><button type="button" class="lb-button lb-secondary" id="library-reset">Xóa bộ lọc</button></div>
       </section>
-      <aside class="lb-callout"><span class="lb-provider lb-red material-symbols-outlined" aria-hidden="true">auto_graph</span><div><h2>Từ phân tích đến báo cáo</h2></div><a class="lb-button lb-secondary" href="/workspace/reports">Xem mẫu báo cáo <span aria-hidden="true">→</span></a></aside>
+      <aside class="lb-callout"><span class="lb-provider lb-red material-symbols-outlined" aria-hidden="true">auto_graph</span><div><h2>Từ phân tích đến báo cáo</h2></div><a class="lb-button lb-secondary" href="/workspace/reports">Xem báo cáo <span aria-hidden="true">→</span></a></aside>
       <footer class="lb-footer"><span>© VIO Agency · VioAgencyAnalytics</span><button type="button" id="library-guide">Hướng dẫn phân tích kênh</button></footer>
     </main>
   </div>
 </div>
 {% include 'customer/live/components/library-dialogs.html' %}
+<dialog id="channels-seo-dialog" class="lb-dialog" aria-labelledby="channels-seo-title"><div class="lb-dialog-top"><h2 id="channels-seo-title">Chọn nguồn SEO & Website</h2><button type="button" class="lb-icon-button" data-library-close aria-label="Đóng chọn nguồn SEO">×</button></div><p>GA4 đo hành vi truy cập. Search Console đo hiệu quả tìm kiếm tự nhiên. Mỗi báo cáo giữ kỳ và cách tính riêng.</p><div class="lb-dialog-actions"><a class="lb-button lb-secondary" data-seo-source="ga4" href="/workspace/reports/data?source=ga4">Google Analytics 4</a><a class="lb-button" data-seo-source="gsc" href="/workspace/reports/data?source=gsc">Google Search Console</a></div><p class="lb-card-period">Theo dõi thứ hạng từ khóa chuyên biệt sẽ được bổ sung ở giai đoạn Admin.</p></dialog>
 {% endblock %}

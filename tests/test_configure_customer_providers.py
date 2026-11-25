@@ -93,3 +93,27 @@ def test_ads_setup_without_google_data_app_preserves_configuration(fixture):
     with pytest.raises(SystemExit):module.configure('google-ads',folder)
     assert (folder/'config.json').read_text()==before
     assert not (folder/'docker-admin.env').exists()
+
+
+@pytest.mark.parametrize('source',['ads','instagram'])
+def test_source_configuration_reuses_customer_meta_app_without_prompting_for_secret(fixture,monkeypatch,capsys,source):
+    module,folder,values,app=fixture
+    values.update({'CUSTOMER_DATA_META_'+key:value for key,value in app.items() if key!='CONFIG_ID'})
+    values['CUSTOMER_DATA_META_CONTENT_CONFIG_ID']='987654'
+    (folder/'config.json').write_text(json.dumps(values))
+    monkeypatch.setattr(module.getpass,'getpass',lambda *_:pytest.fail('Existing application secret must not be re-entered'))
+    monkeypatch.setattr('builtins.input',lambda *_:pytest.fail('Only the supplied configuration ID is needed'))
+    module.configure('meta',folder,meta_source=source,meta_config_id='987655')
+    saved=json.loads((folder/'config.json').read_text())
+    assert all(saved[key]==value for key,value in values.items())
+    assert saved['CUSTOMER_DATA_META_'+source.upper()+'_CONFIG_ID']=='987655'
+    assert app['APP_SECRET'] not in capsys.readouterr().out
+    assert not any('META_' in key for key in dotenv_values(folder/'docker-web.env',interpolate=False))
+
+
+@pytest.mark.parametrize('source,config_id',[('content','123456'),('both','123456'),('ads','not-an-id'),('instagram','')])
+def test_source_configuration_rejects_ambiguous_or_invalid_meta_binding(fixture,source,config_id):
+    module,folder,_,_=fixture;before=(folder/'config.json').read_text()
+    with pytest.raises(SystemExit):module.configure('meta',folder,meta_source=source,meta_config_id=config_id)
+    assert (folder/'config.json').read_text()==before
+    assert not (folder/'docker-admin.env').exists()

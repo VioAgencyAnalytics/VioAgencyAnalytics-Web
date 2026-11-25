@@ -1,0 +1,36 @@
+<section class="seo-tabpanel" id="seo-panel-reports" role="tabpanel" aria-labelledby="seo-tab-reports" hidden>
+  <section class="seo-card seo-report-prep" aria-labelledby="seo-report-prep-title">
+    <div class="seo-card-head">
+      <div>
+        <h2 id="seo-report-prep-title">Chuẩn bị báo cáo SEO</h2>
+        <p class="seo-help" id="seo-report-period">Chọn khách hàng và kỳ ở đầu trang.</p>
+      </div>
+      <button type="button" id="seo-report-refresh" class="ov-button ov-secondary">Cập nhật trạng thái</button>
+    </div>
+    <p id="seo-report-source-status" class="seo-prep-status" role="status">Đang kiểm tra dữ liệu đã lưu…</p>
+    <div class="seo-flow-sources seo-prep-sources" data-seo-flow-sources="spineditor,gsc,ga4"></div>
+    <p class="seo-help">Nếu mở kết nối Google ở tab mới, chọn xong tài sản rồi quay lại đây và bấm <strong>Cập nhật trạng thái</strong>.</p>
+  </section>
+  <section class="seo-card" aria-labelledby="seo-report-details-title">
+    <h3 id="seo-report-details-title">Nội dung bổ sung</h3>
+    <div class="seo-flow-readiness-grid" id="seo-report-readiness"></div>
+  </section>
+  <section class="seo-card seo-prep-export" aria-labelledby="seo-report-export-title">
+    <div>
+      <h3 id="seo-report-export-title">Xuất PDF</h3>
+      <p class="seo-help">Rà lại nguồn và nội dung, chọn <strong>Tạo &amp; mở báo cáo</strong>, rồi <strong>In / Lưu PDF</strong>. Tạo bản mới sau khi bổ sung dữ liệu.</p>
+      <p id="seo-report-filter-note" class="seo-help" hidden>Nhấn <strong>Xem dữ liệu</strong> ở đầu trang để áp dụng kỳ mới.</p>
+    </div>
+    <a class="ov-button seo-primary" id="seo-report-continue" data-seo-report-link href="/workspace/reports/combined?sources=seo,ga4,gsc" hidden>
+      <span class="material-symbols-outlined" aria-hidden="true">description</span>Tạo báo cáo SEO
+    </a>
+  </section>
+  <section class="seo-card">
+    <div class="seo-card-head">
+      <h3>Báo cáo đã lưu</h3>
+      <button type="button" id="seo-reports-refresh" class="ov-button ov-secondary">Cập nhật danh sách</button>
+    </div>
+    <div id="seo-report-list" class="sr-saved"></div>
+    <p id="seo-reports-status" class="seo-help" role="status"></p>
+  </section>
+</section>

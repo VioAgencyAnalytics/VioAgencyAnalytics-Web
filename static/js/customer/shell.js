@@ -2,8 +2,11 @@
 (() => {
   'use strict';
   const $ = (selector) => document.querySelector(selector);
-  const initial = JSON.parse($('#overview-data, #integrations-data, #marketing-data, #workspace-page-data, #library-data').textContent);
-  const workspaceId = initial.workspace.id;
+  const initialNode = $('#overview-data, #integrations-data, #marketing-data, #workspace-page-data, #library-data, #seo-context-data');
+  if (!initialNode) return;
+  const initial = JSON.parse(initialNode.textContent);
+  const workspaceId = initial.workspace?.id || initial.workspace_id;
+  if (!/^[a-f0-9]{32}$/.test(workspaceId || '')) return;
   const dialog = $('#workspace-search-dialog');
   const input = $('#workspace-search-input');
   const results = $('#workspace-search-results');
@@ -15,7 +18,10 @@
     {name: 'Kết nối nền tảng', note: 'Khám phá các nguồn dữ liệu Marketing', icon: 'hub', href: '/workspace/integrations'},
     {name: 'Dashboard Marketing', note: 'KPI, xu hướng và hiệu suất đa kênh', icon: 'monitoring', href: '/workspace/dashboard'},
     {name: 'Phân tích kênh', note: '9 kênh Marketing và khung phân tích chuyên sâu', icon: 'query_stats', href: '/workspace/channels'},
-    {name: 'Trung tâm Báo cáo', note: 'Bố cục báo cáo đa kênh và báo cáo đã lưu', icon: 'description', href: '/workspace/reports'},
+    {name: 'SEO & Từ khóa', note: 'Nhập thứ hạng, cam kết KPI và công việc SEO', icon: 'travel_explore', href: '/workspace/seo'},
+    {name: 'Báo cáo tổng hợp', note: 'Chọn nguồn, kỳ và nội dung báo cáo', icon: 'auto_stories', href: '/workspace/reports/combined'},
+    {name: 'Trung tâm Báo cáo', note: 'Dữ liệu đã đồng bộ và báo cáo đã lưu', icon: 'description', href: '/workspace/reports'},
+    {name: 'Kho mẫu báo cáo', note: 'Xem trước báo cáo theo từng nền tảng', icon: 'grid_view', href: '/workspace/reports/templates'},
     {name: 'Thành viên', note: 'Đội ngũ, lời mời và quyền truy cập Workspace', icon: 'group', href: '/workspace/members'},
     {name: 'Cài đặt Workspace', note: 'Thông tin, khu vực và tùy chọn hiển thị', icon: 'settings', href: '/workspace/settings'},
     {name: 'Quản lý khách hàng', note: 'Thêm, sửa và chọn khách hàng / thương hiệu', icon: 'business_center', href: '/workspace#client-card'},
@@ -47,7 +53,7 @@
     const row = element(item.href ? 'a' : 'button', '', 'wh-result');
     if (item.href) row.href = item.href;
     else { row.type = 'button'; row.disabled = selecting; row.addEventListener('click', () => selectClient(item.id)); }
-    const icon = element('span', item.icon, 'material-symbols-outlined'); icon.setAttribute('aria-hidden', 'true');
+    const icon = item.platform && window.VioPlatformBrand ? window.VioPlatformBrand.logo(item.platform) : element('span', item.icon, 'material-symbols-outlined'); icon.setAttribute('aria-hidden', 'true');
     const content = element('div', ''); content.append(element('strong', item.name), element('small', item.note));
     row.append(icon, content);
     return row;
@@ -60,7 +66,7 @@
         note: 'Chọn khách hàng và mở Tổng quan' + (client.website ? ' · ' + client.website : ''), icon: 'business_center'}))],
       ['NỀN TẢNG', platforms.map((platform) => ({name: platform.name, note: platform.status_label,
         keywords: platform.id + ' ' + platform.subtitle,
-        icon: platform.icon, href: '/workspace/integrations?platform=' + encodeURIComponent(platform.id)}))],
+        icon: platform.icon, platform: platform.id, href: '/workspace/integrations?platform=' + encodeURIComponent(platform.id)}))],
     ];
     const nodes = [];
     let total = 0;
@@ -108,6 +114,7 @@
   dialog.addEventListener('close', () => { generation += 1; $('#workspace-search-open').focus(); });
   input.addEventListener('input', render);
   dialog.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') { event.preventDefault(); dialog.close(); return; }
     if (event.key === 'Enter' && document.activeElement === input && !loading && !selecting) {
       const first = results.querySelector('a, button:not([disabled])');
       if (first) { event.preventDefault(); first.click(); }
@@ -151,29 +158,6 @@
     });
   };
   mobileNavigation.addEventListener('change', fitNavigation); fitNavigation();
-  // Links and form validation must still reach content inside collapsed groups.
-  function reveal(target) {
-    if (!target) return;
-    if (target.matches('details')) target.open = true;
-    for (let parent = target.parentElement; parent; parent = parent.parentElement) {
-      if (parent.matches('details')) parent.open = true;
-    }
-  }
-  function revealHash() {
-    let id;
-    try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
-    const target = document.getElementById(id);
-    if (target) { reveal(target); requestAnimationFrame(() => target.scrollIntoView({block: 'start'})); }
-  }
-  document.addEventListener('click', (event) => {
-    const link = event.target.closest('a[href]'); if (!link) return;
-    const url = new URL(link.href, location.href);
-    if (url.origin === location.origin && url.pathname === location.pathname && url.hash) {
-      try { reveal(document.getElementById(decodeURIComponent(url.hash.slice(1)))); } catch { /* malformed fragment */ }
-    }
-  });
-  document.addEventListener('invalid', (event) => reveal(event.target), true);
-  window.addEventListener('hashchange', revealHash);
-  if (location.hash) revealHash();
+  // Shared interactions.js owns section anchors, hidden-field validation and skip focus.
   if (/Mac|iPhone|iPad/.test(navigator.platform)) $('#workspace-search-open kbd').textContent = '⌘ K';
 })();

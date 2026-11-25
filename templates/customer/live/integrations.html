@@ -1,4 +1,5 @@
 {% extends 'customer/base.html' %}
+{% from 'customer/live/components/platform-mark.html' import platform_mark %}
 {% block layout %}
 {% set business = details.workspace.kind|default('agency') == 'business' %}
 {% set single_brand = business and details.clients|length == 1 %}
@@ -7,7 +8,7 @@
   {% include 'customer/live/components/sidebar.html' %}
   <div class="ov-body">
     {% include 'customer/live/components/topbar.html' %}
-    <main class="ov-main ig-main">
+    <main class="ov-main ig-main" id="customer-main" tabindex="-1">
       <section class="ig-hero">
         <div class="ig-hero-title"><h1>Kết nối nền tảng</h1><p id="integration-subtitle">{% if single_brand %}Kết nối các tài khoản Marketing của doanh nghiệp.{% elif business %}Chọn thương hiệu, rồi kết nối nguồn dữ liệu.{% else %}Chọn khách hàng, rồi kết nối nguồn dữ liệu.{% endif %}</p></div>
         <div class="ig-hero-actions"><button type="button" class="ov-button ov-secondary ui-icon-action" data-integration-guide aria-label="Hướng dẫn kết nối" title="Hướng dẫn kết nối"><span class="material-symbols-outlined" aria-hidden="true">help_outline</span></button><button id="integrations-refresh" type="button" class="ov-button ov-secondary" disabled><span class="material-symbols-outlined" aria-hidden="true">sync</span>Cập nhật</button></div>
@@ -35,8 +36,8 @@
         <div class="ig-result-bar"><p id="platform-result-count" class="ig-muted" role="status" aria-live="polite">Hiển thị {{ details.platforms|length }} nền tảng</p><button type="button" id="platform-clear-filters" class="ov-text-button" hidden>Xóa bộ lọc <span aria-hidden="true">×</span></button></div>
         <div class="ig-platform-grid" id="platform-grid">
           {% for platform in details.platforms %}
-          <article class="ig-platform" data-platform="{{ platform.id }}">
-            <div class="ig-platform-heading"><span class="material-symbols-outlined ig-provider ig-{{ platform.color }}" aria-hidden="true">{{ platform.icon }}</span><span class="ig-badge" data-platform-state>{{ platform.status_label }}</span></div>
+          <article class="ig-platform" data-platform="{{ platform.id }}" data-platform-brand="{{ platform.id }}">
+            <div class="ig-platform-heading">{{ platform_mark(platform.id, 'ig-provider') }}<span class="ig-badge" data-platform-state>{{ platform.status_label }}</span></div>
             <h3>{{ platform.name }}</h3><p class="ig-platform-subtitle">{{ platform.subtitle }}</p>
             <div class="ig-platform-footer"><span><span class="material-symbols-outlined" aria-hidden="true">folder_open</span>{{ platform.asset_label }}</span><button class="ov-button ov-secondary" type="button" data-platform-details="{{ platform.id }}" aria-label="Thông tin kết nối {{ platform.name }}">Tìm hiểu <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></button></div>
           </article>

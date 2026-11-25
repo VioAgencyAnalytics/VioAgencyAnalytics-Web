@@ -4,6 +4,7 @@ import hmac
 import logging
 import re
 import secrets
+import asyncio
 from functools import lru_cache
 from urllib.parse import parse_qs, urlsplit
 
@@ -14,6 +15,7 @@ from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.routes.pages import templates
+from app.customer_transport import PROVIDERS, public_error, public_payload, read_payload
 
 router = APIRouter(tags=['customer identity'])
 logger = logging.getLogger(__name__)
@@ -90,23 +92,28 @@ async def backend(request, method, path, data=None):
     settings = configuration(request)
     headers = {'Authorization': 'Bearer ' + settings.customer_service_token.get_secret_value(),
                'X-Customer-Session': request.cookies.get(SESSION, ''),
-               'X-Customer-Client': client_fingerprint(request, settings)}
+               'X-Customer-Client': client_fingerprint(request, settings),
+               'Accept': 'application/json', 'Accept-Encoding': 'identity'}
     try:
-        async with httpx.AsyncClient(timeout=httpx.Timeout(40, connect=5), follow_redirects=False, trust_env=False) as client:
-            response = await client.request(method, settings.customer_backend_url + '/api/internal/customer' + path, json=data, headers=headers)
-        payload = response.json()
-        if not isinstance(payload, dict):
-            raise ValueError()
-    except (httpx.HTTPError, ValueError):
-        raise CustomerError(503, 'Chưa kết nối được dịch vụ tài khoản. Vui lòng thử lại.') from None
-    if response.status_code >= 300:
-        if payload.get('code') == 'service_auth':
-            raise CustomerError(503, 'Chưa cấu hình kết nối dịch vụ tài khoản.')
-        raise CustomerError(response.status_code, payload.get('error', 'Không thể hoàn tất yêu cầu.'), payload.get('code', 'customer_error'))
-    return payload
+        async with asyncio.timeout(45):
+            async with httpx.AsyncClient(timeout=httpx.Timeout(40, connect=5), follow_redirects=False, trust_env=False) as client:
+                async with client.stream(method, settings.customer_backend_url + '/api/internal/customer' + path, json=data, headers=headers) as response:
+                    if 300 <= response.status_code < 400:
+                        raise ValueError('Admin redirects are not followed')
+                    payload = await read_payload(response)
+                    status = response.status_code
+        if status >= 400:
+            raise CustomerError(*public_error(status, payload))
+        return public_payload(payload, path.split('?', 1)[0])
+    except (httpx.TimeoutException, TimeoutError):
+        raise CustomerError(503, 'Dịch vụ phản hồi chậm. Hãy kiểm tra trạng thái trước khi thử lại.', 'service_timeout') from None
+    except httpx.HTTPError:
+        raise CustomerError(503, 'Chưa kết nối được dịch vụ tài khoản. Vui lòng thử lại.', 'service_unavailable') from None
+    except (ValueError, TypeError, RecursionError, OverflowError):
+        raise CustomerError(502, 'Dịch vụ trả về phản hồi chưa hợp lệ. Vui lòng thử lại.', 'service_response') from None
 
 
-async def read_body(request):
+async def read_body(request, max_bytes=16384):
     settings = configuration(request)
     binding = browser_binding(request)
     supplied = request.headers.get('X-CSRF-Token', '')
@@ -118,7 +125,7 @@ async def read_body(request):
     raw = bytearray()
     async for chunk in request.stream():
         raw.extend(chunk)
-        if len(raw) > 16384:
+        if len(raw) > max_bytes:
             raise CustomerError(413, 'Yêu cầu quá lớn.')
     import json
     try:
@@ -139,6 +146,8 @@ def login_response(request, payload, *, redirect=False):
     age = payload.pop('session_max_age', None)
     if not isinstance(raw, str) or not re.fullmatch(r'[A-Za-z0-9_-]{43,128}', raw):
         raise CustomerError(502, 'Dịch vụ trả về phiên đăng nhập không hợp lệ.')
+    if age is not None and (type(age) is not int or not 1 <= age <= 30 * 86400):
+        raise CustomerError(502, 'Dịch vụ trả về thời hạn phiên không hợp lệ.')
     settings = configuration(request)
     destination = payload.pop('redirect', '/workspace/onboarding')
     if destination not in ('/workspace', '/workspace/onboarding'):
@@ -202,11 +211,11 @@ def google_login_result(payload, settings):
     return {'authorization_url': address}
 
 
-def provider_result(path, payload, settings):
+def provider_result(path, payload, settings, expected_client_id=None):
     """Project only safe provider DTO fields; never forward credentials to JS."""
     if '/providers/' in path:
         source = path.split('/')[-2]
-        provider = 'google' if source in ('ga4','gsc','google_ads','youtube','business_profile') else 'tiktok' if source == 'tiktok_ads' else 'meta'
+        provider = PROVIDERS[source]
         address = payload.get('authorization_url')
         try:
             url = urlsplit(address)
@@ -221,7 +230,11 @@ def provider_result(path, payload, settings):
             if (not isinstance(address,str) or len(address)>8192 or url.scheme!='https' or url.fragment
                     or url.netloc!=host or not valid_path
                     or set(query)-allowed or any(len(v)!=1 for v in query.values())
-                    or (provider!='tiktok' and query.get('response_type')!=['code']) or not query.get('state')
+                    or (provider!='tiktok' and query.get('response_type')!=['code'])
+                    or not query.get('state', [''])[0] or len(query['state'][0])>128
+                    or not query.get('app_id' if provider=='tiktok' else 'client_id', [''])[0]
+                    or provider=='meta' and (not re.fullmatch(r'\d+',query.get('config_id',[''])[0])
+                        or query.get('override_default_response_type')!=['true'])
                     or query.get('redirect_uri')!=[settings.customer_web_origin+'/auth/customer/providers/'+provider+'/callback']):
                 raise ValueError()
         except (TypeError, ValueError, AttributeError):
@@ -230,14 +243,28 @@ def provider_result(path, payload, settings):
     action = path.rsplit('/',1)[-1]
     if action=='discover':
         assets = payload.get('assets')
-        if not isinstance(assets,list) or len(assets)>15000 or any(not isinstance(a,dict) for a in assets):
+        parts = path.split('/')
+        if (payload.get('workspace_id')!=parts[1] or payload.get('connection_id')!=parts[3]
+                or not isinstance(payload.get('client_id'),str) or not re.fullmatch(r'[a-f0-9]{32}',payload['client_id'])
+                or type(payload.get('version')) is not int or payload['version']<1
+                or expected_client_id is not None and payload['client_id']!=expected_client_id):
+            raise CustomerError(502,'Danh sách tài sản không thuộc kết nối đang chọn.','connection_scope')
+        if (not isinstance(assets,list) or len(assets)>15000 or any(not isinstance(a,dict)
+                or not isinstance(a.get('id'),str) or not 1<=len(a['id'])<=2048
+                or not isinstance(a.get('name'),str) or not 1<=len(a['name'])<=2048
+                or any(a.get(key) is not None and (not isinstance(a[key],str) or len(a[key])>100) for key in ('currency','timezone')) for a in assets)
+                or len({a['id'] for a in assets})!=len(assets)):
             raise CustomerError(502,'Danh sách tài sản không hợp lệ.')
         return {**{key:payload.get(key) for key in ('connection_id','workspace_id','client_id','version')},
                 'assets':[{key:asset.get(key) for key in ('id','name','currency','timezone')} for asset in assets]}
     if action in ('select','sync'):
         job = payload.get('sync')
-        if not isinstance(job,dict):
+        if (not isinstance(job,dict) or not isinstance(job.get('id'),str) or not re.fullmatch(r'[a-f0-9]{32}',job['id'])
+                or job.get('status') not in ('queued','running','succeeded','failed','cancelled')):
             raise CustomerError(502,'Trạng thái đồng bộ không hợp lệ.')
+        if action=='select' and (payload.get('connection_id')!=path.split('/')[3]
+                or not isinstance(payload.get('asset_id'),str) or not re.fullmatch(r'[a-f0-9]{32}',payload['asset_id'])):
+            raise CustomerError(502,'Kết quả không thuộc kết nối đang chọn.','connection_scope')
         return {**({key:payload.get(key) for key in ('connection_id','asset_id')} if action=='select' else {}),
                 'sync':{key:job.get(key) for key in ('id','status')}}
     return {key:payload.get(key) for key in ('message','provider_revoked')}
@@ -254,6 +281,7 @@ async def customer_mutation(request: Request, path: str):
                 and not re.fullmatch(r'workspaces/[a-f0-9]{32}/members/[a-f0-9]{32}/(role|remove)', path)
                 and not re.fullmatch(r'workspaces/[a-f0-9]{32}/invitations/[a-f0-9]{32}/revoke', path)
                 and not re.fullmatch(r'workspaces/[a-f0-9]{32}/providers/(ga4|gsc|facebook_content|facebook_ads|google_ads|instagram|youtube|business_profile|tiktok_ads)/start', path)
+                and not re.fullmatch(r'workspaces/[a-f0-9]{32}/targets/(ga4|gsc|facebook_content|facebook_ads|google_ads|instagram|youtube|business_profile|tiktok_ads)', path)
                 and not re.fullmatch(r'workspaces/[a-f0-9]{32}/connections/[a-f0-9]{32}/(discover|select|sync|disconnect)', path)):
             raise CustomerError(404, 'Không tìm thấy chức năng.')
         if path == 'auth/google/start':
@@ -268,8 +296,13 @@ async def customer_mutation(request: Request, path: str):
         if path == 'branding/preview':
             from app.customer_branding import preview_result
             payload = preview_result(payload)
+        if re.fullmatch(r'workspaces/[a-f0-9]{32}/targets/(ga4|gsc|facebook_content|facebook_ads|google_ads|instagram|youtube|business_profile|tiktok_ads)',path):
+            message=payload.get('message')
+            if not isinstance(message,str) or len(message)>250:
+                raise CustomerError(502,'Chưa xác nhận được mục tiêu KPI.')
+            payload={'message':message}
         if re.fullmatch(r'workspaces/[a-f0-9]{32}/(providers/[^/]+/start|connections/[a-f0-9]{32}/[^/]+)',path):
-            payload = provider_result(path,payload,configuration(request))
+            payload = provider_result(path,payload,configuration(request),data.get('client_id'))
         if path in ('auth/register', 'auth/login'):
             return login_response(request, payload)
         response = JSONResponse(payload, headers=HEADERS)
@@ -299,14 +332,15 @@ async def provider_callback(request: Request, provider: str):
         payload = await backend(request, 'POST', '/providers/' + provider + '/finish', data)
         if (not all(isinstance(payload.get(key),str) and re.fullmatch(r'[a-f0-9]{32}',payload[key])
                     for key in ('workspace_id','client_id','connection_id'))
-                or payload.get('platform_id') not in ('ga4','gsc','facebook_content','facebook_ads','google_ads','instagram','youtube','business_profile','tiktok_ads')):
+                or not isinstance(payload.get('platform_id'),str) or PROVIDERS.get(payload['platform_id'])!=provider):
             raise CustomerError(502, 'Kết quả cấp quyền không hợp lệ.', 'provider_failed')
         return RedirectResponse('/workspace/integrations?oauth=connected&connection=' + payload['connection_id'] + '&platform=' + payload['platform_id'],303,headers=HEADERS)
     except CustomerError as exc:
         if exc.status == 404:
             return error_response(exc)
         allowed = {'provider_cancelled','oauth_state','provider_scopes','workspace_changed','client_changed',
-                   'email_verification_required','connector_not_configured','provider_reauth'}
+                   'email_verification_required','connector_not_configured','provider_reauth',
+                   'provider_setup_required','provider_account_required','provider_rate_limit'}
         code = exc.code if exc.code in allowed else 'provider_failed'
         return RedirectResponse('/workspace/integrations?oauth=' + code,303,headers=HEADERS)
 
@@ -421,6 +455,14 @@ async def live_page(request, page):
             suffix = '/' + page if page in ('integrations', 'members', 'settings') else ''
             details = await backend(request, 'GET', '/workspaces/' + user['workspace']['id'] + suffix)
         name = 'overview' if page == '' else page
+        if page == 'reports' and any(key in request.query_params for key in ('report', 'category', 'q')):
+            from app.customer_report_templates import LIBRARY, TEMPLATE_BY_SLUG, catalogue_filters
+            previous = request.query_params.get('report', '')
+            slug = 'combined' if previous == 'overview' else previous.replace('_', '-')
+            item = TEMPLATE_BY_SLUG.get(slug)
+            if item or 'category' in request.query_params or 'q' in request.query_params:
+                url = (item.preview_url if item else LIBRARY) + catalogue_filters(request.query_params)
+                return RedirectResponse(url, 303, headers=HEADERS)
         overview = library = None
         if page in ('', 'dashboard', 'channels', 'reports'):
             from app.mappers.customer_overview import build_overview
@@ -449,3 +491,9 @@ async def live_page(request, page):
         return templates.TemplateResponse(request=request, name='customer/live/error.html',
             context={'title': 'Kết nối tài khoản', 'customer_page': 'error', 'customer_live': True,
                      'message': exc.message}, status_code=exc.status, headers=HEADERS)
+
+
+@router.get('/api/customer/workspaces/{workspace_id}/analytics')
+async def customer_saved_analytics(request: Request, workspace_id: str):
+    from app.customer_analytics import read
+    return await read(request, workspace_id)

@@ -80,7 +80,11 @@ def build_view(content, details):
         enriched.append({**row, 'heading': first[:160], 'url': post_url(row, page_id),
                          'date_label': day(row.get('date')), 'kind': kind,
                          'format_label': FORMATS[kind][0], 'format_icon': FORMATS[kind][1]})
-    total_views = sum(p['post_media_view_lifetime'] for p in posts) if posts and all(number(p.get('post_media_view_lifetime')) for p in posts) else None
+    if 'post_views_lifetime' in metrics:
+        total_views = metrics['post_views_lifetime']['value']
+    else:
+        # Older previews only store the per-post counters.
+        total_views = sum(p['post_media_view_lifetime'] for p in posts) if posts and all(number(p.get('post_media_view_lifetime')) for p in posts) else None
     cards = [
         {'key': 'posts_published', 'label': 'Bài đăng', 'value': metrics.get('posts_published', {}).get('value'), 'icon': 'article', 'tone': 'blue', 'note': 'Xuất bản trong kỳ · UTC'},
         {'key': 'post_views_lifetime', 'label': 'Lượt xem các bài', 'value': total_views, 'icon': 'visibility', 'tone': 'violet', 'note': 'Tích lũy của các bài trong kỳ',
@@ -119,10 +123,16 @@ def build_view(content, details):
     ranking = 'post_media_view_lifetime' if any(number(p.get('post_media_view_lifetime')) for p in enriched) else 'reactions_lifetime'
     top = sorted((p for p in enriched if number(p.get(ranking))), key=lambda p: (p[ranking], p.get('date') or ''), reverse=True)[:3]
     period = content.get('snapshot') or {}
+    requested = content.get('period') or {}
+    first, last = requested.get('start',period.get('start_date')), requested.get('end',period.get('end_date'))
+    days = (date.fromisoformat(last)-date.fromisoformat(first)).days+1 if first and last else 0
     active_days = sum(p['posts_published'] > 0 for p in content.get('daily_posts', []))
     return {'cards': cards, 'posts': enriched, 'top': top, 'ranking': ranking,
             'ranking_label': 'lượt xem' if ranking == 'post_media_view_lifetime' else 'cảm xúc',
             'charts': charts, 'observations': observations, 'formats': formats, 'issues': issues,
-            'shares': shares, 'active_days': active_days, 'days': len(content.get('daily_posts', [])),
-            'period': day(period.get('start_date')) + ' – ' + day(period.get('end_date')),
+            'distribution': {'title': 'Định dạng bài đăng', 'label': 'bài đăng', 'unit': 'count',
+                             'rows': [{'label': item['label'], 'value': item['count']} for item in formats],
+                             'note': f'Tỷ trọng trong {len(posts)} bài đã tải của kỳ đang xem.'},
+            'shares': shares, 'active_days': active_days, 'days': days,
+            'period': day(first) + ' – ' + day(last),
             'single_brand': details.get('workspace', {}).get('kind') == 'business' and len(details.get('clients', [])) == 1}

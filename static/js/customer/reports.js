@@ -1,18 +1,10 @@
-/* Report UI scaffolding. Layout trials are in memory, never saved or published. */
+/* Saved reports in the active customer scope. */
 (() => {
   'use strict';
   const W = window.VioLibrary, {$, node} = W, initial = W.initial, params = new URLSearchParams(location.search);
   const states = {draft: 'Bản nháp', scheduled: 'Định kỳ', published: 'Đã phát hành'};
-  const groups = new Set(initial.templates.map((t) => t.group));
-  let group = groups.has(params.get('category')) ? params.get('category') : 'all';
-  let tab = Object.hasOwn(states, params.get('tab')) ? params.get('tab') : 'all', deepLink = params.get('report'), currentPage = 1;
+  let tab = Object.hasOwn(states, params.get('tab')) ? params.get('tab') : 'all', currentPage = 1;
   const pagination = node('div', '', 'lb-pagination'); pagination.hidden = true; $('#reports-panel').append(pagination);
-  $('#library-search').value = (params.get('q') || '').slice(0, 150);
-  if ($('#library-search').value || group !== 'all' || deepLink) $('#report-template-catalogue').open = true;
-  function openTemplate(id) {
-    const item = initial.templates.find((t) => t.id === id); if (!item || !W.ready) return;
-    W.preview(item); W.url({report: id});
-  }
   function safeRows() {
     if (!W.ready || !W.snapshot?.reports_loaded || !Array.isArray(W.snapshot.reports)) return [];
     return W.snapshot.reports.slice(0, 1000).filter((r) => W.owned(r) && typeof r.id === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(r.id) && typeof r.name === 'string' && r.name.length <= 160 && Object.hasOwn(states, r.status));
@@ -41,7 +33,7 @@
     $('#reports-panel').setAttribute('aria-labelledby', 'reports-tab-' + tab);
     $('#reports-empty').hidden = filtered.length > 0;
     $('#reports-empty-title').textContent = !loaded ? 'Chưa có báo cáo được tải' : rows.length ? 'Không có báo cáo khớp bộ lọc' : 'Chưa có báo cáo đã lưu';
-    $('#reports-empty-description').textContent = !loaded ? 'Báo cáo chưa sẵn sàng. Bạn có thể thử mẫu có sẵn bên dưới.' : rows.length ? 'Thử từ khóa khác hoặc chuyển về Tất cả để xem lại các báo cáo.' : 'Chưa có báo cáo đã lưu cho khách hàng này.';
+    $('#reports-empty-description').textContent = !loaded ? 'Bạn có thể xem cách trình bày trong Kho mẫu báo cáo.' : rows.length ? 'Thử từ khóa khác hoặc chuyển về Tất cả để xem lại các báo cáo.' : 'Chưa có báo cáo đã lưu cho khách hàng này.';
     pagination.replaceChildren(); pagination.hidden = pages <= 1;
     if (pages > 1) {
       pagination.append(node('span', `Trang ${currentPage} / ${pages} · ${filtered.length} báo cáo`));
@@ -59,35 +51,6 @@
     if (!rows.length) { const icon = node('span', 'download', 'material-symbols-outlined'); icon.setAttribute('aria-hidden', 'true'); content.append(icon, node('h3', W.snapshot?.exports_loaded ? 'Chưa có lần xuất file nào' : 'Chưa có lịch sử được tải'), node('p', 'Lịch sử sẽ xuất hiện khi chức năng xuất báo cáo sẵn sàng.')); }
     for (const r of rows) { const item = node('div', '', 'lb-history-row'); item.append(node('strong', r.name), node('small', W.stamp(r.created_at))); content.append(item); }
   }
-  function render() {
-    const words = W.fold($('#library-search').value.trim()).split(/\s+/).filter(Boolean); let count = 0;
-    for (const item of initial.templates) {
-      const haystack = W.fold([item.name, item.description, ...item.topics].join(' '));
-      const matches = (group === 'all' || item.group === group) && words.every((q) => haystack.includes(q));
-      document.querySelector(`[data-template-card="${item.id}"]`).hidden = !matches; if (matches) count += 1;
-    }
-    document.querySelectorAll('[data-library-group]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.libraryGroup === group)));
-    $('#library-no-results').hidden = count > 0; $('#library-result-count').textContent = `Hiển thị ${count} / ${initial.templates.length} bố cục`;
-    renderSaved(); renderHistory();
-    if (deepLink && W.ready) { const id = deepLink; deepLink = null; if (initial.templates.some((t) => t.id === id)) openTemplate(id); }
-  }
-  function filter() { W.url({category: group === 'all' ? '' : group, q: $('#library-search').value.trim()}); render(); }
-  function chooseSources() {
-    const layout = $('#report-builder-layout').value;
-    const ids = layout === 'paid' ? ['facebook_ads', 'tiktok_ads', 'google_ads'] : layout === 'seo' ? ['ga4', 'gsc'] : layout === 'blank' ? [] : initial.sources.map((s) => s.id);
-    document.querySelectorAll('#report-builder-form [name=source]').forEach((input) => { input.checked = ids.includes(input.value); });
-  }
-  function openBuilder() {
-    if (!W.ready) return;
-    if (!W.details.selected_client) { W.info('Chọn khách hàng trước', 'Tạo hoặc chọn khách hàng tại trang Tổng quan trước khi thử thiết kế báo cáo.'); return; }
-    $('#report-builder-error').hidden = true;
-    $('#report-builder-client').textContent = 'Khách hàng: ' + W.details.selected_client.name;
-    $('#report-builder').showModal(); $('#report-builder-name').focus();
-  }
-  $('#library-search').addEventListener('input', filter);
-  document.querySelectorAll('[data-library-group]').forEach((b) => b.addEventListener('click', () => { group = b.dataset.libraryGroup; filter(); }));
-  document.querySelectorAll('[data-open-template]').forEach((b) => b.addEventListener('click', () => openTemplate(b.dataset.openTemplate)));
-  $('#library-reset').addEventListener('click', () => { group = 'all'; $('#library-search').value = ''; filter(); $('#library-search').focus(); });
   const tabs = [...document.querySelectorAll('[data-report-tab]')];
   tabs.forEach((b, i) => {
     b.addEventListener('click', () => { tab = b.dataset.reportTab; currentPage = 1; W.url({tab: tab === 'all' ? '' : tab}); renderSaved(); });
@@ -98,21 +61,7 @@
   });
   $('#reports-search').addEventListener('input', () => { currentPage = 1; renderSaved(); });
   $('#reports-history').addEventListener('click', () => { renderHistory(); $('#report-history-dialog').showModal(); });
-  document.querySelectorAll('[data-open-builder]').forEach((b) => b.addEventListener('click', openBuilder));
-  $('#report-builder-layout').addEventListener('change', chooseSources); chooseSources();
-  $('#report-builder-form').addEventListener('submit', (event) => {
-    event.preventDefault(); if (!W.ready || !W.details.selected_client) return;
-    const name = $('#report-builder-name').value.trim(), layout = $('#report-builder-layout').value;
-    const sources = [...document.querySelectorAll('#report-builder-form [name=source]:checked')].map((i) => i.value).filter((id) => initial.sources.some((s) => s.id === id));
-    if (name.length < 2 || name.length > 160 || (!sources.length && layout !== 'blank')) { $('#report-builder-error').textContent = 'Nhập tên báo cáo từ 2 đến 160 ký tự và chọn ít nhất một nguồn dữ liệu.'; $('#report-builder-error').hidden = false; return; }
-    const base = initial.templates.find((t) => t.id === (layout === 'seo' ? 'seo' : 'overview'));
-    const item = {...base, description: layout === 'blank' ? 'Khung trống để sắp xếp các phần nội dung theo nhu cầu của khách hàng.' : base.description, topics: layout === 'blank' ? ['Tiêu đề báo cáo', 'Khu vực nội dung tùy chỉnh'] : base.topics, metrics: layout === 'blank' ? [] : base.metrics};
-    const key = $('#report-builder-period').value;
-    $('#report-builder').close(); W.preview(item, {name, sources, builder: true, blank: layout === 'blank', period: key === 'current' ? W.context().period : W.range(key)});
-  });
-  $('#library-preview-edit').addEventListener('click', () => { $('#library-preview').close(); openBuilder(); });
-  $('#library-preview').addEventListener('close', () => W.url({report: ''}));
-  document.addEventListener('customer:library-context', () => { currentPage = 1; $('#report-builder-form').reset(); chooseSources(); });
+  document.addEventListener('customer:library-context', () => { currentPage = 1; });
   window.VioReports = Object.freeze({getContext: W.context, render: W.accept});
-  W.mount(render);
+  W.mount(renderSaved);
 })();

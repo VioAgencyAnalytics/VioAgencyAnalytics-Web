@@ -1,0 +1,111 @@
+/* Shared action affordances. Content links and navigation retain their own hierarchy. */
+body[data-customer-page] {
+  --action-border: #ccd6e4;
+  --action-hover: #f1f5f9;
+}
+body[data-customer-page] :is(button, a[href], summary, input, select, textarea):focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+}
+body[data-customer-page] :is(button, a[href], summary) { -webkit-tap-highlight-color: transparent; }
+body[data-customer-page] button:not(#tour-highlight) { min-height: 44px; }
+body[data-customer-page] :is(button, input, select, textarea):disabled { cursor: not-allowed; }
+body[data-customer-page] :is(.identity-button, .ov-button, .od-button, .mk-button, .wa-button, .lb-button,
+  .fc-button, .cd-button, .ig-reconnect, .rc-button, .cr-button) {
+  min-height: 44px;
+  line-height: 1.5;
+}
+body[data-customer-page] :is(.identity-link, .ov-text-button, .od-text-link, .mk-text-link, .ui-context-link,
+  .cd-detail-link, .fc-text-link, .fc-back, .cd-back, .lb-text-link),
+body[data-customer-page] :is(.od-scope-bar, .od-card-heading, .mk-platform-table td, .ig-connection-actions) > a,
+body[data-customer-page] .ig-connection-actions > button,
+body[data-customer-page] :is(.od-source-list, .mk-source-list) a,
+body[data-customer-page] :is(.wa-footer, .ig-footer, .od-footer, .mk-footer, .lb-footer) :is(a, button),
+body[data-customer-page] :is(.identity-workspaces-heading, #invite-result) > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 9px 14px;
+  border: 1px solid var(--action-border);
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+  font-size: .875rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  cursor: pointer;
+}
+body[data-customer-page] :is(.identity-link, .ov-text-button, .od-text-link, .mk-text-link, .ui-context-link,
+  .cd-detail-link, .fc-text-link, .fc-back, .cd-back, .lb-text-link):hover,
+body[data-customer-page] :is(.od-scope-bar, .od-card-heading, .mk-platform-table td, .ig-connection-actions) > a:hover,
+body[data-customer-page] .ig-connection-actions > button:hover,
+body[data-customer-page] :is(.od-source-list, .mk-source-list) a:hover,
+body[data-customer-page] :is(.wa-footer, .ig-footer, .od-footer, .mk-footer, .lb-footer) :is(a, button):hover,
+body[data-customer-page] :is(.identity-workspaces-heading, #invite-result) > a:hover {
+  background: var(--action-hover);
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+body[data-customer-page] :is(.wh-icon-button, .lb-icon-button, .ui-icon-action, .wa-id, #tour-dismiss,
+  .identity-password button, .wa-dialog-top > button, .ui-tip > summary, .rp-dialog-close) {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--action-border);
+  border-radius: 8px;
+}
+body[data-customer-page] .ui-tip > summary { background: #f8fafc; }
+body[data-customer-page] :is(.ui-inline-help, .fc-kpi > details, .cr-chart-table, .fc-chart-table) > summary {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid var(--action-border);
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: .875rem;
+  color: #475569;
+  cursor: pointer;
+}
+body[data-customer-page] :is(.od-metric-tabs, .mk-segments, .lb-segments, .wa-tabs,
+  .fc-post-tabs, .fc-post-filters) button { min-height: 44px; }
+.ws-theme .ov-sidebar > a.ui-workspace-add { margin: 8px 16px; padding: 9px 12px; }
+.ws-theme .od-channel-nav > div a { min-height: 44px; display: flex; align-items: center; }
+.ws-theme .wh-breadcrumb a { text-decoration: underline; text-underline-offset: 4px; }
+.ws-theme .wa-settings-nav a { min-height: 44px; display: inline-flex; align-items: center; border: 1px solid var(--action-border); }
+.ws-theme .wa-settings-nav a[aria-current=location] { color: #b91c2b; border-color: #f0b9c0; background: #fff1f2; }
+.ws-theme .lb-card-period { margin: 12px 0 0; font-size: .8125rem; line-height: 1.6; color: #64748b; }
+.ws-theme .lb-card-metrics dt { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ws-theme .lb-card-metrics dt small { display: block; margin-top: 3px; font-size: .75rem; line-height: 1.5; }
+.ws-theme .cd-source.cd-report-ready .cd-detail-link { background: #2563eb; border-color: #2563eb; color: #fff !important; }
+.ws-theme .cd-source.cd-report-ready .cd-detail-link:hover { background: #1d4ed8; border-color: #1d4ed8; }
+.ws-theme .lb-card[data-state=ready] { border-color: #c9e5d9; }
+.ws-theme .lb-live-note { margin: 0 0 18px; }
+.ws-theme .lb-secondary-sections { display: grid; gap: 20px; }
+body[data-customer-page] .fc-post-link { min-height: 44px; padding: 9px 12px; }
+body[data-customer-page] .fc-post-title { text-decoration: underline; text-decoration-color: #cbd5e1; text-underline-offset: 4px; }
+body[data-customer-page] .fc-post-title:hover { text-decoration-color: currentColor; }
+body[data-customer-page] .fc-kpi > strong.fc-unavailable { font-size: 1rem; line-height: 1.45; letter-spacing: 0; min-height: 2.9em; display: flex; align-items: center; }
+body[data-customer-page] .identity-check { min-height: 44px; align-items: center; }
+body[data-customer-page] .cd-source-catalogue > summary { min-height: 44px; }
+body[data-customer-page] .ui-disclosure > summary { border: 1px solid transparent; }
+body[data-customer-page] .ui-disclosure > summary:hover { border-color: var(--action-border); }
+body[data-customer-page] #customer-main { scroll-margin-top: 100px; }
+@media (max-width: 700px) {
+  .ws-theme .ov-nav > :is(a, button), .ws-theme .od-channel-nav summary { min-height: 44px; }
+  .ws-theme .ui-guide { flex-wrap: wrap; }
+  .ws-theme :is(.ig-footer, .wa-footer, .lb-footer, .od-footer, .mk-footer) { gap: 12px; flex-wrap: wrap; }
+  .ws-theme .ui-context-link { white-space: normal; }
+  .ws-theme :is(.od-metric-tabs, .mk-chart-controls .mk-segments) { display: flex; flex-wrap: wrap; width: 100%; min-width: 0; max-width: 100%; gap: 4px; }
+  .ws-theme :is(.od-metric-tabs, .mk-chart-controls .mk-segments) button { flex: 1 1 45%; white-space: normal; }
+  body[data-customer-page] #customer-main { scroll-margin-top: 155px; }
+}
+@media print {
+  body[data-customer-page] :is(.fc-post-title, .fc-post-link, .fc-text-link) { border: 0; background: transparent; padding: 0; min-height: 0; }
+  body[data-customer-page] .fc-kpi > strong.fc-unavailable { font-size: 11pt; }
+}

@@ -1,0 +1,13 @@
+<div class="pr-composition pr-paid-social" data-order-container>
+<div class="vt-order-block" data-order-key="summary" data-order-label="Chỉ số chính">
+{{ p.metrics(view.layout,report,display,['leads','cost_per_result','spend']) }}
+{{ p.metrics(view.layout,report,display,['clicks','impressions','ctr','cpc'],'report-supporting-kpis') }}
+{{ note(report_review, 'summary') }}
+</div>
+<div class="vt-order-block" data-order-key="trend" data-order-label="{{ view.layout.trend }}">
+{{ p.trend(report,view.layout) }}
+{{ note(report_review, 'trend') }}
+</div>
+{{ target_comparison(report,display,report_review) }}
+
+</div>

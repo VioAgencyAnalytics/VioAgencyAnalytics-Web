@@ -15,7 +15,8 @@
   function card(source) {
     const el = node('article', '', 'cd-source'), heading = node('div', '', 'cd-source-heading');
     el.dataset.source = source.source;
-    const icon = node('span', source.connector.icon, 'material-symbols-outlined cd-source-icon'); icon.setAttribute('aria-hidden','true');
+    window.VioPlatformBrand?.setTheme(el, source.source);
+    const icon = window.VioPlatformBrand?.logo(source.source, 'cd-source-icon') || node('span', source.connector.icon, 'material-symbols-outlined cd-source-icon'); icon.setAttribute('aria-hidden','true');
     const title = node('div',''); title.append(node('h3',source.connector.name),node('span',labels[source.state] || 'Chưa có dữ liệu','cd-source-state'));
     heading.append(icon,title); el.append(heading);
     const metric = source.metrics[0], hasData = source.state === 'ready';
@@ -25,11 +26,12 @@
     if (source.source === 'facebook_content' && !all) strong.id = 'meta-summary-posts';
     value.append(strong,node('span',metric?.label || 'Dữ liệu nguồn')); el.append(value);
     const period = source.snapshot;
-    el.append(node('p',period ? `${period.start_date} → ${period.end_date} · ${period.timezone}` : source.availability === 'not_configured' ? 'Chờ VIO cấu hình ứng dụng.' : source.state === 'planned' ? 'Connector đang được phát triển.' : 'Cấp quyền và chọn tài khoản.','cd-source-period'));
-    const facebookReport = hasData && source.source === 'facebook_content';
+    el.append(node('p',period ? `${period.start_date} → ${period.end_date} · ${period.timezone}` : source.asset ? 'Chọn kỳ báo cáo và đặt mục tiêu KPI.' : source.availability === 'not_configured' ? 'Chờ VIO cấu hình ứng dụng.' : source.state === 'planned' ? 'Connector đang được phát triển.' : 'Cấp quyền và chọn tài khoản.','cd-source-period'));
+    const canRead = hasData || Boolean(source.asset), facebookReport = canRead && source.source === 'facebook_content';
     if (facebookReport && all) el.classList.add('cd-report-ready');
-    const link = node('a',facebookReport ? 'Xem báo cáo →' : hasData ? 'Xem dữ liệu →' : source.state === 'planned' || source.availability === 'not_configured' ? 'Xem nền tảng →' : 'Quản lý kết nối →','cd-detail-link');
-    link.href = facebookReport ? '/workspace/reports/facebook-content?snapshot='+encodeURIComponent(source.snapshot.id) : hasData ? '/workspace/reports/data?source='+encodeURIComponent(source.source) : '/workspace/integrations?platform='+encodeURIComponent(source.source);
+    if (hasData && source.latest_sync?.status === 'failed') el.append(node('p','Lần đồng bộ mới cần kiểm tra. Báo cáo vẫn giữ dữ liệu đã lưu.','cd-source-period'));
+    const link = node('a',hasData ? 'Xem báo cáo →' : source.asset ? 'Chọn kỳ & đặt KPI →' : source.state === 'planned' || source.availability === 'not_configured' ? 'Xem nền tảng →' : 'Quản lý kết nối →','cd-detail-link');
+    link.href = facebookReport ? '/workspace/reports/facebook-content'+(period ? '?snapshot='+encodeURIComponent(period.id) : '') : canRead ? '/workspace/reports/data?source='+encodeURIComponent(source.source)+(period ? '&snapshot='+encodeURIComponent(period.id) : '') : '/workspace/integrations?platform='+encodeURIComponent(source.source);
     el.append(link); return el;
   }
   async function refresh() {
@@ -65,6 +67,7 @@
     } finally { if (ticket === generation) root.setAttribute('aria-busy','false'); }
   }
   root.querySelector('[data-sources-retry]').addEventListener('click', refresh);
+  document.addEventListener('customer:scope-changing',()=>{selected=null;refresh();});
   document.addEventListener('customer:workspace-detail',(event) => { selected = event.detail.selected_client?.id || null; refresh(); });
   document.addEventListener('customer:marketing-context',(event) => { const id = event.detail.scope?.client_id || null; if (id !== selected) { selected = id; refresh(); } });
   document.addEventListener('customer:library-context',(event) => { const id = event.detail.scope?.client_id || null; selected = id; refresh(); });

@@ -150,9 +150,10 @@
     const isFacebook = platform.id === 'facebook_content';
     const activePage = isFacebook && item.asset_id && !['expired','disconnected','pending'].includes(item.state);
     const card = node('article', '', 'ig-connection-card'); card.dataset.connectionId = item.id;
+    window.VioPlatformBrand?.setTheme(card, platform.id);
     const heading = node('div', '', 'ig-connection-top'), title = node('div', '');
     title.append(node('h3', isFacebook ? item.asset_name || platform.name : platform.name), node('p', isFacebook ? 'Facebook Content' : item.account_name || platform.asset_label));
-    heading.append(icon(platform.icon, 'ig-provider ig-' + (colors.has(platform.color) ? platform.color : 'blue')), title);
+    heading.append(window.VioPlatformBrand?.logo(platform.id, 'ig-provider') || icon(platform.icon, 'ig-provider ig-' + (colors.has(platform.color) ? platform.color : 'blue')), title);
     const badge = node('span', isFacebook && !item.asset_id && item.state === 'connected' ? 'Chưa chọn Fanpage' : stateLabels[item.state], 'ig-badge');
     badge.dataset.state = attentionStates.includes(item.state) ? 'attention' : item.state === 'pending' ? 'upcoming' : 'connected';
     const meta = node('div', '', 'ig-connection-meta');
@@ -164,6 +165,12 @@
     const actions = node('div', '', 'ig-connection-actions');
     const info = node('button', isFacebook ? facebookLabel(item) : 'Thông tin kết nối'); info.type = 'button'; info.dataset.connectionInfo = 'true'; info.addEventListener('click', () => showPlatform(platform.id, true));
     actions.append(info);
+    if (current.permissions.manage_connections && platform.can_connect) {
+      const retry=node('button','Kết nối lại','ig-reconnect'); retry.type='button'; retry.dataset.providerAction='reconnect';
+      retry.setAttribute('aria-label','Kết nối lại '+platform.name);
+      retry.addEventListener('click',() => { if (busy || changingScope) return; if (isFacebook) facebook.open({reconnect:true}); else connector.open(platform.id,undefined,{reconnect:true}); });
+      actions.append(retry);
+    }
     if (activePage) {
       const link = node('a', 'Xem Fanpage →'); link.href = '/workspace/channels/facebook-content'; actions.append(link);
     } else if (!isFacebook && item.asset_id && platform.data_contract?.adapter_ready && !['disconnected','pending'].includes(item.state)) {
@@ -243,6 +250,7 @@
       }
       if ($('#integration-dialog').open && next.selected_client?.id !== current.selected_client?.id) $('#integration-dialog').close();
       current = next; ready = true; loadFailed = false; render();
+      document.dispatchEvent(new CustomEvent('customer:workspace-detail', {detail: current}));
       clearTimeout(syncTimer);
       if (!document.hidden && connections().some((item) => item.state === 'syncing')) syncTimer = setTimeout(() => operation(refresh), 5000);
     } catch (error) {
@@ -270,6 +278,8 @@
     $('#integration-dialog-extra').replaceChildren(...extra);
     $('#integration-dialog-icon').textContent = platform?.icon || 'hub';
     $('#integration-dialog-icon').className = 'material-symbols-outlined ig-provider' + (platform && colors.has(platform.color) ? ' ig-' + platform.color : '');
+    window.VioPlatformBrand?.setLogo($('#integration-dialog-icon'), platform?.id);
+    window.VioPlatformBrand?.setTheme($('#integration-dialog'), platform?.id);
     $('#integration-dialog-badge').textContent = platform ? platformState(platform) === 'connected' ? 'Đã kết nối' : platformState(platform) === 'attention' ? 'Cần kiểm tra' : platform.status_label : '';
     $('#integration-dialog-badge').hidden = !platform;
     $('#integration-dialog-badge').dataset.state = platform ? platformState(platform) : 'upcoming';
@@ -278,11 +288,11 @@
     if (!$('#integration-dialog').open) $('#integration-dialog').showModal();
   }
   $('#integration-dialog').addEventListener('cancel', (event) => { if (busy) event.preventDefault(); });
-  function showPlatform(id, connectOnClick = false) {
+  function showPlatform(id, connectOnClick = false, reconnect = false) {
     if (changingScope) return;
     const platform = current.platforms.find((item) => item.id === id); if (!platform) return;
-    if (id === 'facebook_content') { facebook.open({authorize:connectOnClick}); return; }
-    connector.open(id);
+    if (id === 'facebook_content') { facebook.open({authorize:connectOnClick, reconnect}); return; }
+    connector.open(id, undefined, {reconnect});
   }
 
   function providerButton(label, action, danger = false) {
@@ -333,6 +343,7 @@
   async function selectClient(clientId) {
     if (!current.clients.some((client) => client.id === clientId)) { render(); return; }
     changingScope = true; render(); controls();
+    document.dispatchEvent(new CustomEvent('customer:scope-changing'));
     try { await api(`${base}/clients/${clientId}/select`, {}); await refresh(); status(`Đã chọn ${current.selected_client?.name || scopeWord()}.`); }
     catch (error) { try { await refresh(); } catch { ready = false; } throw error; }
     finally { changingScope = false; render(); }
@@ -375,6 +386,11 @@
   render(); operation(async () => {
     await refresh();
     const messages = {connected:'Cấp quyền thành công.',provider_cancelled:'Bạn đã hủy cấp quyền. Các kết nối trước đó được giữ nguyên.',oauth_state:'Phiên cấp quyền đã hết hạn hoặc đã thay đổi. Vui lòng bắt đầu lại.',provider_scopes:'Chưa được cấp đủ quyền đọc. Vui lòng kiểm tra các quyền trên nền tảng.',workspace_changed:'Workspace đã thay đổi. Chọn lại phạm vi làm việc trước khi kết nối.',client_changed:'Khách hàng đã thay đổi. Chọn lại trước khi kết nối.',email_verification_required:'Vui lòng xác minh email trước khi kết nối.',connector_not_configured:'Ứng dụng nền tảng chưa được cấu hình. Liên hệ hỗ trợ VIO.',provider_reauth:'Quyền truy cập không còn hợp lệ. Vui lòng cấp quyền lại.',provider_failed:'Chưa thể hoàn tất cấp quyền. Thử lại hoặc liên hệ hỗ trợ.'};
+    Object.assign(messages, {
+      provider_setup_required:'Vio cần hoàn tất cấu hình ứng dụng cho nền tảng này. Liên hệ hỗ trợ; bạn không cần đăng nhập lại.',
+      provider_account_required:'Tài khoản chưa có nguồn dữ liệu phù hợp. Chọn tài khoản quản lý nguồn bạn cần kết nối.',
+      provider_rate_limit:'Nền tảng đang giới hạn lượt đọc. Hãy thử lại sau.'
+    });
     const code = params.get('oauth');
     const callbackSource = requested?.id || connections().find((item) => item.id === params.get('connection'))?.platform_id;
     const legacyEmailGate = callbackSource === 'facebook_content' && ['email_verification_required','email_unverified'].includes(code);
@@ -384,7 +400,7 @@
     if (!ready) return;
     const code = params.get('oauth');
     const resumed = code ? facebook.resume(code, params.get('connection'), requested?.id === 'facebook_content') : false;
-    if (!code && requested) showPlatform(requested.id);
+    if (!code && requested) showPlatform(requested.id, false, params.get('reconnect') === '1' && current.permissions.manage_connections);
     if (!resumed && code === 'connected') {
       const item = connections().find((entry) => entry.id === params.get('connection'));
       if (item) showPlatform(item.platform_id);

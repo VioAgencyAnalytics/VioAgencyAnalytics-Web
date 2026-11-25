@@ -16,12 +16,12 @@
   window.addEventListener('pageshow', (event) => { if (event.persisted) location.reload(); });
 
   function status(message, tone = 'error') {
-    const target = $('#identity-status');
+    const target = $('#join-workspace-dialog')?.open ? $('#join-feedback') : $('#identity-status');
     if (!target) return;
     target.textContent = message;
     target.dataset.tone = tone;
     target.hidden = !message;
-    if (message && tone === 'error') target.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+    if (message && tone === 'error') target.scrollIntoView({block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
   }
 
   async function api(path, data) {
@@ -81,7 +81,7 @@
     return session;
   }
 
-  function setMode(next) {
+  function setMode(next, focus = false) {
     mode = next;
     const register = mode === 'register';
     $('#name-field').hidden = !register;
@@ -91,8 +91,12 @@
     $('#password-guidance').hidden = !register;
     $('#auth-heading').textContent = register ? 'Tạo tài khoản của bạn' : 'Đăng nhập vào Workspace';
     $('#auth-submit').textContent = register ? 'Tạo tài khoản' : 'Đăng nhập';
+    $('#auth-description').textContent = register ? 'Tạo tài khoản để bắt đầu với Workspace của bạn.' : 'Tiếp tục công việc, kết nối những góc nhìn.';
+    $('.entry-form-intro .entry-form-eyebrow').textContent = register ? 'BẮT ĐẦU CÙNG VIO' : 'CHÀO MỪNG TRỞ LẠI';
+    $('.identity-login-card').setAttribute('aria-labelledby', 'auth-heading');
     $$('[data-mode]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.mode === mode)));
     status('');
+    if (focus) $(register ? '#name-field input' : '#identity-auth-form [name=email]').focus();
   }
 
   function showEmailAction(kind, token = '') {
@@ -102,6 +106,7 @@
     $('#signed-in').hidden = true;
     $('#email-sent').hidden = true;
     $('#email-action-form').hidden = false;
+    $('.identity-login-card').setAttribute('aria-labelledby', 'email-action-heading');
     const request = kind === 'request';
     const reset = kind === 'reset';
     $('#email-action-heading').textContent = request ? 'Quên mật khẩu?' : reset ? 'Đặt lại mật khẩu' : 'Xác minh địa chỉ email';
@@ -125,6 +130,20 @@
     status('');
   }
 
+  function passwordToggle(inputSelector, buttonSelector, name) {
+    const input = $(inputSelector), button = $(buttonSelector);
+    const update = () => {
+      const visible = input.type === 'text';
+      const label = (visible ? 'Ẩn ' : 'Hiện ') + name;
+      button.setAttribute('aria-label', label);
+      button.setAttribute('aria-pressed', String(visible));
+      button.title = label;
+      button.querySelector('.material-symbols-outlined').textContent = visible ? 'visibility' : 'visibility_off';
+    };
+    button.addEventListener('click', () => { input.type = input.type === 'password' ? 'text' : 'password'; update(); });
+    update();
+  }
+
   function initLogin() {
     $('#auth-fields').disabled = false;
     $('#google-login').disabled = !session.capabilities.google;
@@ -134,14 +153,10 @@
       $('#signed-in').hidden = false;
       $('#signed-in-label').textContent = 'Bạn đang đăng nhập với ' + session.user.email;
       $('#auth-main').hidden = true;
+      $('.identity-login-card').setAttribute('aria-labelledby', 'signed-in-heading');
     }
-    $$('[data-mode]').forEach((button) => button.addEventListener('click', () => setMode(button.dataset.mode)));
-    $('#toggle-password').addEventListener('click', () => {
-      const visible = $('#auth-password').type === 'password';
-      $('#auth-password').type = visible ? 'text' : 'password';
-      $('#toggle-password').setAttribute('aria-label', visible ? 'Ẩn mật khẩu' : 'Hiện mật khẩu');
-      $('#toggle-password').setAttribute('aria-pressed', String(visible));
-    });
+    $$('[data-mode]').forEach((button) => button.addEventListener('click', () => setMode(button.dataset.mode, true)));
+    passwordToggle('#auth-password', '#toggle-password', 'mật khẩu');
     $('#identity-auth-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const form = new FormData(event.currentTarget);
@@ -171,12 +186,7 @@
       $('#recovery-email-label input').value = $('#identity-auth-form [name=email]').value;
       $('#recovery-email-label input').focus();
     });
-    $('#toggle-reset-password').addEventListener('click', () => {
-      const visible = $('#reset-password').type === 'password';
-      $('#reset-password').type = visible ? 'text' : 'password';
-      $('#toggle-reset-password').setAttribute('aria-label', visible ? 'Ẩn mật khẩu mới' : 'Hiện mật khẩu mới');
-      $('#toggle-reset-password').setAttribute('aria-pressed', String(visible));
-    });
+    passwordToggle('#reset-password', '#toggle-reset-password', 'mật khẩu mới');
     for (const input of [$('#reset-password'), $('#reset-password-confirm')]) {
       input.addEventListener('input', () => $('#reset-password-confirm').setCustomValidity(''));
     }
@@ -212,6 +222,9 @@
         if (emailAction === 'request') {
           $('#email-action-form').hidden = true;
           $('#email-sent').hidden = false;
+          $('.identity-login-card').setAttribute('aria-labelledby', 'email-sent-heading');
+          $('#email-sent-heading').setAttribute('tabindex', '-1');
+          $('#email-sent-heading').focus();
         } else {
           emailToken = '';
           $('#email-action-form').hidden = true;
@@ -219,6 +232,7 @@
           setMode('login');
           $('#auth-main').hidden = !!session.user;
           $('#signed-in').hidden = !session.user;
+          if (session.user) $('.identity-login-card').setAttribute('aria-labelledby', 'signed-in-heading');
           if (session.user) $('#signed-in-label').textContent = 'Email đã xác minh: ' + session.user.email;
         }
         if (emailAction !== 'request') status(result.message, 'success');
@@ -260,7 +274,7 @@
     const brand = Brand.avatar(data.name); Brand.setImage(brand, logoImage, false);
     const heading = document.createElement('strong'); heading.textContent = data.name;
     $('#workspace-review-brand').replaceChildren(brand, heading);
-    const values = [['Loại hình', data.kind === 'agency' ? 'Agency' : 'Doanh nghiệp'], ['Website', data.website || 'Chưa thêm'], ['Quốc gia', $('#workspace-form [name=country]').selectedOptions[0].textContent], ['Múi giờ', data.timezone], ['Tiền tệ', data.currency], ['Khách hàng', data.first_client || (data.kind === 'business' ? data.name : 'Thêm sau')]];
+    const values = [['Loại hình', data.kind === 'agency' ? 'Agency' : 'Doanh nghiệp'], ['Website', data.website || 'Chưa thêm'], ['Quốc gia', $('#workspace-form [name=country]').selectedOptions[0].textContent], ['Múi giờ', data.timezone], ['Tiền tệ', data.currency], [data.kind === 'business' ? 'Thương hiệu' : 'Khách hàng', data.first_client || (data.kind === 'business' ? data.name : 'Thêm sau')]];
     $('#workspace-review').replaceChildren(...values.map(([label, value]) => {
       const row = document.createElement('div');
       const dt = document.createElement('dt');
@@ -270,17 +284,55 @@
     }));
   }
 
-  function showStep(next) {
+  function showStep(next, focus = true) {
     step = next;
     $$('[data-step]').forEach((section) => { section.hidden = Number(section.dataset.step) !== step; });
     $$('[data-step-indicator]').forEach((item) => {
       if (Number(item.dataset.stepIndicator) === step) item.setAttribute('aria-current', 'step');
       else item.removeAttribute('aria-current');
+      item.dataset.completed = String(Number(item.dataset.stepIndicator) < step);
     });
     $('#step-back').hidden = step === 1;
     $('#step-next').hidden = step === 3;
     $('#workspace-submit').hidden = step !== 3;
     if (step === 3) review();
+    if (focus) $(`[data-step="${step}"]`).querySelector('input:not([type=radio]), h3[tabindex]')?.focus();
+  }
+
+  function showWorkspaceCreation(open, focus = true) {
+    const hasWorkspaces = session.workspaces.length > 0;
+    document.body.dataset.entryCreating = String(open);
+    $('#workspace-create-section').hidden = !open;
+    $('#workspace-picker').hidden = open;
+    $('#workspace-create-open').hidden = open;
+    $('#workspace-create-cancel').hidden = !hasWorkspaces;
+    $('#workspace-page-heading').textContent = open ? hasWorkspaces ? 'Tạo Workspace mới' : 'Tạo Workspace đầu tiên' : 'Chọn Workspace của bạn';
+    $('#workspace-page-description').textContent = open ? 'Thiết lập không gian riêng cho dữ liệu, thương hiệu và đội ngũ.' : 'Một nơi riêng cho thương hiệu, dữ liệu và đội ngũ của bạn.';
+    status('');
+    if (open) showStep(1, false);
+    if (focus) {
+      if (open) $('#create-heading').focus();
+      else $('#workspace-create-open').focus();
+    }
+  }
+
+  function updateWorkspaceType() {
+    const business = $('#workspace-form [name=kind]:checked').value === 'business';
+    $('#first-client-heading').textContent = business ? 'Thương hiệu của bạn' : 'Khách hàng đầu tiên';
+    $('#first-client-description').textContent = business ? 'Dữ liệu các nền tảng sẽ được gom theo thương hiệu này.' : 'Thêm khách hàng để tổ chức dữ liệu ngay từ đầu.';
+    $('#first-client-label').textContent = business ? 'Tên thương hiệu' : 'Tên khách hàng / thương hiệu';
+    $('#first-client-help').textContent = business ? 'Để trống để dùng tên Workspace. Bạn có thể cập nhật sau.' : 'Bạn có thể để trống và thêm khách hàng sau.';
+    $('#workspace-client-step-label').textContent = business ? 'Thương hiệu' : 'Khách hàng';
+    $('#workspace-form [name=first_client]').placeholder = business ? $('#workspace-form [name=name]').value.trim() || 'Tên thương hiệu của bạn' : 'VD: Thương hiệu ABC';
+  }
+
+  function searchWorkspaces() {
+    const normalize = (value) => value.toLocaleLowerCase('vi').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
+    const query = normalize($('#workspace-search').value.trim());
+    let visible = 0;
+    $$('#workspace-list button').forEach((button) => { button.hidden = !normalize(button.textContent).includes(query); if (!button.hidden) visible += 1; });
+    $('#workspace-search-empty').hidden = visible > 0;
+    $('#workspace-count').textContent = query ? `${visible}/${session.workspaces.length}` : String(session.workspaces.length);
   }
 
   function validStep() {
@@ -329,11 +381,13 @@
 
   async function renderWorkspaces() {
     $('#account-name').textContent = session.user.name;
+    $('#account-avatar').textContent = Array.from(session.user.name.trim())[0]?.toLocaleUpperCase('vi') || 'V';
     $('#verification-note').hidden = !!session.user.email_verified;
     $('#verify-email').disabled = !session.capabilities.email_delivery;
     if (!session.capabilities.email_delivery) $('#verification-text').textContent = 'Bạn có thể tạo Workspace. Xác minh email và lời mời sẽ khả dụng khi dịch vụ email được bật.';
     $('#workspace-list-section').hidden = !session.workspaces.length;
     $('#workspace-count').textContent = String(session.workspaces.length);
+    $('#workspace-search-label').hidden = session.workspaces.length < 4;
     $('#workspace-list').replaceChildren(...session.workspaces.map((workspace) => {
       const button = document.createElement('button');
       button.className = 'identity-workspace-option'; button.type = 'button';
@@ -342,7 +396,8 @@
       const body = document.createElement('span'); body.className = 'workspace-choice-body';
       const name = document.createElement('strong'); name.className = 'workspace-choice-title'; name.textContent = workspace.name;
       const detail = document.createElement('span'); detail.className = 'workspace-choice-meta';
-      const role = document.createElement('span'); role.className = 'workspace-role'; role.textContent = roles[workspace.role]; detail.append(role);
+      const role = document.createElement('span'); role.className = 'workspace-role'; role.textContent = roles[workspace.role] || 'Thành viên'; detail.append(role);
+      const kind = document.createElement('span'); kind.className = 'workspace-kind'; kind.textContent = workspace.kind === 'business' ? 'Doanh nghiệp' : 'Agency'; detail.append(kind);
       if (chosen) { const current = document.createElement('span'); current.className = 'workspace-current'; current.textContent = 'Đang chọn'; detail.append(current); }
       body.append(name, detail);
       if (workspace.website) {
@@ -352,7 +407,7 @@
       }
       if (Number.isInteger(workspace.client_count)) {
         const clients = document.createElement('span'); clients.className = 'workspace-choice-clients';
-        const count = document.createElement('strong'); count.textContent = `${workspace.client_count} khách hàng`; clients.append(count);
+        const count = document.createElement('strong'); count.textContent = `${workspace.client_count} ${workspace.kind === 'business' ? 'thương hiệu' : 'khách hàng'}`; clients.append(count);
         (workspace.client_preview || []).slice(0,2).forEach((value) => { const tag = document.createElement('span'); tag.className = 'workspace-client-chip'; tag.textContent = value; clients.append(tag); });
         if (workspace.client_count > 2) { const extra = document.createElement('span'); extra.className = 'workspace-client-chip'; extra.textContent = '+' + (workspace.client_count - 2); clients.append(extra); }
         body.append(clients);
@@ -377,21 +432,43 @@
       $('#workspace-success-detail').textContent = `${roles[current.role]} · ${current.kind === 'agency' ? 'Agency' : 'Doanh nghiệp'} · ${current.currency} · ${current.timezone}`;
       $('#invite-admin-option').disabled = current.role !== 'owner';
       $('#invite-form [name=role]').value = 'member';
-      const details = await api(`workspaces/${current.id}`);
-      $('#workspace-client-detail').textContent = details.clients.length ? `${details.clients.length} khách hàng / thương hiệu` : 'Chưa thêm khách hàng / thương hiệu.';
-      const tags = details.clients.slice(0,3).map((client) => { const tag = document.createElement('span'); tag.className = 'workspace-client-chip'; tag.textContent = client.name; return tag; });
-      if (details.clients.length > 3) { const more = document.createElement('span'); more.className = 'workspace-client-chip'; more.textContent = '+' + (details.clients.length - 3); tags.push(more); }
-      $('#workspace-client-tags').replaceChildren(...tags);
+      try {
+        const details = await api(`workspaces/${current.id}`);
+        $('#workspace-client-detail').textContent = details.clients.length ? `${details.clients.length} khách hàng / thương hiệu` : 'Chưa thêm khách hàng / thương hiệu.';
+        const tags = details.clients.slice(0,3).map((client) => { const tag = document.createElement('span'); tag.className = 'workspace-client-chip'; tag.textContent = client.name; return tag; });
+        if (details.clients.length > 3) { const more = document.createElement('span'); more.className = 'workspace-client-chip'; more.textContent = '+' + (details.clients.length - 3); tags.push(more); }
+        $('#workspace-client-tags').replaceChildren(...tags);
+      } catch { /* Workspace selection remains available if its optional preview fails. */ }
     }
   }
 
   async function initOnboarding() {
     if (!session.user) { location.replace('/workspace/login'); return; }
     await renderWorkspaces();
+    showWorkspaceCreation(session.workspaces.length === 0, false);
+    $('#workspace-create-open').disabled = false;
+    $('#workspace-join-open').disabled = false;
+    $('#workspace-create-open').addEventListener('click', () => showWorkspaceCreation(true));
+    $('#workspace-create-cancel').addEventListener('click', () => showWorkspaceCreation(false));
+    $('#workspace-join-open').addEventListener('click', () => {
+      $('#join-feedback').hidden = true;
+      $('#join-workspace-dialog').showModal();
+      $('#join-form [name=invitation_code]').focus();
+    });
+    $('#workspace-join-close').addEventListener('click', () => $('#join-workspace-dialog').close());
+    $('#workspace-search').addEventListener('input', searchWorkspaces);
+    $('#workspace-search-clear').addEventListener('click', () => { $('#workspace-search').value = ''; searchWorkspaces(); $('#workspace-search').focus(); });
     $('#workspace-preview-avatar').replaceChildren(Brand.avatar('Workspace của bạn'));
     $('#workspace-form [name=name]').addEventListener('input', () => {
       const name = $('#workspace-form [name=name]').value.trim() || 'Workspace của bạn';
       $('#workspace-brand-name').textContent = name; Brand.setName($('#workspace-preview-avatar .ws-avatar'), name);
+      updateWorkspaceType();
+    });
+    $$('#workspace-form [name=kind]').forEach((input) => input.addEventListener('change', updateWorkspaceType));
+    updateWorkspaceType();
+    for (const name of ['country', 'currency', 'timezone']) $('#workspace-form [name=' + name + ']').addEventListener('change', () => {
+      const form = $('#workspace-form');
+      $('#workspace-locale-summary').textContent = form.elements.country.selectedOptions[0].textContent + ' · ' + form.elements.currency.value + ' · ' + form.elements.timezone.value;
     });
     $('#workspace-form [name=website]').addEventListener('input', updateBrandPreview);
     $('#workspace-form [name=website]').addEventListener('blur', () => { normalizeWebsite(); updateBrandPreview(); });

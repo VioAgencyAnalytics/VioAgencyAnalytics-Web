@@ -1,6 +1,8 @@
 # Kết nối chín nền tảng của Vio
 
-Cập nhật 09/11/2026. Đây là hướng dẫn cho **người vận hành Vio**. Khách hàng không
+Cập nhật 10/11/2026. Hướng dẫn thao tác từng bước và trạng thái mới nhất:
+[Google, Meta và các nguồn còn lại](CUSTOMER_CONNECTORS_NEXT_STEPS_20261110.md).
+Đây là hướng dẫn cho **người vận hành Vio**. Khách hàng không
 phải tạo ứng dụng, xin Developer Token hoặc nhập API key. Họ chỉ chọn nền tảng,
 đăng nhập tại nhà cung cấp, cấp quyền, chọn tài khoản và xem kết quả đồng bộ.
 
@@ -98,6 +100,11 @@ Tài liệu: [Thông báo sunset Developer Token](https://developers.google.com/
 
 ## 3. Facebook Ads và Instagram — giữ ứng dụng Facebook Content hiện có
 
+Người dùng đã tạo hai cấu hình riêng ngày 10/11. Instagram ban đầu chưa có use
+case nên thiếu `instagram_basic`; sau bước thêm use case, người dùng đã cung cấp
+ảnh tạo thành công cấu hình Instagram với ba lựa chọn. Không bỏ kiểm tra quyền
+hoặc token USER chỉ để mở kết nối khi cấu hình Meta thiếu quyền.
+
 Trong ứng dụng Meta của Vio, chuẩn bị Facebook Login for Business configuration
 phù hợp cho từng nguồn. Giữ nguyên Content Config ID đang dùng, không thay scope
 của nguồn Content chỉ để thêm Ads/Instagram.
@@ -120,6 +127,11 @@ Nhập App settings và đúng Config ID; để trống trường đã có để
 
 Nếu dùng app khác với Content đang chạy, cần chủ động đánh giá ảnh hưởng
 reconnect. Không dùng tùy chọn reuse Primary để đoán Instagram Config ID.
+
+Với Ads hoặc Instagram dùng đúng Customer Meta app hiện có, helper hỗ trợ
+`meta --meta-source ads --meta-config-id <ID>` hoặc
+`meta --meta-source instagram --meta-config-id <ID>`. Không hỏi lại App Secret và
+không đổi Content Config ID. Chỉ dùng sau khi kiểm tra quyền/loại token của config.
 
 Tài liệu: [Instagram API với Facebook Login](https://developers.facebook.com/docs/instagram-platform/instagram-api-with-facebook-login/),
 [Meta App Review](https://developers.facebook.com/docs/app-review/).

@@ -1,0 +1,59 @@
+{% from 'customer/live/components/platform-mark.html' import platform_mark %}
+{% from 'customer/live/components/report-notes.html' import note %}
+{% from 'customer/live/components/report-controls.html' import period_comparison, target_comparison %}
+{% from 'customer/live/components/visuals.html' import donut %}
+{% from 'customer/live/components/facebook-content-panels.html' import kpis, charts, top_posts, posts %}
+{% import 'customer/live/reports/parts.html' as parts %}
+{% from 'customer/live/components/report-detail-table.html' import detail_table %}
+
+{% set is_facebook = report.source == 'facebook_content' %}
+<article class="report-focus" data-report-preset="{{ report_preset.key }}" data-focus-style="{{ report_preset.style }}">
+  <header class="rf-cover" id="report-summary">
+    <div class="rf-cover-top">{{ platform_mark(report.source) }}<strong>{{ 'Facebook Content' if is_facebook else report.connector.name }}</strong></div>
+    {% set heading = 'h1' if report_example else 'h2' %}
+    <{{ heading }}>{{ report_preset.name }}</{{ heading }}>
+    <p>{{ report_preset.description }}</p>
+    <dl class="rf-facts">
+      <div><dt>Khách hàng</dt><dd>{{ report.client.name }}</dd></div>
+      <div><dt>Nguồn dữ liệu</dt><dd>{{ report.asset.name }}</dd></div>
+      <div><dt>Kỳ báo cáo</dt><dd>{{ view.period }} · {{ report.snapshot.timezone }}</dd></div>
+    </dl>
+  </header>
+  <div class="rf-sections">
+    {% for block in report_preset.blocks %}
+    <section class="rf-section" data-report-block="{{ block }}">
+      {% if block == 'metrics' %}
+        {% if is_facebook %}{{ kpis(report_focus.content, fc_amount) }}{% elif report_focus.layout.metrics %}{{ parts.metrics(report_focus.layout, report, display) }}{% else %}<p class="rf-empty">Bản lưu chưa có chỉ số cho mẫu này.</p>{% endif %}
+        {{ note(report_review, 'summary') }}
+      {% elif block == 'trend' %}
+        {% if is_facebook %}
+          {% if report_focus.content.charts %}<div class="rf-chart-panel">{{ charts(report_focus.content, true) }}</div>{% else %}<p class="rf-empty">Chưa có chuỗi quan sát tương tác Fanpage trong kỳ này.</p>{% endif %}
+        {% else %}{{ parts.trend(report, report_focus.layout, false, true) }}{% endif %}
+        {{ note(report_review, 'trend') }}
+      {% elif block == 'ranking' %}
+        {% if is_facebook %}{{ top_posts(view, fc_amount) }}{{ note(report_review, 'rank_posts') }}
+        {% else %}{{ parts.ranking(report_focus.rank, report_preset.name, display, report.snapshot.currency, 'report-ranking', report_review, 'focus_rank') }}{% endif %}
+      {% elif block == 'distribution' %}
+        {{ donut(view.distribution if is_facebook else report_focus.layout.distribution, report.snapshot.currency) }}
+        {{ note(report_review, 'distribution') }}
+      {% elif block == 'details' %}
+        {% if is_facebook %}{{ posts(view, fc_amount) }}{{ note(report_review, 'detail_posts') }}
+        {% else %}
+          {% for index, table in report_focus.tables %}{{ detail_table(table, display, report.snapshot.currency, report_review, 'detail_' ~ index) }}
+          {% else %}<p class="rf-empty">Bản lưu kỳ này chưa có bảng dữ liệu cho mẫu đã chọn.</p>{{ note(report_review, 'details_empty') }}{% endfor %}
+        {% endif %}
+      {% elif block == 'comparison' %}
+        {% if report.comparison and report.comparison.mode != 'none' %}{{ period_comparison(report, display, report_review) }}
+        {% else %}<div class="rf-empty"><h3>Đối chiếu hai kỳ</h3><p>Chọn kỳ đối chiếu trong bộ lọc ngày để xem chênh lệch.</p></div>{% endif %}
+      {% elif block == 'kpi' %}
+        {{ target_comparison(report, display, report_review, false) }}
+      {% endif %}
+    </section>
+    {% endfor %}
+  </div>
+  {% if report.notes %}
+  <aside class="rf-print-notes" aria-label="Phương pháp đo">
+    {% for source_note in report.notes %}<p>{{ source_note }}</p>{% endfor %}
+  </aside>
+  {% endif %}
+</article>

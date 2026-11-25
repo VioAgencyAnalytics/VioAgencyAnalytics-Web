@@ -19,7 +19,7 @@
     ['integration-card', 'Kết nối dữ liệu', 'Chọn nền tảng, tự cấp quyền rồi chọn tài sản cần theo dõi.'],
     ['nav-dashboard', 'Dashboard Marketing', 'Xem KPI, xu hướng và chiến dịch sau khi kết nối và đồng bộ dữ liệu.'],
     ['nav-channels', 'Phân tích từng kênh', 'Chọn kênh để xem chỉ số và nội dung chuyên sâu.'],
-    ['nav-reports', 'Báo cáo', 'Thử mẫu báo cáo và bố cục tùy chỉnh. Lưu, xuất và chia sẻ chưa khả dụng.'],
+    ['nav-reports', 'Báo cáo', 'Xem báo cáo đã đồng bộ, chọn kỳ, đặt mục tiêu KPI và in/PDF. Phát hành và chia sẻ công khai được quản lý riêng.'],
     ['nav-members', 'Mời đội ngũ', 'Quản lý thành viên và vai trò. Cần xác minh email trước khi tạo mã mời.'],
     ['nav-settings', 'Cài đặt Workspace', 'Cập nhật thông tin, tiền tệ và tùy chọn hiển thị theo quyền của bạn. Có thể xem lại hướng dẫn từ nút trợ giúp.'],
   ];
@@ -52,9 +52,12 @@
     $('#tour-summary').textContent = completed ? 'Đã xem 8 bước' : progress.status === 'new' ? 'Hướng dẫn · 8 bước' : `Đã xem ${progress.step}/8 bước`;
     document.querySelector('.ov-welcome [data-start-tour]').textContent = completed ? 'Xem lại hướng dẫn' : progress.status === 'new' ? 'Xem hướng dẫn →' : 'Tiếp tục hướng dẫn →';
   }
+  function tourTarget() {
+    return document.getElementById(progress.step === 2 && $('#integration-card').hidden ? 'overview-saved-focus' : steps[progress.step][0]);
+  }
   function position() {
     if (!dialog.open) return;
-    const target = document.getElementById(steps[progress.step][0]);
+    const target = tourTarget();
     const rect = target.getBoundingClientRect();
     const pad = 4;
     const highlight = $('#tour-highlight');
@@ -82,7 +85,7 @@
     $('#tour-back').hidden = progress.step === 0;
     $('#tour-next').textContent = progress.step === 7 ? 'Hoàn tất' : 'Tiếp tục';
     $('#tour-error').hidden = true;
-    const target = document.getElementById(id);
+    const target = tourTarget();
     for (let parent = target.parentElement; parent; parent = parent.parentElement) {
       if (parent.matches('details') && !parent.open) { revealedGroups.add(parent); parent.open = true; }
     }

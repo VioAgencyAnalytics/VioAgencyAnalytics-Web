@@ -1,0 +1,28 @@
+{% macro render(summary=none, chart_href=none, live=false) %}
+<section class="seo-rank-overview"{% if live %} id="seo-rank-overview" hidden{% endif %} aria-label="Tổng quát thứ hạng">
+  <h3 class="seo-rank-overview-title" data-rank-overview-title>{{ summary.title if summary else 'Tổng quát thứ hạng' }}</h3>
+  <p class="seo-rank-overview-scope" data-rank-overview-scope{% if not (summary and summary.total) %} hidden{% endif %}>
+    {% if summary and summary.total %}Spineditor · {{ display(summary.total,'count') }} từ đang theo dõi{% endif %}
+  </p>
+  <p class="seo-rank-overview-empty" data-rank-overview-empty{% if summary and summary.total %} hidden{% endif %}>Chưa có từ khóa để tổng hợp.</p>
+  <dl class="seo-rank-overview-list" data-rank-overview-list{% if not (summary and summary.total) %} hidden{% endif %}>
+    {% for key, label, hint in [
+      ('page1', 'Số từ khóa trang 1', 'Vị trí 1–10'),
+      ('pages2_3', 'Số từ khóa trang 2–3', 'Vị trí 11–30'),
+      ('pages4_10', 'Số từ khóa trang 4–10', 'Vị trí 31–100'),
+      ('unknown', 'Số từ khóa chưa có thứ hạng', 'Chưa xác định vị trí trong kỳ'),
+      ('outside', 'Số từ khóa ngoài Top 100', 'Đã ghi nhận ngoài 100 vị trí đầu')
+    ] %}
+    <div data-rank-overview-group="{{ key }}"{% if key == 'outside' and not (summary and summary.counts.outside) %} hidden{% endif %}>
+      <dt title="{{ hint }}">{{ label }}</dt>
+      <dd><strong data-rank-overview-count="{{ key }}">{{ display(summary.counts[key], 'count') if summary else '' }}</strong> từ</dd>
+    </div>
+    {% endfor %}
+  </dl>
+  {% if chart_href %}
+  <p class="seo-rank-overview-link" data-rank-overview-link{% if live %} hidden{% endif %}>
+    Hình ảnh báo cáo <a href="{{ chart_href }}" aria-label="Xem biểu đồ thứ hạng">Tại đây</a>
+  </p>
+  {% endif %}
+</section>
+{% endmacro %}

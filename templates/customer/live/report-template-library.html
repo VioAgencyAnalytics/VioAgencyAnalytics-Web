@@ -1,0 +1,101 @@
+{% extends 'customer/base.html' %}
+{% from 'customer/live/components/platform-mark.html' import platform_mark %}
+
+{% macro icon(item) %}
+{% if item.key in ['seo', 'combined'] %}<span class="rt-icon material-symbols-outlined" aria-hidden="true">{{ 'travel_explore' if item.key == 'seo' else 'auto_stories' }}</span>{% else %}{{ platform_mark(item.key, 'rt-icon') }}{% endif %}
+{% endmacro %}
+
+{% block layout %}
+<div class="ov-shell ws-theme" id="customer-content">
+  {% include 'customer/live/components/sidebar.html' %}
+  <div class="ov-body">
+    {% include 'customer/live/components/topbar.html' %}
+    <main class="ov-main rt-main" id="customer-main" tabindex="-1">
+      {% include 'customer/live/components/report-navigation.html' %}
+      <section class="rt-hero" id="rt-hero" aria-labelledby="rt-title">
+        <div class="rt-hero-copy">
+          <h1 id="rt-title">Kho mẫu báo cáo</h1>
+          <p>{{ report_count }} mẫu tổng quan. Chọn nền tảng, rồi chọn cách trình bày phù hợp để gửi khách hàng.</p>
+        </div>
+        <div class="rt-hero-art" aria-hidden="true">
+          <img class="rt-hero-sheet rt-hero-behind" src="/static/customer/report-samples/ga4.webp" width="640" height="360" alt="">
+          <img class="rt-hero-sheet rt-hero-front" src="/static/customer/report-samples/seo.webp" width="640" height="360" alt="">
+        </div>
+      </section>
+
+      <p id="seo-message" class="seo-message" role="status" hidden></p>
+      <section aria-label="Tìm mẫu báo cáo" class="rt-catalogue">
+        <div class="rt-tools">
+          <div class="rt-filters" role="group" aria-label="Loại báo cáo">
+            {% for key, label in report_groups %}
+            <button type="button" data-template-group="{{ key }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ label }}</button>
+            {% endfor %}
+          </div>
+          <label class="rt-search">
+            <span class="material-symbols-outlined" aria-hidden="true">search</span>
+            <span class="rt-visually-hidden">Tìm theo tên mẫu hoặc nền tảng</span>
+            <input type="search" id="rt-search" maxlength="120" placeholder="Tìm mẫu báo cáo…" autocomplete="off">
+          </label>
+        </div>
+        <div class="rt-results-heading">
+          <div><h2 id="rt-results-title">Chọn nền tảng</h2><p class="rt-count" role="status" id="rt-count">{{ report_count }} mẫu báo cáo</p></div>
+          <a class="rt-button rt-button-secondary" id="rt-all" href="/workspace/reports/templates" hidden><span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>Tất cả nền tảng</a>
+        </div>
+        <div class="rt-palettes" id="rt-palettes" role="group" aria-label="Màu báo cáo" hidden>
+          <strong>Màu báo cáo</strong>
+          {% for color, label in report_palettes.items() %}
+          <button type="button" data-template-palette="{{ color }}" aria-pressed="{{ 'true' if loop.first else 'false' }}"><span aria-hidden="true" class="rt-swatch rt-swatch-{{ color }}"></span>{{ label }}</button>
+          {% endfor %}
+        </div>
+        <div class="rt-platforms" id="rt-platforms">
+          {% for item in report_catalogue %}
+          <a class="rt-platform" data-platform-brand="{{ item.key }}" data-collection="{{ item.slug }}" data-group="{{ item.group }}" data-name="{{ item.name }}" href="?platform={{ item.slug }}">
+            {{ icon(item) }}
+            <div><strong>{{ item.name }}</strong><small>{{ report_styles|length }} mẫu tổng quan</small></div>
+            <span class="material-symbols-outlined rt-platform-arrow" aria-hidden="true">chevron_right</span>
+          </a>
+          {% endfor %}
+        </div>
+
+        <div class="rt-grid" id="rt-grid" hidden>
+          {% for item in report_catalogue %}
+          {% for style in report_styles %}
+          {% set label = style.name %}
+          {% set card_id = item.slug ~ ('--style-' ~ style.key if style.key != 'standard' else '') %}
+          {% set sample_url = item.preview_url ~ '/design/' ~ style.key %}
+          {% set use_url = style_url(item.use_url, item.key, style) %}
+          <article class="rt-card" data-platform-brand="{{ item.key }}" data-template-card="{{ card_id }}" data-collection-id="{{ item.slug }}" data-group="{{ item.group }}" data-search="{{ item.name }} {{ item.search }} {{ report_group_labels[item.group] }}" aria-labelledby="rt-{{ card_id }}-title" hidden>
+            <div class="rt-thumbnail">
+              <img data-src="/static/customer/report-samples/{{ card_id }}.webp" width="640" height="360" alt="" loading="lazy" decoding="async">
+            </div>
+            <div class="rt-card-content">
+              <div class="rt-card-title">
+                {{ icon(item) }}
+                <div>
+                  <span class="rt-category">{{ item.name }}</span>
+                  <h3 id="rt-{{ card_id }}-title">{{ label }}</h3>
+                </div>
+              </div>
+              <p>{{ style.description }}</p>
+              <div class="rt-card-actions">
+                <a class="rt-button rt-button-secondary" data-template-preview href="{{ sample_url }}" aria-label="Xem mẫu {{ label }} · {{ item.name }}"><span class="material-symbols-outlined" aria-hidden="true">visibility</span>Xem mẫu</a>
+                <a class="rt-button rt-button-primary" data-template-use href="{{ use_url }}" aria-label="Dùng mẫu {{ label }} · {{ item.name }}">Dùng mẫu<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+              </div>
+            </div>
+          </article>
+          {% endfor %}
+          {% endfor %}
+        </div>
+
+        <div class="rt-empty" id="rt-empty" hidden>
+          <span class="material-symbols-outlined" aria-hidden="true">search_off</span>
+          <h2>Chưa tìm thấy mẫu phù hợp</h2>
+          <p>Thử tìm bằng tên nền tảng hoặc kiểu trình bày.</p>
+          <button class="rt-button rt-button-secondary" id="rt-reset" type="button">Xóa bộ lọc</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script type="application/json" id="seo-context-data">{{ {'workspace_id': details.workspace.id, 'client_id': details.selected_client.id if details.selected_client else none, 'timezone': details.workspace.timezone}|tojson }}</script>
+{% endblock %}

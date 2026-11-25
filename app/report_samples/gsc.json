@@ -1,0 +1,1018 @@
+{
+  "asset": {
+    "external_id": "properties/123",
+    "id": "cccccccccccccccccccccccccccccccc",
+    "name": "Tài khoản minh họa"
+  },
+  "availability": "available",
+  "calendar": {
+    "latest_closed_date": "2026-11-10",
+    "max_days": 90,
+    "timezone": "Asia/Ho_Chi_Minh",
+    "today": "2026-11-11"
+  },
+  "client": {
+    "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "name": "Thương hiệu minh họa"
+  },
+  "comparison": {
+    "comparison_days": 30,
+    "current_days": 30,
+    "current_period": {
+      "end": "2026-10-30",
+      "start": "2026-10-01"
+    },
+    "daily": [
+      {
+        "date": "2026-09-01",
+        "values": {
+          "clicks": 76,
+          "ctr": 0.02948,
+          "impressions": 2578,
+          "position": 9.88
+        }
+      },
+      {
+        "date": "2026-09-02",
+        "values": {
+          "clicks": 89,
+          "ctr": 0.029916,
+          "impressions": 2975,
+          "position": 9.94
+        }
+      },
+      {
+        "date": "2026-09-03",
+        "values": {
+          "clicks": 101,
+          "ctr": 0.03395,
+          "impressions": 2975,
+          "position": 10.0
+        }
+      },
+      {
+        "date": "2026-09-04",
+        "values": {
+          "clicks": 101,
+          "ctr": 0.029953,
+          "impressions": 3372,
+          "position": 10.06
+        }
+      },
+      {
+        "date": "2026-09-05",
+        "values": {
+          "clicks": 113,
+          "ctr": 0.029989,
+          "impressions": 3768,
+          "position": 10.12
+        }
+      },
+      {
+        "date": "2026-09-06",
+        "values": {
+          "clicks": 126,
+          "ctr": 0.033439,
+          "impressions": 3768,
+          "position": 9.48
+        }
+      },
+      {
+        "date": "2026-09-07",
+        "values": {
+          "clicks": 126,
+          "ctr": 0.030252,
+          "impressions": 4165,
+          "position": 9.54
+        }
+      },
+      {
+        "date": "2026-09-08",
+        "values": {
+          "clicks": 80,
+          "ctr": 0.02952,
+          "impressions": 2710,
+          "position": 9.6
+        }
+      },
+      {
+        "date": "2026-09-09",
+        "values": {
+          "clicks": 93,
+          "ctr": 0.034305,
+          "impressions": 2711,
+          "position": 9.66
+        }
+      },
+      {
+        "date": "2026-09-10",
+        "values": {
+          "clicks": 92,
+          "ctr": 0.029611,
+          "impressions": 3107,
+          "position": 9.72
+        }
+      },
+      {
+        "date": "2026-09-11",
+        "values": {
+          "clicks": 106,
+          "ctr": 0.030251,
+          "impressions": 3504,
+          "position": 9.08
+        }
+      },
+      {
+        "date": "2026-09-12",
+        "values": {
+          "clicks": 117,
+          "ctr": 0.0334,
+          "impressions": 3503,
+          "position": 9.14
+        }
+      },
+      {
+        "date": "2026-09-13",
+        "values": {
+          "clicks": 118,
+          "ctr": 0.030249,
+          "impressions": 3901,
+          "position": 9.2
+        }
+      },
+      {
+        "date": "2026-09-14",
+        "values": {
+          "clicks": 129,
+          "ctr": 0.030021,
+          "impressions": 4297,
+          "position": 9.26
+        }
+      },
+      {
+        "date": "2026-09-15",
+        "values": {
+          "clicks": 85,
+          "ctr": 0.034751,
+          "impressions": 2446,
+          "position": 9.32
+        }
+      },
+      {
+        "date": "2026-09-16",
+        "values": {
+          "clicks": 84,
+          "ctr": 0.029557,
+          "impressions": 2842,
+          "position": 8.68
+        }
+      },
+      {
+        "date": "2026-09-17",
+        "values": {
+          "clicks": null,
+          "ctr": null,
+          "impressions": null,
+          "position": null
+        }
+      },
+      {
+        "date": "2026-09-18",
+        "values": {
+          "clicks": 109,
+          "ctr": 0.033652,
+          "impressions": 3239,
+          "position": 8.8
+        }
+      },
+      {
+        "date": "2026-09-19",
+        "values": {
+          "clicks": 110,
+          "ctr": 0.030253,
+          "impressions": 3636,
+          "position": 8.86
+        }
+      },
+      {
+        "date": "2026-09-20",
+        "values": {
+          "clicks": 121,
+          "ctr": 0.030002,
+          "impressions": 4033,
+          "position": 8.92
+        }
+      },
+      {
+        "date": "2026-09-21",
+        "values": {
+          "clicks": 134,
+          "ctr": 0.033234,
+          "impressions": 4032,
+          "position": 8.28
+        }
+      },
+      {
+        "date": "2026-09-22",
+        "values": {
+          "clicks": 77,
+          "ctr": 0.029857,
+          "impressions": 2579,
+          "position": 8.34
+        }
+      },
+      {
+        "date": "2026-09-23",
+        "values": {
+          "clicks": 88,
+          "ctr": 0.02959,
+          "impressions": 2974,
+          "position": 8.4
+        }
+      },
+      {
+        "date": "2026-09-24",
+        "values": {
+          "clicks": 101,
+          "ctr": 0.03395,
+          "impressions": 2975,
+          "position": 8.46
+        }
+      },
+      {
+        "date": "2026-09-25",
+        "values": {
+          "clicks": 101,
+          "ctr": 0.029953,
+          "impressions": 3372,
+          "position": 8.52
+        }
+      },
+      {
+        "date": "2026-09-26",
+        "values": {
+          "clicks": 113,
+          "ctr": 0.029989,
+          "impressions": 3768,
+          "position": 7.88
+        }
+      },
+      {
+        "date": "2026-09-27",
+        "values": {
+          "clicks": 126,
+          "ctr": 0.033439,
+          "impressions": 3768,
+          "position": 7.94
+        }
+      },
+      {
+        "date": "2026-09-28",
+        "values": {
+          "clicks": 126,
+          "ctr": 0.030252,
+          "impressions": 4165,
+          "position": 8.0
+        }
+      },
+      {
+        "date": "2026-09-29",
+        "values": {
+          "clicks": 80,
+          "ctr": 0.029509,
+          "impressions": 2711,
+          "position": 8.06
+        }
+      },
+      {
+        "date": "2026-09-30",
+        "values": {
+          "clicks": 93,
+          "ctr": 0.034317,
+          "impressions": 2710,
+          "position": 8.12
+        }
+      }
+    ],
+    "items": [
+      {
+        "actual": 3890,
+        "chart": {
+          "actual": 100.0,
+          "previous": 80.0
+        },
+        "currency": null,
+        "difference": "778",
+        "difference_label": "778",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "period",
+        "key": "clicks",
+        "label": "Lượt nhấp",
+        "previous": 3112,
+        "relation": "above",
+        "relative": "0.25",
+        "status": "ready",
+        "summary": "+25%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 124780,
+        "chart": {
+          "actual": 100.0,
+          "previous": 80.0
+        },
+        "currency": null,
+        "difference": "24956",
+        "difference_label": "24.956",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "period",
+        "key": "impressions",
+        "label": "Lượt hiển thị",
+        "previous": 99824,
+        "relation": "above",
+        "relative": "0.25",
+        "status": "ready",
+        "summary": "+25%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 0.031175,
+        "chart": {
+          "actual": 100.0,
+          "previous": 100.0
+        },
+        "currency": null,
+        "difference": "0.000000",
+        "difference_label": "0 điểm phần trăm",
+        "effect": "unchanged",
+        "effect_label": "Không thay đổi",
+        "grain": "period",
+        "key": "ctr",
+        "label": "CTR",
+        "previous": 0.031175,
+        "relation": "equal",
+        "relative": "0",
+        "status": "ready",
+        "summary": "Không thay đổi",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "percent"
+      },
+      {
+        "actual": 7.39,
+        "chart": {
+          "actual": 82.20244716351502,
+          "previous": 100.0
+        },
+        "currency": null,
+        "difference": "1.60",
+        "difference_label": "1,6",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "period",
+        "key": "position",
+        "label": "Vị trí trung bình",
+        "previous": 8.99,
+        "relation": "below",
+        "relative": "0.1779755283648498331479421579532814238042269187986651835372636262513904338153503893214682981090100111",
+        "status": "ready",
+        "summary": "−1,6 vị trí",
+        "trend": {
+          "direction": "lower",
+          "guidance": "Giá trị thấp hơn là chiều cải thiện của chỉ số."
+        },
+        "unit": "number"
+      }
+    ],
+    "label": "Kỳ liền trước",
+    "matched_elapsed": false,
+    "message": "",
+    "mode": "previous",
+    "period": {
+      "end": "2026-09-30",
+      "start": "2026-09-01"
+    },
+    "status": "ready"
+  },
+  "connection": {
+    "id": "dddddddddddddddddddddddddddddddd",
+    "status": "connected",
+    "version": 1
+  },
+  "connector": {
+    "adapter_ready": true,
+    "application_owner": "vio",
+    "asset_label": "Tài khoản",
+    "capabilities": {
+      "export": false,
+      "live_provider_reads": false,
+      "publish": false,
+      "saved_data": true
+    },
+    "color": "amber",
+    "icon": "monitoring",
+    "id": "gsc",
+    "mapping_status": "available",
+    "mapping_version": 1,
+    "metrics": [
+      {
+        "aggregation": "provider_period",
+        "field": "totals.clicks",
+        "grain": "period",
+        "key": "clicks",
+        "label": "Lượt nhấp",
+        "unit": "count"
+      },
+      {
+        "aggregation": "provider_period",
+        "field": "totals.impressions",
+        "grain": "period",
+        "key": "impressions",
+        "label": "Lượt hiển thị",
+        "unit": "count"
+      },
+      {
+        "aggregation": "provider_period",
+        "field": "totals.ctr",
+        "grain": "period",
+        "key": "ctr",
+        "label": "CTR",
+        "unit": "percent"
+      },
+      {
+        "aggregation": "provider_period",
+        "field": "totals.position",
+        "grain": "period",
+        "key": "position",
+        "label": "Vị trí trung bình",
+        "unit": "number"
+      }
+    ],
+    "name": "Google Search Console",
+    "provider": "google"
+  },
+  "daily": [
+    {
+      "date": "2026-10-01",
+      "values": {
+        "clicks": 95,
+        "ctr": 0.029476,
+        "impressions": 3223,
+        "position": 8.28
+      }
+    },
+    {
+      "date": "2026-10-02",
+      "values": {
+        "clicks": 111,
+        "ctr": 0.029855,
+        "impressions": 3718,
+        "position": 8.34
+      }
+    },
+    {
+      "date": "2026-10-03",
+      "values": {
+        "clicks": 126,
+        "ctr": 0.03388,
+        "impressions": 3719,
+        "position": 8.4
+      }
+    },
+    {
+      "date": "2026-10-04",
+      "values": {
+        "clicks": 127,
+        "ctr": 0.030138,
+        "impressions": 4214,
+        "position": 8.46
+      }
+    },
+    {
+      "date": "2026-10-05",
+      "values": {
+        "clicks": 141,
+        "ctr": 0.02993,
+        "impressions": 4711,
+        "position": 8.52
+      }
+    },
+    {
+      "date": "2026-10-06",
+      "values": {
+        "clicks": 157,
+        "ctr": 0.033333,
+        "impressions": 4710,
+        "position": 7.88
+      }
+    },
+    {
+      "date": "2026-10-07",
+      "values": {
+        "clicks": 158,
+        "ctr": 0.03035,
+        "impressions": 5206,
+        "position": 7.94
+      }
+    },
+    {
+      "date": "2026-10-08",
+      "values": {
+        "clicks": 100,
+        "ctr": 0.029516,
+        "impressions": 3388,
+        "position": 8.0
+      }
+    },
+    {
+      "date": "2026-10-09",
+      "values": {
+        "clicks": 116,
+        "ctr": 0.034238,
+        "impressions": 3388,
+        "position": 8.06
+      }
+    },
+    {
+      "date": "2026-10-10",
+      "values": {
+        "clicks": 116,
+        "ctr": 0.029866,
+        "impressions": 3884,
+        "position": 8.12
+      }
+    },
+    {
+      "date": "2026-10-11",
+      "values": {
+        "clicks": 131,
+        "ctr": 0.029909,
+        "impressions": 4380,
+        "position": 7.48
+      }
+    },
+    {
+      "date": "2026-10-12",
+      "values": {
+        "clicks": null,
+        "ctr": null,
+        "impressions": null,
+        "position": null
+      }
+    },
+    {
+      "date": "2026-10-13",
+      "values": {
+        "clicks": 147,
+        "ctr": 0.030148,
+        "impressions": 4876,
+        "position": 7.6
+      }
+    },
+    {
+      "date": "2026-10-14",
+      "values": {
+        "clicks": 162,
+        "ctr": 0.030162,
+        "impressions": 5371,
+        "position": 7.66
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "values": {
+        "clicks": 106,
+        "ctr": 0.034663,
+        "impressions": 3058,
+        "position": 7.72
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "values": {
+        "clicks": 105,
+        "ctr": 0.029552,
+        "impressions": 3553,
+        "position": 7.08
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "values": {
+        "clicks": 122,
+        "ctr": 0.030131,
+        "impressions": 4049,
+        "position": 7.14
+      }
+    },
+    {
+      "date": "2026-10-18",
+      "values": {
+        "clicks": 136,
+        "ctr": 0.033589,
+        "impressions": 4049,
+        "position": 7.2
+      }
+    },
+    {
+      "date": "2026-10-19",
+      "values": {
+        "clicks": 137,
+        "ctr": 0.030143,
+        "impressions": 4545,
+        "position": 7.26
+      }
+    },
+    {
+      "date": "2026-10-20",
+      "values": {
+        "clicks": 152,
+        "ctr": 0.030153,
+        "impressions": 5041,
+        "position": 7.32
+      }
+    },
+    {
+      "date": "2026-10-21",
+      "values": {
+        "clicks": 167,
+        "ctr": 0.033128,
+        "impressions": 5041,
+        "position": 6.68
+      }
+    },
+    {
+      "date": "2026-10-22",
+      "values": {
+        "clicks": 95,
+        "ctr": 0.029476,
+        "impressions": 3223,
+        "position": 6.74
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "values": {
+        "clicks": 111,
+        "ctr": 0.029855,
+        "impressions": 3718,
+        "position": 6.8
+      }
+    },
+    {
+      "date": "2026-10-24",
+      "values": {
+        "clicks": 126,
+        "ctr": 0.03388,
+        "impressions": 3719,
+        "position": 6.86
+      }
+    },
+    {
+      "date": "2026-10-25",
+      "values": {
+        "clicks": 127,
+        "ctr": 0.030138,
+        "impressions": 4214,
+        "position": 6.92
+      }
+    },
+    {
+      "date": "2026-10-26",
+      "values": {
+        "clicks": 141,
+        "ctr": 0.02993,
+        "impressions": 4711,
+        "position": 6.28
+      }
+    },
+    {
+      "date": "2026-10-27",
+      "values": {
+        "clicks": 157,
+        "ctr": 0.033333,
+        "impressions": 4710,
+        "position": 6.34
+      }
+    },
+    {
+      "date": "2026-10-28",
+      "values": {
+        "clicks": 158,
+        "ctr": 0.03035,
+        "impressions": 5206,
+        "position": 6.4
+      }
+    },
+    {
+      "date": "2026-10-29",
+      "values": {
+        "clicks": 100,
+        "ctr": 0.029516,
+        "impressions": 3388,
+        "position": 6.46
+      }
+    },
+    {
+      "date": "2026-10-30",
+      "values": {
+        "clicks": 116,
+        "ctr": 0.034238,
+        "impressions": 3388,
+        "position": 6.52
+      }
+    }
+  ],
+  "latest_sync": null,
+  "mapping_version": 1,
+  "metrics": [
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "clicks",
+      "label": "Lượt nhấp",
+      "status": "available",
+      "unit": "count",
+      "value": 3890
+    },
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "impressions",
+      "label": "Lượt hiển thị",
+      "status": "available",
+      "unit": "count",
+      "value": 124780
+    },
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "ctr",
+      "label": "CTR",
+      "status": "available",
+      "unit": "percent",
+      "value": 0.031175
+    },
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "position",
+      "label": "Vị trí trung bình",
+      "status": "available",
+      "unit": "number",
+      "value": 7.39
+    }
+  ],
+  "notes": [],
+  "period": {
+    "data_end": "2026-10-30",
+    "data_start": "2026-10-01",
+    "end": "2026-10-30",
+    "is_open": false,
+    "mode": "custom",
+    "start": "2026-10-01"
+  },
+  "periods": [
+    {
+      "created_at": "2026-10-03T00:00:00+00:00",
+      "end_date": "2026-10-02",
+      "id": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "start_date": "2026-10-01"
+    }
+  ],
+  "published": false,
+  "schema_version": 1,
+  "scope": {
+    "client_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "workspace_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "snapshot": {
+    "created_at": "2026-10-31T00:00:00Z",
+    "currency": null,
+    "end_date": "2026-10-30",
+    "fetched_at": "2026-10-31T00:00:00Z",
+    "id": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "start_date": "2026-10-01",
+    "timezone": "Asia/Ho_Chi_Minh"
+  },
+  "source": "gsc",
+  "state": "ready",
+  "tables": [
+    {
+      "columns": [
+        {
+          "key": "query",
+          "label": "Truy vấn",
+          "unit": "text"
+        },
+        {
+          "key": "clicks",
+          "label": "Lượt nhấp",
+          "unit": "count"
+        },
+        {
+          "key": "impressions",
+          "label": "Hiển thị",
+          "unit": "count"
+        },
+        {
+          "key": "ctr",
+          "label": "CTR",
+          "unit": "percent"
+        },
+        {
+          "key": "position",
+          "label": "Vị trí TB",
+          "unit": "number"
+        }
+      ],
+      "id": "queries",
+      "rows": [
+        {
+          "clicks": 1240,
+          "ctr": 0.05,
+          "impressions": 24800,
+          "position": 7.4,
+          "query": "thương hiệu minh họa"
+        },
+        {
+          "clicks": 860,
+          "ctr": 0.05,
+          "impressions": 17200,
+          "position": 8.4,
+          "query": "dịch vụ chuyên nghiệp"
+        },
+        {
+          "clicks": 640,
+          "ctr": 0.05,
+          "impressions": 12800,
+          "position": 9.4,
+          "query": "sản phẩm mới"
+        },
+        {
+          "clicks": 420,
+          "ctr": 0.05,
+          "impressions": 8400,
+          "position": 10.4,
+          "query": "tư vấn sản phẩm"
+        },
+        {
+          "clicks": 310,
+          "ctr": 0.05,
+          "impressions": 6200,
+          "position": 11.4,
+          "query": "báo giá dịch vụ"
+        }
+      ],
+      "title": "Truy vấn tìm kiếm",
+      "total_rows": 5,
+      "truncated": false
+    },
+    {
+      "id": "seo_pages",
+      "title": "Trang trên Google",
+      "columns": [
+        {
+          "key": "page",
+          "label": "Đường dẫn trang",
+          "unit": "text"
+        },
+        {
+          "key": "clicks",
+          "label": "Lượt nhấp",
+          "unit": "count"
+        },
+        {
+          "key": "impressions",
+          "label": "Hiển thị",
+          "unit": "count"
+        },
+        {
+          "key": "ctr",
+          "label": "CTR",
+          "unit": "percent"
+        },
+        {
+          "key": "position",
+          "label": "Vị trí TB",
+          "unit": "number"
+        }
+      ],
+      "truncated": false,
+      "total_rows": 5,
+      "rows": [
+        {
+          "page": "https://example.test/san-pham",
+          "clicks": 1540,
+          "impressions": 41560,
+          "ctr": 0.037055,
+          "position": 6.2
+        },
+        {
+          "page": "https://example.test/dich-vu",
+          "clicks": 890,
+          "impressions": 25420,
+          "ctr": 0.035012,
+          "position": 7.1
+        },
+        {
+          "page": "https://example.test/blog/huong-dan",
+          "clicks": 610,
+          "impressions": 20280,
+          "ctr": 0.030079,
+          "position": 8.3
+        },
+        {
+          "page": "https://example.test/bang-gia",
+          "clicks": 320,
+          "impressions": 14720,
+          "ctr": 0.021739,
+          "position": 9.5
+        },
+        {
+          "page": "https://example.test/lien-he",
+          "clicks": 170,
+          "impressions": 8850,
+          "ctr": 0.019209,
+          "position": 11.8
+        }
+      ]
+    }
+  ],
+  "targets": {
+    "asset_id": "cccccccccccccccccccccccccccccccc",
+    "can_manage": false,
+    "end": "2026-10-30",
+    "items": [
+      {
+        "actual": 3890,
+        "aggregation": "provider_period",
+        "currency": null,
+        "difference": "584",
+        "direction": "at_least",
+        "grain": "period",
+        "input_value": "3306",
+        "key": "clicks",
+        "label": "Lượt nhấp",
+        "ratio": "1.176648517846339987900786449",
+        "relation": "above",
+        "status": "met",
+        "unit": "count",
+        "value": "3306",
+        "version": 1
+      },
+      {
+        "actual": 124780,
+        "aggregation": "provider_period",
+        "currency": null,
+        "difference": "18717",
+        "direction": "at_least",
+        "grain": "period",
+        "input_value": "143497",
+        "key": "impressions",
+        "label": "Lượt hiển thị",
+        "ratio": "0.8695652173913043478260869565",
+        "relation": "below",
+        "status": "below_target",
+        "unit": "count",
+        "value": "143497",
+        "version": 1
+      },
+      {
+        "actual": 0.031175,
+        "aggregation": "provider_period",
+        "currency": null,
+        "difference": "0.00467625",
+        "direction": "at_least",
+        "grain": "period",
+        "input_value": "3.58512500",
+        "key": "ctr",
+        "label": "CTR",
+        "ratio": "0.8695652173913043478260869565",
+        "relation": "below",
+        "status": "below_target",
+        "unit": "percent",
+        "value": "0.03585125",
+        "version": 1
+      }
+    ],
+    "start": "2026-10-01",
+    "updated_at": null
+  }
+}

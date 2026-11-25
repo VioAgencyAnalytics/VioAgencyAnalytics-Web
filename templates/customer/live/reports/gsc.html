@@ -1,0 +1,13 @@
+<div class="pr-composition pr-search" data-order-container>
+<div class="vt-order-block" data-order-key="summary" data-order-label="Chỉ số chính">
+{{ p.metrics(view.layout,report,display) }}
+{{ note(report_review, 'summary') }}
+</div>
+<div class="vt-order-block" data-order-key="trend" data-order-label="{{ view.layout.trend }}">
+<div class="pr-search-grid">{{ p.trend(report,view.layout,false) }}{{ p.ranking(view.layout.rankings.queries,'Truy vấn mang lại lượt nhấp',display,review=report_review,note_key='rank_queries') }}</div>
+<div class="cr-secondary-charts" id="data-secondary-charts"></div>
+{{ note(report_review, 'trend') }}
+</div>
+{{ target_comparison(report,display,report_review) }}
+
+</div>

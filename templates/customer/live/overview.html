@@ -4,9 +4,9 @@
   {% include 'customer/live/components/sidebar.html' %}
   <div class="ov-body">
     {% include 'customer/live/components/topbar.html' %}
-    <main class="ov-main od-main">
+    <main class="ov-main od-main" id="customer-main" tabindex="-1">
       {% include 'customer/live/components/overview-marketing.html' %}
-      {% include 'customer/live/components/meta-summary.html' %}
+      <details class="ui-disclosure sa-all-sources"><summary><span class="material-symbols-outlined" aria-hidden="true">inventory_2</span><strong>Dữ liệu đã đồng bộ theo nền tảng</strong><span class="material-symbols-outlined ui-chevron" aria-hidden="true">expand_more</span></summary><div class="ui-disclosure-body">{% include 'customer/live/components/meta-summary.html' %}</div></details>
       <p class="ov-status" id="overview-status" role="status" hidden></p>
       <details class="ui-disclosure ui-management" {% if not details.clients %}open{% endif %}><summary><span class="material-symbols-outlined" aria-hidden="true">business_center</span><strong>Khách hàng & thiết lập</strong><span class="ui-summary-meta">{{ details.clients|length }} khách hàng</span><span class="material-symbols-outlined ui-chevron" aria-hidden="true">expand_more</span></summary><div class="ui-disclosure-body">
       <div class="ov-welcome ui-guide"><p id="tour-summary" class="ov-tour-summary">Hướng dẫn · 8 bước</p><button type="button" class="ov-text-button" data-start-tour>Xem hướng dẫn <span aria-hidden="true">→</span></button></div>

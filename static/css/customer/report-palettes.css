@@ -1,0 +1,214 @@
+/* Keep presentation palettes independent of report layout and source data. */
+:where(body[data-platform-page], [data-platform-brand], [data-report-template="platform"]) {
+  --report-header: var(--platform-action, #254479);
+  --report-accent: var(--platform-accent, #4a7cce);
+  --report-second: #8ab5ed;
+  --report-chart: var(--platform-action, #315fa9);
+  --report-paper: var(--platform-soft, #ebf3ff);
+  --report-edge: var(--platform-line, #c6d8ee);
+}
+
+:is([data-platform-page=ga4], [data-platform-brand=ga4]) {
+  --report-header: #914512;
+  --report-accent: #f9ab38;
+  --report-second: #ffd186;
+  --report-chart: #be590d;
+  --report-paper: #fff1db;
+  --report-edge: #ecc28e;
+}
+
+:is([data-platform-page=gsc], [data-platform-brand=gsc]) {
+  --report-header: #224e9c;
+  --report-accent: #4285f4;
+  --report-second: #44ba83;
+  --report-chart: #275db8;
+  --report-paper: #eaf2ff;
+  --report-edge: #bdd4f6;
+}
+
+:is([data-platform-page=google_ads], [data-platform-brand=google_ads]) {
+  --report-header: #245578;
+  --report-second: #45b778;
+  --report-paper: #e9f4fb;
+}
+
+:is([data-platform-page=business_profile], [data-platform-brand=business_profile]) {
+  --report-header: #21609c;
+  --report-second: #56b2eb;
+  --report-paper: #e8f5ff;
+}
+
+:is([data-platform-page=facebook_content], [data-platform-brand=facebook_content]) {
+  --report-header: #174ea8;
+  --report-second: #77b6ff;
+  --report-paper: #eaf2ff;
+}
+
+:is([data-platform-page=facebook_ads], [data-platform-brand=facebook_ads]) {
+  --report-header: #294b83;
+  --report-accent: #358aff;
+  --report-second: #5ed3ec;
+  --report-paper: #e6f3fd;
+}
+
+:is([data-platform-page=instagram], [data-platform-brand=instagram]) {
+  --report-header: #833260;
+  --report-accent: #d44d98;
+  --report-second: #f5a76d;
+  --report-paper: #fcebf6;
+  --report-edge: #ecd0e2;
+}
+
+:is([data-platform-page=youtube], [data-platform-brand=youtube]) {
+  --report-header: #941c3a;
+  --report-accent: #ff0033;
+  --report-second: #ff99a2;
+  --report-paper: #fff0f2;
+}
+
+:is([data-platform-page=tiktok_ads], [data-platform-brand=tiktok_ads]) {
+  --report-header: #292439;
+  --report-accent: #3fded3;
+  --report-second: #f94877;
+  --report-chart: #087a75;
+  --report-paper: #e3f7f3;
+  --report-edge: #a9dcd5;
+}
+
+[data-platform-brand=seo] {
+  --report-header: #1c5b48;
+  --report-accent: #36b481;
+  --report-second: #84cfa3;
+  --report-chart: #117864;
+  --report-paper: #e5f4ed;
+  --report-edge: #b3dbca;
+}
+
+[data-report-template="platform"] :is(.pr-cover, .fc-report-cover, .sr-cover, .sr-section-hero, .sc-heading) {
+  border-top: 4px solid var(--report-accent);
+  border-image: linear-gradient(90deg, var(--report-accent) 72%, var(--report-second) 72%) 1;
+}
+
+.pr-report[data-report-template="platform"] .pr-cover {
+  background: linear-gradient(115deg, var(--platform-deep), var(--report-header));
+  color: #fff;
+}
+
+.pr-report[data-report-template="platform"] .pr-cover :is(
+  .pr-cover-masthead, .pr-cover-facts, .pr-cover-statement, .pr-overline, .pr-private, .pr-cover-client>span
+) {
+  color: #fff;
+  border-color: #ffffff3d;
+}
+
+.pr-report[data-report-template="platform"] :is(.pr-stat, .cd-card:not(.cd-method)),
+.fc-report-document[data-report-template="platform"] .fc-kpi {
+  border-color: var(--report-edge);
+}
+
+.pr-report[data-report-template="platform"] .pr-stat[data-observed=true],
+.fc-report-document[data-report-template="platform"] .fc-kpi {
+  background: var(--report-paper);
+}
+
+.pr-report[data-report-template="platform"] .pr-stat[data-observed=true]>strong {
+  color: var(--report-header);
+}
+
+.pr-report[data-report-template="platform"] .pr-short-video .pr-metrics>.pr-stat:first-child {
+  background: linear-gradient(145deg, #153b43, var(--report-header));
+  border-color: #284853;
+}
+
+.pr-report[data-report-template="platform"] .pr-short-video .pr-metrics>.pr-stat:first-child :is(strong, small, .pr-stat-label) {
+  color: #fff;
+}
+
+.fc-report-document[data-report-template="platform"] .fc-report-cover {
+  background: linear-gradient(115deg, #123466, var(--report-header));
+  color: #fff;
+}
+
+.fc-report-document[data-report-template="platform"] .fc-report-cover::before {
+  display: none;
+}
+
+.fc-report-document[data-report-template="platform"] .fc-report-cover :is(
+  h1, em, p, p strong, dt, dd, .fc-report-source, .fc-report-brand>div>span, .fc-report-index
+) {
+  color: #fff;
+}
+
+.fc-report-document[data-report-template="platform"] .fc-report-facts {
+  border-color: #ffffff4d;
+}
+
+.sr-report[data-report-template="platform"] .sr-section-hero {
+  padding: 11px 14px;
+  background: linear-gradient(110deg, var(--platform-deep, #263f60), var(--report-header));
+  color: #fff;
+}
+
+.sr-report[data-report-template="platform"] .sr-section-hero :is(h2, .seo-eyebrow) {
+  color: #fff;
+}
+
+.sr-report[data-report-template="platform"] .sr-section-hero img {
+  padding: 6px;
+  background: #fff;
+  border-radius: 7px;
+}
+
+.sr-report[data-report-template="platform"][data-platform-brand=seo] .sr-cover {
+  background: linear-gradient(110deg, #153b32, #235c4b);
+}
+
+.sr-report[data-report-template="platform"] .sc-heading {
+  background: var(--report-header);
+  border-left: none;
+  padding-left: 12px;
+}
+
+.sr-report[data-report-template="platform"] .sc-heading h2,
+.sr-report[data-report-template="platform"] .sc-heading>span {
+  color: #fff;
+}
+
+.sr-report[data-report-template="platform"] .sc-signal {
+  background: var(--report-paper);
+  border-color: var(--report-edge);
+  border-top-color: var(--report-accent);
+  color: var(--report-header);
+}
+
+.sr-report[data-report-template="platform"] .sc-signal:first-child {
+  background: var(--report-header);
+  color: #fff;
+}
+
+[data-report-template="platform"] :is(.viz-series, .viz-composition) {
+  --viz-accent: var(--report-chart);
+}
+
+.sr-report[data-report-template="platform"] .sc-charts>div {
+  border-color: var(--report-edge);
+  background: color-mix(in srgb, var(--report-paper) 50%, white);
+}
+
+.sr-report[data-report-template="platform"] .sc-article-track i {
+  background: var(--report-chart);
+}
+
+@media print {
+  [data-report-template="platform"] {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .pr-report[data-report-template="platform"] .pr-search-grid {
+    break-inside: auto;
+  }
+  :is(.pr-report,.fc-report-document)[data-report-template="platform"] * {
+    font-variant-numeric: normal!important;
+    font-feature-settings: normal!important;
+  }
+}

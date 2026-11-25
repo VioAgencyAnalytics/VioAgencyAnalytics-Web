@@ -1,0 +1,38 @@
+{% macro coverage(item) -%}
+<section aria-label="Phạm vi dữ liệu báo cáo"><h3>Dữ liệu trong báo cáo SEO</h3>
+<div class="seo-report-coverage">{% for row in item.coverage %}<div><span>{{ row.label }}<small class="seo-date">{{ row.note }}</small></span><strong>{{ 'Có đầu vào' if row.available else 'Cần bổ sung' }}</strong></div>{% endfor %}</div>
+<p class="seo-help">Các mục được chốt theo nguồn và kỳ. Chưa có dữ liệu không đồng nghĩa kết quả bằng 0; bản đã lưu không tự đổi khi đồng bộ thêm.</p></section>
+{%- endmacro %}
+
+{% macro keyword_groups(item, compare) -%}
+<section><h3>Thứ hạng từ khóa</h3><p class="seo-help">Vai trò chính/phụ và phạm vi cam kết được ghi riêng. Dấu — thể hiện chưa có phép đo Spineditor trong kỳ.</p>
+{% for group in item.keyword_groups if group.rows %}<section class="seo-report-niche"><h4>{{ group.title }} · {{ group.rows|length }} từ</h4>
+{% if group.search %}
+<p class="seo-help">Quan sát Search Console trong kỳ của nguồn. Vị trí trung bình của truy vấn được ghi riêng, thứ hạng Spineditor chờ file đo.</p>
+<div class="seo-table-wrap"><table class="seo-table seo-report-articles"><colgroup><col class="seo-article-column"><col><col><col><col></colgroup><thead><tr><th>Từ khóa / vai trò</th><th>Nhấp · GSC</th><th>Hiển thị</th><th>CTR</th><th>Vị trí TB · GSC</th></tr></thead><tbody>
+{% for row in group.rows %}<tr><td>{{ row.keyword }}<small class="seo-date">{{ 'Chính' if row.role=='primary' else 'Phụ' if row.role=='secondary' else 'Chưa phân loại' }}{% if not row.role_reviewed %} · Gợi ý GSC · chờ duyệt{% endif %}</small></td>{% for key,unit in [('clicks','count'),('impressions','count'),('ctr','percent'),('position','number')] %}<td>{{ display(row.search_values.get(key),unit) }}</td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div>
+{% else %}
+<div class="seo-table-wrap"><table class="seo-table seo-report-keywords"><colgroup><col class="seo-word-column"><col>{% if compare %}<col>{% endif %}<col></colgroup><thead><tr><th>Từ khóa / vai trò</th><th>Vị trí / ngày đo</th>{% if compare %}<th>Trước / thay đổi</th>{% endif %}<th>URL thực tế</th></tr></thead><tbody>
+{% for row in group.rows %}<tr><td>{{ row.keyword }}<small class="seo-date">{{ {'primary':'Chính','secondary':'Phụ','unclassified':'Chưa phân loại'}[row.role] }}{% if row.segment=='niche' %} · Ngách{% endif %}{% if row.topic %} · {{ row.topic }}{% endif %}</small>{% if row.role_origin=='gsc' and not row.role_reviewed %}<small class="seo-date">Gợi ý GSC · chờ duyệt</small>{% endif %}</td>
+<td>{{ row.rank if row.rank is not none else '>100' if row.state=='outside_top100' else '—' }}{% if row.observed_date %}<small class="seo-date">{{ row.observed_date }}</small>{% endif %}</td>
+{% if compare %}<td>{{ row.previous_period_rank if row.previous_period_rank is not none else '—' }}{% if row.change is not none %}<small class="seo-date">{{ '↑' if row.change>0 else '↓' if row.change<0 else '=' }} {{ row.change|abs }} bậc</small>{% endif %}</td>{% endif %}
+<td>{% if row.url %}<a href="{{ row.url }}" target="_blank" rel="noopener noreferrer">Mở trang ↗</a>{% else %}—{% endif %}</td></tr>{% endfor %}
+</tbody></table></div>{% endif %}</section>{% else %}<p class="seo-help">Chưa có bộ từ khóa trong bản báo cáo.</p>{% endfor %}</section>
+{%- endmacro %}
+
+{% macro project_timeline(report) -%}
+{% set timeline=report.project.timeline if report.project else none %}{% if timeline and timeline.months %}
+<section class="seo-report-timeline">
+{% for batch in timeline.months|batch(6) %}<div class="seo-timeline-block"><h3>Kế hoạch &amp; thực tế theo tháng</h3>{% if loop.first %}<p class="seo-help">{{ timeline.note }} · Chốt đến {{ timeline.as_of }}</p>{% endif %}<div class="seo-table-wrap"><table class="seo-table seo-timeline-table"><thead><tr><th>Chỉ tiêu</th>{% for month in batch %}<th>{{ month.month }}</th>{% endfor %}</tr></thead><tbody>
+{% for metric in timeline.metrics %}<tr><th>{{ metric.label }}</th>{% for month in batch %}{% set ns=namespace(value=none) %}{% for goal in month['items'] if goal.key==metric.key %}{% set ns.value=goal %}{% endfor %}{% set goal=ns.value %}<td data-state="{{ goal.status }}"><small>KH {{ display(goal.target,'number') }}{{ '%' if metric.unit=='percent' and goal.target is not none else '' }}</small><strong>{{ display(goal.actual,'number') }}{{ '%' if metric.unit=='percent' and goal.actual is not none else '' }}</strong><small>{{ {'not_set':'Chưa đặt mốc','not_started':'Chưa tới kỳ','no_data':'Thiếu dữ liệu','met':'Đạt','below_target':'Chưa đạt','in_progress':'Đang thực hiện','in_progress_met':'Tạm đạt'}.get(goal.status,'—') }}</small></td>{% endfor %}</tr>{% endfor %}
+</tbody></table></div></div>{% endfor %}</section>{% endif %}
+{%- endmacro %}
+
+{% macro article_effectiveness(report, compare, example=false) -%}
+{% if report.effectiveness %}<section><h3>Hiệu quả bài viết · GA4 &amp; GSC</h3><p class="seo-help">{{ report.effectiveness.note }}</p>
+<div class="seo-table-wrap"><table class="seo-table seo-report-articles"><colgroup><col class="seo-article-column"><col><col><col><col><col></colgroup><thead><tr><th>Bài viết</th><th>Xem · GA4</th><th>Nhấp · GSC</th><th>Hiển thị</th><th>CTR</th><th>Vị trí TB</th></tr></thead><tbody>
+{% for row in report.effectiveness['items'] %}<tr><td>{% if example %}{{ row.title }}{% else %}<a href="{{ row.url }}" target="_blank" rel="noopener noreferrer">{{ row.title }}</a>{% endif %}</td>{% for key,unit in [('views','count'),('clicks','count'),('impressions','count'),('ctr','percent'),('position','number')] %}<td>{{ display(row['values'][key],unit) }}{% if compare and row.previous[key] is not none %}<small class="seo-date">Trước: {{ display(row.previous[key],unit) }}</small>{% endif %}</td>{% endfor %}</tr>{% else %}<tr><td colspan="6">Chưa có bài viết để ghép số liệu.</td></tr>{% endfor %}
+</tbody></table></div>
+{% for key,source in report.effectiveness.sources.items() %}<p class="seo-help">{{ 'GA4' if key=='ga4' else 'GSC' }}: {% if source.snapshot and source.detail_ready %}{{ source.period.start }} → {{ source.period.end }} · {{ source.period.timezone }}{% if compare and source.comparison_period %} · Đối chiếu {{ source.comparison_period.start }} → {{ source.comparison_period.end }}{% endif %}{% if source.limited %} · Bảng nguồn có giới hạn{% endif %}{% elif source.snapshot %}Bản cũ chưa có chi tiết theo URL. Đồng bộ lại trước khi tạo báo cáo mới.{% else %}Chưa có dữ liệu chi tiết đúng kỳ.{% endif %}</p>{% endfor %}</section>{% endif %}
+{%- endmacro %}

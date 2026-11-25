@@ -1,0 +1,69 @@
+{
+  "retrieved": "2026-11-11",
+  "note": "Vendor-hosted assets used only to identify supported integrations. All trademarks belong to their owners. No endorsement is implied. Original files; no recoloring or distortion.",
+  "assets": [
+    {
+      "file": "ga4.svg",
+      "sha256": "aa7d39ae684b9dc29b319257ad078f97fd90350aa6ace71fc9cfb66eb316c045",
+      "bytes": 658,
+      "source": "https://www.gstatic.com/analytics-suite/header/suite/v2/ic_analytics.svg",
+      "asset": "https://www.gstatic.com/analytics-suite/header/suite/v2/ic_analytics.svg"
+    },
+    {
+      "file": "google_ads.png",
+      "sha256": "f492b6de4d52c5cda1e693e441758af9ca7961d4c9a4b79737f4392ebcd6792d",
+      "bytes": 1808,
+      "source": "https://www.gstatic.com/images/branding/product/2x/ads_48dp.png",
+      "asset": "https://www.gstatic.com/images/branding/product/2x/ads_48dp.png"
+    },
+    {
+      "file": "gsc.png",
+      "sha256": "85933a1c002254c41d906e52aff732dd6286a6cbc39b55c88bd1a3b64d9c252c",
+      "bytes": 1278,
+      "source": "https://www.gstatic.com/images/branding/product/2x/search_console_48dp.png",
+      "asset": "https://www.gstatic.com/images/branding/product/2x/search_console_48dp.png"
+    },
+    {
+      "file": "business_profile.png",
+      "sha256": "a3501128abaa0e8e35dd3da67c6180b887931c0e3dd3195002f469959e4cf3b3",
+      "bytes": 4857,
+      "source": "https://www.gstatic.com/images/branding/product/2x/google_my_business_48dp.png",
+      "asset": "https://www.gstatic.com/images/branding/product/2x/google_my_business_48dp.png"
+    },
+    {
+      "file": "youtube.png",
+      "sha256": "8639db0dbaa462e7bc11d7884c3a6cb84275dc988811cd2bfaf5cf2e65bc0fe0",
+      "bytes": 729,
+      "source": "https://www.gstatic.com/youtube/img/branding/favicon/favicon_144x144.png",
+      "asset": "https://www.gstatic.com/youtube/img/branding/favicon/favicon_144x144.png"
+    },
+    {
+      "file": "facebook.png",
+      "sha256": "2adfd474d91fd20c51084309ed000c1ae6cc7f5f70af14d375930f5a71301308",
+      "bytes": 54771,
+      "source": "https://www.meta.com/brand/resources/facebook/logo/",
+      "asset": "Facebook Brand Asset Pack/Logo/Primary Logo/Facebook_Logo_Primary.png"
+    },
+    {
+      "file": "tiktok.png",
+      "sha256": "e8013e14350422f54f4b61735d91e232bf02972f6156d979cd82905559f5ee2e",
+      "bytes": 13976,
+      "source": "https://developers.tiktok.com/doc/getting-started-design-guidelines/",
+      "asset": "Dev Portal Logo Pack/TikTok Logo Pack/TikTok \u0393\u00c7\u00f4 Icons/TikTok_Icon_Black_Square.png"
+    },
+    {
+      "file": "meta.svg",
+      "sha256": "3d90eb90e4440065a2706615986ff65b0e93f02dbc9ab9a37651fefb80d2411a",
+      "bytes": 374068,
+      "source": "https://www.meta.com/brand/resources/meta/company-brand/",
+      "asset": "Meta_Company Lockup/1 Positive Primary/RGB/Meta_lockup_positive primary_RGB.svg"
+    },
+    {
+      "file": "instagram.svg",
+      "sha256": "a036f8197b3856b02d1e236e08dd1b50a4ed68cb148686beb274eabf29794d51",
+      "bytes": 1759,
+      "source": "https://www.meta.com/brand/resources/instagram/instagram-brand/",
+      "asset": "01 Static Glyph/03 Black Glyph/Instagram_Glyph_Black.svg"
+    }
+  ]
+}

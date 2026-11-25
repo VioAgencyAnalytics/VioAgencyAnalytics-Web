@@ -23,8 +23,8 @@
         if (typeof value === 'number' && Number.isFinite(value)) { document.querySelector('#meta-summary-posts').textContent = new Intl.NumberFormat('vi-VN').format(value); metric.hidden = false; }
         document.querySelector('#meta-summary-title').textContent = data.asset.name;
         const stamp = new Date(data.snapshot.fetched_at);
-        const fetched = Number.isNaN(stamp.getTime()) ? 'chưa rõ thời điểm' : new Intl.DateTimeFormat('vi-VN',{dateStyle:'short',timeStyle:'short',timeZone:'UTC'}).format(stamp);
-        note.textContent = `Kỳ ${data.snapshot.start_date} → ${data.snapshot.end_date} UTC · Cập nhật ${fetched} UTC.`;
+        const fetched = Number.isNaN(stamp.getTime()) ? 'chưa rõ thời điểm' : new Intl.DateTimeFormat('vi-VN',{dateStyle:'short',timeStyle:'short',timeZone:'Asia/Ho_Chi_Minh'}).format(stamp);
+        note.textContent = `Kỳ ${data.snapshot.start_date} → ${data.snapshot.end_date} UTC · Cập nhật ${fetched} GMT+7.`;
       } else {
         document.querySelector('#meta-summary-title').textContent = 'Nội dung Fanpage';
         note.textContent = ({select_asset:'Đã cấp quyền · Chọn Fanpage tại Kết nối nền tảng.',syncing:'Đang đồng bộ Fanpage…',sync_error:'Đồng bộ cần kiểm tra tại Kết nối nền tảng.',empty:'Chưa có dữ liệu đã đồng bộ.'})[data.state] || 'Chọn khách hàng để bắt đầu.';

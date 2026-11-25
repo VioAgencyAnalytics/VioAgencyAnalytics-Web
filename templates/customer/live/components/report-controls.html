@@ -1,0 +1,95 @@
+{% from 'customer/live/components/report-notes.html' import note %}
+{% macro period_picker(data) %}
+{% if data.calendar and data.period %}
+<section class="rp-controls" aria-label="Chọn kỳ báo cáo">
+  <div class="rp-controls-title"><span class="material-symbols-outlined" aria-hidden="true">date_range</span><div><h2>Kỳ báo cáo</h2><p>{{ data.calendar.timezone }}</p></div></div>
+  <form id="report-period-form" class="rp-form">
+    <label>Kỳ xem<select id="report-preset"><option value="custom">Tùy chỉnh ngày</option><option value="last7">7 ngày đã kết thúc</option><option value="last30">30 ngày đã kết thúc</option><option value="last90">90 ngày đã kết thúc</option><option value="this_month">Tháng này</option><option value="last_month">Tháng trước</option><option value="month">Chọn tháng</option></select></label>
+    <label id="report-month-label" hidden>Tháng<input id="report-month" type="month" value="{{ data.period.start[:7] }}"></label>
+    <label>Từ ngày<input id="report-start" type="date" required value="{{ data.period.start }}"></label>
+    <label>Đến ngày<input id="report-end" type="date" required value="{{ data.period.end }}"></label>
+    {% set comparison = data.comparison|default({}) %}
+    <label>Đối chiếu<select id="report-comparison">{% for value,label in [('none','Không so sánh'),('previous','Kỳ trước cùng số ngày'),('previous_month','Cùng kỳ tháng trước'),('custom','Chọn kỳ đối chiếu')] %}<option value="{{ value }}" {% if comparison.get('mode','none') == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+    <label id="report-comparison-start-label" {% if comparison.get('mode') != 'custom' %}hidden{% endif %}>Đối chiếu từ<input id="report-comparison-start" type="date" max="{{ data.calendar.latest_closed_date }}" value="{{ comparison.period.start if comparison.get('mode') == 'custom' and comparison.period else '' }}" {% if comparison.get('mode') != 'custom' %}disabled{% else %}required{% endif %}></label>
+    <label id="report-comparison-end-label" {% if comparison.get('mode') != 'custom' %}hidden{% endif %}>Đối chiếu đến<input id="report-comparison-end" type="date" max="{{ data.calendar.latest_closed_date }}" value="{{ comparison.period.end if comparison.get('mode') == 'custom' and comparison.period else '' }}" {% if comparison.get('mode') != 'custom' %}disabled{% else %}required{% endif %}></label>
+    <button type="submit" class="ov-button rp-apply">Xem báo cáo</button>
+  </form>
+  <div class="rp-period-note"><p>{% if data.period.is_open %}{% if data.period.data_end %}<span class="rp-live-dot"></span>Dữ liệu đến <strong>{{ data.period.data_end[8:] }}/{{ data.period.data_end[5:7] }}/{{ data.period.data_end[:4] }}</strong>. Mục tiêu áp dụng cho toàn bộ kỳ đã chọn.{% else %}Kỳ này chưa bắt đầu có dữ liệu. Bạn có thể đặt mục tiêu trước.{% endif %}{% else %}Tối đa 90 ngày mỗi kỳ · Báo cáo đọc dữ liệu đã đồng bộ.{% endif %}</p>
+  {% if data.permissions.sync and data.asset and data.connection and data.connection.status == 'connected' and data.period.data_start %}<button id="report-sync" type="button" class="ov-button ov-secondary"><span class="material-symbols-outlined" aria-hidden="true">sync</span>{{ 'Đồng bộ lại kỳ này' if data.snapshot else 'Đồng bộ kỳ này' }}</button>{% endif %}</div>
+  <p id="report-control-feedback" class="rp-feedback" role="status" aria-live="polite" hidden></p>
+</section>
+{% endif %}
+{% endmacro %}
+
+{% macro comparison_date(value) %}{% if value %}{{ value[8:] }}/{{ value[5:7] }}/{{ value[:4] }}{% endif %}{% endmacro %}
+
+{% macro target_gap(item, display) -%}
+  {%- if item.difference is defined and item.difference is not none and item.relation != 'equal' -%}
+    {{ 'Vượt' if item.relation == 'above' and item.direction == 'at_most' else 'Cao hơn' if item.relation == 'above' else 'Còn thiếu' if item.direction == 'at_least' else 'Thấp hơn' }}
+    {{ display(item.difference, 'percent')|replace('%','') ~ ' điểm phần trăm' if item.unit == 'percent' else display(item.difference, item.unit, item.currency) }}
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro target_outcome(item, display) -%}
+  <strong>{{ item.assessment.label if item.assessment else {'met':'Đạt mục tiêu','below_target':'Chưa đạt','within_limit':'Trong giới hạn','over_limit':'Vượt giới hạn','no_data':'Chưa có số liệu','currency_mismatch':'Khác tiền tệ'}.get(item.status,'Chưa đủ dữ liệu') }}</strong>
+  {% set gap = target_gap(item, display) %}
+  {% if item.ratio is defined and item.ratio is not none %}<br><small>{{ display(item.ratio,'percent') }} {{ 'mục tiêu' if item.direction == 'at_least' else 'giới hạn' }}</small>{% endif %}
+  {% if gap %}<br><small>{{ gap }}</small>{% endif %}
+{%- endmacro %}
+
+{% macro period_comparison(data, display, review=none) %}
+{% set comparison = data.comparison|default({}) %}
+{% if comparison and comparison.mode != 'none' %}
+<section class="rp-targets rp-comparison" id="report-period-comparison" aria-labelledby="report-comparison-title" data-order-key="comparison" data-order-label="Đối chiếu hai kỳ">
+  <header class="rp-targets-heading"><div><span class="rp-eyebrow">ĐỐI CHIẾU HAI KỲ</span><h2 id="report-comparison-title">{{ comparison.label }}</h2></div><span class="rp-comparison-count">{{ comparison.current_days }} ngày / {{ comparison.comparison_days }} ngày</span></header>
+  {% if comparison.period %}<div class="rp-period-pair"><div><span><i></i>Kỳ đang xem</span><strong>{{ comparison_date(comparison.current_period.start) }} – {{ comparison_date(comparison.current_period.end) }}</strong></div><div data-start="{{ comparison.period.start }}" data-end="{{ comparison.period.end }}"><span><i></i>Kỳ đối chiếu</span><strong>{{ comparison_date(comparison.period.start) }} – {{ comparison_date(comparison.period.end) }}</strong></div></div>{% endif %}
+  {% if comparison.status == 'ready' %}<div class="rp-comparison-grid" data-count="{{ comparison['items']|length }}">
+    {% for item in comparison['items'] %}<article class="rp-period-card" data-comparison-status="{{ item.status }}"><h3>{{ item.label }}</h3><div class="rp-period-values"><div><span>Đang xem</span><strong>{{ display(item.actual,item.unit,item.currency) }}</strong></div><div><span>Đối chiếu</span><strong>{{ display(item.previous,item.unit,item.currency) }}</strong></div></div>
+    {% if item.chart %}<svg class="rp-pair-chart" viewBox="0 0 200 22" preserveAspectRatio="none" aria-hidden="true"><rect x="0" y="1" width="{{ item.chart.actual * 2 }}" height="7" rx="3" class="rp-pair-current"/><rect x="0" y="13" width="{{ item.chart.previous * 2 }}" height="7" rx="3" class="rp-pair-previous"/></svg>{% endif %}
+    <p class="rp-period-change" data-relation="{{ item.relation or 'unavailable' }}" data-effect="{{ item.effect }}">{% if item.status == 'ready' %}<strong>{% if item.relation == 'above' %}↑ {% elif item.relation == 'below' %}↓ {% endif %}{{ item.summary }}</strong>{% if item.difference_label and item.relative is not none and item.unit != 'percent' and item.relation != 'equal' %}<span>{{ 'Tăng' if item.relation == 'above' else 'Giảm' }} {{ item.difference_label }}</span>{% endif %}{% if item.relation != 'equal' %}<small class="kpi-effect">{{ item.effect_label }}</small>{% endif %}{% else %}{{ item.summary }}{% endif %}</p></article>{% endfor %}
+  </div>{% else %}<p class="rp-comparison-message" role="status">{{ comparison.message }}</p>{% endif %}
+  {% if comparison.status == 'missing' and comparison.period and data.permissions.sync and data.connection and data.connection.status == 'connected' %}<button id="report-sync-comparison" type="button" class="ov-button ov-secondary"><span class="material-symbols-outlined" aria-hidden="true">sync</span>Đồng bộ kỳ đối chiếu</button>{% endif %}
+  {% if comparison.status in ['unavailable','syncing'] %}<button id="report-comparison-retry" type="button" class="ov-button ov-secondary">{{ 'Cập nhật kết quả' if comparison.status == 'syncing' else 'Tải lại kỳ đối chiếu' }}</button>{% endif %}
+  <p class="rp-footnote">{% if comparison.matched_elapsed %}So cùng phần thời gian đã kết thúc; KPI giữ mục tiêu cả kỳ. {% endif %}{% if comparison.current_days != comparison.comparison_days %}Hai kỳ khác số ngày; chênh lệch tổng chưa được chuẩn hóa theo ngày. {% endif %}Tăng/giảm thể hiện biến động, không tự đánh giá tốt/xấu. Số tích lũy không tính tăng trưởng theo kỳ.</p>
+  {{ note(review, 'comparison') }}
+</section>
+{% endif %}
+{% endmacro %}
+
+{% macro target_comparison(data, display, review=none, show_comparison=true) %}
+{% if show_comparison %}{{ period_comparison(data, display, review) }}{% endif %}
+{% set targets = data.targets %}
+{% if targets and data.period %}
+{% set planned = targets['items']|selectattr('value','ne',none)|list %}
+<section class="rp-targets" id="report-targets" aria-labelledby="report-targets-title" data-order-key="kpi" data-order-label="So sánh KPI">
+  <header class="rp-targets-heading"><div class="rp-targets-title"><span class="material-symbols-outlined" aria-hidden="true">flag</span><div><span class="rp-eyebrow">MỤC TIÊU & KẾT QUẢ</span><h2 id="report-targets-title">So sánh KPI</h2><p>{{ data.period.start[8:] }}/{{ data.period.start[5:7] }}/{{ data.period.start[:4] }} – {{ data.period.end[8:] }}/{{ data.period.end[5:7] }}/{{ data.period.end[:4] }}{% if data.asset %} · {{ data.asset.name }}{% endif %}</p></div></div>{% if targets.can_manage %}<button type="button" class="ov-button ov-secondary" id="report-goals-edit"><span class="material-symbols-outlined" aria-hidden="true">tune</span>{{ 'Sửa mục tiêu' if planned else 'Đặt mục tiêu KPI' }}</button>{% endif %}</header>
+  {% if planned %}
+  <div class="rp-goal-grid" data-count="{{ planned|length }}">
+  {% for item in planned %}
+    <article class="rp-goal-card" data-target-status="{{ item.assessment.tone if item.assessment else item.status }}"><header><h3>{{ item.label }}</h3><strong class="rp-status rp-status-{{ item.assessment.tone if item.assessment else item.status }}">{{ item.assessment.label if item.assessment else {'met':'Đạt mục tiêu','below_target':'Chưa đạt','within_limit':'Trong giới hạn','over_limit':'Vượt giới hạn','no_data':'Chưa có số liệu','currency_mismatch':'Khác tiền tệ'}.get(item.status,'Chưa đặt') }}</strong></header>
+    {% set actual_currency = item.actual_currency|default(data.snapshot.currency if data.snapshot else none) %}
+    {% set gap = target_gap(item, display) %}
+    <div class="rp-goal-values"><div><span>Thực tế</span><strong>{{ display(item.actual,item.unit,actual_currency) }}</strong></div><div><span>{{ 'Mục tiêu tối thiểu' if item.direction == 'at_least' else 'Giới hạn tối đa' }}</span><strong>{{ display(item.value,item.unit,item.currency) }}</strong></div></div>
+    {% if item.ratio is not none %}{% set ratio = item.ratio|float %}{% set scale = [1.2,ratio]|max %}
+    <svg class="rp-bullet-chart" viewBox="0 0 200 24" preserveAspectRatio="none" role="img" aria-label="Thực tế {{ display(item.actual,item.unit,actual_currency) }}, {{ 'mục tiêu' if item.direction == 'at_least' else 'giới hạn' }} {{ display(item.value,item.unit,item.currency) }}"><rect x="0" y="8" width="200" height="9" rx="4" class="rp-bullet-track"/><rect x="0" y="8" width="{{ 200 * ratio / scale }}" height="9" rx="4" class="rp-bullet-actual"/><line x1="{{ 200 / scale }}" x2="{{ 200 / scale }}" y1="2" y2="23" class="rp-bullet-target"/></svg>
+    <div class="rp-goal-progress"><strong>{{ display(item.ratio,'percent') }} {{ 'mục tiêu' if item.direction == 'at_least' else 'giới hạn' }}</strong>{% if gap %}<span>{{ gap }}</span>{% endif %}</div>
+    {% elif item.status == 'currency_mismatch' %}<p class="rp-goal-explainer">Khác tiền tệ, không tự quy đổi.</p>{% elif item.value == '0' and item.actual is not none %}<p class="rp-goal-explainer">Mục tiêu bằng 0. Đánh giá theo chênh lệch.{% if gap %} {{ gap }}.{% endif %}</p>{% else %}<p class="rp-goal-explainer">Chưa đủ dữ liệu để đo mức đạt.</p>{% endif %}
+    {% if item.grain == 'snapshot' %}<small class="rp-goal-grain">Tích lũy / tại thời điểm đồng bộ</small>{% endif %}
+    </article>
+  {% endfor %}
+  </div>
+  <p class="rp-footnote">Vạch đứng: {{ 'mục tiêu / giới hạn' }}. {% if data.period.is_open %}Đang so với mục tiêu cả kỳ, không chia theo ngày.{% else %}Thực tế tại bản lưu đang xem.{% endif %}{% if targets.updated_at %} Mục tiêu cập nhật {{ targets.updated_at | vietnam_time }}.{% endif %}</p>
+  {% else %}<div class="rp-target-empty"><span class="material-symbols-outlined" aria-hidden="true">track_changes</span><div><strong>Chưa có mục tiêu cho kỳ này</strong><p>{{ 'Đặt chỉ tiêu hoặc giới hạn để theo dõi kết quả của nền tảng.' if targets.can_manage else 'Quản trị viên có thể đặt mục tiêu sau khi chọn tài khoản nền tảng.' }}</p></div></div>{% endif %}
+  {{ note(review, 'kpi') }}
+</section>
+{% if targets.can_manage %}
+<dialog id="report-goals-dialog" class="rp-dialog" aria-labelledby="report-goals-title"><form id="report-goals-form">
+  <header><div><span class="rp-eyebrow">{{ data.connector.name if data.connector else 'FACEBOOK CONTENT' }}</span><h2 id="report-goals-title">Mục tiêu KPI</h2></div><button type="button" class="rp-dialog-close" id="report-goals-close" aria-label="Đóng">×</button></header>
+  <div class="rp-dialog-body"><p class="rp-goals-scope">{{ data.client.name if data.client else '' }} / {{ data.asset.name }}<strong>{{ data.period.start }} → {{ data.period.end }}</strong></p><p class="rp-input-help" id="report-goals-help">Nhập số không có dấu hàng nghìn, dùng dấu phẩy hoặc dấu chấm cho phần lẻ. Để trống để bỏ mục tiêu. Tỷ lệ nhập từ 0 đến 100%.</p>
+  <div class="rp-goal-fields">{% for item in targets['items'] %}<fieldset data-goal="{{ item.key }}"><legend>{{ item.label }}{% if item.grain == 'snapshot' %}<small>Số tích lũy / hiện tại, không phải phát sinh riêng trong kỳ</small>{% endif %}</legend><label><span class="rp-sr">Điều kiện {{ item.label }}</span><select data-goal-direction aria-label="Điều kiện {{ item.label }}"><option value="at_least" {% if item.direction == 'at_least' %}selected{% endif %}>Tối thiểu (≥)</option><option value="at_most" {% if item.direction == 'at_most' %}selected{% endif %}>Tối đa (≤)</option></select></label><label class="rp-goal-input"><span class="rp-sr">Mục tiêu {{ item.label }}</span><input type="text" inputmode="decimal" maxlength="28" data-goal-value value="{{ item.input_value or '' }}" aria-label="Mục tiêu {{ item.label }}" aria-describedby="report-goals-help" autocomplete="off" placeholder="Chưa đặt"><span>{{ '%' if item.unit == 'percent' else item.currency or 'Tiền tệ nguồn' if item.unit == 'currency' else 'Số lượng' if item.unit == 'count' else 'Giá trị' }}</span></label></fieldset>{% endfor %}</div>
+  <p class="rp-feedback" id="report-goals-feedback" role="alert" hidden></p></div>
+  <footer><button type="button" class="ov-button ov-secondary" id="report-goals-cancel">Hủy</button><button type="submit" class="ov-button" id="report-goals-save">Lưu mục tiêu</button></footer>
+</form></dialog>
+{% endif %}
+{% endif %}
+{% endmacro %}

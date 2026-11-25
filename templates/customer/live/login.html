@@ -1,25 +1,27 @@
 {% extends 'customer/auth.html' %}
 {% block content %}
-<header class="identity-brand"><img src="/static/customer/vio-logo.png" alt="VIO Agency"><span>VIO<span class="identity-accent">Agency</span>Analytics</span></header>
+<header class="entry-topbar"><a class="identity-brand" href="/workspace/login" aria-label="VioAgencyAnalytics — Đăng nhập"><img src="/static/customer/vio-logo.png" alt=""><span>VioAgency<span class="identity-accent">Analytics</span><small>Nền tảng báo cáo Marketing</small></span></a><span class="entry-header-note"><span class="material-symbols-outlined" aria-hidden="true">shield_lock</span>Không gian làm việc của bạn</span></header>
 <main class="identity-login">
   <aside class="identity-story">
-    <span class="identity-eyebrow">NỀN TẢNG BÁO CÁO MARKETING CHO AGENCY</span>
-    <h2>Quản lý dữ liệu Marketing trên <span>một nền tảng</span></h2>
-    <p>Kết nối dữ liệu. Theo dõi hiệu suất. Chia sẻ báo cáo.</p>
-    <ul class="identity-benefits">
-      <li><span class="material-symbols-outlined">groups</span><div><strong>Quản lý nhiều khách hàng</strong></div></li>
-      <li><span class="material-symbols-outlined">query_stats</span><div><strong>Kết nối các kênh Marketing</strong></div></li>
-      <li><span class="material-symbols-outlined">analytics</span><div><strong>Dashboard &amp; Báo cáo</strong></div></li>
-    </ul>
-    <small>Được phát triển và vận hành bởi VIO Agency</small>
+    <div class="entry-story-copy"><span class="identity-eyebrow"><i aria-hidden="true"></i>MỘT NỀN TẢNG. MỌI GÓC NHÌN.</span>
+    <h2>Dữ liệu kết nối.<br><span>Quyết định rõ ràng.</span></h2>
+    <p>Từ các kênh Marketing đến báo cáo.<br>Mọi thứ gọn trong một Workspace.</p></div>
+    <div class="entry-scene" role="img" aria-label="Các nguồn Marketing kết nối vào Workspace để xem Dashboard và báo cáo">
+      <div class="entry-scene-orbit" aria-hidden="true"></div>
+      <div class="entry-source-row" aria-hidden="true"><span><img src="/static/customer/platforms/ga4.svg" alt=""></span><span><img src="/static/customer/platforms/gsc.png" alt=""></span><span><img src="/static/customer/platforms/facebook.png" alt=""></span><span><img src="/static/customer/platforms/youtube.png" alt=""></span><span><img src="/static/customer/platforms/tiktok.png" alt=""></span></div>
+      <div class="entry-flow-line" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="entry-workspace-stack"><div class="entry-stack-back" aria-hidden="true"></div><div class="entry-stack-mid" aria-hidden="true"></div><div class="entry-stack-front"><span class="entry-stack-icon material-symbols-outlined" aria-hidden="true">space_dashboard</span><div><small>KHÔNG GIAN LÀM VIỆC</small><strong>Workspace của bạn</strong></div><span class="material-symbols-outlined entry-stack-check" aria-hidden="true">verified_user</span></div></div>
+      <div class="entry-scene-caption"><span class="material-symbols-outlined" aria-hidden="true">bar_chart</span>Dashboard &amp; Báo cáo<span class="entry-scene-caption-line" aria-hidden="true"></span><span class="material-symbols-outlined" aria-hidden="true">flag</span>Mục tiêu KPI</div>
+    </div>
+    <ul class="identity-benefits"><li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span>Quản lý từng thương hiệu, rõ từng nguồn dữ liệu</li><li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span>Theo dõi hiệu suất và chia sẻ báo cáo</li></ul>
+    <div class="entry-story-footer"><span class="entry-vio-sign">VIO</span><small>Phát triển và vận hành bởi VIO Agency</small></div>
   </aside>
   <section class="identity-card identity-login-card" aria-labelledby="auth-heading">
-    <div class="identity-product"><img src="/static/customer/vio-logo.png" alt=""><div><strong>VioAgencyAnalytics</strong><p>Chào mừng bạn trở lại</p></div></div>
     <div id="identity-status" role="status" aria-live="polite" class="identity-status" hidden></div>
-    <div id="signed-in" class="identity-note" hidden><p id="signed-in-label"></p><a href="/workspace/onboarding" class="identity-button">Tiếp tục đến Workspace</a><button type="button" data-logout class="identity-link">Đăng xuất</button></div>
+    <div id="signed-in" class="identity-note" hidden><span class="entry-session-icon material-symbols-outlined" aria-hidden="true">verified_user</span><h1 id="signed-in-heading">Chào mừng bạn trở lại</h1><p id="signed-in-label"></p><a href="/workspace/onboarding" class="identity-button">Chọn Workspace <span aria-hidden="true">→</span></a><button type="button" data-logout class="identity-link">Dùng tài khoản khác</button></div>
     <div id="auth-main">
       <div class="identity-tabs" aria-label="Tài khoản"><button type="button" data-mode="login" aria-pressed="true">Đăng nhập</button><button type="button" data-mode="register" aria-pressed="false">Tạo tài khoản</button></div>
-      <h1 id="auth-heading">Đăng nhập vào Workspace</h1>
+      <div class="entry-form-intro"><span class="entry-form-eyebrow">CHÀO MỪNG TRỞ LẠI</span><h1 id="auth-heading">Đăng nhập vào Workspace</h1><p id="auth-description">Tiếp tục công việc, kết nối những góc nhìn.</p></div>
       <button type="button" id="google-login" class="identity-button identity-secondary" data-loading-label="Đang mở Google…" aria-describedby="google-account-help google-availability" disabled>
         <svg class="identity-google" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
           <path fill="#4285F4" d="M17.64 9.2045c0-.638-.0573-1.2518-.1636-1.8409H9v3.4818h4.8436c-.2086 1.125-.8427 2.0782-1.7963 2.7164v2.2582h2.9082c1.7027-1.5673 2.6845-3.8741 2.6845-6.6155z"/>
@@ -29,14 +31,14 @@
         </svg>
         <span data-action-label>Tiếp tục với Google</span>
       </button>
-      <p id="google-account-help" class="identity-hint identity-google-help">Dùng Gmail cá nhân hoặc Google Workspace của công ty.</p>
+      <p id="google-account-help" class="identity-hint identity-google-help">Gmail cá nhân hoặc Google Workspace của công ty.</p>
       <p id="google-availability" class="identity-hint" role="status" hidden></p>
       <div class="identity-divider"><span>hoặc email</span></div>
       <form id="identity-auth-form">
         <fieldset id="auth-fields" disabled>
           <label id="name-field" hidden>Họ và tên<input name="name" autocomplete="name" maxlength="100" placeholder="Nguyễn Minh Anh"></label>
-          <label>Email<input name="email" type="email" autocomplete="username" required maxlength="254" placeholder="ban@congty.vn"></label>
-          <label>Mật khẩu<span class="identity-password"><input name="password" id="auth-password" type="password" autocomplete="current-password" required maxlength="200" placeholder="Nhập mật khẩu"><button type="button" id="toggle-password" aria-label="Hiện mật khẩu" aria-pressed="false"><span class="material-symbols-outlined">visibility</span></button></span></label>
+          <label>Email<input name="email" type="email" autocomplete="username" required maxlength="254" placeholder="ban@congty.vn" autocapitalize="none" spellcheck="false"></label>
+          <label>Mật khẩu<span class="identity-password"><input name="password" id="auth-password" type="password" autocomplete="current-password" required maxlength="200" placeholder="Nhập mật khẩu"><button type="button" id="toggle-password" aria-label="Hiện mật khẩu" aria-pressed="false" title="Hiện mật khẩu"><span class="material-symbols-outlined" aria-hidden="true">visibility_off</span></button></span></label>
           <p id="password-guidance" class="identity-hint" hidden>Sử dụng ít nhất 12 ký tự cho mật khẩu của bạn.</p>
           <div class="identity-form-row"><label class="identity-check"><input type="checkbox" name="remember"> Ghi nhớ đăng nhập</label><button type="button" id="forgot-password" class="identity-link">Quên mật khẩu?</button></div>
           <button id="auth-submit" class="identity-button" type="submit">Đăng nhập</button>
@@ -47,7 +49,7 @@
       <h1 id="email-action-heading">Khôi phục tài khoản</h1>
       <p id="email-action-description" class="identity-hint"></p>
       <label id="recovery-email-label">Email đã đăng ký<input name="email" type="email" autocomplete="email" maxlength="254" placeholder="ban@congty.vn"></label>
-      <label id="new-password-label" hidden>Mật khẩu mới<span class="identity-password"><input id="reset-password" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="200" aria-describedby="reset-password-guidance"><button type="button" id="toggle-reset-password" aria-label="Hiện mật khẩu mới" aria-pressed="false"><span class="material-symbols-outlined">visibility</span></button></span></label>
+      <label id="new-password-label" hidden>Mật khẩu mới<span class="identity-password"><input id="reset-password" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="200" aria-describedby="reset-password-guidance"><button type="button" id="toggle-reset-password" aria-label="Hiện mật khẩu mới" aria-pressed="false" title="Hiện mật khẩu mới"><span class="material-symbols-outlined" aria-hidden="true">visibility_off</span></button></span></label>
       <label id="confirm-password-label" hidden>Nhập lại mật khẩu mới<input id="reset-password-confirm" name="password_confirm" type="password" autocomplete="new-password" minlength="12" maxlength="200"></label>
       <p id="reset-password-guidance" class="identity-hint" hidden>Sử dụng ít nhất 12 ký tự. Sau khi đổi mật khẩu, bạn cần đăng nhập lại trên các thiết bị.</p>
       <button class="identity-button" id="email-action-submit" type="submit">Gửi hướng dẫn</button>
@@ -61,9 +63,9 @@
       <button type="button" id="recovery-retry" class="identity-button identity-secondary">Nhập lại email / Gửi lại</button>
       <a href="/workspace/login" class="identity-link">Quay lại đăng nhập</a>
     </section>
-    <p class="identity-footnote"><span class="material-symbols-outlined">lock</span> Bạn luôn kiểm soát quyền kết nối và chia sẻ dữ liệu.</p>
+    <p class="identity-footnote"><span class="material-symbols-outlined" aria-hidden="true">lock</span><span>Bạn quyết định nguồn kết nối và người được xem dữ liệu.</span></p>
     <noscript>Vui lòng bật JavaScript để sử dụng đăng nhập và thiết lập Workspace.</noscript>
   </section>
 </main>
-<footer class="identity-footer">© VIO Agency · VioAgencyAnalytics</footer>
+<footer class="identity-footer"><span>© VioAgencyAnalytics</span><span>Dành cho Agency &amp; Doanh nghiệp</span></footer>
 {% endblock %}

@@ -1,5 +1,20 @@
 # Kiểm tra khung connector và báo cáo — 09/11/2026
 
+**Xác nhận bổ sung 10/11:** người dùng đã bật API GA4 và YouTube theo hướng dẫn.
+App settings/callback hai nguồn đã có trên Docker; đang chờ customer tự cấp quyền,
+chọn property/kênh và đồng bộ thật. Xác nhận Enable chưa phải nghiệm thu dữ liệu.
+
+**Mốc mới 10/11:** Meta Ads và Instagram đã được cấu hình bằng hai Config ID riêng
+người dùng tạo. Runtime có App settings 8/9 nguồn; TikTok còn đăng ký ứng dụng.
+Web **507 PASS** Windows và Docker, focused backend **45 PASS / 38 PG skip**,
+transport/error candidate bốn tests PASS. Browser fixture kiểm tra hướng dẫn
+từng nguồn và lỗi setup trên desktop/mobile; không có lỗi JS. Lỗi API disabled
+và quota không chuyển grant sang expired, không làm phát sinh snapshot. GSC đã
+có connection `connected` nhưng chưa chọn website/chưa có snapshot Google;
+Facebook Content vẫn giữ 16 bài. Consent/sync Ads và Instagram chưa nghiệm thu.
+Hướng dẫn mới: [Thao tác tiếp theo](CUSTOMER_CONNECTORS_NEXT_STEPS_20261110.md).
+Các đoạn ngày 09/11 bên dưới là lịch sử trước thay đổi này.
+
 **Cập nhật sau lượt triển khai ban đầu:** đã kích hoạt Google Data dùng chung App
 với Sign-in nhưng grant/transaction riêng. Người dùng đã Save callback Data và
 xác nhận bật Search Console API; browser live đã thấy nút Tiếp tục với Google.

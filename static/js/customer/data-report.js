@@ -2,8 +2,14 @@
 (() => {
   'use strict';
   const $ = (s) => document.querySelector(s), report = JSON.parse($('#connector-report-data').textContent);
-  const details = JSON.parse($('#library-data').textContent), workspaceId = details.workspace.id;
-  const base = '/workspace/reports/data?source='+encodeURIComponent(report.source);
+  const example = document.body.hasAttribute('data-report-example');
+  const details = example ? null : JSON.parse($('#library-data').textContent), workspaceId = details?.workspace.id;
+  const current = new URLSearchParams(location.search);
+  const reportParams = new URLSearchParams({source: report.source});
+  for (const key of ['style', 'palette', 'order', 'hidden', 'template', 'comparison', 'comparison_start', 'comparison_end']) {
+    if (current.has(key)) reportParams.set(key, current.get(key));
+  }
+  const base = '/workspace/reports/data?' + reportParams;
   let session, busy = false, timer;
   const node = (tag,value,cls) => { const el = document.createElement(tag); el.textContent = value; if (cls) el.className = cls; return el; };
   const fold = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[đĐ]/g,'d').toLowerCase();
@@ -35,44 +41,13 @@
     try { await action(); } catch (error) { feedback(error.message); } finally { busy = false; controls(); }
   }
   function chart(target, key, interactive = false) {
-    if (!target) return;
-    const metric = report.metrics.find((m) => m.key === key);
-    const observed = new Map(report.daily.filter((r) => Object.hasOwn(r.values,key)).map((r) => [r.date,r]));
-    const points = [], first = new Date(report.snapshot.start_date+'T00:00:00Z'), last = new Date(report.snapshot.end_date+'T00:00:00Z');
-    for (let day = first.getTime(); day <= last.getTime() && points.length < 90; day += 86400000) {
-      const stamp = new Date(day).toISOString().slice(0,10);
-      points.push(observed.get(stamp) || {date:stamp,values:{[key]:null}});
-    }
-    if (!metric || !points.length || points.every((p) => p.values[key] === null || p.values[key] === undefined)) { target.replaceChildren(node('p','Nguồn chưa cung cấp chuỗi ngày cho chỉ số này.','cd-chart-empty')); return; }
-    const max = Math.max(0,...points.filter((p) => p.values[key] !== null).map((p) => Number(p.values[key])));
-    const svgNode = (tag, attrs = {}) => { const item = document.createElementNS('http://www.w3.org/2000/svg',tag); for (const [name,value] of Object.entries(attrs)) item.setAttribute(name,String(value)); return item; };
-    const svg = svgNode('svg',{viewBox:'0 0 880 260',role:'img','aria-label':metric.label+' theo ngày'});
-    const left = 92, width = 764, top = 18, height = 184, scale = max || 1, step = width/points.length;
-    for (let i = 0; i <= 4; i += 1) {
-      const y = top+height-height*i/4;
-      svg.append(svgNode('line',{x1:left,y1:y,x2:left+width,y2:y,class:'cr-grid-line'}));
-      const label = svgNode('text',{x:left-12,y:y+4,'text-anchor':'end',class:'cr-axis'}); label.textContent = format(scale*i/4,metric.unit); svg.append(label);
-    }
-    const cadence = Math.max(1,Math.ceil(points.length/8));
-    points.forEach((point,index) => {
-      const value = point.values[key] ?? null, amount = value === null ? 0 : height*Number(value)/scale;
-      const group = svgNode('g',{class:'cr-chart-point',tabindex:interactive ? '0' : '-1','aria-label':point.date+': '+format(value,metric.unit)});
-      const title = svgNode('title'); title.textContent = point.date+': '+format(value,metric.unit); group.append(title);
-      const x = left+index*step+step*.19, barWidth = Math.max(2,step*.62);
-      group.append(svgNode('rect',{x:left+index*step,y:top,width:step,height:height,fill:'transparent'}));
-      group.append(svgNode('rect',{x,y:top+height-(value === null ? 2 : Math.max(amount,1.5)),width:barWidth,
-        height:value === null ? 2 : Math.max(amount,1.5),rx:Math.min(3,barWidth/4),class:value === null ? 'cr-bar-missing' : 'cr-bar'}));
-      if (index % cadence === 0 || index === points.length-1 && index%cadence >= 2) {
-        const label = svgNode('text',{x:left+(index+.5)*step,y:230,'text-anchor':'middle',class:'cr-axis'});
-        label.textContent = point.date.slice(8)+'/'+point.date.slice(5,7); group.append(label);
-      }
-      if (interactive) {
-        const read = () => { $('#data-chart-readout').textContent = point.date.slice(8)+'/'+point.date.slice(5,7)+' · '+metric.label+': '+format(value,metric.unit); };
-        group.addEventListener('pointerenter',read); group.addEventListener('focus',read); group.addEventListener('click',read);
-      }
-      svg.append(group);
+    const paired = window.VioReportCharts.render(target,report,key,{
+      kind: target?.dataset.chartKind || 'bar', compare: interactive,
+      onRead: interactive ? (value) => { $('#data-chart-readout').textContent = value; } : null,
     });
-    target.replaceChildren(svg);
+    if (interactive) {
+      const legend = $('#data-chart-legend .pr-legend-previous'); if (legend) legend.hidden = !paired;
+    }
   }
   function drawCharts() {
     const selected = $('#data-chart-metric')?.value;
@@ -99,7 +74,7 @@
         const tr = document.createElement('tr');
         for (const col of table.columns) {
           const td = node('td',col.unit === 'text' ? row[col.key] ?? '—' : format(row[col.key],col.unit));
-          if (report.source === 'youtube' && col.key === 'video' && /^[A-Za-z0-9_-]{11}$/.test(row[col.key])) {
+          if (!example && report.source === 'youtube' && col.key === 'video' && /^[A-Za-z0-9_-]{11}$/.test(row[col.key])) {
             const link = node('a',row[col.key]+' ↗'); link.href = 'https://www.youtube.com/watch?v='+row[col.key]; link.target = '_blank'; link.rel = 'noopener noreferrer'; td.replaceChildren(link);
           }
           tr.append(td);
@@ -117,12 +92,24 @@
     tableRenders.push(render); render();
   }
   $('#data-chart-metric')?.addEventListener('change',drawCharts); drawCharts();
+  if (document.body.dataset.pdfRender === 'true') {
+    $('#report-method').open = true;
+    for (const render of tableRenders) render(true);
+    return;
+  }
   let methodWasOpen = false;
   window.addEventListener('beforeprint',() => { methodWasOpen = $('#report-method').open; $('#report-method').open = true; for (const render of tableRenders) render(true); });
   window.addEventListener('afterprint',() => { $('#report-method').open = methodWasOpen; for (const render of tableRenders) render(); });
-  $('#data-print')?.addEventListener('click',() => window.print());
+  $('#data-print')?.addEventListener('click',event => window.VioReportNotes ? window.VioReportNotes.print(event.currentTarget) : window.print());
   document.querySelectorAll('a[href="#report-method"]').forEach((link) => link.addEventListener('click',() => { $('#report-method').open = true; }));
-  $('#data-source').addEventListener('change',() => { const value = $('#data-source').value; if ([...$('#data-source').options].some((o) => o.value === value)) location.assign('/workspace/reports/data?source='+encodeURIComponent(value)); });
+  if (example) return;
+  $('#data-source').addEventListener('change',() => {
+    const value = $('#data-source').value;
+    if (![...$('#data-source').options].some((option) => option.value === value)) return;
+    const filters = new URLSearchParams({source: value});
+    for (const key of ['style', 'palette']) if (current.has(key)) filters.set(key, current.get(key));
+    location.assign('/workspace/reports/data?' + filters);
+  });
   $('#data-period').addEventListener('change',() => { const value = $('#data-period').value; if (report.periods.some((p) => p.id === value)) location.assign(base+'&snapshot='+encodeURIComponent(value)); });
   $('#data-refresh').addEventListener('click',() => location.reload());
   $('#data-client').addEventListener('change',() => run(async () => {
@@ -135,7 +122,9 @@
   }));
   $('#library-logout').addEventListener('click',() => run(async () => { await api('auth/logout',{}); location.assign('/workspace/login'); }));
   async function poll() {
-    const next = await api(`workspaces/${workspaceId}/data/${report.source}`);
+    const params = new URLSearchParams(location.search), periodQuery = new URLSearchParams();
+    for (const key of ['start','end']) if (params.has(key)) periodQuery.set(key,params.get(key));
+    const next = await api(`workspaces/${workspaceId}/data/${report.source}`+(periodQuery.size ? '?'+periodQuery : ''));
     if (next.scope?.client_id !== report.scope.client_id || next.scope?.workspace_id !== workspaceId) { location.replace(base); return; }
     if (next.snapshot?.id !== report.snapshot?.id || next.latest_sync?.status !== report.latest_sync?.status || next.connection?.status !== report.connection?.status) { location.reload(); return; }
     schedule();

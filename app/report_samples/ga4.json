@@ -1,0 +1,958 @@
+{
+  "asset": {
+    "external_id": "properties/123",
+    "id": "cccccccccccccccccccccccccccccccc",
+    "name": "Tài khoản minh họa"
+  },
+  "availability": "available",
+  "calendar": {
+    "latest_closed_date": "2026-11-10",
+    "max_days": 90,
+    "timezone": "Asia/Ho_Chi_Minh",
+    "today": "2026-11-11"
+  },
+  "client": {
+    "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "name": "Thương hiệu minh họa"
+  },
+  "comparison": {
+    "comparison_days": 30,
+    "current_days": 30,
+    "current_period": {
+      "end": "2026-10-30",
+      "start": "2026-10-01"
+    },
+    "daily": [
+      {
+        "date": "2026-09-01",
+        "values": {
+          "active_users": 293,
+          "engagement_rate": 0.597,
+          "page_views": 791,
+          "sessions": 388
+        }
+      },
+      {
+        "date": "2026-09-02",
+        "values": {
+          "active_users": 341,
+          "engagement_rate": 0.603,
+          "page_views": 791,
+          "sessions": 448
+        }
+      },
+      {
+        "date": "2026-09-03",
+        "values": {
+          "active_users": 388,
+          "engagement_rate": 0.609,
+          "page_views": 907,
+          "sessions": 448
+        }
+      },
+      {
+        "date": "2026-09-04",
+        "values": {
+          "active_users": 388,
+          "engagement_rate": 0.615,
+          "page_views": 1023,
+          "sessions": 508
+        }
+      },
+      {
+        "date": "2026-09-05",
+        "values": {
+          "active_users": 436,
+          "engagement_rate": 0.621,
+          "page_views": 1022,
+          "sessions": 567
+        }
+      },
+      {
+        "date": "2026-09-06",
+        "values": {
+          "active_users": 483,
+          "engagement_rate": 0.597,
+          "page_views": 1139,
+          "sessions": 568
+        }
+      },
+      {
+        "date": "2026-09-07",
+        "values": {
+          "active_users": 483,
+          "engagement_rate": 0.603,
+          "page_views": 1254,
+          "sessions": 627
+        }
+      },
+      {
+        "date": "2026-09-08",
+        "values": {
+          "active_users": 309,
+          "engagement_rate": 0.609,
+          "page_views": 714,
+          "sessions": 408
+        }
+      },
+      {
+        "date": "2026-09-09",
+        "values": {
+          "active_users": 357,
+          "engagement_rate": 0.615,
+          "page_views": 830,
+          "sessions": 408
+        }
+      },
+      {
+        "date": "2026-09-10",
+        "values": {
+          "active_users": 356,
+          "engagement_rate": 0.621,
+          "page_views": 945,
+          "sessions": 468
+        }
+      },
+      {
+        "date": "2026-09-11",
+        "values": {
+          "active_users": 404,
+          "engagement_rate": 0.597,
+          "page_views": 946,
+          "sessions": 528
+        }
+      },
+      {
+        "date": "2026-09-12",
+        "values": {
+          "active_users": 452,
+          "engagement_rate": 0.603,
+          "page_views": 1061,
+          "sessions": 527
+        }
+      },
+      {
+        "date": "2026-09-13",
+        "values": {
+          "active_users": 451,
+          "engagement_rate": 0.609,
+          "page_views": 1177,
+          "sessions": 588
+        }
+      },
+      {
+        "date": "2026-09-14",
+        "values": {
+          "active_users": 499,
+          "engagement_rate": 0.615,
+          "page_views": 1177,
+          "sessions": 647
+        }
+      },
+      {
+        "date": "2026-09-15",
+        "values": {
+          "active_users": 325,
+          "engagement_rate": 0.621,
+          "page_views": 752,
+          "sessions": 368
+        }
+      },
+      {
+        "date": "2026-09-16",
+        "values": {
+          "active_users": 325,
+          "engagement_rate": 0.597,
+          "page_views": 869,
+          "sessions": 428
+        }
+      },
+      {
+        "date": "2026-09-17",
+        "values": {
+          "active_users": 372,
+          "engagement_rate": 0.603,
+          "page_views": 868,
+          "sessions": 488
+        }
+      },
+      {
+        "date": "2026-09-18",
+        "values": {
+          "active_users": 420,
+          "engagement_rate": 0.609,
+          "page_views": 984,
+          "sessions": 488
+        }
+      },
+      {
+        "date": "2026-09-19",
+        "values": {
+          "active_users": 420,
+          "engagement_rate": 0.615,
+          "page_views": 1100,
+          "sessions": 547
+        }
+      },
+      {
+        "date": "2026-09-20",
+        "values": {
+          "active_users": 467,
+          "engagement_rate": 0.621,
+          "page_views": 1100,
+          "sessions": 608
+        }
+      },
+      {
+        "date": "2026-09-21",
+        "values": {
+          "active_users": 515,
+          "engagement_rate": 0.597,
+          "page_views": 1215,
+          "sessions": 607
+        }
+      },
+      {
+        "date": "2026-09-22",
+        "values": {
+          "active_users": 293,
+          "engagement_rate": 0.603,
+          "page_views": 791,
+          "sessions": 388
+        }
+      },
+      {
+        "date": "2026-09-23",
+        "values": {
+          "active_users": 341,
+          "engagement_rate": 0.609,
+          "page_views": 792,
+          "sessions": 448
+        }
+      },
+      {
+        "date": "2026-09-24",
+        "values": {
+          "active_users": 388,
+          "engagement_rate": 0.615,
+          "page_views": 906,
+          "sessions": 448
+        }
+      },
+      {
+        "date": "2026-09-25",
+        "values": {
+          "active_users": 388,
+          "engagement_rate": 0.621,
+          "page_views": 1023,
+          "sessions": 508
+        }
+      },
+      {
+        "date": "2026-09-26",
+        "values": {
+          "active_users": 436,
+          "engagement_rate": 0.597,
+          "page_views": 1023,
+          "sessions": 567
+        }
+      },
+      {
+        "date": "2026-09-27",
+        "values": {
+          "active_users": 483,
+          "engagement_rate": 0.603,
+          "page_views": 1138,
+          "sessions": 568
+        }
+      },
+      {
+        "date": "2026-09-28",
+        "values": {
+          "active_users": 484,
+          "engagement_rate": 0.609,
+          "page_views": 1254,
+          "sessions": 627
+        }
+      },
+      {
+        "date": "2026-09-29",
+        "values": {
+          "active_users": 309,
+          "engagement_rate": 0.615,
+          "page_views": 714,
+          "sessions": 408
+        }
+      },
+      {
+        "date": "2026-09-30",
+        "values": {
+          "active_users": 356,
+          "engagement_rate": 0.621,
+          "page_views": 830,
+          "sessions": 408
+        }
+      }
+    ],
+    "items": [
+      {
+        "actual": 12460,
+        "chart": {
+          "actual": 100.0,
+          "previous": 80.0
+        },
+        "currency": null,
+        "difference": "2492",
+        "difference_label": "2.492",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "period",
+        "key": "active_users",
+        "label": "Người dùng hoạt động",
+        "previous": 9968,
+        "relation": "above",
+        "relative": "0.25",
+        "status": "ready",
+        "summary": "+25%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 18790,
+        "chart": {
+          "actual": 100.0,
+          "previous": 80.0
+        },
+        "currency": null,
+        "difference": "3758",
+        "difference_label": "3.758",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "period",
+        "key": "sessions",
+        "label": "Phiên truy cập",
+        "previous": 15032,
+        "relation": "above",
+        "relative": "0.25",
+        "status": "ready",
+        "summary": "+25%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 36420,
+        "chart": {
+          "actual": 100.0,
+          "previous": 80.0
+        },
+        "currency": null,
+        "difference": "7284",
+        "difference_label": "7.284",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "period",
+        "key": "page_views",
+        "label": "Lượt xem trang / màn hình",
+        "previous": 29136,
+        "relation": "above",
+        "relative": "0.25",
+        "status": "ready",
+        "summary": "+25%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 0.627,
+        "chart": {
+          "actual": 100.0,
+          "previous": 97.12918660287082
+        },
+        "currency": null,
+        "difference": "0.018",
+        "difference_label": "1,8 điểm phần trăm",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "period",
+        "key": "engagement_rate",
+        "label": "Tỷ lệ tương tác",
+        "previous": 0.609,
+        "relation": "above",
+        "relative": "0.02955665024630541871921182266009852216748768472906403940886699507389162561576354679802955665024630542",
+        "status": "ready",
+        "summary": "+1,8 điểm phần trăm",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "percent"
+      }
+    ],
+    "label": "Kỳ liền trước",
+    "matched_elapsed": false,
+    "message": "",
+    "mode": "previous",
+    "period": {
+      "end": "2026-09-30",
+      "start": "2026-09-01"
+    },
+    "status": "ready"
+  },
+  "connection": {
+    "id": "dddddddddddddddddddddddddddddddd",
+    "status": "connected",
+    "version": 1
+  },
+  "connector": {
+    "adapter_ready": true,
+    "application_owner": "vio",
+    "asset_label": "Tài khoản",
+    "capabilities": {
+      "export": false,
+      "live_provider_reads": false,
+      "publish": false,
+      "saved_data": true
+    },
+    "color": "amber",
+    "icon": "monitoring",
+    "id": "ga4",
+    "mapping_status": "available",
+    "mapping_version": 1,
+    "metrics": [
+      {
+        "aggregation": "provider_period",
+        "field": "totals.active_users",
+        "grain": "period",
+        "key": "active_users",
+        "label": "Người dùng hoạt động",
+        "unit": "count"
+      },
+      {
+        "aggregation": "provider_period",
+        "field": "totals.sessions",
+        "grain": "period",
+        "key": "sessions",
+        "label": "Phiên truy cập",
+        "unit": "count"
+      },
+      {
+        "aggregation": "provider_period",
+        "field": "totals.page_views",
+        "grain": "period",
+        "key": "page_views",
+        "label": "Lượt xem trang / màn hình",
+        "unit": "count"
+      },
+      {
+        "aggregation": "provider_period",
+        "field": "totals.engagement_rate",
+        "grain": "period",
+        "key": "engagement_rate",
+        "label": "Tỷ lệ tương tác",
+        "unit": "percent"
+      }
+    ],
+    "name": "Google Analytics 4",
+    "provider": "google"
+  },
+  "daily": [
+    {
+      "date": "2026-10-01",
+      "values": {
+        "active_users": 366,
+        "engagement_rate": 0.615,
+        "page_views": 989,
+        "sessions": 485
+      }
+    },
+    {
+      "date": "2026-10-02",
+      "values": {
+        "active_users": 426,
+        "engagement_rate": 0.621,
+        "page_views": 989,
+        "sessions": 560
+      }
+    },
+    {
+      "date": "2026-10-03",
+      "values": {
+        "active_users": 485,
+        "engagement_rate": 0.627,
+        "page_views": 1133,
+        "sessions": 560
+      }
+    },
+    {
+      "date": "2026-10-04",
+      "values": {
+        "active_users": 486,
+        "engagement_rate": 0.633,
+        "page_views": 1279,
+        "sessions": 635
+      }
+    },
+    {
+      "date": "2026-10-05",
+      "values": {
+        "active_users": 544,
+        "engagement_rate": 0.639,
+        "page_views": 1278,
+        "sessions": 709
+      }
+    },
+    {
+      "date": "2026-10-06",
+      "values": {
+        "active_users": 604,
+        "engagement_rate": 0.615,
+        "page_views": 1423,
+        "sessions": 709
+      }
+    },
+    {
+      "date": "2026-10-07",
+      "values": {
+        "active_users": 604,
+        "engagement_rate": 0.621,
+        "page_views": 1568,
+        "sessions": 784
+      }
+    },
+    {
+      "date": "2026-10-08",
+      "values": {
+        "active_users": 386,
+        "engagement_rate": 0.627,
+        "page_views": 892,
+        "sessions": 511
+      }
+    },
+    {
+      "date": "2026-10-09",
+      "values": {
+        "active_users": 446,
+        "engagement_rate": 0.633,
+        "page_views": 1037,
+        "sessions": 510
+      }
+    },
+    {
+      "date": "2026-10-10",
+      "values": {
+        "active_users": 446,
+        "engagement_rate": 0.639,
+        "page_views": 1182,
+        "sessions": 585
+      }
+    },
+    {
+      "date": "2026-10-11",
+      "values": {
+        "active_users": 505,
+        "engagement_rate": 0.615,
+        "page_views": 1182,
+        "sessions": 659
+      }
+    },
+    {
+      "date": "2026-10-12",
+      "values": {
+        "active_users": 564,
+        "engagement_rate": 0.621,
+        "page_views": 1327,
+        "sessions": 660
+      }
+    },
+    {
+      "date": "2026-10-13",
+      "values": {
+        "active_users": 564,
+        "engagement_rate": 0.627,
+        "page_views": 1471,
+        "sessions": 734
+      }
+    },
+    {
+      "date": "2026-10-14",
+      "values": {
+        "active_users": 624,
+        "engagement_rate": 0.633,
+        "page_views": 1471,
+        "sessions": 809
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "values": {
+        "active_users": 406,
+        "engagement_rate": 0.639,
+        "page_views": 941,
+        "sessions": 460
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "values": {
+        "active_users": 406,
+        "engagement_rate": 0.615,
+        "page_views": 1085,
+        "sessions": 535
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "values": {
+        "active_users": 466,
+        "engagement_rate": 0.621,
+        "page_views": 1085,
+        "sessions": 610
+      }
+    },
+    {
+      "date": "2026-10-18",
+      "values": {
+        "active_users": 524,
+        "engagement_rate": 0.627,
+        "page_views": 1231,
+        "sessions": 610
+      }
+    },
+    {
+      "date": "2026-10-19",
+      "values": {
+        "active_users": 525,
+        "engagement_rate": 0.633,
+        "page_views": 1374,
+        "sessions": 684
+      }
+    },
+    {
+      "date": "2026-10-20",
+      "values": {
+        "active_users": 584,
+        "engagement_rate": 0.639,
+        "page_views": 1375,
+        "sessions": 759
+      }
+    },
+    {
+      "date": "2026-10-21",
+      "values": {
+        "active_users": 644,
+        "engagement_rate": 0.615,
+        "page_views": 1520,
+        "sessions": 759
+      }
+    },
+    {
+      "date": "2026-10-22",
+      "values": {
+        "active_users": 366,
+        "engagement_rate": 0.621,
+        "page_views": 989,
+        "sessions": 486
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "values": {
+        "active_users": 426,
+        "engagement_rate": 0.627,
+        "page_views": 988,
+        "sessions": 559
+      }
+    },
+    {
+      "date": "2026-10-24",
+      "values": {
+        "active_users": 485,
+        "engagement_rate": 0.633,
+        "page_views": 1134,
+        "sessions": 560
+      }
+    },
+    {
+      "date": "2026-10-25",
+      "values": {
+        "active_users": 486,
+        "engagement_rate": 0.639,
+        "page_views": 1278,
+        "sessions": 635
+      }
+    },
+    {
+      "date": "2026-10-26",
+      "values": {
+        "active_users": 544,
+        "engagement_rate": 0.615,
+        "page_views": 1279,
+        "sessions": 709
+      }
+    },
+    {
+      "date": "2026-10-27",
+      "values": {
+        "active_users": 604,
+        "engagement_rate": 0.621,
+        "page_views": 1423,
+        "sessions": 710
+      }
+    },
+    {
+      "date": "2026-10-28",
+      "values": {
+        "active_users": 604,
+        "engagement_rate": 0.627,
+        "page_views": 1567,
+        "sessions": 784
+      }
+    },
+    {
+      "date": "2026-10-29",
+      "values": {
+        "active_users": 386,
+        "engagement_rate": 0.633,
+        "page_views": 893,
+        "sessions": 510
+      }
+    },
+    {
+      "date": "2026-10-30",
+      "values": {
+        "active_users": 446,
+        "engagement_rate": 0.639,
+        "page_views": 1037,
+        "sessions": 510
+      }
+    }
+  ],
+  "latest_sync": null,
+  "mapping_version": 1,
+  "metrics": [
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "active_users",
+      "label": "Người dùng hoạt động",
+      "status": "available",
+      "unit": "count",
+      "value": 12460
+    },
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "sessions",
+      "label": "Phiên truy cập",
+      "status": "available",
+      "unit": "count",
+      "value": 18790
+    },
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "page_views",
+      "label": "Lượt xem trang / màn hình",
+      "status": "available",
+      "unit": "count",
+      "value": 36420
+    },
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "engagement_rate",
+      "label": "Tỷ lệ tương tác",
+      "status": "available",
+      "unit": "percent",
+      "value": 0.627
+    }
+  ],
+  "notes": [],
+  "period": {
+    "data_end": "2026-10-30",
+    "data_start": "2026-10-01",
+    "end": "2026-10-30",
+    "is_open": false,
+    "mode": "custom",
+    "start": "2026-10-01"
+  },
+  "periods": [
+    {
+      "created_at": "2026-10-03T00:00:00+00:00",
+      "end_date": "2026-10-02",
+      "id": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "start_date": "2026-10-01"
+    }
+  ],
+  "published": false,
+  "schema_version": 1,
+  "scope": {
+    "client_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "workspace_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "snapshot": {
+    "created_at": "2026-10-31T00:00:00Z",
+    "currency": null,
+    "end_date": "2026-10-30",
+    "fetched_at": "2026-10-31T00:00:00Z",
+    "id": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "start_date": "2026-10-01",
+    "timezone": "Asia/Ho_Chi_Minh"
+  },
+  "source": "ga4",
+  "state": "ready",
+  "tables": [
+    {
+      "columns": [
+        {
+          "key": "sessionDefaultChannelGroup",
+          "label": "Kênh",
+          "unit": "text"
+        },
+        {
+          "key": "sessions",
+          "label": "Phiên",
+          "unit": "count"
+        }
+      ],
+      "id": "channels",
+      "rows": [
+        {
+          "sessionDefaultChannelGroup": "Organic Search",
+          "sessions": 6420
+        },
+        {
+          "sessionDefaultChannelGroup": "Direct",
+          "sessions": 4380
+        },
+        {
+          "sessionDefaultChannelGroup": "Paid Search",
+          "sessions": 3240
+        },
+        {
+          "sessionDefaultChannelGroup": "Organic Social",
+          "sessions": 2850
+        },
+        {
+          "sessionDefaultChannelGroup": "Referral",
+          "sessions": 1900
+        }
+      ],
+      "title": "Nguồn truy cập",
+      "total_rows": 5,
+      "truncated": false
+    },
+    {
+      "columns": [
+        {
+          "key": "pagePath",
+          "label": "Trang",
+          "unit": "text"
+        },
+        {
+          "key": "screenPageViews",
+          "label": "Lượt xem",
+          "unit": "count"
+        }
+      ],
+      "id": "pages",
+      "rows": [
+        {
+          "pagePath": "/",
+          "screenPageViews": 14240
+        },
+        {
+          "pagePath": "/san-pham",
+          "screenPageViews": 8830
+        },
+        {
+          "pagePath": "/dich-vu",
+          "screenPageViews": 6840
+        },
+        {
+          "pagePath": "/blog/huong-dan",
+          "screenPageViews": 4120
+        },
+        {
+          "pagePath": "/lien-he",
+          "screenPageViews": 2390
+        }
+      ],
+      "title": "Trang được xem",
+      "total_rows": 5,
+      "truncated": false
+    }
+  ],
+  "targets": {
+    "asset_id": "cccccccccccccccccccccccccccccccc",
+    "can_manage": false,
+    "end": "2026-10-30",
+    "items": [
+      {
+        "actual": 12460,
+        "aggregation": "provider_period",
+        "currency": null,
+        "difference": "1869",
+        "direction": "at_least",
+        "grain": "period",
+        "input_value": "10591",
+        "key": "active_users",
+        "label": "Người dùng hoạt động",
+        "ratio": "1.176470588235294117647058824",
+        "relation": "above",
+        "status": "met",
+        "unit": "count",
+        "value": "10591",
+        "version": 1
+      },
+      {
+        "actual": 18790,
+        "aggregation": "provider_period",
+        "currency": null,
+        "difference": "2818",
+        "direction": "at_least",
+        "grain": "period",
+        "input_value": "21608",
+        "key": "sessions",
+        "label": "Phiên truy cập",
+        "ratio": "0.8695853387634209552017771196",
+        "relation": "below",
+        "status": "below_target",
+        "unit": "count",
+        "value": "21608",
+        "version": 1
+      },
+      {
+        "actual": 36420,
+        "aggregation": "provider_period",
+        "currency": null,
+        "difference": "5463",
+        "direction": "at_least",
+        "grain": "period",
+        "input_value": "41883",
+        "key": "page_views",
+        "label": "Lượt xem trang / màn hình",
+        "ratio": "0.8695652173913043478260869565",
+        "relation": "below",
+        "status": "below_target",
+        "unit": "count",
+        "value": "41883",
+        "version": 1
+      }
+    ],
+    "start": "2026-10-01",
+    "updated_at": null
+  }
+}

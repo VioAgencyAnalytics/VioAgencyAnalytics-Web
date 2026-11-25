@@ -1,0 +1,24 @@
+<div class="wn" id="workspace-notifications" data-workspace-id="{{ details.workspace.id }}" data-account-id="{{ account.user.id }}"
+     data-client-id="{{ details.selected_client.id if details.selected_client else '' }}" data-client-name="{{ details.selected_client.name if details.selected_client else '' }}">
+  <button type="button" id="workspace-bell" class="wh-icon-button wn-bell" aria-label="Thông báo" aria-expanded="false" aria-controls="workspace-inbox" title="Thông báo">
+    <span class="material-symbols-outlined" aria-hidden="true">notifications</span>
+    <span class="wn-count" id="workspace-bell-count" aria-hidden="true" hidden></span>
+  </button>
+  <section class="wn-inbox" id="workspace-inbox" aria-labelledby="workspace-inbox-title" hidden>
+    <div class="wn-heading">
+      <div><h2 id="workspace-inbox-title">Thông báo</h2><p id="workspace-inbox-client"></p></div>
+      <button type="button" id="workspace-inbox-read" class="wn-read-all" disabled>Đọc tất cả</button>
+    </div>
+    <div class="wn-filters" aria-label="Lọc thông báo" role="group">
+      <button type="button" data-wn-filter="all" aria-pressed="true">Tất cả</button>
+      <button type="button" data-wn-filter="unread" aria-pressed="false">Chưa đọc</button>
+      <button type="button" data-wn-filter="attention" aria-pressed="false">Cần xử lý</button>
+    </div>
+    <p id="workspace-inbox-status" class="wn-status" role="status" hidden></p>
+    <ol class="wn-items" id="workspace-inbox-items" aria-label="Hoạt động của khách hàng"></ol>
+    <div class="wn-empty" id="workspace-inbox-empty" hidden>
+      <span class="material-symbols-outlined" aria-hidden="true">notifications_none</span><p></p>
+      <button id="workspace-inbox-retry" type="button" class="wn-read-all" hidden>Thử lại</button>
+    </div>
+  </section>
+</div>

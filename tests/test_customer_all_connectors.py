@@ -21,6 +21,7 @@ def test_provider_start_all_new_sources_only_forwards_safe_url(stack,source,prov
     state['logged_in']=True; client.cookies.set(auth.SESSION,TOKEN)
     query={'state':'QA_ONLY_STATE','redirect_uri':ORIGIN+'/auth/customer/providers/'+provider+'/callback'}
     query.update({'app_id':'123456'} if provider=='tiktok' else {'client_id':'QA_ONLY_CLIENT','response_type':'code'})
+    if provider=='meta':query.update(config_id='123458',override_default_response_type='true')
     state['provider_url']='https://'+host+path+'?'+urlencode(query)
     address='/api/customer/workspaces/'+'a'*32+'/providers/'+source+'/start'
     result=client.post(address,json={'client_id':'b'*32},headers=csrf_headers(client))
@@ -67,6 +68,37 @@ def test_report_view_counts_zero_as_observation_and_never_invents_missing_metric
     assert view['days']==2 and view['observed_days']==1
     assert view['available']==3 and view['total']==4
     assert view['missing']==['Xem trang']
+
+
+@pytest.mark.parametrize('code,expected',[
+    ('provider_setup_required','Vio cần hoàn tất cấu hình API'),
+    ('provider_account_required','Tài khoản chưa có nguồn dữ liệu phù hợp'),
+    ('provider_scopes','Tài khoản chưa có đủ quyền đọc'),
+    ('provider_rate_limit','Nền tảng đang giới hạn lượt đọc'),
+    ('provider_reauth','Quyền truy cập đã hết hiệu lực'),
+    ('QA_ONLY_PRIVATE_ERROR','Lần đồng bộ chưa thành công'),
+])
+def test_failed_sync_has_safe_specific_guidance_in_report(stack,code,expected):
+    client,_,state,_=stack;prepare(state)
+    value=report('ga4',state='sync_error')
+    value['latest_sync']={'id':'e'*32,'status':'failed','error_code':code}
+    state['source_data']=value
+    result=client.get('/workspace/reports/data?source=ga4')
+    assert result.status_code==200,result.text
+    assert expected in result.text
+    assert 'QA_ONLY_PRIVATE_ERROR' not in result.text
+
+
+def test_callback_preserves_safe_setup_error_without_returning_vendor_body(stack,monkeypatch):
+    client,_,state,_=stack;state['logged_in']=True;client.cookies.set(auth.SESSION,TOKEN)
+    csrf_headers(client)
+    async def failure(*args,**kwargs):
+        raise auth.CustomerError(503,'QA_ONLY_VENDOR_PRIVATE_BODY','provider_setup_required')
+    monkeypatch.setattr(auth,'backend',failure)
+    result=client.get('/auth/customer/providers/google/callback?state=QA_ONLY_STATE&code=QA_ONLY_CODE',follow_redirects=False)
+    assert result.status_code==303
+    assert result.headers['location']=='/workspace/integrations?oauth=provider_setup_required'
+    assert 'QA_ONLY' not in result.text and 'QA_ONLY' not in result.headers['location']
 
 
 def test_reusing_google_application_copies_app_settings_only_and_keeps_signin_separate(tmp_path,monkeypatch):

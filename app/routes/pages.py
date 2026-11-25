@@ -4,6 +4,8 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 
 from app.services.reports import ReportService
+from app.customer_platform_brands import PLATFORM_BRANDS
+from app.display_time import vietnam_time
 
 
 router = APIRouter(tags=["pages"])
@@ -14,6 +16,8 @@ templates = Jinja2Templates(
         / "templates"
     )
 )
+templates.env.globals['customer_platform_brands'] = PLATFORM_BRANDS
+templates.env.filters['vietnam_time'] = vietnam_time
 
 
 # =========================================================

@@ -1,0 +1,752 @@
+{
+  "asset": {
+    "external_id": "properties/123",
+    "id": "cccccccccccccccccccccccccccccccc",
+    "name": "Tài khoản minh họa"
+  },
+  "availability": "available",
+  "calendar": {
+    "latest_closed_date": "2026-11-10",
+    "max_days": 90,
+    "timezone": "Asia/Ho_Chi_Minh",
+    "today": "2026-11-11"
+  },
+  "client": {
+    "id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "name": "Thương hiệu minh họa"
+  },
+  "comparison": {
+    "comparison_days": 30,
+    "current_days": 30,
+    "current_period": {
+      "end": "2026-10-30",
+      "start": "2026-10-01"
+    },
+    "daily": [
+      {
+        "date": "2026-09-01",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-02",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-03",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-04",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-05",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-06",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-07",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-08",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-09",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-10",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-11",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-12",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-13",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-14",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-15",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-16",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-17",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-18",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-19",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-20",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-21",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-22",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-23",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-24",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-25",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-26",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-27",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-28",
+        "values": {
+          "posts_published": 0
+        }
+      },
+      {
+        "date": "2026-09-29",
+        "values": {
+          "posts_published": 1
+        }
+      },
+      {
+        "date": "2026-09-30",
+        "values": {
+          "posts_published": 0
+        }
+      }
+    ],
+    "items": [
+      {
+        "actual": 18,
+        "chart": {
+          "actual": 100.0,
+          "previous": 77.77777777777777
+        },
+        "currency": null,
+        "difference": "4",
+        "difference_label": "4",
+        "effect": "improved",
+        "effect_label": "Đúng chiều cải thiện",
+        "grain": "period",
+        "key": "posts_published",
+        "label": "Bài đăng trong kỳ",
+        "previous": 14,
+        "relation": "above",
+        "relative": "0.2857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857142857",
+        "status": "ready",
+        "summary": "+28,57%",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 2460,
+        "chart": null,
+        "currency": null,
+        "difference": null,
+        "difference_label": null,
+        "effect": "unavailable",
+        "effect_label": "",
+        "grain": "snapshot",
+        "key": "likes_lifetime",
+        "label": "Lượt thích · nhóm bài",
+        "previous": null,
+        "relation": null,
+        "relative": null,
+        "status": "not_comparable",
+        "summary": "Số tích lũy / tại thời điểm đồng bộ; không tính tăng trưởng theo kỳ.",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 174,
+        "chart": null,
+        "currency": null,
+        "difference": null,
+        "difference_label": null,
+        "effect": "unavailable",
+        "effect_label": "",
+        "grain": "snapshot",
+        "key": "comments_lifetime",
+        "label": "Bình luận · nhóm bài",
+        "previous": null,
+        "relation": null,
+        "relative": null,
+        "status": "not_comparable",
+        "summary": "Số tích lũy / tại thời điểm đồng bộ; không tính tăng trưởng theo kỳ.",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      },
+      {
+        "actual": 12380,
+        "chart": null,
+        "currency": null,
+        "difference": null,
+        "difference_label": null,
+        "effect": "unavailable",
+        "effect_label": "",
+        "grain": "snapshot",
+        "key": "followers",
+        "label": "Người theo dõi hiện tại",
+        "previous": null,
+        "relation": null,
+        "relative": null,
+        "status": "not_comparable",
+        "summary": "Số tích lũy / tại thời điểm đồng bộ; không tính tăng trưởng theo kỳ.",
+        "trend": {
+          "direction": "higher",
+          "guidance": "Giá trị cao hơn là chiều cải thiện của chỉ số; cần đọc cùng chất lượng kết quả."
+        },
+        "unit": "count"
+      }
+    ],
+    "label": "Kỳ liền trước",
+    "matched_elapsed": false,
+    "message": "",
+    "mode": "previous",
+    "period": {
+      "end": "2026-09-30",
+      "start": "2026-09-01"
+    },
+    "status": "ready"
+  },
+  "connection": {
+    "id": "dddddddddddddddddddddddddddddddd",
+    "status": "connected",
+    "version": 1
+  },
+  "connector": {
+    "adapter_ready": true,
+    "application_owner": "vio",
+    "asset_label": "Tài khoản",
+    "capabilities": {
+      "export": false,
+      "live_provider_reads": false,
+      "publish": false,
+      "saved_data": true
+    },
+    "color": "amber",
+    "icon": "monitoring",
+    "id": "instagram",
+    "mapping_status": "available",
+    "mapping_version": 1,
+    "metrics": [
+      {
+        "aggregation": "provider_period",
+        "field": "totals.posts_published",
+        "grain": "period",
+        "key": "posts_published",
+        "label": "Bài đăng trong kỳ",
+        "unit": "count"
+      },
+      {
+        "aggregation": "sum_posts_at_fetch",
+        "field": "totals.likes_lifetime",
+        "grain": "snapshot",
+        "key": "likes_lifetime",
+        "label": "Lượt thích · nhóm bài",
+        "unit": "count"
+      },
+      {
+        "aggregation": "sum_posts_at_fetch",
+        "field": "totals.comments_lifetime",
+        "grain": "snapshot",
+        "key": "comments_lifetime",
+        "label": "Bình luận · nhóm bài",
+        "unit": "count"
+      },
+      {
+        "aggregation": "latest_observation",
+        "field": "totals.followers",
+        "grain": "snapshot",
+        "key": "followers",
+        "label": "Người theo dõi hiện tại",
+        "unit": "count"
+      }
+    ],
+    "name": "Instagram",
+    "provider": "google"
+  },
+  "daily": [
+    {
+      "date": "2026-10-01",
+      "values": {
+        "posts_published": 0
+      }
+    },
+    {
+      "date": "2026-10-02",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-03",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-04",
+      "values": {
+        "posts_published": 0
+      }
+    },
+    {
+      "date": "2026-10-05",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-06",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-07",
+      "values": {
+        "posts_published": 0
+      }
+    },
+    {
+      "date": "2026-10-08",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-09",
+      "values": {
+        "posts_published": 0
+      }
+    },
+    {
+      "date": "2026-10-10",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-11",
+      "values": {
+        "posts_published": 0
+      }
+    },
+    {
+      "date": "2026-10-12",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-13",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-14",
+      "values": {
+        "posts_published": 0
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "values": {
+        "posts_published": 0
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-18",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-19",
+      "values": {
+        "posts_published": 0
+      }
+    },
+    {
+      "date": "2026-10-20",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-21",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-22",
+      "values": {
+        "posts_published": 0
+      }
+    },
+    {
+      "date": "2026-10-23",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-24",
+      "values": {
+        "posts_published": 0
+      }
+    },
+    {
+      "date": "2026-10-25",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-26",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-27",
+      "values": {
+        "posts_published": 0
+      }
+    },
+    {
+      "date": "2026-10-28",
+      "values": {
+        "posts_published": 1
+      }
+    },
+    {
+      "date": "2026-10-29",
+      "values": {
+        "posts_published": 0
+      }
+    },
+    {
+      "date": "2026-10-30",
+      "values": {
+        "posts_published": 1
+      }
+    }
+  ],
+  "latest_sync": null,
+  "mapping_version": 1,
+  "metrics": [
+    {
+      "aggregation": "provider_period",
+      "currency": null,
+      "grain": "period",
+      "key": "posts_published",
+      "label": "Bài đăng trong kỳ",
+      "status": "available",
+      "unit": "count",
+      "value": 18
+    },
+    {
+      "aggregation": "sum_posts_at_fetch",
+      "currency": null,
+      "grain": "snapshot",
+      "key": "likes_lifetime",
+      "label": "Lượt thích · nhóm bài",
+      "status": "available",
+      "unit": "count",
+      "value": 2460
+    },
+    {
+      "aggregation": "sum_posts_at_fetch",
+      "currency": null,
+      "grain": "snapshot",
+      "key": "comments_lifetime",
+      "label": "Bình luận · nhóm bài",
+      "status": "available",
+      "unit": "count",
+      "value": 174
+    },
+    {
+      "aggregation": "latest_observation",
+      "currency": null,
+      "grain": "snapshot",
+      "key": "followers",
+      "label": "Người theo dõi hiện tại",
+      "status": "available",
+      "unit": "count",
+      "value": 12380
+    }
+  ],
+  "notes": [],
+  "period": {
+    "data_end": "2026-10-30",
+    "data_start": "2026-10-01",
+    "end": "2026-10-30",
+    "is_open": false,
+    "mode": "custom",
+    "start": "2026-10-01"
+  },
+  "periods": [
+    {
+      "created_at": "2026-10-03T00:00:00+00:00",
+      "end_date": "2026-10-02",
+      "id": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "start_date": "2026-10-01"
+    }
+  ],
+  "published": false,
+  "schema_version": 1,
+  "scope": {
+    "client_id": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "workspace_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "snapshot": {
+    "created_at": "2026-10-31T00:00:00Z",
+    "currency": null,
+    "end_date": "2026-10-30",
+    "fetched_at": "2026-10-31T00:00:00Z",
+    "id": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "start_date": "2026-10-01",
+    "timezone": "Asia/Ho_Chi_Minh"
+  },
+  "source": "instagram",
+  "state": "ready",
+  "tables": [
+    {
+      "columns": [
+        {
+          "key": "date",
+          "label": "Ngày UTC",
+          "unit": "text"
+        },
+        {
+          "key": "caption",
+          "label": "Nội dung",
+          "unit": "text"
+        },
+        {
+          "key": "format",
+          "label": "Định dạng",
+          "unit": "text"
+        },
+        {
+          "key": "likes_lifetime",
+          "label": "Thích",
+          "unit": "count"
+        },
+        {
+          "key": "comments_lifetime",
+          "label": "Bình luận",
+          "unit": "count"
+        }
+      ],
+      "id": "posts",
+      "rows": [
+        {
+          "caption": "Một góc nhìn mới về trải nghiệm của khách hàng.",
+          "comments_lifetime": 24,
+          "date": "2026-10-02",
+          "format": "IMAGE",
+          "likes_lifetime": 640
+        },
+        {
+          "caption": "Những chi tiết nhỏ tạo nên sự khác biệt.",
+          "comments_lifetime": 20,
+          "date": "2026-10-03",
+          "format": "CAROUSEL_ALBUM",
+          "likes_lifetime": 530
+        },
+        {
+          "caption": "Cùng khám phá bộ sưu tập trong tháng.",
+          "comments_lifetime": 16,
+          "date": "2026-10-05",
+          "format": "IMAGE",
+          "likes_lifetime": 420
+        },
+        {
+          "caption": "Câu chuyện phía sau mỗi sản phẩm.",
+          "comments_lifetime": 12,
+          "date": "2026-10-06",
+          "format": "CAROUSEL_ALBUM",
+          "likes_lifetime": 310
+        }
+      ],
+      "title": "Bài đăng trong kỳ",
+      "total_rows": 18,
+      "truncated": true
+    }
+  ],
+  "targets": {
+    "asset_id": "cccccccccccccccccccccccccccccccc",
+    "can_manage": false,
+    "end": "2026-10-30",
+    "items": [
+      {
+        "actual": 18,
+        "aggregation": "provider_period",
+        "currency": null,
+        "difference": "3",
+        "direction": "at_least",
+        "grain": "period",
+        "input_value": "15",
+        "key": "posts_published",
+        "label": "Bài đăng trong kỳ",
+        "ratio": "1.2",
+        "relation": "above",
+        "status": "met",
+        "unit": "count",
+        "value": "15",
+        "version": 1
+      },
+      {
+        "actual": 2460,
+        "aggregation": "sum_posts_at_fetch",
+        "currency": null,
+        "difference": "369",
+        "direction": "at_least",
+        "grain": "snapshot",
+        "input_value": "2829",
+        "key": "likes_lifetime",
+        "label": "Lượt thích · nhóm bài",
+        "ratio": "0.8695652173913043478260869565",
+        "relation": "below",
+        "status": "below_target",
+        "unit": "count",
+        "value": "2829",
+        "version": 1
+      },
+      {
+        "actual": 174,
+        "aggregation": "sum_posts_at_fetch",
+        "currency": null,
+        "difference": "26",
+        "direction": "at_least",
+        "grain": "snapshot",
+        "input_value": "200",
+        "key": "comments_lifetime",
+        "label": "Bình luận · nhóm bài",
+        "ratio": "0.87",
+        "relation": "below",
+        "status": "below_target",
+        "unit": "count",
+        "value": "200",
+        "version": 1
+      }
+    ],
+    "start": "2026-10-01",
+    "updated_at": null
+  }
+}
